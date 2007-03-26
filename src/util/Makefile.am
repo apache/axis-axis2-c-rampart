@@ -11,10 +11,8 @@ librampart_util_la_SOURCES = rampart_action.c rampart_crypto_util.c \
 
 librampart_util_la_LIBADD  = -lssl \
 						-lcrypto \
-						../../../util/src/libaxis2_util.la 
+						${AXIS2C_HOME}/lib
 
 INCLUDES = -I$(top_builddir)/include \
-			-I ../../../include \
-			-I ../../../util/include \
-			-I ../../../xml_schema/include \
-			-I ../../../axiom/include
+			-I ../../include \
+			@AXIS2INC@

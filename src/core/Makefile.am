@@ -10,9 +10,8 @@ libmod_rampart_la_LIBADD  = ../handlers/librampart_handlers.la \
 			    ../omxmlsec/libomxmlsec.la \
 				../secpolicy/model/librp_model.la \
 				../secpolicy/builder/librp_builder.la \
-				../../../modules/core/engine/libaxis2_engine.la
+				${AXIS2C_HOME}/lib
 
 INCLUDES = -I$(top_builddir)/include \
-			-I ../../../include \
-			-I ../../../util/include \
-			-I ../../../axiom/include 
+			-I ../../include \
+			@AXIS2INC@

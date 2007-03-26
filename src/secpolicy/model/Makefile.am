@@ -9,11 +9,9 @@ librp_model_la_SOURCES = algorithmsuite.c asymmetric_binding.c \
 							symmetric_binding.c transport_binding.c ut.c wss10.c wss11.c x509_token.c
 
 
-librp_model_la_LIBADD  = ../../../../util/src/libaxis2_util.la \
-						 ../../../../axiom/src/om/libaxis2_axiom.la
+librp_model_la_LIBADD  = ${AXIS2C_HOME}/lib
 
 
 INCLUDES = -I$(top_builddir)/include \
-			-I ../../../../include \
-			-I ../../../../util/include \
-			-I ../../../../axiom/include
+			-I ../../../include \
+			@AXIS2INC@
