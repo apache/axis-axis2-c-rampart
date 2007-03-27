@@ -1,5 +1,5 @@
 TESTS = test 
-bin_PROGRAMS = test
+noinst_PROGRAMS = test
 SUBDIRS =
 
 AM_CFLAGS = -g -O2 -pthread
