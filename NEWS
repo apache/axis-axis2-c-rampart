@@ -1,6 +1,6 @@
-We are happy to announce the first release of Rampart/C which is the security module for Apache Axis2/C
+Rampart/C is the security module for Apache Axis2/C
 
-You can get the latest svn checkout from https://svn.apache.org/repos/asf/webservices/axis2/trunk/c/rampart
+You can get the latest svn checkout from https://svn.apache.org/repos/asf/webservices/rampart/trunk/c
 
 Key features
 -------------
@@ -9,13 +9,15 @@ Key features
     2. Digested password
 
 2. Ability to send Timestamp tokens
-3. Support for callback mechanism
-4. Support for both dynamic and static configurations.
+3. Policy based configurations as per WS-Security Policy
+4. SOAP message encryption 
+5. SOAP message signature
 
 Un-Implemented Architecture Features 
 ------------------------------------
-1. Timestamp token verification
-2. Support for Signing and Encrypting messages
+1. SAML support 
+2. WS Secure conversation
+3. WS Trust
 
 
 We welcome your early feedback on this implementation.
