@@ -24,7 +24,6 @@
 #include <rampart_util.h>
 #include <rampart_sec_processed_result.h>
 #include <rampart_handler_util.h>
-#include <oxs_ctx.h>
 #include <oxs_error.h>
 #include <oxs_utility.h>
 #include <oxs_key.h>
