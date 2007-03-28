@@ -25,10 +25,10 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_key_identifier_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* encoding_type,
-        axis2_char_t* value_type,
-        axis2_char_t* value  )
+                                       axiom_node_t *parent,
+                                       axis2_char_t* encoding_type,
+                                       axis2_char_t* value_type,
+                                       axis2_char_t* value  )
 {
     axiom_node_t *ki_node = NULL;
     axiom_element_t *ki_ele = NULL;
@@ -38,13 +38,13 @@ oxs_token_build_key_identifier_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_WSSE_NS,
-            OXS_WSSE);
+                                    OXS_WSSE);
 
     ki_ele = axiom_element_create(env, parent, OXS_NODE_KEY_IDENTIFIER, ns_obj, &ki_node);
     if (!ki_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating KeyIdentifier element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating KeyIdentifier element");
         return NULL;
     }
 
@@ -59,7 +59,7 @@ oxs_token_build_key_identifier_element(const axis2_env_t *env,
         ret  = axiom_element_set_text(ki_ele, env, value, ki_node);
     }
 
-    
+
     return ki_node;
 
 }

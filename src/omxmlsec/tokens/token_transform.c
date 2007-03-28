@@ -25,9 +25,9 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_transform_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* algorithm
-                                         )
+                                  axiom_node_t *parent,
+                                  axis2_char_t* algorithm
+                                 )
 {
     axiom_node_t *transform_node = NULL;
     axiom_element_t *transform_ele = NULL;
@@ -36,13 +36,13 @@ oxs_token_build_transform_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
     transform_ele = axiom_element_create(env, parent, OXS_NODE_TRANSFORM, ns_obj, &transform_node);
     if (!transform_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating transform element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating transform element");
         return NULL;
     }
     /*If transform algorithm is NULL then use the default*/
@@ -75,7 +75,7 @@ oxs_token_get_transform(const axis2_env_t *env, axiom_node_t *transform_node)
     if (!transform_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error retrieving digest method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving digest method element");
         return NULL;
     }
 
@@ -83,7 +83,7 @@ oxs_token_get_transform(const axis2_env_t *env, axiom_node_t *transform_node)
     if((!transform) ||(0 == axis2_strcmp("", transform))){
         return NULL;
     }
-    
+
     return transform;
 
 }

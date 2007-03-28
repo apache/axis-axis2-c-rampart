@@ -25,7 +25,7 @@
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_token_get_cipher_value(const axis2_env_t *env,
-        axiom_node_t *cv_node)
+                           axiom_node_t *cv_node)
 {
     axis2_char_t *cv = NULL;
     /*TODO Verification*/
@@ -36,8 +36,8 @@ oxs_token_get_cipher_value(const axis2_env_t *env,
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_cipher_value_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* cipher_val
+                                     axiom_node_t *parent,
+                                     axis2_char_t* cipher_val
                                     )
 {
     axiom_node_t *cipher_value_node = NULL;
@@ -46,13 +46,13 @@ oxs_token_build_cipher_value_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-            OXS_XENC);
+                                    OXS_XENC);
 
     cipher_value_ele = axiom_element_create(env, parent, OXS_NODE_CIPHER_VALUE, ns_obj, &cipher_value_node);
     if (!cipher_value_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating cipher value element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating cipher value element");
         return NULL;
     }
 

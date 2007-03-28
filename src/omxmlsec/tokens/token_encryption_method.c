@@ -36,13 +36,13 @@ oxs_token_build_encryption_method_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-            OXS_XENC);
+                                    OXS_XENC);
 
     encryption_method_ele = axiom_element_create(env, parent, OXS_NODE_ENCRYPTION_METHOD, ns_obj, &encryption_method_node);
     if (!encryption_method_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating encryption method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating encryption method element");
         return NULL;
     }
     /*Fixed bug. If kt algorithm is NULL then use the default*/
@@ -75,7 +75,7 @@ oxs_token_get_encryption_method(const axis2_env_t *env, axiom_node_t *enc_mtd_no
     if (!enc_mtd_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error retrieving encryption method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving encryption method element");
         return NULL;
     }
 

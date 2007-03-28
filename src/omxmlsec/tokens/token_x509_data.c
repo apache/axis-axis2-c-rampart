@@ -24,21 +24,21 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_x509_data_element(const axis2_env_t *env,
-        axiom_node_t *parent)
+                                  axiom_node_t *parent)
 {
     axiom_node_t *x509_data_node = NULL;
     axiom_element_t *x509_data_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
 
     x509_data_ele = axiom_element_create(env, parent, OXS_NODE_X509_DATA, ns_obj, &x509_data_node);
     if (!x509_data_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating X509Data element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating X509Data element");
         return NULL;
     }
 

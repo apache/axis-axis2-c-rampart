@@ -54,14 +54,14 @@ oxs_token_build_x509_issuer_serial_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
 
     x509_issuer_serial_ele = axiom_element_create(env, parent, OXS_NODE_X509_ISSUER_SERIAL, ns_obj, &x509_issuer_serial_node);
     if (!x509_issuer_serial_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating X509IssuerSerial element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating X509IssuerSerial element");
         return NULL;
     }
 

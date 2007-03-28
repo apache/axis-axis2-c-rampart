@@ -26,9 +26,9 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_encrypted_data_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* type_attribute,
-        axis2_char_t* id
+                                       axiom_node_t *parent,
+                                       axis2_char_t* type_attribute,
+                                       axis2_char_t* id
                                       )
 {
     axiom_node_t *encrypted_data_node = NULL;
@@ -39,13 +39,13 @@ oxs_token_build_encrypted_data_element(const axis2_env_t *env,
     int ret;
 
     ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-            OXS_XENC);
+                                    OXS_XENC);
 
     encrypted_data_ele = axiom_element_create(env, parent, OXS_NODE_ENCRYPTED_DATA, ns_obj, &encrypted_data_node);
     if (!encrypted_data_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating encrypted data element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating encrypted data element");
         return NULL;
     }
 

@@ -25,9 +25,9 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_digest_method_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* algorithm
-                                         )
+                                      axiom_node_t *parent,
+                                      axis2_char_t* algorithm
+                                     )
 {
     axiom_node_t *digest_method_node = NULL;
     axiom_element_t *digest_method_ele = NULL;
@@ -36,13 +36,13 @@ oxs_token_build_digest_method_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
     digest_method_ele = axiom_element_create(env, parent, OXS_NODE_DIGEST_METHOD, ns_obj, &digest_method_node);
     if (!digest_method_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating digest method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating digest method element");
         return NULL;
     }
     /*If digest algorithm is NULL then use the default*/
@@ -75,7 +75,7 @@ oxs_token_get_digest_method(const axis2_env_t *env, axiom_node_t *digest_mtd_nod
     if (!digest_mtd_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error retrieving digest method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving digest method element");
         return NULL;
     }
 
@@ -83,7 +83,7 @@ oxs_token_get_digest_method(const axis2_env_t *env, axiom_node_t *digest_mtd_nod
     if((!digest_mtd) ||(0 == axis2_strcmp("", digest_mtd))){
         return NULL;
     }
-    
+
     return digest_mtd;
 
 }

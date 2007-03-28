@@ -25,7 +25,7 @@
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_token_get_x509_certificate(const axis2_env_t *env,
-        axiom_node_t *sv_node)
+                               axiom_node_t *sv_node)
 {
     axis2_char_t *sv = NULL;
     /*TODO Verification*/
@@ -45,13 +45,13 @@ oxs_token_build_x509_certificate_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
     x509_certificate_ele = axiom_element_create(env, parent, OXS_NODE_X509_CERTIFICATE, ns_obj, &x509_certificate_node);
     if (!x509_certificate_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_X509_CERTIFICATE);
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_X509_CERTIFICATE);
         return NULL;
     }
 

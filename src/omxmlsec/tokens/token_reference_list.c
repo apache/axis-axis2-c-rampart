@@ -25,21 +25,21 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_reference_list_element(const axis2_env_t *env,
-        axiom_node_t *parent )
+                                       axiom_node_t *parent )
 {
     axiom_node_t *reference_list_node = NULL;
     axiom_element_t *reference_list_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-            OXS_XENC);
+                                    OXS_XENC);
 
 
     reference_list_ele = axiom_element_create(env, parent, OXS_NODE_REFERENCE_LIST, ns_obj, &reference_list_node);
     if (!reference_list_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating ReferenceList element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating ReferenceList element");
         return NULL;
     }
 
@@ -60,15 +60,16 @@ oxs_token_build_data_reference_list(const axis2_env_t *env, axiom_node_t *parent
     if(!ref_list_node) {return AXIS2_FAILURE;}
 
     /*Build the list*/
-    for(i=0 ; i < axis2_array_list_size(id_list, env); i++){ 
+    for(i=0 ; i < axis2_array_list_size(id_list, env); i++){
         axiom_node_t *data_ref_node = NULL;
         axis2_char_t *id = NULL;
-        
+
         /*We need to prepend # to the id in the list to create the reference*/
         id = axis2_stracat("#",(axis2_char_t*)axis2_array_list_get(id_list, env, i), env);
         data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, id);
 
         if(!data_ref_node) {return AXIS2_FAILURE;}
+
     }
     return AXIS2_SUCCESS;
 }
@@ -84,7 +85,7 @@ oxs_token_get_reference_list_data(const axis2_env_t *env, axiom_node_t *ref_list
     if (!ref_list_node)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "reference list node is NULL");
+                  "reference list node is NULL");
         return NULL;
     }
     ref_list_ele = AXIOM_NODE_GET_DATA_ELEMENT(ref_list_node, env);
@@ -94,10 +95,10 @@ oxs_token_get_reference_list_data(const axis2_env_t *env, axiom_node_t *ref_list
     iter = axiom_element_get_children_with_qname(ref_list_ele, env, qname, ref_list_node);
     axis2_qname_free(qname, env);
     qname = NULL;
-    
+
     if(!iter){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                        "There are no children for %s", OXS_NODE_DATA_REFERENCE);
+                  "There are no children for %s", OXS_NODE_DATA_REFERENCE);
         return NULL;
     }
 

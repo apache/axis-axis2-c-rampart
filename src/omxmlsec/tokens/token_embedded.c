@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-#include <axis2_util.h> 
+#include <axis2_util.h>
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
@@ -28,8 +28,8 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_embedded_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* id)
+                                 axiom_node_t *parent,
+                                 axis2_char_t* id)
 {
     axiom_node_t *embedded_node = NULL;
     axiom_element_t *embedded_ele = NULL;
@@ -38,13 +38,13 @@ oxs_token_build_embedded_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_WSSE_NS,
-            OXS_WSSE);
+                                    OXS_WSSE);
 
     embedded_ele = axiom_element_create(env, parent, OXS_NODE_EMBEDDED, ns_obj, &embedded_node);
     if (!embedded_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating embedded element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating embedded element");
         return NULL;
     }
     if (!id)
@@ -72,7 +72,7 @@ oxs_token_get_embedded_id(const axis2_env_t *env, axiom_node_t *embedded_node)
     if (!embedded_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error retrieving embedded element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving embedded element");
         return NULL;
     }
 

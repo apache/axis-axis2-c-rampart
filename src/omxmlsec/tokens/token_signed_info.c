@@ -24,22 +24,22 @@
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_signed_info_element(const axis2_env_t *env,
-        axiom_node_t *parent
-                                )
+                                    axiom_node_t *parent
+                                   )
 {
     axiom_node_t *signed_info_node = NULL;
     axiom_element_t *signed_info_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
 
     signed_info_ele = axiom_element_create(env, parent, OXS_NODE_SIGNEDINFO, ns_obj, &signed_info_node);
     if (!signed_info_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating SignedInfo element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating SignedInfo element");
         return NULL;
     }
 

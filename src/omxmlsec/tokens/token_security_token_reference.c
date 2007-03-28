@@ -33,13 +33,13 @@ oxs_token_build_security_token_reference_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_WSSE_NS,
-            OXS_WSSE);
+                                    OXS_WSSE);
 
     security_token_reference_ele = axiom_element_create(env, parent, OXS_NODE_SECURITY_TOKEN_REFRENCE, ns_obj, &security_token_reference_node);
     if (!security_token_reference_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityTokenReference element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityTokenReference element");
         return NULL;
     }
 

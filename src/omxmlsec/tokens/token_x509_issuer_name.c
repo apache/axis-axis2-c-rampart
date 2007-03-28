@@ -25,7 +25,7 @@
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_token_get_issuer_name(const axis2_env_t *env,
-        axiom_node_t *issuer_name_node)
+                          axiom_node_t *issuer_name_node)
 {
     axis2_char_t *val = NULL;
     /*TODO Verification*/
@@ -36,9 +36,9 @@ oxs_token_get_issuer_name(const axis2_env_t *env,
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_issuer_name_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* value
-                                    )
+                                    axiom_node_t *parent,
+                                    axis2_char_t* value
+                                   )
 {
     axiom_node_t *issuer_name_node = NULL;
     axiom_element_t *issuer_name_ele = NULL;
@@ -46,13 +46,13 @@ oxs_token_build_issuer_name_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
     issuer_name_ele = axiom_element_create(env, parent, OXS_NODE_X509_ISSUER_NAME, ns_obj, &issuer_name_node);
     if (!issuer_name_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating  element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating  element");
         return NULL;
     }
 

@@ -27,7 +27,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_signature_method_element(const axis2_env_t *env,
         axiom_node_t *parent,
         axis2_char_t* algorithm
-                                         )
+                                        )
 {
     axiom_node_t *signature_method_node = NULL;
     axiom_element_t *signature_method_ele = NULL;
@@ -36,13 +36,13 @@ oxs_token_build_signature_method_element(const axis2_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-            OXS_DS);
+                                    OXS_DS);
 
     signature_method_ele = axiom_element_create(env, parent, OXS_NODE_SIGNATURE_METHOD, ns_obj, &signature_method_node);
     if (!signature_method_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error creating signature method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error creating signature method element");
         return NULL;
     }
     /*Fixed bug. If signature algorithm is NULL then use the default*/
@@ -75,7 +75,7 @@ oxs_token_get_signature_method(const axis2_env_t *env, axiom_node_t *enc_mtd_nod
     if (!enc_mtd_ele)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_ELEMENT_FAILED, "Error retrieving signature method element");
+                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving signature method element");
         return NULL;
     }
 
