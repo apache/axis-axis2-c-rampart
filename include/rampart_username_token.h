@@ -32,28 +32,8 @@ extern "C"
 #include <axis2_env.h>
 #include <rampart_constants.h>
 #include <rampart_crypto_util.h>
-#include <rampart_action.h>
 #include <rampart_context.h>
     
-        /**
-         * Build a username token according to the given parameters.
-         * These parameter are taken from the action collection and message context
-         * @param env pointer to environment struct
-         * @param ctx axis2 context
-         * @param actions collection of actions
-         * @param sec_node security node
-         * @param sec_ns_obj security namespace object
-         * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
-         */ 
-/*      axis2_status_t (AXIS2_CALL *
-        build)(rampart_username_token_t *username_token,
-            const axis2_env_t *env,
-            axis2_ctx_t *ctx,
-            rampart_actions_t *actions,
-            axiom_node_t *sec_node,
-            axiom_namespace_t *sec_ns_obj
-            );
-*/        
 
 axis2_status_t AXIS2_CALL
 rampart_username_token_build(
@@ -66,7 +46,6 @@ rampart_username_token_build(
          * @param env pointer to environment struct
          * @param msg_ctx axis2 message context
          * @param soap_header SOAP Header
-         * @param actions collection of actions
          * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
          */
 axis2_status_t AXIS2_CALL

@@ -36,7 +36,6 @@ extern "C" {
 /**
 * @param env pointer to environment struct
 * @param msg_ctx message context
-* @param actions actions defined in the descriptor file
 * @param soap_envelope the SOAP envelope
 * @param sec_node The security element
 * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE

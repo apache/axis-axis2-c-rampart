@@ -57,42 +57,6 @@ extern "C"
 
 #define RAMPART_PASSWORD_TEXT_URI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText" 
 
-/* Inflow outflow security parameter    */
-/*
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="action">
-        <xs:annotation>
-            <xs:documentation>Outflow security 'action' configuration</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="items" type="xs:string"/>
-                <xs:element name="user" type="xs:string"/>
-                <xs:element name="passwordCallbackClass" type="xs:string" minOccurs="0"/>
-                <xs:element name="signaturePropFile" type="xs:string" minOccurs="0"/>
-                <xs:element name="encryptionPropFile" type="xs:string" minOccurs="0"/>
-                <xs:element name="decryptionPropFile" type="xs:string" minOccurs="0"/>
-                <xs:element name="signatureKeyIdentifier" type="xs:string" minOccurs="0"/>
-                <xs:element name="encryptionKeyIdentifier" type="xs:string" minOccurs="0"/>
-                <xs:element name="encryptionUser" type="xs:string" minOccurs="0"/>
-                <xs:element name="signatureParts" type="xs:string" minOccurs="0"/>
-                <xs:element name="encryptionParts" type="xs:string" minOccurs="0"/>
-                <xs:element name="optimizeParts" type="xs:string" minOccurs="0"/>
-                <xs:element name="encryptionSymAlgorithm" type="xs:string" minOccurs="0"/>
-                <xs:element name="EmbeddedKeyCallbackClass" type="xs:string" minOccurs="0"/>
-                <xs:element name="encryptionKeyTransportAlgorithm" type="xs:string" minOccurs="0"/>
-                <xs:element name="EmbeddedKeyName" type="xs:string" minOccurs="0"/>
-                <xs:element name="timeToLive" type="xs:string" minOccurs="0"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-</xs:schema>
-*/
-/*    
-#define RAMPART_INFLOW_SECURITY                     "InflowSecurity"
-#define RAMPART_OUTFLOW_SECURITY                    "OutflowSecurity"
-*/
 
 #define RAMPART_INFLOW_SECURITY_POLICY              "InflowSecurityPolicy"
 #define RAMPART_OUTFLOW_SECURITY_POLICY             "OutflowSecurityPolicy"
@@ -102,39 +66,8 @@ extern "C"
 
 #define IN_MESSAGE_SECURITY                          "InMessageSecurity"
 #define OUT_MESSAGE_SECURITY                         "OutMessageSEcurity"                                
-/*
-#define RAMPART_PASSWORD_TEXT                       "passwordText"
-#define RAMPART_PASSWORD_DIGEST                     "passwordDigest"
-*/
 #define RAMPART_PASSWORD_TEXT                       "plainText"
 #define RAMPART_PASSWORD_DIGEST                     "Digest"
-
-#define RAMPART_ACTION                              "action"
-/*These are the parameters of actions in the axis2.xml file*/
-#define RAMPART_ACTION_ITEMS                        "items"
-#define RAMPART_ACTION_ITEMS_USERNAMETOKEN          "UsernameToken"
-#define RAMPART_ACTION_ITEMS_TIMESTAMP              "Timestamp"
-#define RAMPART_ACTION_ITEMS_ENCRYPT                "Encrypt"
-#define RAMPART_ACTION_ITEMS_SIGNATURE              "Signature"
-#define RAMPART_ACTION_PASSWORD_TYPE                "passwordType"
-#define RAMPART_ACTION_USER                         "user"
-#define RAMPART_ACTION_PW_CALLBACK_CLASS            "passwordCallbackClass"
-#define RAMPART_ACTION_AUTHN_MODULE_NAME            "authnModuleName"
-#define RAMPART_ACTION_SIGNATURE_PROP_FILE          "signaturePropFile"
-#define RAMPART_ACTION_ENCRYPTION_PROP_FILE         "encryptionPropFile"
-#define RAMPART_ACTION_DECRYPTION_PROP_FILE         "decryptionPropFile"
-#define RAMPART_ACTION_SIGNATURE_KEY_IDENTIFIER     "signatureKeyIdentifier"
-#define RAMPART_ACTION_ENCRYPTION_KEY_IDENTIFIER    "encryptionKeyIdentifier"
-#define RAMPART_ACTION_ENCRYPTION_USER              "encryptionUser"
-#define RAMPART_ACTION_SIGNATURE_PARTS              "signatureParts"
-#define RAMPART_ACTION_ENCRYPTION_PARTS             "encryptionParts"
-#define RAMPART_ACTION_OPTIMIZE_PARTS               "optimizeParts"
-#define RAMPART_ACTION_ENCRYPTION_SYM_ALGORITHM     "encryptionSymAlgorithm"
-#define RAMPART_ACTION_EMBEDDED_KEY_CALLBACK_CLASS  "EmbeddedKeyCallbackClass"
-#define RAMPART_ACTION_ENCRYPTION_KEY_TRANSFORM_ALGORITHM "encryptionKeyTransportAlgorithm"
-#define RAMPART_ACTION_EMBEDDED_KEY_NAME            "EmbeddedKeyName"
-#define RAMPART_ACTION_TIME_TO_LIVE                 "timeToLive"
-#define RAMPART_ACTION_KEY_BUF                      "keyBuffer"
 
 
 /************fault codes***************/
