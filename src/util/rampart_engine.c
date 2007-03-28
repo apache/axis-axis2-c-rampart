@@ -20,6 +20,7 @@
  */
 
 #include <rampart_engine.h>
+#include <axis2_ctx.h>
 
 /*This method sets all the configurations
  loads required modules and start rampart.*/
@@ -33,6 +34,13 @@ rampart_context_t *AXIS2_CALL
 build_rampart_context_from_file(
             const axis2_env_t *env,
             axis2_char_t *file_name);
+
+rampart_context_t *AXIS2_CALL
+get_rampart_context_in_server_side(
+            const axis2_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            const axis2_char_t *key);
+
 
 AXIS2_EXTERN rampart_context_t* AXIS2_CALL
 rampart_engine_init(const axis2_env_t *env, 
@@ -63,16 +71,24 @@ rampart_engine_init(const axis2_env_t *env,
         }
         else
         {
-            value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
-            if(!value)
+            if(axis2_msg_ctx_get_server_side(msg_ctx,env))
             {
-                AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
-                return NULL;
-            }
-            file_name = (axis2_char_t *)value;
-            return build_rampart_context_from_file(env,file_name);                        
-        }            
+                return get_rampart_context_in_server_side(env,msg_ctx,IN_MESSAGE_SECURITY);
+            }  
+            else
+            {              
+                value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
+                if(!value)
+                {
+                    AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
+                    return NULL;
+                }
+                file_name = (axis2_char_t *)value;
+                return build_rampart_context_from_file(env,file_name);                        
+            }            
+        }
     }
+    
     else
     {
         value = rampart_get_rampart_configuration(env,msg_ctx,OUTFLOW_RAMPART_CONTEXT);
@@ -88,14 +104,21 @@ rampart_engine_init(const axis2_env_t *env,
         }
         else
         {
-            value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_OUTFLOW_SECURITY_POLICY);
-            if(!value)
+            if(axis2_msg_ctx_get_server_side(msg_ctx,env))
             {
-                AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
-                return NULL;
+                return get_rampart_context_in_server_side(env,msg_ctx,OUT_MESSAGE_SECURITY);
             }
-            file_name = (axis2_char_t *)value;
-            return build_rampart_context_from_file(env,file_name);
+            else
+            {
+                value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_OUTFLOW_SECURITY_POLICY);
+                if(!value)
+                {
+                    AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
+                    return NULL;
+                }
+                file_name = (axis2_char_t *)value;
+                return build_rampart_context_from_file(env,file_name);
+            }
         }
     }
 }
@@ -192,6 +215,77 @@ build_rampart_context_from_file(
     }
     return rampart_context;
 
+}
+
+rampart_context_t *AXIS2_CALL
+get_rampart_context_in_server_side(
+            const axis2_env_t *env,
+            axis2_msg_ctx_t *msg_ctx,
+            const axis2_char_t *key)
+{
+
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_ctx_t *ctx = NULL;
+    axis2_property_t *property = NULL;
+
+    conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
+    if(!conf_ctx)
+    {
+         AXIS2_LOG_INFO(env->log, "[rampart][engine] Conf context is NULL ");
+         return NULL;
+    }
+    ctx = axis2_conf_ctx_get_base(conf_ctx,env);        
+    if(!ctx)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][engine] axis2 context is NULL ");
+        return NULL;
+    }
+    property = axis2_ctx_get_property(ctx,env,key);
+    if(property)
+    {
+        return (rampart_context_t *)axis2_property_get_value(property,env);
+    }
+    else
+    {
+        axis2_char_t *file_name = NULL;
+        rampart_context_t *rampart_context = NULL;
+
+        if(axis2_strcmp(key,IN_MESSAGE_SECURITY)==0)
+        {
+            file_name =(axis2_char_t *)rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
+            if(file_name)
+            {
+                rampart_context = build_rampart_context_from_file(env,file_name);
+                property = axis2_property_create(env);
+                axis2_property_set_value(property,env,rampart_context);
+                axis2_ctx_set_property(ctx,env,key,property);
+                return rampart_context;
+            }
+            else
+            {
+                AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
+                return NULL;
+            }
+        }
+        else if(axis2_strcmp(key,OUT_MESSAGE_SECURITY)==0)
+        {
+            file_name =(axis2_char_t *)rampart_get_rampart_configuration(env,msg_ctx,RAMPART_OUTFLOW_SECURITY_POLICY);
+            if(file_name)
+            {
+                rampart_context = build_rampart_context_from_file(env,file_name);
+                property = axis2_property_create(env);
+                axis2_property_set_value(property,env,rampart_context);
+                axis2_ctx_set_property(ctx,env,key,property);
+                return rampart_context;
+            }
+            else
+            {
+                AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
+                return NULL;
+            } 
+        }
+        else return NULL;
+    }
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL

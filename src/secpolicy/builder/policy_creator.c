@@ -28,12 +28,14 @@ rp_policy_create_from_file(
     if(!builder)
     {
         AXIOM_XML_READER_FREE(reader, env);
+        reader = NULL;
         return NULL;
     }
     document = axiom_stax_builder_get_document(builder, env);
     if(!document)
     {
         axiom_stax_builder_free(builder, env);
+        builder = NULL;
         return NULL;
     }
 
@@ -41,6 +43,7 @@ rp_policy_create_from_file(
     if(!root)
     {
         axiom_stax_builder_free(builder, env);
+        builder = NULL;
         AXIS2_LOG_INFO(env->log,"[rp][policy_creator] Root element is NULL");
         return NULL;
     }

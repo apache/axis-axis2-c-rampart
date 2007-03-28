@@ -133,7 +133,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
                 rampart_engine_shutdown(env,rampart_context);
                 return AXIS2_FAILURE;
         }
-        status = rampart_engine_shutdown(env,rampart_context);
+        /*status = rampart_engine_shutdown(env,rampart_context);*/
     }
     return status;
 }

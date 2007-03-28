@@ -138,124 +138,12 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     {
         AXIS2_LOG_INFO(env->log,
             "[rampart][rampart_in_handler] Security Header processing failed.");
+        rampart_engine_shutdown(env,rampart_context);
         return status;
     }        
-
+            
     /*This method will free the rampart_context*/
-    status = rampart_engine_shutdown(env,rampart_context);
-
-/*    
-    rampart_context_free(rampart_context,env);
-    rampart_context = NULL;
-*/   
+    /*status = rampart_engine_shutdown(env,rampart_context);*/
+    
     return status;
 }
-
-
-/*
-axis2_status_t AXIS2_CALL
-rampart_in_handler_invoke(struct axis2_handler *handler,
-        const axis2_env_t *env,
-        struct axis2_msg_ctx *msg_ctx)
-{
-    axiom_soap_envelope_t *soap_envelope = NULL;
-    axiom_soap_header_t *soap_header = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
-    axis2_param_t *param_in_flow_security = NULL;
-    axis2_ctx_t *ctx = NULL;
-    axis2_array_list_t *action_list = NULL;
-    axis2_param_t *param_action = NULL;
-    axiom_node_t *sec_node = NULL;
-    rampart_actions_t *actions = NULL;
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
-
-    soap_envelope =  axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
-
-    if (soap_envelope)
-    {
-
-        soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
-        if (soap_header)
-        {
-            AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "SOAP header found");
-            
-
-            actions = rampart_actions_create(env);
-
-
-            ctx = axis2_msg_ctx_get_base(msg_ctx, env);
-            param_in_flow_security = rampart_get_security_param(env, msg_ctx, 
-									RAMPART_INFLOW_SECURITY);
-
-            if (param_in_flow_security)
-            {
-                AXIS2_LOG_INFO(env->log, 
-				"[rampart][rampart_in_handler]Inflow Security found");
-
-
-                action_list = rampart_get_actions(env, ctx, 
-								param_in_flow_security);
-    
-                if (action_list)
-                {
-
-                    if (axis2_array_list_is_empty(action_list, env))
-                    {
-                        AXIS2_LOG_INFO(env->log, 
-						"[rampart][rampart_in_handler] No actions defined.");
-                    }
-
-                    param_action = (axis2_param_t*) axis2_array_list_get(action_list,
-						env, 0);
-
-                    if (param_action)
-                    {
-                        status = RAMPART_ACTIONS_POPULATE_FROM_PARAMS(actions, 
-									env, param_action);
-                    }else{
-                        AXIS2_LOG_INFO(env->log, 
-						"[rampart][rampart_in_handler] Cannot find first action element from the InflowSecurityParameter");
-                    }
-                }
-            }else{
-                AXIS2_LOG_INFO(env->log, 
-				"[rampart][rampart_in_handler] No Inflow Security in the paramter list.");
-                return AXIS2_SUCCESS;
-            }
-
-            status = RAMPART_ACTIONS_POPULATE_FROM_CTX(actions, env, ctx);            
-
-            sec_node = rampart_get_security_token(env, msg_ctx, soap_header);
-
-
-            status = rampart_set_security_processed_results_property(env, msg_ctx);
-            if(AXIS2_FAILURE == status){
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-					"[rampart][rampart_in_handler] Unable to set the security processed results");
-            }
-
-            if(!sec_node){
-                AXIS2_LOG_INFO(env->log, 
-					"[rampart][rampart_in_handler] No security header element.");
-                return AXIS2_SUCCESS;
-            
-            }
-
-    
-            status = rampart_shp_process_message(env, msg_ctx, actions, 
-						soap_envelope, sec_node);
-            if (AXIS2_FAILURE == status)
-            {                
-                return AXIS2_FAILURE;
-            }                
-
-           
-
-        }else{ 
-            
-            return AXIS2_SUCCESS;
-        }
-    }
-    return status;}*/

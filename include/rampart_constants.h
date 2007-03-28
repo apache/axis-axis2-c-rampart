@@ -98,7 +98,10 @@ extern "C"
 #define RAMPART_OUTFLOW_SECURITY_POLICY             "OutflowSecurityPolicy"
 
 #define INFLOW_RAMPART_CONTEXT                      "InflowRampartContext"
-#define OUTFLOW_RAMPART_CONTEXT                     "OutflowRampartContext"    
+#define OUTFLOW_RAMPART_CONTEXT                     "OutflowRampartContext"   
+
+#define IN_MESSAGE_SECURITY                          "InMessageSecurity"
+#define OUT_MESSAGE_SECURITY                         "OutMessageSEcurity"                                
 /*
 #define RAMPART_PASSWORD_TEXT                       "passwordText"
 #define RAMPART_PASSWORD_DIGEST                     "passwordDigest"
