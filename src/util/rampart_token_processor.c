@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
  *
  */
 #include <stdio.h>
@@ -35,9 +35,9 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_process_security_token_reference(const axis2_env_t *env,
-    axiom_node_t *st_ref_node,
-    axiom_node_t *scope_node,/*Can be NULL for all other scenarios but the Direct Reference*/
-    oxs_x509_cert_t *cert)
+        axiom_node_t *st_ref_node,
+        axiom_node_t *scope_node,/*Can be NULL for all other scenarios but the Direct Reference*/
+        oxs_x509_cert_t *cert)
 {
     axis2_char_t *child_name = NULL;
     axiom_node_t *child_node = NULL;
@@ -64,10 +64,10 @@ rampart_token_process_security_token_reference(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_process_direct_ref(const axis2_env_t *env, 
-    axiom_node_t *ref_node,
-    axiom_node_t *scope_node,
-    oxs_x509_cert_t *cert)
+rampart_token_process_direct_ref(const axis2_env_t *env,
+                                 axiom_node_t *ref_node,
+                                 axiom_node_t *scope_node,
+                                 oxs_x509_cert_t *cert)
 {
     axis2_char_t *ref = NULL;
     axis2_char_t *ref_id = NULL;
@@ -95,20 +95,20 @@ rampart_token_process_direct_ref(const axis2_env_t *env,
     }else{
         status =  AXIS2_FAILURE;
     }
- 
+
     oxs_x509_cert_copy_to(_cert, env, cert);
     return status;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_process_embedded(const axis2_env_t *env,
-    axiom_node_t *embed_node,
-    oxs_x509_cert_t *cert)
+                               axiom_node_t *embed_node,
+                               oxs_x509_cert_t *cert)
 {
     axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *data = NULL;
     oxs_x509_cert_t *_cert = NULL;
-    
+
     data = oxs_axiom_get_node_content(env, embed_node);
     /*Process data*/
     _cert = oxs_key_mgr_load_x509_cert_from_string(env, data);
@@ -124,8 +124,8 @@ rampart_token_process_embedded(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_process_key_identifier(const axis2_env_t *env,
-    axiom_node_t *ki_node,
-    oxs_x509_cert_t *cert)
+                                     axiom_node_t *ki_node,
+                                     oxs_x509_cert_t *cert)
 {
     axis2_char_t *ki = NULL;
 
@@ -137,8 +137,8 @@ rampart_token_process_key_identifier(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_process_x509_data(const axis2_env_t *env,
-    axiom_node_t *x509_data_node,
-    oxs_x509_cert_t *cert)
+                                axiom_node_t *x509_data_node,
+                                oxs_x509_cert_t *cert)
 {
     return oxs_xml_key_process_X509Data(env, x509_data_node, cert);
 }

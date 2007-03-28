@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
  *
  */
 #include <stdio.h>
@@ -44,14 +44,14 @@
 
 AXIS2_EXTERN void* AXIS2_CALL
 rampart_load_module(const axis2_env_t *env,
-    axis2_char_t *module_name)
+                    axis2_char_t *module_name)
 {
     axis2_dll_desc_t *dll_desc = NULL;
     axis2_param_t *impl_info_param = NULL;
     void *ptr = NULL;
 
     dll_desc = axis2_dll_desc_create(env);
-     axis2_dll_desc_set_name(dll_desc, env, module_name);
+    axis2_dll_desc_set_name(dll_desc, env, module_name);
     impl_info_param = axis2_param_create(env, NULL, NULL);
     axis2_param_set_value(impl_info_param, env, dll_desc);
     axis2_class_loader_init(env);
@@ -68,10 +68,10 @@ rampart_load_module(const axis2_env_t *env,
 
 AXIS2_EXTERN rampart_credentials_status_t AXIS2_CALL
 rampart_call_credentials(const axis2_env_t *env,
-    rampart_credentials_t *cred_module,
-    axis2_msg_ctx_t *msg_ctx,
-    axis2_char_t **username,
-    axis2_char_t **password)
+                         rampart_credentials_t *cred_module,
+                         axis2_msg_ctx_t *msg_ctx,
+                         axis2_char_t **username,
+                         axis2_char_t **password)
 {
     rampart_credentials_status_t cred_status = RAMPART_CREDENTIALS_GENERAL_ERROR;
 
@@ -81,7 +81,7 @@ rampart_call_credentials(const axis2_env_t *env,
 
 AXIS2_EXTERN rampart_credentials_t* AXIS2_CALL
 rampart_load_credentials_module(const axis2_env_t *env,
-    axis2_char_t *cred_module_name)
+                                axis2_char_t *cred_module_name)
 {
     rampart_credentials_t *cred = NULL;
 
@@ -97,7 +97,7 @@ rampart_load_credentials_module(const axis2_env_t *env,
 
 AXIS2_EXTERN rampart_authn_provider_t* AXIS2_CALL
 rampart_load_auth_module(const axis2_env_t *env,
-    axis2_char_t *auth_module_name)
+                         axis2_char_t *auth_module_name)
 {
     rampart_authn_provider_t *authp = NULL;
 
@@ -113,13 +113,13 @@ rampart_load_auth_module(const axis2_env_t *env,
 
 AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
 rampart_authenticate_un_pw(const axis2_env_t *env,
-    rampart_authn_provider_t *authp,
-    const axis2_char_t *username,
-    const axis2_char_t *password,
-    const axis2_char_t *nonce,/*Can be NULL if plain text*/
-    const axis2_char_t *created,/*Can be NULL if plain text*/
-    const axis2_char_t *password_type,
-    axis2_msg_ctx_t *msg_ctx)
+                           rampart_authn_provider_t *authp,
+                           const axis2_char_t *username,
+                           const axis2_char_t *password,
+                           const axis2_char_t *nonce,/*Can be NULL if plain text*/
+                           const axis2_char_t *created,/*Can be NULL if plain text*/
+                           const axis2_char_t *password_type,
+                           axis2_msg_ctx_t *msg_ctx)
 {
     rampart_authn_provider_status_t auth_status = RAMPART_AUTHN_PROVIDER_GENERAL_ERROR;
 
@@ -139,7 +139,7 @@ rampart_authenticate_un_pw(const axis2_env_t *env,
 
 AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
 rampart_load_pwcb_module(const axis2_env_t *env,
-        axis2_char_t *callback_module_name)
+                         axis2_char_t *callback_module_name)
 {
     rampart_callback_t *cb = NULL;
 
@@ -157,8 +157,8 @@ rampart_load_pwcb_module(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_callback_password(const axis2_env_t *env,
-        rampart_callback_t *callback_module,
-        const axis2_char_t *username)
+                          rampart_callback_t *callback_module,
+                          const axis2_char_t *username)
 {
     axis2_char_t *password = NULL;
     void *cb_prop_val= NULL;
@@ -209,7 +209,7 @@ rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1_str, axis2_c
     axis2_date_time_t *dt1 = NULL;
     axis2_date_time_t *dt2 = NULL;
     axis2_date_time_comp_result_t res = AXIS2_DATE_TIME_COMP_RES_UNKNOWN;
-#if 0    
+#if 0
     int yyyy1, mm1, dd1, hh1, mi1, ss1, ml1;
     int yyyy2, mm2, dd2, hh2, mi2, ss2, ml2;
 #endif
@@ -282,7 +282,7 @@ rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1_str, axis2_c
     {
         return AXIS2_FAILURE;
     }
-     if (mi1 < mi2)
+    if (mi1 < mi2)
     {
         return AXIS2_SUCCESS;
     }

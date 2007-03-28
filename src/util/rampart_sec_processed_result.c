@@ -16,7 +16,7 @@
  */
 
 
-/* 
+/*
  *
  */
 #include <rampart_util.h>
@@ -28,9 +28,9 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_set_security_processed_result(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *key,
-        void *value)
+                                      axis2_msg_ctx_t *msg_ctx,
+                                      axis2_char_t *key,
+                                      void *value)
 {
     axis2_hash_t *sec_processed_results = NULL;
 
@@ -45,8 +45,8 @@ rampart_set_security_processed_result(const axis2_env_t *env,
 
 AXIS2_EXTERN void *AXIS2_CALL
 rampart_get_security_processed_result(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *key)
+                                      axis2_msg_ctx_t *msg_ctx,
+                                      axis2_char_t *key)
 {
     axis2_hash_t *sec_processed_results = NULL;
 
@@ -59,7 +59,7 @@ rampart_get_security_processed_result(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_set_security_processed_results_property(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx)
+        axis2_msg_ctx_t *msg_ctx)
 {
     axis2_hash_t *sec_processed_results = NULL;
     axis2_property_t *sec_processed_results_prop = NULL;
@@ -70,7 +70,7 @@ rampart_set_security_processed_results_property(const axis2_env_t *env,
 
     sec_processed_results = axis2_hash_make(env);
     sec_processed_results_prop = axis2_property_create(env);
-    
+
     axis2_property_set_value(sec_processed_results_prop, env, sec_processed_results);
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_SECURITY_PROCESSED_RESULTS, sec_processed_results_prop);
 
@@ -79,14 +79,14 @@ rampart_set_security_processed_results_property(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_hash_t* AXIS2_CALL
 rampart_get_all_security_processed_results(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx)
+        axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *sec_processed_results_prop = NULL;
     axis2_hash_t *sec_processed_results = NULL;
 
     sec_processed_results_prop =  axis2_msg_ctx_get_property(msg_ctx, env, RAMPART_SECURITY_PROCESSED_RESULTS);
     if(!sec_processed_results_prop){
-         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][spr] Cannot get %s from msg ctx ", RAMPART_SECURITY_PROCESSED_RESULTS);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][spr] Cannot get %s from msg ctx ", RAMPART_SECURITY_PROCESSED_RESULTS);
         return NULL;
     }
 
@@ -101,18 +101,18 @@ rampart_get_all_security_processed_results(const axis2_env_t *env,
 
 AXIS2_EXTERN void AXIS2_CALL
 rampart_print_security_processed_results_set(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx)
+        axis2_msg_ctx_t *msg_ctx)
 {
     axis2_hash_t *sec_processed_results = NULL;
     axis2_hash_index_t *hi = NULL;
     const void *key = NULL;
     void *val = NULL;
-    
+
     sec_processed_results = rampart_get_all_security_processed_results(env, msg_ctx);
     if(!sec_processed_results){
         return;
     }
-    
+
     for (hi = axis2_hash_first(sec_processed_results, env); hi; hi = axis2_hash_next(env, hi)) {
         axis2_hash_this(hi, &key, NULL, &val);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][spr] (key, val) %s = %s\n", (axis2_char_t*)key, (axis2_char_t*)val);

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
  *
  */
 #include <stdio.h>
@@ -34,9 +34,9 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_build_security_token_reference(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert,
-    rampart_token_build_pattern_t pattern)
+        axiom_node_t *parent,
+        oxs_x509_cert_t *cert,
+        rampart_token_build_pattern_t pattern)
 {
     axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *stref_node = NULL;
@@ -63,8 +63,8 @@ rampart_token_build_security_token_reference(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_build_embedded(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert)
+                             axiom_node_t *parent,
+                             oxs_x509_cert_t *cert)
 {
     axis2_char_t *data  = NULL;
     axis2_char_t *bst_id  = NULL;
@@ -78,14 +78,14 @@ rampart_token_build_embedded(const axis2_env_t *env,
     }
     embedded_node = oxs_token_build_embedded_element(env, parent, "ID");
     bst_id = "bst-id";/*TODO*/
-    bst_node =  oxs_token_build_binary_security_token_element(env, embedded_node, bst_id , OXS_VALUE_X509V3, OXS_ENCODING_BASE64BINARY, data);   
+    bst_node =  oxs_token_build_binary_security_token_element(env, embedded_node, bst_id , OXS_VALUE_X509V3, OXS_ENCODING_BASE64BINARY, data);
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_build_key_identifier(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert)
+                                   axiom_node_t *parent,
+                                   oxs_x509_cert_t *cert)
 {
     axiom_node_t *ki_node = NULL;
     axis2_char_t *ki =  NULL;
@@ -95,14 +95,14 @@ rampart_token_build_key_identifier(const axis2_env_t *env,
         return AXIS2_FAILURE;
     }
     ki_node = oxs_token_build_key_identifier_element(env, parent, OXS_ENCODING_BASE64BINARY,
-                                OXS_X509_SUBJ_KI, ki);
+              OXS_X509_SUBJ_KI, ki);
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_build_x509_data_x509_certificate(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert)
+        axiom_node_t *parent,
+        oxs_x509_cert_t *cert)
 {
     axiom_node_t *x509_data_node = NULL;
     axiom_node_t *x509_cert_node = NULL;
@@ -122,8 +122,8 @@ rampart_token_build_x509_data_x509_certificate(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_build_x509_data_issuer_serial(const axis2_env_t *env,
-     axiom_node_t *parent,
-     oxs_x509_cert_t *cert)
+        axiom_node_t *parent,
+        oxs_x509_cert_t *cert)
 {
     axiom_node_t *x509_data_node = NULL;
     axiom_node_t *x509_issuer_serial_node = NULL;

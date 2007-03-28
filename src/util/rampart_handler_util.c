@@ -33,43 +33,43 @@
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_get_property_from_ctx(const axis2_env_t *env,
-        axis2_ctx_t *ctx,
-        const axis2_char_t *key);
+                              axis2_ctx_t *ctx,
+                              const axis2_char_t *key);
 
 AXIS2_EXTERN axis2_param_t* AXIS2_CALL
 rampart_get_security_param(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *parameter);
+                           axis2_msg_ctx_t *msg_ctx,
+                           axis2_char_t *parameter);
 
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 rampart_get_security_token(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axiom_soap_header_t *soap_header);
+                           axis2_msg_ctx_t *msg_ctx,
+                           axiom_soap_header_t *soap_header);
 
 AXIS2_EXTERN void AXIS2_CALL
 rampart_create_fault_envelope(const axis2_env_t *env,
-        const axis2_char_t *sub_code,
-        const axis2_char_t *reason_text,
-        const axis2_char_t *detail_node_text,
-        axis2_msg_ctx_t *msg_ctx);
+                              const axis2_char_t *sub_code,
+                              const axis2_char_t *reason_text,
+                              const axis2_char_t *detail_node_text,
+                              axis2_msg_ctx_t *msg_ctx);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_validate_security_token(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axiom_node_t *sec_node);
+                                axis2_msg_ctx_t *msg_ctx,
+                                axiom_node_t *sec_node);
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_get_policy_location(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *param_name);
+                            axis2_msg_ctx_t *msg_ctx,
+                            axis2_char_t *param_name);
 
 /**********************end of header functions ****************************/
 
 
 axis2_char_t* AXIS2_CALL
 rampart_get_property_from_ctx(const axis2_env_t *env,
-        axis2_ctx_t *ctx,
-        const axis2_char_t *key)
+                              axis2_ctx_t *ctx,
+                              const axis2_char_t *key)
 {
     axis2_property_t* property = NULL;
     axis2_char_t* str_property = NULL;
@@ -89,8 +89,8 @@ rampart_get_property_from_ctx(const axis2_env_t *env,
 
 axis2_param_t* AXIS2_CALL
 rampart_get_security_param(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *parameter)
+                           axis2_msg_ctx_t *msg_ctx,
+                           axis2_char_t *parameter)
 {
     /*parameter can be either RAMPART_OUTFLOW_SECURITY or RAMPART_INFLOW_SECURITY*/
     axis2_param_t *param = NULL;
@@ -102,8 +102,8 @@ rampart_get_security_param(const axis2_env_t *env,
 
 axiom_node_t *AXIS2_CALL
 rampart_get_security_token(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axiom_soap_header_t *soap_header
+                           axis2_msg_ctx_t *msg_ctx,
+                           axiom_soap_header_t *soap_header
                           )
 {
     axis2_array_list_t *sec_headers = NULL;
@@ -152,10 +152,10 @@ rampart_get_security_token(const axis2_env_t *env,
 
 AXIS2_EXTERN void AXIS2_CALL
 rampart_create_fault_envelope(const axis2_env_t *env,
-        const axis2_char_t *sub_code,
-        const axis2_char_t *reason_text,
-        const axis2_char_t *detail_node_text,
-        axis2_msg_ctx_t *msg_ctx)
+                              const axis2_char_t *sub_code,
+                              const axis2_char_t *reason_text,
+                              const axis2_char_t *detail_node_text,
+                              axis2_msg_ctx_t *msg_ctx)
 {
     axiom_soap_envelope_t *envelope = NULL;
     int soap_version = AXIOM_SOAP12;
@@ -172,19 +172,19 @@ rampart_create_fault_envelope(const axis2_env_t *env,
     axiom_element_set_text(text_om_ele, env, detail_node_text, text_om_node);
 
     envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env,
-            "soapenv:Sender",
-            reason_text,
-            soap_version, sub_codes, text_om_node);
+               "soapenv:Sender",
+               reason_text,
+               soap_version, sub_codes, text_om_node);
 
-     axis2_msg_ctx_set_fault_soap_envelope(msg_ctx, env, envelope);
+    axis2_msg_ctx_set_fault_soap_envelope(msg_ctx, env, envelope);
     /*free sub codes*/
     return;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_validate_security_token(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axiom_node_t *sec_node)
+                                axis2_msg_ctx_t *msg_ctx,
+                                axiom_node_t *sec_node)
 {
     int num = 0;
     /*Check if there are multiple timestamp tokens*/
@@ -200,20 +200,20 @@ rampart_validate_security_token(const axis2_env_t *env,
 
 AXIS2_EXTERN void *AXIS2_CALL
 rampart_get_rampart_configuration(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *param_name)
-        
+                                  axis2_msg_ctx_t *msg_ctx,
+                                  axis2_char_t *param_name)
+
 {
     axis2_param_t *param_x_flow_security = NULL;
     void *value = NULL;
 
     param_x_flow_security = rampart_get_security_param(env, msg_ctx,
-                                    param_name);
-    
+                            param_name);
+
     if (!param_x_flow_security)
     {
         AXIS2_LOG_INFO(env->log,
-            "[rampart][rampart_handler_utils] %s parameter is not set.",param_x_flow_security);
+                       "[rampart][rampart_handler_utils] %s parameter is not set.",param_x_flow_security);
         return NULL;
     }
     value = axis2_param_get_value(param_x_flow_security, env);
@@ -224,7 +224,7 @@ rampart_get_rampart_configuration(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_is_rampart_engaged(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx)
+                           axis2_msg_ctx_t *msg_ctx)
 {
     struct axis2_svc *svc = NULL;
     axis2_array_list_t *engaged_modules = NULL;
@@ -238,16 +238,16 @@ rampart_is_rampart_engaged(const axis2_env_t *env,
     conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
     if(!conf_ctx)
     {
-         AXIS2_LOG_INFO(env->log, "[rampart][rhu] Conf context is NULL ");
-         return AXIS2_FALSE;
-    }    
+        AXIS2_LOG_INFO(env->log, "[rampart][rhu] Conf context is NULL ");
+        return AXIS2_FALSE;
+    }
     conf =  axis2_conf_ctx_get_conf(conf_ctx, env);
     if(!conf)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rhu] Cannot get the axis2 conf from conf context. ");
         return AXIS2_FALSE;
     }
-    
+
     engaged_modules =  axis2_conf_get_all_engaged_modules(conf, env);
     if(engaged_modules)
     {
@@ -259,18 +259,18 @@ rampart_is_rampart_engaged(const axis2_env_t *env,
             if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
                 return AXIS2_TRUE;
         }
-    }            
-/*If not engaed gloabally check whether it is engaged at service level.
- *And If service is not there check whether the rampart is enabled by 
- a previous invocation of a handler.*/
+    }
+    /*If not engaed gloabally check whether it is engaged at service level.
+     *And If service is not there check whether the rampart is enabled by 
+     a previous invocation of a handler.*/
 
     svc =  axis2_msg_ctx_get_svc(msg_ctx,env);
     if(!svc)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rhu] Service is NULL.");
         return axis2_conf_get_enable_security(conf,env);
-    }    
-            
+    }
+
     engaged_modules = axis2_svc_get_all_module_qnames(svc,env);
     if(engaged_modules)
     {
@@ -280,10 +280,10 @@ rampart_is_rampart_engaged(const axis2_env_t *env,
             qname = (axis2_qname_t *) axis2_array_list_get(engaged_modules,env,i);
             local_name = axis2_qname_get_localpart(qname,env);
             if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
-            {                
+            {
                 axis2_conf_set_enable_security(conf,env,AXIS2_TRUE);
                 return AXIS2_TRUE;
-            }                
+            }
         }
     }
     return AXIS2_FALSE;

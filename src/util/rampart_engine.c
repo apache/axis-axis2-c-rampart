@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/* 
+/*
  *
  */
 
@@ -27,25 +27,25 @@
 
 rampart_context_t *AXIS2_CALL
 get_rampart_context_with_secpolicy_from_om(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env);
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env);
 
 rampart_context_t *AXIS2_CALL
 build_rampart_context_from_file(
-            const axis2_env_t *env,
-            axis2_char_t *file_name);
+    const axis2_env_t *env,
+    axis2_char_t *file_name);
 
 rampart_context_t *AXIS2_CALL
 get_rampart_context_in_server_side(
-            const axis2_env_t *env,
-            axis2_msg_ctx_t *msg_ctx,
-            const axis2_char_t *key);
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    const axis2_char_t *key);
 
 
 AXIS2_EXTERN rampart_context_t* AXIS2_CALL
-rampart_engine_init(const axis2_env_t *env, 
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_bool_t is_inflow)
+rampart_engine_init(const axis2_env_t *env,
+                    axis2_msg_ctx_t *msg_ctx,
+                    axis2_bool_t is_inflow)
 {
 
     axis2_char_t *file_name = NULL;
@@ -58,7 +58,7 @@ rampart_engine_init(const axis2_env_t *env,
 
     if(is_inflow)
     {
-        value = rampart_get_rampart_configuration(env,msg_ctx,INFLOW_RAMPART_CONTEXT);            
+        value = rampart_get_rampart_configuration(env,msg_ctx,INFLOW_RAMPART_CONTEXT);
         if(value)
         {
             rampart_context = (rampart_context_t *)value;
@@ -74,9 +74,9 @@ rampart_engine_init(const axis2_env_t *env,
             if(axis2_msg_ctx_get_server_side(msg_ctx,env))
             {
                 return get_rampart_context_in_server_side(env,msg_ctx,IN_MESSAGE_SECURITY);
-            }  
+            }
             else
-            {              
+            {
                 value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
                 if(!value)
                 {
@@ -84,11 +84,11 @@ rampart_engine_init(const axis2_env_t *env,
                     return NULL;
                 }
                 file_name = (axis2_char_t *)value;
-                return build_rampart_context_from_file(env,file_name);                        
-            }            
+                return build_rampart_context_from_file(env,file_name);
+            }
         }
     }
-    
+
     else
     {
         value = rampart_get_rampart_configuration(env,msg_ctx,OUTFLOW_RAMPART_CONTEXT);
@@ -125,8 +125,8 @@ rampart_engine_init(const axis2_env_t *env,
 
 rampart_context_t *AXIS2_CALL
 get_rampart_context_with_secpolicy_from_om(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     axiom_node_t *policy_node = NULL;
     rp_secpolicy_t *secpolicy = NULL;
@@ -149,21 +149,21 @@ get_rampart_context_with_secpolicy_from_om(
 
 rampart_context_t *AXIS2_CALL
 build_rampart_context_from_file(
-            const axis2_env_t *env,
-            axis2_char_t *file_name)
+    const axis2_env_t *env,
+    axis2_char_t *file_name)
 {
     rp_secpolicy_t *secpolicy = NULL;
-    rampart_context_t *rampart_context = NULL;    
+    rampart_context_t *rampart_context = NULL;
     rampart_callback_t* password_callback_module = NULL;
     rampart_authn_provider_t *authn_provider = NULL;
     axis2_char_t *pwcb_module_name = NULL;
     axis2_char_t *authn_provider_name = NULL;
-    axis2_status_t status = AXIS2_SUCCESS;   
+    axis2_status_t status = AXIS2_SUCCESS;
 
     if(!file_name)
     {
         AXIS2_LOG_INFO(env->log,
-         "[rampart][rampart_Engine] No Security in the flow. So nothing to do");
+                       "[rampart][rampart_Engine] No Security in the flow. So nothing to do");
         return NULL;
     }
     secpolicy = rp_policy_create_from_file(env,file_name);
@@ -219,9 +219,9 @@ build_rampart_context_from_file(
 
 rampart_context_t *AXIS2_CALL
 get_rampart_context_in_server_side(
-            const axis2_env_t *env,
-            axis2_msg_ctx_t *msg_ctx,
-            const axis2_char_t *key)
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    const axis2_char_t *key)
 {
 
     axis2_conf_ctx_t *conf_ctx = NULL;
@@ -231,10 +231,10 @@ get_rampart_context_in_server_side(
     conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
     if(!conf_ctx)
     {
-         AXIS2_LOG_INFO(env->log, "[rampart][engine] Conf context is NULL ");
-         return NULL;
+        AXIS2_LOG_INFO(env->log, "[rampart][engine] Conf context is NULL ");
+        return NULL;
     }
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);        
+    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
     if(!ctx)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][engine] axis2 context is NULL ");
@@ -282,7 +282,7 @@ get_rampart_context_in_server_side(
             {
                 AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
                 return NULL;
-            } 
+            }
         }
         else return NULL;
     }
@@ -290,16 +290,16 @@ get_rampart_context_in_server_side(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_engine_shutdown(const axis2_env_t *env,
-                rampart_context_t *rampart_context)
+                        rampart_context_t *rampart_context)
 {
 
-/*  rp_secpolicy_t *secpolicy = NULL;*/
+    /*  rp_secpolicy_t *secpolicy = NULL;*/
     axis2_status_t status = AXIS2_FAILURE;
 
-/*  secpolicy = rampart_context_get_secpolicy(rampart_context,env);
-    status = rp_secpolicy_free(secpolicy,env);
-    secpolicy = NULL;
-*/
+    /*  secpolicy = rampart_context_get_secpolicy(rampart_context,env);
+        status = rp_secpolicy_free(secpolicy,env);
+        secpolicy = NULL;
+    */
     status = rampart_context_free(rampart_context,env);
     rampart_context = NULL;
     return status;

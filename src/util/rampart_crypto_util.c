@@ -36,7 +36,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axis2_env_t *env
         const axis2_char_t *password)
 {
     char* input = NULL;
-    axis2_char_t* digest = NULL;   
+    axis2_char_t* digest = NULL;
     axis2_char_t* decoded_nonce = NULL;
     int decoded_nonce_length = 0;
 
@@ -65,12 +65,12 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axis2_env_t *env
     }
     else
     {/*If all nonce, created and password are present*/
-        input = AXIS2_MALLOC(env->allocator, 
-						decoded_nonce_length + axis2_strlen(created) + axis2_strlen(password) + 1);
+        input = AXIS2_MALLOC(env->allocator,
+                             decoded_nonce_length + axis2_strlen(created) + axis2_strlen(password) + 1);
         sprintf(input, "%s%s%s", decoded_nonce, created, password);
     }
-    
-    digest = openssl_sha1(env, input, axis2_strlen(input)); 
+
+    digest = openssl_sha1(env, input, axis2_strlen(input));
     AXIS2_FREE(env->allocator, input);
     AXIS2_FREE(env->allocator, decoded_nonce);
     return digest;

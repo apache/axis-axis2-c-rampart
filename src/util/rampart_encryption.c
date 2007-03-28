@@ -38,10 +38,10 @@
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_enc_encrypt_message(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    rampart_context_t *rampart_context,
-    axiom_soap_envelope_t *soap_envelope,
-    axiom_node_t *sec_node)
+                            axis2_msg_ctx_t *msg_ctx,
+                            rampart_context_t *rampart_context,
+                            axiom_soap_envelope_t *soap_envelope,
+                            axiom_node_t *sec_node)
 {
     axis2_array_list_t *nodes_to_encrypt = NULL;
     axis2_array_list_t *id_list = NULL;
@@ -54,7 +54,7 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     oxs_key_t *session_key = NULL;
     oxs_asym_ctx_t *asym_ctx = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
-    int token_type = 0;   
+    int token_type = 0;
     rp_property_t *token = NULL;
     axis2_char_t *enc_user = NULL;
     rampart_callback_t *password_callback = NULL;
@@ -72,14 +72,14 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
         return AXIS2_SUCCESS;
-    }                            
+    }
     /*Now we have to check whether a token is specified.*/
     token = rampart_context_get_token(rampart_context,env,AXIS2_TRUE,server_side);
     if(!token)
     {
         AXIS2_LOG_INFO(env->log,"[rampart][rampart_encryption] Encryption Token is not specified");
         return AXIS2_SUCCESS;
-    }   
+    }
     token_type = rp_property_get_type(token,env);
 
     if(!rampart_context_is_token_type_supported(token_type,env))
@@ -89,17 +89,17 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     {
         AXIS2_LOG_INFO(env->log,"[rampart][rampart_encryption] We still do not support derived keys");
         return AXIS2_FAILURE;
-    }        
+    }
     /*Get the symmetric encryption algorithm*/
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context,env);
     /*If not specified set the default*/
     if(!enc_sym_algo ||  (0 == axis2_strcmp(enc_sym_algo, ""))){
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No symmetric algorithm is specified for encryption. Using the default");
-        enc_sym_algo = OXS_DEFAULT_SYM_ALGO;    
+        enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
     /*Generate the  session key*/
     session_key = oxs_key_create(env);
-    status = oxs_key_for_algo(session_key, env, enc_sym_algo); 
+    status = oxs_key_for_algo(session_key, env, enc_sym_algo);
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
@@ -115,7 +115,7 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
         oxs_ctx_t *enc_ctx = NULL;
         axis2_char_t *id = NULL;
         axis2_status_t enc_status = AXIS2_FAILURE;
-        
+
         /*Get the node to be encrypted*/
         node_to_enc = (axiom_node_t *)axis2_array_list_get(nodes_to_encrypt, env, i);
         if(!node_to_enc){
@@ -139,19 +139,19 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     }
     /*Get the asymmetric key encryption algorithm*/
     enc_asym_algo = rampart_context_get_enc_asym_algo(rampart_context,env);
-    
+
     /*Get encryption key identifier*/
-    /*First we should check whether we include the token in the 
+    /*First we should check whether we include the token in the
      *message.*/
 
     if(rampart_context_is_token_include(rampart_context,token,token_type,server_side,env))
     {
         eki = RAMPART_STR_DIRECT_REFERENCE;
-    }            
+    }
     else
-    {        
+    {
         eki = rampart_context_get_key_identifier(rampart_context,token,env);
-    }        
+    }
     if(!eki)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No mechanism for attaching the token.");
@@ -171,14 +171,14 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
         if(type == AXIS2_KEY_TYPE_PEM)
         {
             oxs_asym_ctx_set_format(asym_ctx, env, OXS_ASYM_CTX_FORMAT_PEM);
-            oxs_asym_ctx_set_pem_buf(asym_ctx, env, (axis2_char_t *)key_buf);            
-        }            
-    }        
-    
+            oxs_asym_ctx_set_pem_buf(asym_ctx, env, (axis2_char_t *)key_buf);
+        }
+    }
+
     /*Buffer is null load from the file*/
     else
     {
-        certificate_file = rampart_context_get_receiver_certificate_file(rampart_context,env);        
+        certificate_file = rampart_context_get_receiver_certificate_file(rampart_context,env);
         oxs_asym_ctx_set_file_name(asym_ctx, env, certificate_file);
         oxs_asym_ctx_set_format(asym_ctx, env, oxs_util_get_format_by_file_extension(env, certificate_file));
 
@@ -216,7 +216,7 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     oxs_asym_ctx_set_operation(asym_ctx, env, OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
     oxs_asym_ctx_set_st_ref_pattern(asym_ctx, env, eki);
     /*Encrypt the session key*/
-    status = oxs_xml_enc_encrypt_key(env, asym_ctx, sec_node, session_key, id_list);    
+    status = oxs_xml_enc_encrypt_key(env, asym_ctx, sec_node, session_key, id_list);
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }

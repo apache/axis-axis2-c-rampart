@@ -51,19 +51,19 @@ struct rampart_context_t
     /*This is used in callback functions.*/
     void *ctx;
 
-            
+
 };
 
-/*void rampart_context_set_callback_fn(axis2_env_t *env, 
+/*void rampart_context_set_callback_fn(axis2_env_t *env,
                                 axis2_char_t *(*callback)(
                                     axis2_env_t  *env, 
                                     axis2_char_t *user ,
                                     void *ctx), void *ctx);
-
+ 
 */
 /*private functions*/
 
-rp_symmetric_asymmetric_binding_commons_t 
+rp_symmetric_asymmetric_binding_commons_t
 *rampart_context_get_symmetric_asymmetric_binding_commons(
     rampart_context_t *rampart_context,
     const axis2_env_t *env);
@@ -114,7 +114,7 @@ rampart_context_get_key_identifier_from_wss(
 
 
 
-AXIS2_EXTERN rampart_context_t *AXIS2_CALL 
+AXIS2_EXTERN rampart_context_t *AXIS2_CALL
 rampart_context_create(const axis2_env_t *env)
 {
     rampart_context_t *rampart_context = NULL;
@@ -122,7 +122,7 @@ rampart_context_create(const axis2_env_t *env)
     AXIS2_ENV_CHECK(env, NULL);
 
     rampart_context =  (rampart_context_t *) AXIS2_MALLOC (env->allocator,
-    sizeof (rampart_context_t));
+                       sizeof (rampart_context_t));
 
     if(rampart_context == NULL)
     {
@@ -157,7 +157,7 @@ rampart_context_create(const axis2_env_t *env)
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_free(rampart_context_t *rampart_context,
-        const axis2_env_t *env)
+                     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -180,8 +180,8 @@ rampart_context_free(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_policy_node(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axiom_node_t *policy_node)
+                                const axis2_env_t *env,
+                                axiom_node_t *policy_node)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,policy_node,AXIS2_FAILURE);
@@ -192,10 +192,10 @@ rampart_context_set_policy_node(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_prv_key(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            void *prv_key)
+                            const axis2_env_t *env,
+                            void *prv_key)
 {
-    
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,prv_key,AXIS2_FAILURE);
 
@@ -205,8 +205,8 @@ rampart_context_set_prv_key(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_prv_key_type(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_key_type_t type)
+                                 const axis2_env_t *env,
+                                 axis2_key_type_t type)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
@@ -217,8 +217,8 @@ rampart_context_set_prv_key_type(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_certificate(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            void *certificate)
+                                const axis2_env_t *env,
+                                void *certificate)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,certificate,AXIS2_FAILURE);
@@ -229,8 +229,8 @@ rampart_context_set_certificate(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_certificate_type(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_key_type_t type)
+                                     const axis2_env_t *env,
+                                     axis2_key_type_t type)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
@@ -241,8 +241,8 @@ rampart_context_set_certificate_type(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            void *receiver_certificate)
+        const axis2_env_t *env,
+        void *receiver_certificate)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,receiver_certificate,AXIS2_FAILURE);
@@ -253,8 +253,8 @@ rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_receiver_certificate_type(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_key_type_t type)
+        const axis2_env_t *env,
+        axis2_key_type_t type)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
@@ -265,8 +265,8 @@ rampart_context_set_receiver_certificate_type(rampart_context_t *rampart_context
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_user(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_char_t *user)
+                         const axis2_env_t *env,
+                         axis2_char_t *user)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -279,8 +279,8 @@ rampart_context_set_user(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_password(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_char_t *password)
+                             const axis2_env_t *env,
+                             axis2_char_t *password)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -293,8 +293,8 @@ rampart_context_set_password(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_prv_key_password(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_char_t *prv_key_password)
+                                     const axis2_env_t *env,
+                                     axis2_char_t *prv_key_password)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -306,9 +306,9 @@ rampart_context_set_prv_key_password(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            password_callback_fn pwcb_function,
-            void *ctx)
+                                  const axis2_env_t *env,
+                                  password_callback_fn pwcb_function,
+                                  void *ctx)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,pwcb_function,AXIS2_FAILURE);
@@ -320,8 +320,8 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_password_type(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            axis2_char_t *password_type)
+                                  const axis2_env_t *env,
+                                  axis2_char_t *password_type)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -334,8 +334,8 @@ rampart_context_set_password_type(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_ttl(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            int ttl)
+                        const axis2_env_t *env,
+                        int ttl)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -351,18 +351,18 @@ rampart_context_set_ttl(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 rampart_context_get_policy_node(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
-   
-    return rampart_context->policy_node; 
+
+    return rampart_context->policy_node;
 }
 
 AXIS2_EXTERN void *AXIS2_CALL
 rampart_context_get_prv_key(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -371,8 +371,8 @@ rampart_context_get_prv_key(
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
 rampart_context_get_prv_key_type(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -381,8 +381,8 @@ rampart_context_get_prv_key_type(
 
 AXIS2_EXTERN void *AXIS2_CALL
 rampart_context_get_certificate(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -391,8 +391,8 @@ rampart_context_get_certificate(
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
 rampart_context_get_certificate_type(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -402,8 +402,8 @@ rampart_context_get_certificate_type(
 
 AXIS2_EXTERN void *AXIS2_CALL
 rampart_context_get_receiver_certificate(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -412,8 +412,8 @@ rampart_context_get_receiver_certificate(
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
 rampart_context_get_receiver_certificate_type(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -424,8 +424,8 @@ rampart_context_get_receiver_certificate_type(
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_user(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -434,8 +434,8 @@ rampart_context_get_user(
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_password(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -444,8 +444,8 @@ rampart_context_get_password(
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_prv_key_password(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -454,8 +454,8 @@ rampart_context_get_prv_key_password(
 
 AXIS2_EXTERN password_callback_fn AXIS2_CALL
 rampart_context_get_pwcb_function(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -464,8 +464,8 @@ rampart_context_get_pwcb_function(
 
 AXIS2_EXTERN void* AXIS2_CALL
 rampart_context_get_ctx(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -474,8 +474,8 @@ rampart_context_get_ctx(
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_context_get_ttl(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
 
@@ -484,8 +484,8 @@ rampart_context_get_ttl(
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_password_type(
-            rampart_context_t *rampart_context,
-            const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env,NULL);
 
@@ -500,14 +500,14 @@ rampart_context_get_secpolicy(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     return rampart_context->secpolicy;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_secpolicy(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            rp_secpolicy_t *secpolicy)
+                              const axis2_env_t *env,
+                              rp_secpolicy_t *secpolicy)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,secpolicy,AXIS2_FAILURE);
@@ -523,15 +523,15 @@ rampart_context_get_password_callback(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     return rampart_context->password_callback_module;
 }
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_password_callback(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            rampart_callback_t *password_callback_module)
+                                      const axis2_env_t *env,
+                                      rampart_callback_t *password_callback_module)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,password_callback_module,AXIS2_FAILURE);
@@ -540,7 +540,7 @@ rampart_context_set_password_callback(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
-/*The 4 functions below deals with setting and getting authentication 
+/*The 4 functions below deals with setting and getting authentication
  *module function pointers */
 
 AXIS2_EXTERN auth_password_func AXIS2_CALL
@@ -549,15 +549,15 @@ rampart_context_get_auth_password_function(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     return rampart_context->authenticate_with_password;
 }
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_auth_password_function(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            auth_password_func authenticate_with_password)
+        const axis2_env_t *env,
+        auth_password_func authenticate_with_password)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,authenticate_with_password,AXIS2_FAILURE);
@@ -574,15 +574,15 @@ rampart_context_get_auth_digest_function(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     return rampart_context->authenticate_with_digest;
 }
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_auth_digest_function(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            auth_digest_func authenticate_with_digest)
+        const axis2_env_t *env,
+        auth_digest_func authenticate_with_digest)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,authenticate_with_digest,AXIS2_FAILURE);
@@ -597,14 +597,14 @@ rampart_context_get_authn_provider(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     return rampart_context->authn_provider;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_authn_provider(rampart_context_t *rampart_context,
-            const axis2_env_t *env,
-            rampart_authn_provider_t *authn_provider)
+                                   const axis2_env_t *env,
+                                   rampart_authn_provider_t *authn_provider)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,authn_provider,AXIS2_FAILURE);
@@ -619,7 +619,7 @@ rampart_context_get_require_timestamp(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    
+
     return rampart_context->require_timestamp;
 }
 
@@ -629,7 +629,7 @@ rampart_context_get_require_ut(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    
+
     return rampart_context->require_ut;
 }
 
@@ -646,10 +646,10 @@ rampart_context_get_binding_type(
     if(!property)
         return -1;
 
-    return rp_property_get_type(property,env);   
+    return rp_property_get_type(property,env);
 }
 
-rp_symmetric_asymmetric_binding_commons_t 
+rp_symmetric_asymmetric_binding_commons_t
 *rampart_context_get_symmetric_asymmetric_binding_commons(
     rampart_context_t *rampart_context,
     const axis2_env_t *env)
@@ -681,7 +681,7 @@ rp_symmetric_asymmetric_binding_commons_t
         return NULL;
 }
 
-rp_binding_commons_t 
+rp_binding_commons_t
 *rampart_context_get_binding_commons(
     rampart_context_t *rampart_context,
     const axis2_env_t *env)
@@ -718,7 +718,7 @@ rp_binding_commons_t
             return NULL;
 
         return rp_symmetric_asymmetric_binding_commons_get_binding_commons(sym_asym_commons,env);
-        
+
     }
     else if(rp_property_get_type(property,env)==RP_BINDING_TRANSPORT)
     {
@@ -734,7 +734,7 @@ rp_binding_commons_t
 }
 /*supporting tokens may contain under binding*/
 
-rp_supporting_tokens_t  
+rp_supporting_tokens_t
 *rampart_context_get_signed_supporting_from_binding(
     rampart_context_t *rampart_context,
     const axis2_env_t *env)
@@ -743,7 +743,7 @@ rp_supporting_tokens_t
     commons = rampart_context_get_binding_commons(rampart_context,env);
     if(!commons)
         return NULL;
-    return rp_binding_commons_get_signed_supporting_tokens(commons,env);     
+    return rp_binding_commons_get_signed_supporting_tokens(commons,env);
 }
 
 axis2_bool_t
@@ -759,8 +759,8 @@ rampart_context_validate_ut(
     {
         inclusion = rp_username_token_get_inclusion(username_token,env);
         if((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-           (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-           (axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0))
+                (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                (axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0))
             return bval;
         else
             bval = AXIS2_FALSE;
@@ -770,7 +770,7 @@ rampart_context_validate_ut(
 
 
 
-axis2_bool_t 
+axis2_bool_t
 rampart_context_use_username_token(
     rp_supporting_tokens_t *signed_supporting,
     const axis2_env_t *env)
@@ -788,12 +788,12 @@ rampart_context_use_username_token(
         {
             rp_property_t *token = NULL;
             token = (rp_property_t *)
-                   axis2_array_list_get(array_list,env, i);
+                    axis2_array_list_get(array_list,env, i);
             if (token)
             {
                 if(rp_property_get_type(token,env)==RP_TOKEN_USERNAME)
                 {
-                    rp_username_token_t *username_token = 
+                    rp_username_token_t *username_token =
                         (rp_username_token_t *)rp_property_get_value(token,env);
                     bvalidate = rampart_context_validate_ut(username_token,env);
                     break;
@@ -847,12 +847,12 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
             {
                 node = axiom_soap_header_block_get_base_node(header_block,env);
                 if(node)
-                {    
+                {
                     axis2_array_list_add(nodes_to_encrypt_or_sign,env,node);
                     return AXIS2_SUCCESS;
                 }
             }
-            
+
         }
     }
     else if(axis2_strcmp(local_name,"Security")==0)
@@ -871,7 +871,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
             {
                 axiom_element_t *ret_node_ele = NULL;
                 ret_node_ele = (axiom_element_t *)
-                           AXIOM_NODE_GET_DATA_ELEMENT(ret_node, env);
+                               AXIOM_NODE_GET_DATA_ELEMENT(ret_node, env);
                 if(ret_node_ele)
                 {
                     axiom_namespace_t *ns = NULL;
@@ -886,10 +886,10 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
                             return AXIS2_SUCCESS;
                         }
 
-                    }                
+                    }
 
                 }
-        
+
             }
         }
     }
@@ -897,10 +897,10 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
 }
 
 
-rp_algorithmsuite_t *AXIS2_CALL 
+rp_algorithmsuite_t *AXIS2_CALL
 rampart_context_get_algorithmsuite(
-        rampart_context_t *rampart_context,
-        const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     rp_binding_commons_t *binding_commons = NULL;
 
@@ -914,19 +914,19 @@ rampart_context_get_algorithmsuite(
     return rp_binding_commons_get_algorithmsuite(binding_commons,env);
 }
 
-axis2_char_t *AXIS2_CALL 
+axis2_char_t *AXIS2_CALL
 rampart_context_get_key_identifier_from_wss(
-        rampart_context_t *rampart_context,
-        const axis2_env_t *env)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     rp_property_t *wss = NULL;
     axis2_char_t *identifier = NULL;
-             
+
     wss = rp_secpolicy_get_wss(rampart_context->secpolicy,env);
     if(!wss)
     {
-        AXIS2_LOG_INFO(env->log,"Problem identifying the key Identifier." );        
-        return identifier;    
+        AXIS2_LOG_INFO(env->log,"Problem identifying the key Identifier." );
+        return identifier;
     }
 
     if(rp_property_get_type(wss,env)==RP_WSS_WSS10)
@@ -935,7 +935,7 @@ rampart_context_get_key_identifier_from_wss(
         wss10 = rp_property_get_value(wss,env);
         if(!wss10)
             return NULL;
-            
+
         if(rp_wss10_get_must_support_ref_key_identifier(wss10,env))
             identifier = RAMPART_STR_KEY_IDENTIFIER;
         else if(rp_wss10_get_must_support_ref_issuer_serial(wss10,env))
@@ -946,8 +946,8 @@ rampart_context_get_key_identifier_from_wss(
             identifier = RAMPART_STR_EMBEDDED;
         else
             identifier = NULL;
-        
-        return identifier;                                         
+
+        return identifier;
     }
     else if(rp_property_get_type(wss,env)==RP_WSS_WSS11)
     {
@@ -955,7 +955,7 @@ rampart_context_get_key_identifier_from_wss(
         wss11 = rp_property_get_value(wss,env);
         if(!wss11)
             return NULL;
-            
+
         if(rp_wss11_get_must_support_ref_key_identifier(wss11,env))
             identifier = RAMPART_STR_KEY_IDENTIFIER;
         else if(rp_wss11_get_must_support_ref_issuer_serial(wss11,env))
@@ -969,19 +969,19 @@ rampart_context_get_key_identifier_from_wss(
         else if(rp_wss11_get_must_support_ref_encryptedkey(wss11,env))
             identifier = RAMPART_STR_ENCRYPTED_KEY;
         else
-            identifier = NULL;                                         
+            identifier = NULL;
 
         return identifier;
     }
     else return NULL;
-} 
+}
 
 
-axis2_bool_t AXIS2_CALL 
+axis2_bool_t AXIS2_CALL
 rampart_context_is_key_identifier_supported(
-        rp_property_t *token,
-        rampart_context_t *rampart_context,
-        const axis2_env_t *env)
+    rp_property_t *token,
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     rp_property_t *wss = NULL;
     rp_wss10_t *wss10 = NULL;
@@ -1002,7 +1002,7 @@ rampart_context_is_key_identifier_supported(
     {
         wss11 = rp_property_get_value(wss,env);
     }
-        
+
     if(rp_property_get_type(token,env)==RP_TOKEN_X509)
     {
         rp_x509_token_t *x509_token = NULL;
@@ -1029,11 +1029,11 @@ rampart_context_is_key_identifier_supported(
 
 }
 
-axis2_bool_t AXIS2_CALL 
+axis2_bool_t AXIS2_CALL
 rampart_context_is_issuer_serial_supported(
-        rp_property_t *token,
-        rampart_context_t *rampart_context,
-        const axis2_env_t *env)
+    rp_property_t *token,
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     rp_property_t *wss = NULL;
     rp_wss10_t *wss10 = NULL;
@@ -1054,7 +1054,7 @@ rampart_context_is_issuer_serial_supported(
     {
         wss11 = rp_property_get_value(wss,env);
     }
-        
+
     if(rp_property_get_type(token,env)==RP_TOKEN_X509)
     {
         rp_x509_token_t *x509_token = NULL;
@@ -1081,11 +1081,11 @@ rampart_context_is_issuer_serial_supported(
 
 }
 
-axis2_bool_t AXIS2_CALL 
+axis2_bool_t AXIS2_CALL
 rampart_context_is_embedded_token_supported(
-        rp_property_t *token,
-        rampart_context_t *rampart_context,
-        const axis2_env_t *env)
+    rp_property_t *token,
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env)
 {
     rp_property_t *wss = NULL;
     rp_wss10_t *wss10 = NULL;
@@ -1106,7 +1106,7 @@ rampart_context_is_embedded_token_supported(
     {
         wss11 = rp_property_get_value(wss,env);
     }
-        
+
     if(rp_property_get_type(token,env)==RP_TOKEN_X509)
     {
         rp_x509_token_t *x509_token = NULL;
@@ -1148,7 +1148,7 @@ rampart_context_is_include_timestamp(
 
     if(!binding_commons)
         return AXIS2_FALSE;
-    
+
     rampart_context->require_timestamp = rp_binding_commons_get_include_timestamp(binding_commons,env);
 
     return rampart_context->require_timestamp;
@@ -1175,7 +1175,7 @@ rampart_context_is_include_username_token(
     }
     /*Now we have signed supporting tokens*/
     /*Get the user name token if available and check the validity*/
-    rampart_context->require_ut = rampart_context_use_username_token(signed_supporting,env); 
+    rampart_context->require_ut = rampart_context_use_username_token(signed_supporting,env);
     return rampart_context->require_ut;
 }
 
@@ -1189,7 +1189,7 @@ rampart_context_set_user_from_file(
     rp_rampart_config_t *config = NULL;
     config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
     if(!config)
-        return AXIS2_FAILURE;    
+        return AXIS2_FAILURE;
 
     rampart_context->user = rp_rampart_config_get_user(config,env);
     return AXIS2_SUCCESS;
@@ -1230,7 +1230,7 @@ rampart_context_set_password_type_from_file(
     rp_rampart_config_t *config = NULL;
     config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
     if(!config)
-        return AXIS2_FAILURE;    
+        return AXIS2_FAILURE;
 
     rampart_context->password_type = rp_rampart_config_get_password_type(config,env);
     return AXIS2_SUCCESS;
@@ -1251,7 +1251,7 @@ rampart_context_set_ttl_from_file(
     if(!time_to_live)
         rampart_context->ttl = 300;
     else
-        rampart_context->ttl = axis2_atoi(time_to_live);    
+        rampart_context->ttl = axis2_atoi(time_to_live);
 
     return AXIS2_SUCCESS;
 }
@@ -1269,10 +1269,10 @@ rampart_context_is_encrypt_before_sign(
         return AXIS2_FALSE;
     else
     {
-        protection_order = rp_symmetric_asymmetric_binding_commons_get_protection_order(sym_asym_commons,env);       
+        protection_order = rp_symmetric_asymmetric_binding_commons_get_protection_order(sym_asym_commons,env);
         if(!protection_order || axis2_strcmp(protection_order,RP_SIGN_BEFORE_ENCRYPTING)==0)
             return AXIS2_FALSE;
- 
+
         else if(axis2_strcmp(protection_order,RP_ENCRYPT_BEFORE_SIGNING)==0)
             return AXIS2_TRUE;
     }
@@ -1289,7 +1289,7 @@ rampart_context_get_nodes_to_encrypt(
     axiom_soap_envelope_t *soap_envelope,
     axis2_array_list_t *nodes_to_encrypt)
 {
-    
+
     return rampart_context_get_nodes_to_protect(rampart_context,env,soap_envelope,nodes_to_encrypt,AXIS2_FALSE);
 }
 
@@ -1300,7 +1300,7 @@ rampart_context_get_nodes_to_sign(
     axiom_soap_envelope_t *soap_envelope,
     axis2_array_list_t *nodes_to_sign)
 {
-    
+
     return rampart_context_get_nodes_to_protect(rampart_context,env,soap_envelope,nodes_to_sign,AXIS2_TRUE);
 }
 
@@ -1314,7 +1314,7 @@ rampart_context_get_nodes_to_protect(
     axis2_array_list_t *nodes_to_sign_or_encrypt,
     axis2_bool_t is_sign)
 {
-    rp_signed_encrypted_parts_t *signed_encrypted_parts = NULL;    
+    rp_signed_encrypted_parts_t *signed_encrypted_parts = NULL;
     axis2_array_list_t *parts = NULL;
     axis2_status_t status = AXIS2_FAILURE;
 
@@ -1322,10 +1322,10 @@ rampart_context_get_nodes_to_protect(
         signed_encrypted_parts = rp_secpolicy_get_signed_parts(rampart_context->secpolicy,env);
     else
         signed_encrypted_parts = rp_secpolicy_get_encrypted_parts(rampart_context->secpolicy,env);
-  
+
     if(!signed_encrypted_parts)
         return AXIS2_FAILURE;
-    
+
     parts = rp_signed_encrypted_parts_get_headers(signed_encrypted_parts,env);
     if(!parts || (axis2_array_list_size(parts,env)==0))
     {
@@ -1334,7 +1334,7 @@ rampart_context_get_nodes_to_protect(
             axiom_soap_body_t *body = NULL;
             axiom_node_t *body_node = NULL;
             axiom_node_t *body_child_node = NULL;
-            
+
             if(is_sign)
                 AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] No Signed parts specified. Using the body.");
             else
@@ -1352,7 +1352,7 @@ rampart_context_get_nodes_to_protect(
                 AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Nothing to sign outside Secyrity header.");
             else
                 AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Nothing to encrypt outside Secyrity header.");
-            
+
             return AXIS2_FAILURE;
         }
     }
@@ -1369,7 +1369,7 @@ rampart_context_get_nodes_to_protect(
                 if(status!=AXIS2_FAILURE)
                     return AXIS2_FAILURE;
             }
-            
+
         }
         if(rp_signed_encrypted_parts_get_body(signed_encrypted_parts,env))
         {
@@ -1384,7 +1384,7 @@ rampart_context_get_nodes_to_protect(
             axis2_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
             return AXIS2_SUCCESS;
         }
-        
+
     }
     return AXIS2_FAILURE;
 }
@@ -1395,19 +1395,19 @@ rampart_context_check_whether_to_encrypt(
     rampart_context_t *rampart_context,
     const axis2_env_t *env)
 {
-    rp_signed_encrypted_parts_t *encrypted_parts = NULL;    
+    rp_signed_encrypted_parts_t *encrypted_parts = NULL;
     axis2_array_list_t *parts = NULL;
 
     encrypted_parts = rp_secpolicy_get_encrypted_parts(rampart_context->secpolicy,env);
     if(!encrypted_parts)
         return AXIS2_FALSE;
-    
+
     parts = rp_signed_encrypted_parts_get_headers(encrypted_parts,env);
     if(!parts || (axis2_array_list_size(parts,env)==0))
     {
         if(rp_signed_encrypted_parts_get_body(encrypted_parts,env))
-            return AXIS2_TRUE;       
-        
+            return AXIS2_TRUE;
+
         else
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_context]No encryption parts specified Nothing to decrypt");
@@ -1415,7 +1415,7 @@ rampart_context_check_whether_to_encrypt(
         }
     }
     return AXIS2_TRUE;
-}        
+}
 
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
@@ -1423,19 +1423,19 @@ rampart_context_check_whether_to_sign(
     rampart_context_t *rampart_context,
     const axis2_env_t *env)
 {
-    rp_signed_encrypted_parts_t *signed_parts = NULL;    
+    rp_signed_encrypted_parts_t *signed_parts = NULL;
     axis2_array_list_t *parts = NULL;
 
     signed_parts = rp_secpolicy_get_signed_parts(rampart_context->secpolicy,env);
     if(!signed_parts)
         return AXIS2_FALSE;
-    
+
     parts = rp_signed_encrypted_parts_get_headers(signed_parts,env);
     if(!parts || (axis2_array_list_size(parts,env)==0))
     {
         if(rp_signed_encrypted_parts_get_body(signed_parts,env))
-            return AXIS2_TRUE;       
-        
+            return AXIS2_TRUE;
+
         else
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_context]No Signed parts specified Nothing to Verify");
@@ -1443,16 +1443,16 @@ rampart_context_check_whether_to_sign(
         }
     }
     return AXIS2_TRUE;
-}        
+}
 
 
 
-AXIS2_EXTERN rp_property_t *AXIS2_CALL 
+AXIS2_EXTERN rp_property_t *AXIS2_CALL
 rampart_context_get_token(
-        rampart_context_t *rampart_context,
-        const axis2_env_t *env,
-        axis2_bool_t for_encryption,
-        axis2_bool_t server_side)
+    rampart_context_t *rampart_context,
+    const axis2_env_t *env,
+    axis2_bool_t for_encryption,
+    axis2_bool_t server_side)
 {
     rp_property_t *binding = NULL;
     binding = rp_secpolicy_get_binding(rampart_context->secpolicy,env);
@@ -1468,7 +1468,7 @@ rampart_context_get_token(
             if((for_encryption && server_side) || (!for_encryption && !server_side))
             {
                 return rp_asymmetric_binding_get_initiator_token(asym_binding,env);
-            }    
+            }
             else if((for_encryption && !server_side) || (!for_encryption && server_side))
             {
                 return rp_asymmetric_binding_get_recipient_token(asym_binding,env);
@@ -1489,8 +1489,8 @@ rampart_context_get_token(
             /*First check protection tokens have being specified.*/
             token = rp_symmetric_binding_get_protection_token(sym_binding,env);
             if(token)
-                return token;    
-            
+                return token;
+
             else
             {
                 if(for_encryption)
@@ -1514,7 +1514,7 @@ rampart_context_get_token(
         {
             return rp_transport_binding_get_transport_token(transport_binding,env);
         }
-        else return NULL;                    
+        else return NULL;
     }
     else return NULL;
 }
@@ -1529,10 +1529,10 @@ rampart_context_check_is_derived_keys(
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
         return rp_x509_token_get_derivedkeys(x509_token,env);
-    }        
+    }
     /*This can be extended when we are supporting other token types.*/
     else
-        return AXIS2_FALSE;        
+        return AXIS2_FALSE;
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
@@ -1541,8 +1541,8 @@ rampart_context_get_enc_sym_algo(
     const axis2_env_t *env)
 {
     rp_algorithmsuite_t *algosuite = NULL;
-  
-    algosuite = rampart_context_get_algorithmsuite(rampart_context,env); 
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context,env);
     if(algosuite)
     {
         return rp_algorithmsuite_get_encryption(algosuite,env);
@@ -1557,8 +1557,8 @@ rampart_context_get_enc_asym_algo(
     const axis2_env_t *env)
 {
     rp_algorithmsuite_t *algosuite = NULL;
-  
-    algosuite = rampart_context_get_algorithmsuite(rampart_context,env); 
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context,env);
     if(algosuite)
     {
         return rp_algorithmsuite_get_asymmetrickeywrap(algosuite,env);
@@ -1573,8 +1573,8 @@ rampart_context_get_asym_sig_algo(
     const axis2_env_t *env)
 {
     rp_algorithmsuite_t *algosuite = NULL;
-  
-    algosuite = rampart_context_get_algorithmsuite(rampart_context,env); 
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context,env);
     if(algosuite)
     {
         return rp_algorithmsuite_get_asymmetric_signature(algosuite,env);
@@ -1589,8 +1589,8 @@ rampart_context_get_digest_mtd(
     const axis2_env_t *env)
 {
     rp_algorithmsuite_t *algosuite = NULL;
-  
-    algosuite = rampart_context_get_algorithmsuite(rampart_context,env); 
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context,env);
     if(algosuite)
     {
         return rp_algorithmsuite_get_digest(algosuite,env);
@@ -1663,10 +1663,10 @@ rampart_context_get_encryption_user(
 
 }
 
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_is_token_type_supported(
-        int token_type,
-        const axis2_env_t *env)
+    int token_type,
+    const axis2_env_t *env)
 {
     if(token_type == RP_TOKEN_X509)
         return AXIS2_TRUE;
@@ -1675,7 +1675,7 @@ rampart_context_is_token_type_supported(
         AXIS2_LOG_INFO(env->log,"We still only suppport X509 Tokens.");
         return AXIS2_FALSE;
     }
-    /*This method will be extended when we are supporting other types of tokens.*/        
+    /*This method will be extended when we are supporting other types of tokens.*/
 }
 
 
@@ -1698,12 +1698,12 @@ rampart_context_is_token_include(
 
         if(server_side)
             include = ((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                        (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0));
+                       (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0));
         else
-           include = ((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-           (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-           (axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
-         
+            include = ((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                       (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
+
         return include;
     }
     else
@@ -1745,7 +1745,7 @@ rampart_context_get_key_identifier(
             else
                 return rampart_context_get_key_identifier_from_wss(rampart_context,env);
 
-           return identifier;
+            return identifier;
         }
     }
     /*This can be extended when we are supporting other token types.*/
@@ -1756,7 +1756,7 @@ AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_is_key_identifier_type_supported(
     rampart_context_t *rampart_context,
     rp_property_t *token,
-    axis2_char_t *identifier,    
+    axis2_char_t *identifier,
     const axis2_env_t *env)
 {
     if(axis2_strcmp(identifier,RAMPART_STR_KEY_IDENTIFIER)==0)
@@ -1787,7 +1787,7 @@ rampart_context_get_layout(
 
     if(!binding_commons)
         return NULL;
-    
+
     layout = rp_binding_commons_get_layout(binding_commons,env);
     if(!layout)
         return RP_LAYOUT_STRICT;

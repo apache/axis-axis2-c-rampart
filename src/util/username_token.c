@@ -39,11 +39,11 @@
 
 axis2_status_t AXIS2_CALL
 rampart_username_token_build(
-        const axis2_env_t *env,
-        rampart_context_t *rampart_context,
-        axiom_node_t *sec_node,
-        axiom_namespace_t *sec_ns_obj
-                            )
+    const axis2_env_t *env,
+    rampart_context_t *rampart_context,
+    axiom_node_t *sec_node,
+    axiom_namespace_t *sec_ns_obj
+)
 {
 
     axiom_node_t *ut_node = NULL;
@@ -52,22 +52,22 @@ rampart_username_token_build(
     axiom_node_t *nonce_node = NULL;
     axiom_node_t *created_node = NULL;
     axiom_element_t  *ut_ele = NULL;
-    axiom_element_t *un_ele = NULL; 
+    axiom_element_t *un_ele = NULL;
     axiom_element_t *pw_ele = NULL;
     axiom_element_t *nonce_ele = NULL;
     axiom_element_t *created_ele = NULL;
     axiom_namespace_t *wsu_ns_obj = NULL;
     axiom_attribute_t *om_attr = NULL;
-    axis2_char_t *password = NULL;    
+    axis2_char_t *password = NULL;
     axis2_char_t *username = NULL;
     rampart_callback_t *password_callback = NULL;
-/*  axis2_bool_t isdigest = AXIS2_FALSE;*/
+    /*  axis2_bool_t isdigest = AXIS2_FALSE;*/
     axis2_char_t *password_type = NULL;
     password_callback_fn password_function = NULL;
     void *param = NULL;
-    
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);    
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     /*Directly call the password from callback module*/
 
@@ -79,18 +79,18 @@ rampart_username_token_build(
     }
 
     password = rampart_context_get_password(rampart_context,env);
-    
+
     if(!password)
     {
         password_function = rampart_context_get_pwcb_function(rampart_context,env);
         if(password_function)
-        {            
+        {
             param = rampart_context_get_ctx(rampart_context,env);
             if(!param)
             {
                 AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Param is not set.");
                 return AXIS2_FAILURE;
-            }            
+            }
             password = (*password_function)(env,username,param);
         }
         else
@@ -111,32 +111,32 @@ rampart_username_token_build(
     }
 
     ut_ele = axiom_element_create(env, sec_node,
-            RAMPART_SECURITY_USERNAMETOKEN,
-            sec_ns_obj,
-            &ut_node);
+                                  RAMPART_SECURITY_USERNAMETOKEN,
+                                  sec_ns_obj,
+                                  &ut_node);
 
     wsu_ns_obj = axiom_namespace_create(env, RAMPART_WSU_XMLNS,
-            RAMPART_WSU);
+                                        RAMPART_WSU);
     axiom_element_declare_namespace(ut_ele, env,
-            ut_node, wsu_ns_obj);
+                                    ut_node, wsu_ns_obj);
 
     if (ut_ele)
     {
 
         un_ele = axiom_element_create(env, ut_node, RAMPART_SECURITY_USERNAMETOKEN_USERNAME, sec_ns_obj,
-                &un_node);
+                                      &un_node);
         if (un_ele)
         {
             axiom_namespace_t *dec_ns = NULL;
             axiom_element_set_text(un_ele, env, username, un_node);
             dec_ns = axiom_element_find_declared_namespace(un_ele, env,
-                    RAMPART_WSSE_XMLNS,
-                    RAMPART_WSSE);
+                     RAMPART_WSSE_XMLNS,
+                     RAMPART_WSSE);
 
 
             axiom_element_set_namespace(un_ele, env, sec_ns_obj, un_node);
         }
-        
+
         password_type = rampart_context_get_password_type(rampart_context,env);
         if(!password_type)
             password_type = RAMPART_PASSWORD_TEXT;
@@ -152,49 +152,49 @@ rampart_username_token_build(
             digest_val = rampart_crypto_sha1(env, nonce_val, created_val, password);
 
             pw_ele = axiom_element_create(env, ut_node, RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, sec_ns_obj,
-                    &pw_node);
+                                          &pw_node);
             if (pw_ele)
             {
 
                 axiom_element_set_text(pw_ele, env, digest_val, pw_node);
                 dec_ns = axiom_element_find_declared_namespace(pw_ele, env,
-                        RAMPART_WSSE_XMLNS,
-                        RAMPART_WSSE);
+                         RAMPART_WSSE_XMLNS,
+                         RAMPART_WSSE);
 
 
                 om_attr = axiom_attribute_create(env,
-                        RAMPART_SECURITY_USERNAMETOKEN_PASSWORD_ATTR_TYPE,
-                        RAMPART_PASSWORD_DIGEST_URI,
-                        NULL);
+                                                 RAMPART_SECURITY_USERNAMETOKEN_PASSWORD_ATTR_TYPE,
+                                                 RAMPART_PASSWORD_DIGEST_URI,
+                                                 NULL);
 
                 axiom_element_add_attribute(pw_ele, env,
-                        om_attr, pw_node);
+                                            om_attr, pw_node);
 
             }
             nonce_ele = axiom_element_create(env, ut_node, RAMPART_SECURITY_USERNAMETOKEN_NONCE, sec_ns_obj,
-                    &nonce_node);
+                                             &nonce_node);
             if (nonce_ele)
             {
                 axiom_namespace_t *dec_ns = NULL;
                 axiom_element_set_text(nonce_ele, env, nonce_val , nonce_node);
                 dec_ns = axiom_element_find_declared_namespace(nonce_ele, env,
-                        RAMPART_WSSE_XMLNS,
-                        RAMPART_WSSE);
+                         RAMPART_WSSE_XMLNS,
+                         RAMPART_WSSE);
             }
             created_ele = axiom_element_create(env, ut_node, RAMPART_SECURITY_USERNAMETOKEN_CREATED, sec_ns_obj,
-                    &created_node);
+                                               &created_node);
             if (created_ele)
             {
                 axiom_namespace_t *dec_ns = NULL;
                 axiom_element_set_text(created_ele, env, created_val, created_node);
                 dec_ns = axiom_element_find_declared_namespace(created_ele, env,
-                        RAMPART_WSSE_XMLNS,
-                        RAMPART_WSSE);
+                         RAMPART_WSSE_XMLNS,
+                         RAMPART_WSSE);
 
                 axiom_element_set_namespace(created_ele, env, wsu_ns_obj, created_node);
 
             }
-            
+
             if(nonce_val){
                 /*AXIS2_FREE(env->allocator, nonce_val);
                 nonce_val = NULL;*//*TODO Check*/
@@ -211,22 +211,22 @@ rampart_username_token_build(
         else /*default is passwordText*/
         {
             pw_ele = axiom_element_create(env, ut_node, RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, sec_ns_obj,
-                    &pw_node);
+                                          &pw_node);
             if (pw_ele)
             {
                 axiom_namespace_t *dec_ns = NULL;
                 axiom_element_set_text(pw_ele, env, password, pw_node);
                 dec_ns = axiom_element_find_declared_namespace(pw_ele, env,
-                        RAMPART_WSSE_XMLNS,
-                        RAMPART_WSSE);
+                         RAMPART_WSSE_XMLNS,
+                         RAMPART_WSSE);
 
                 om_attr = axiom_attribute_create(env,
-                        RAMPART_SECURITY_USERNAMETOKEN_PASSWORD_ATTR_TYPE,
-                        RAMPART_PASSWORD_TEXT_URI,
-                        NULL);
+                                                 RAMPART_SECURITY_USERNAMETOKEN_PASSWORD_ATTR_TYPE,
+                                                 RAMPART_PASSWORD_TEXT_URI,
+                                                 NULL);
 
                 axiom_element_add_attribute(pw_ele, env,
-                        om_attr, pw_node);
+                                            om_attr, pw_node);
             }
         } /*End if passwordType == passwordText*/
     }
@@ -235,10 +235,10 @@ rampart_username_token_build(
 
 axis2_status_t AXIS2_CALL
 rampart_username_token_validate(
-        const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axiom_node_t *ut_node,
-        rampart_context_t *rampart_context)
+    const axis2_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    axiom_node_t *ut_node,
+    rampart_context_t *rampart_context)
 {
     axiom_child_element_iterator_t *children = NULL;
     axis2_char_t *username = NULL;
@@ -257,7 +257,7 @@ rampart_username_token_validate(
     void *param = NULL;
     auth_password_func authenticate_with_password = NULL;
     auth_digest_func authenticate_with_digest = NULL;
-    axis2_char_t *password_type_pol = NULL; 
+    axis2_char_t *password_type_pol = NULL;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -309,8 +309,8 @@ rampart_username_token_validate(
             else if (0 == axis2_strcmp(localname , RAMPART_SECURITY_USERNAMETOKEN_PASSWORD))
             {
                 password_type = axiom_element_get_attribute_value_by_name(element,
-                        env,
-                        RAMPART_SECURITY_USERNAMETOKEN_PASSWORD_ATTR_TYPE);
+                                env,
+                                RAMPART_SECURITY_USERNAMETOKEN_PASSWORD_ATTR_TYPE);
 
                 if (!password_type)
                 {
@@ -329,15 +329,15 @@ rampart_username_token_validate(
                     {
                         AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Password Type is Wrong");
                         return AXIS2_FAILURE;
-                    }                        
-                }   
-                else if(axis2_strcmp(password_type_pol,RP_PLAINTEXT)==0)     
+                    }
+                }
+                else if(axis2_strcmp(password_type_pol,RP_PLAINTEXT)==0)
                 {
                     if(0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
                     {
                         AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Password Type is Wrong");
                         return AXIS2_FAILURE;
-                    }            
+                    }
                 }
                 password = axiom_element_get_text(element, env, node);
 
@@ -374,7 +374,7 @@ rampart_username_token_validate(
         AXIS2_LOG_INFO(env->log,  "[rampart][rampart_usernametoken] Username is not specified");
         return AXIS2_FAILURE;
     }
-    
+
     /*Set the username to the SPR*/
     rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_UT_USERNAME, username);
     ctx = axis2_msg_ctx_get_base(msg_ctx, env);
@@ -388,10 +388,10 @@ rampart_username_token_validate(
      * Else try the usual approach to get password from the callback and compare
      * */
     /*In both authentication and password callback methods we should first try to
-     *use function pointers. */    
+     *use function pointers. */
 
     /*authn_module_name = "/home/kau/axis2/c/deploy/bin/samples/rampart/authn_provider/libauthn.so";*/
-    if (0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI)) 
+    if (0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
     {
         authenticate_with_digest = rampart_context_get_auth_digest_function(rampart_context,env);
         if(authenticate_with_digest)
@@ -409,7 +409,7 @@ rampart_username_token_validate(
                 return AXIS2_FAILURE;
             }
         }
-    }   
+    }
     else
     {
         authenticate_with_password = rampart_context_get_auth_password_function(rampart_context,env);
@@ -437,20 +437,20 @@ rampart_username_token_validate(
         if(RAMPART_AUTHN_PROVIDER_GRANTED == auth_status){
             AXIS2_LOG_INFO(env->log,  "[rampart][rampart_usernametoken] User authenticated");
             rampart_set_security_processed_result(env, msg_ctx,RAMPART_SPR_UT_CHECKED, RAMPART_YES);
-            return AXIS2_SUCCESS;            
+            return AXIS2_SUCCESS;
         }else{
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", username, auth_status);
             return AXIS2_FAILURE;
         }
-        
+
     }else{
         /*Auth module is NULL. Use Callback password*/
         /*First we must check the password in rampart_context.*/
         password_from_svr = rampart_context_get_password(rampart_context,env);
-        
+
         /*If not then check the call  back function*/
         if(!password_from_svr)
-        {           
+        {
             password_function = rampart_context_get_pwcb_function(rampart_context,env);
             if(password_function)
             {
@@ -463,7 +463,7 @@ rampart_username_token_validate(
                 password_from_svr = (*password_function)(env,username,param);
             }
             else
-            {    
+            {
                 password_callback = rampart_context_get_password_callback(rampart_context,env);
                 if(!password_callback){
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_usernametoken] Password callback module is not specified");
@@ -472,7 +472,7 @@ rampart_username_token_validate(
                 AXIS2_LOG_INFO(env->log,  "[rampart][rampart_usernametoken] Password authentication using CALLBACK MODULE ");
                 /*password_from_svr = rampart_callback_password(env, pw_callback_module, username, ctx);*/
                 password_from_svr = rampart_callback_password(env, password_callback, username);
-            }                 
+            }
         }
 
         if (!password_from_svr)
