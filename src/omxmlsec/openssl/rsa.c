@@ -59,15 +59,15 @@ openssl_rsa_pub_encrypt(
 
     encrypted = AXIS2_MALLOC(env->allocator, RSA_size(key->pkey.rsa));
     ret = RSA_public_encrypt(oxs_buffer_get_size(in, env),
-            oxs_buffer_get_data(in, env),
-            encrypted,
-            key->pkey.rsa ,
-            pad);
-    
+                             oxs_buffer_get_data(in, env),
+                             encrypted,
+                             key->pkey.rsa ,
+                             pad);
+
     if (ret < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_OPENSSL_FUNC_FAILED,
-                            "RSA encryption failed");
+                  "RSA encryption failed");
         return (-1);
     }
     oxs_buffer_populate(out, env, encrypted, ret);
@@ -87,7 +87,7 @@ openssl_rsa_pub_decrypt(
     EVP_PKEY *key = NULL;
     int pad = RSA_PKCS1_PADDING;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);    
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     key = (EVP_PKEY *)openssl_pkey_get_key(pkey, env);
     if(0 == axis2_strcmp(padding, OPENSSL_RSA_PKCS1_OAEP_PADDING  ) ){
@@ -98,20 +98,20 @@ openssl_rsa_pub_decrypt(
 
     decrypted = AXIS2_MALLOC(env->allocator, RSA_size(key->pkey.rsa));
     ret = RSA_public_decrypt(oxs_buffer_get_size(in, env),
-            oxs_buffer_get_data(in, env),
-            decrypted,
-            key->pkey.rsa ,
-            pad);
-    
+                             oxs_buffer_get_data(in, env),
+                             decrypted,
+                             key->pkey.rsa ,
+                             pad);
+
     if (ret < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_OPENSSL_FUNC_FAILED,
-                            "PUBKEY decrypt (signature verification) failed");
+                  "PUBKEY decrypt (signature verification) failed");
         return (-1);
     }
     oxs_buffer_populate(out, env, decrypted, ret);
     return ret;
- }
+}
 
 
 int AXIS2_CALL
@@ -140,15 +140,15 @@ openssl_rsa_prv_decrypt(
 
     decrypted =  AXIS2_MALLOC(env->allocator, RSA_size(key->pkey.rsa));
     ret = RSA_private_decrypt(RSA_size(key->pkey.rsa),
-            oxs_buffer_get_data(in, env),
-            decrypted,
-            key->pkey.rsa,
-            pad);
-    
+                              oxs_buffer_get_data(in, env),
+                              decrypted,
+                              key->pkey.rsa,
+                              pad);
+
     if (ret < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_OPENSSL_FUNC_FAILED,
-                            "RSA decryption failed");
+                  "RSA decryption failed");
         return (-1);
     }
     oxs_buffer_populate(out, env, decrypted, ret);
@@ -182,15 +182,15 @@ openssl_rsa_prv_encrypt(
 
     encrypted =  AXIS2_MALLOC(env->allocator, RSA_size(key->pkey.rsa));
     ret = RSA_private_encrypt(RSA_size(key->pkey.rsa),
-            oxs_buffer_get_data(in, env),
-            encrypted,
-            key->pkey.rsa,
-            pad);
+                              oxs_buffer_get_data(in, env),
+                              encrypted,
+                              key->pkey.rsa,
+                              pad);
 
     if (ret < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_OPENSSL_FUNC_FAILED,
-                            "RSA private encryption(Signing) failed. Error code %d: %s",ERR_get_error(), ERR_reason_error_string(ERR_get_error()));
+                  "RSA private encryption(Signing) failed. Error code %d: %s",ERR_get_error(), ERR_reason_error_string(ERR_get_error()));
         return (-1);
     }
     oxs_buffer_populate(out, env, encrypted, ret);

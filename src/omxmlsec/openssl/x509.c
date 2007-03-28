@@ -32,8 +32,8 @@
 /*Usefull when we have BinarySecurityTokn*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_x509_load_from_buffer(const axis2_env_t *env,
-    axis2_char_t *b64_encoded_buf,
-    X509 **cert)
+                              axis2_char_t *b64_encoded_buf,
+                              X509 **cert)
 {
     unsigned char *buff = NULL;
     BIO *mem = NULL;
@@ -54,13 +54,13 @@ openssl_x509_load_from_buffer(const axis2_env_t *env,
     else
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED,
-                    "New line removed buffer creation failed.");
-            return AXIS2_FAILURE;
+                  "New line removed buffer creation failed.");
+        return AXIS2_FAILURE;
     }
     /*First we need to base64 decode*/
-/*  EVP_ENCODE_CTX ctx;*/
-/*  int len = 0;*/
-/*  int ret = 0;*/
+    /*  EVP_ENCODE_CTX ctx;*/
+    /*  int len = 0;*/
+    /*  int ret = 0;*/
 
     decode_len = axis2_base64_decode_len(formatted_buf );
     buff = AXIS2_MALLOC(env->allocator, decode_len);
@@ -71,16 +71,16 @@ openssl_x509_load_from_buffer(const axis2_env_t *env,
     if (decoded_len < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED,
-                    "axis2_base64_decode_binary failed");
-            return AXIS2_FAILURE;
+                  "axis2_base64_decode_binary failed");
+        return AXIS2_FAILURE;
     }
-    
-/*  EVP_DecodeInit(&ctx);
-    EVP_DecodeUpdate(&ctx, (unsigned char*)buff, &len,
-                   (unsigned char*)b64_encoded_buf, ilen);
-    EVP_DecodeFinal(&ctx, (unsigned char*)buff, &ret);
-    ret += len;
-*/    
+
+    /*  EVP_DecodeInit(&ctx);
+        EVP_DecodeUpdate(&ctx, (unsigned char*)buff, &len,
+                       (unsigned char*)b64_encoded_buf, ilen);
+        EVP_DecodeFinal(&ctx, (unsigned char*)buff, &ret);
+        ret += len;
+    */
     if ((mem = BIO_new_mem_buf(buff, ilen)) == NULL)
     {
         /*oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
@@ -100,15 +100,15 @@ openssl_x509_load_from_buffer(const axis2_env_t *env,
                 "Certificate is NULL");*/
         return AXIS2_FAILURE;
     }
-    
-    return AXIS2_SUCCESS;   
+
+    return AXIS2_SUCCESS;
 
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_x509_load_from_pem(const axis2_env_t *env,
-    axis2_char_t *filename,
-    X509 **cert)
+                           axis2_char_t *filename,
+                           X509 **cert)
 {
     BIO *in;
 
@@ -124,9 +124,9 @@ openssl_x509_load_from_pem(const axis2_env_t *env,
     {
         return AXIS2_FAILURE;
     }
-    
+
     if (-1 == BIO_reset(in) ){
-       return AXIS2_FAILURE;
+        return AXIS2_FAILURE;
     }
 
     if (-1 == BIO_free(in)  ){
@@ -138,11 +138,11 @@ openssl_x509_load_from_pem(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_x509_load_from_pkcs12(const axis2_env_t *env,
-    axis2_char_t *filename,
-    axis2_char_t *password,
-    X509 **cert,
-    EVP_PKEY **pkey,
-    STACK_OF(X509) **ca)
+                              axis2_char_t *filename,
+                              axis2_char_t *password,
+                              X509 **cert,
+                              EVP_PKEY **pkey,
+                              STACK_OF(X509) **ca)
 {
     PKCS12 *p12 = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -154,8 +154,8 @@ openssl_x509_load_from_pkcs12(const axis2_env_t *env,
     }
     /*Parse*/
     status = openssl_pkcs12_parse(env, password, p12, pkey,
-                cert,
-                 ca);
+                                  cert,
+                                  ca);
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
@@ -164,16 +164,16 @@ openssl_x509_load_from_pkcs12(const axis2_env_t *env,
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
-    
+
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_x509_load_certificate(const axis2_env_t *env,
-    openssl_x509_format_t format,
-    axis2_char_t *filename,
-    axis2_char_t *password,
-    X509 **cert)
+                              openssl_x509_format_t format,
+                              axis2_char_t *filename,
+                              axis2_char_t *password,
+                              X509 **cert)
 {
     axis2_status_t status = AXIS2_FAILURE;
 
@@ -181,19 +181,19 @@ openssl_x509_load_certificate(const axis2_env_t *env,
         /*Load from PEM*/
         status = openssl_x509_load_from_pem(env, filename, cert);
         if(AXIS2_FAILURE == status){
-             return AXIS2_FAILURE;
+            return AXIS2_FAILURE;
         }
     }else if(OPENSSL_X509_FORMAT_PKCS12 == format){
         /*Load from PKCS12*/
         EVP_PKEY *pkey = NULL;
         STACK_OF(X509) *ca = NULL;
-        status = openssl_x509_load_from_pkcs12(env, filename, password, cert, &pkey, &ca);        
-         if(AXIS2_FAILURE == status){
-             return AXIS2_FAILURE;
-         }
+        status = openssl_x509_load_from_pkcs12(env, filename, password, cert, &pkey, &ca);
+        if(AXIS2_FAILURE == status){
+            return AXIS2_FAILURE;
+        }
     }else if(OPENSSL_X509_FORMAT_DER == format){
         /*Load from DER*/
-    
+
     }else{
         /*Unspported*/
     }
@@ -209,7 +209,7 @@ openssl_x509_load_certificate(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 openssl_x509_get_cert_data(const axis2_env_t *env,
-    X509 *cert)
+                           X509 *cert)
 {
     axis2_char_t *unformatted = NULL;
     axis2_char_t *core_tail = NULL;
@@ -236,7 +236,7 @@ openssl_x509_get_cert_data(const axis2_env_t *env,
 
 AXIS2_EXTERN int AXIS2_CALL
 openssl_x509_get_serial(const axis2_env_t *env,
-    X509 *cert)
+                        X509 *cert)
 {
     axis2_char_t *serial = NULL;
     int no = 0;
@@ -249,7 +249,7 @@ openssl_x509_get_serial(const axis2_env_t *env,
 
 AXIS2_EXTERN unsigned long AXIS2_CALL
 openssl_x509_get_subject_name_hash(const axis2_env_t *env,
-    X509 *cert)
+                                   X509 *cert)
 {
     unsigned long l = 0;
     l=X509_subject_name_hash(cert);
@@ -258,8 +258,8 @@ openssl_x509_get_subject_name_hash(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_x509_get_pubkey(const axis2_env_t *env,
-    X509 *cert,
-    EVP_PKEY **pubkey)
+                        X509 *cert,
+                        EVP_PKEY **pubkey)
 {
     *pubkey = X509_get_pubkey(cert);
     return AXIS2_SUCCESS;
@@ -267,7 +267,7 @@ openssl_x509_get_pubkey(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 openssl_x509_get_subject_key_identifier(const axis2_env_t *env,
-    X509 *cert)
+                                        X509 *cert)
 {
     X509_EXTENSION *ext;
     ASN1_OCTET_STRING *keyId = NULL;
@@ -281,22 +281,22 @@ openssl_x509_get_subject_key_identifier(const axis2_env_t *env,
     /*Get ext by ID*/
     index = X509_get_ext_by_NID(cert, NID_subject_key_identifier, -1);
     if (index < 0) {
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "The extenension index of NID_subject_key_identifier is not valid");
-       return NULL;
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+                  "The extenension index of NID_subject_key_identifier is not valid");
+        return NULL;
     }
     /*Get the extension*/
     ext = X509_get_ext(cert, index);
     if (ext == NULL) {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "The extension for NID_subject_key_identifier is NULL");
+                  "The extension for NID_subject_key_identifier is NULL");
         return NULL;
     }
     /*Subject Key Identifier*/
     keyId = (ASN1_OCTET_STRING *)X509V3_EXT_d2i(ext);
     if (keyId == NULL) {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "The SubjectKeyIdentifier is NULL");
+                  "The SubjectKeyIdentifier is NULL");
         return NULL;
     }
     memcpy(buf, keyId->data, keyId->length);
@@ -307,14 +307,14 @@ openssl_x509_get_subject_key_identifier(const axis2_env_t *env,
     EVP_EncodeFinal(&ctx, (unsigned char*)(output+len), &ret);
 
     ret += len;
-    ski = axis2_strdup(output, env); 
-    return ski; 
+    ski = axis2_strdup(output, env);
+    return ski;
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 openssl_x509_get_info(const axis2_env_t *env,
-    openssl_x509_info_type_t type,
-    X509 *cert)
+                      openssl_x509_info_type_t type,
+                      X509 *cert)
 {
     BIO *out = NULL;
     unsigned char *data= NULL;
@@ -325,9 +325,9 @@ openssl_x509_get_info(const axis2_env_t *env,
     if(OPENSSL_X509_INFO_SUBJECT==type){
         X509_NAME_print_ex(out, X509_get_subject_name(cert), 0, 0);
     }else if(OPENSSL_X509_INFO_ISSUER == type){
-        X509_NAME_print_ex(out,  X509_get_issuer_name(cert), 0, 0);    
+        X509_NAME_print_ex(out,  X509_get_issuer_name(cert), 0, 0);
     }else if(OPENSSL_X509_INFO_VALID_FROM == type){
-        ASN1_TIME_print(out, X509_get_notBefore(cert));    
+        ASN1_TIME_print(out, X509_get_notBefore(cert));
     }else if(OPENSSL_X509_INFO_VALID_TO == type){
         ASN1_TIME_print(out, X509_get_notAfter(cert));
     }else if(OPENSSL_X509_INFO_DATA_CERT == type){
@@ -339,7 +339,7 @@ openssl_x509_get_info(const axis2_env_t *env,
         const EVP_MD *digest = NULL;
         unsigned char md[EVP_MAX_MD_SIZE];
         unsigned int _n = 0;
-        
+
         digest = EVP_sha1();/*If we use EVP_md5(); here we can get the digest from md5. */
         if(X509_digest(cert,digest,md,&_n))
         {
@@ -358,10 +358,10 @@ openssl_x509_get_info(const axis2_env_t *env,
         s=cert->signature->data;
         for (i=0; i<n; i++)
         {
-           if ( ((i%18) == 0) && (i!=0) ) BIO_printf(out,"\n");
-           BIO_printf(out,"%02x%s",s[i], (((i+1)%18) == 0)?"":":");
+            if ( ((i%18) == 0) && (i!=0) ) BIO_printf(out,"\n");
+            BIO_printf(out,"%02x%s",s[i], (((i+1)%18) == 0)?"":":");
         }
-            
+
     }else if(OPENSSL_X509_INFO_VERSION == type){
         long l = 0.0;
 
@@ -381,37 +381,37 @@ openssl_x509_get_info(const axis2_env_t *env,
             EVP_PKEY_free(pkey);
         }
     }else if(OPENSSL_X509_INFO_PUBKEY_ALGO == type){
-       X509_CINF *ci = NULL;
+        X509_CINF *ci = NULL;
 
-       ci = cert->cert_info;
-       i2a_ASN1_OBJECT(out, ci->key->algor->algorithm);
+        ci = cert->cert_info;
+        i2a_ASN1_OBJECT(out, ci->key->algor->algorithm);
     }
     n = BIO_get_mem_data(out, &data);
     result = axis2_strndup( data, n, env );
     BIO_free(out);
     out = NULL;
-    
+
     return result;
 }
 
 AXIS2_EXTERN void  AXIS2_CALL
 openssl_x509_print(const axis2_env_t *env,
-    X509 *cert)
+                   X509 *cert)
 {
-        printf("\n*************START PRINTING*****************\n"); 
-        printf("OPENSSL_X509_INFO_SUBJECT : %s\n", openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT,cert));
-        printf("OPENSSL_X509_INFO_ISSUER : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_ISSUER ,cert));
-        printf("OPENSSL_X509_INFO_VALID_FROM : %s\n", openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_FROM,cert));
-        printf("OPENSSL_X509_INFO_VALID_TO : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_VALID_TO ,cert));
-        printf("OPENSSL_X509_INFO_FINGER : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_FINGER ,cert));
-        printf("OPENSSL_X509_INFO_SIGNATURE : %s\n", openssl_x509_get_info(env, OPENSSL_X509_INFO_SIGNATURE,cert));
-        printf("OPENSSL_X509_INFO_VERSION : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_VERSION ,cert));
-        printf("OPENSSL_X509_INFO_PUBKEY : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_PUBKEY ,cert));
-        printf("OPENSSL_X509_INFO_PUBKEY_ALGO : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_PUBKEY_ALGO ,cert));
-        printf("SERIAL : %u\n", openssl_x509_get_serial(env,cert));
-        printf("PUBKEY : %s\n", openssl_x509_get_cert_data(env,cert));
+    printf("\n*************START PRINTING*****************\n");
+    printf("OPENSSL_X509_INFO_SUBJECT : %s\n", openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT,cert));
+    printf("OPENSSL_X509_INFO_ISSUER : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_ISSUER ,cert));
+    printf("OPENSSL_X509_INFO_VALID_FROM : %s\n", openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_FROM,cert));
+    printf("OPENSSL_X509_INFO_VALID_TO : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_VALID_TO ,cert));
+    printf("OPENSSL_X509_INFO_FINGER : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_FINGER ,cert));
+    printf("OPENSSL_X509_INFO_SIGNATURE : %s\n", openssl_x509_get_info(env, OPENSSL_X509_INFO_SIGNATURE,cert));
+    printf("OPENSSL_X509_INFO_VERSION : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_VERSION ,cert));
+    printf("OPENSSL_X509_INFO_PUBKEY : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_PUBKEY ,cert));
+    printf("OPENSSL_X509_INFO_PUBKEY_ALGO : %s\n", openssl_x509_get_info(env,OPENSSL_X509_INFO_PUBKEY_ALGO ,cert));
+    printf("SERIAL : %u\n", openssl_x509_get_serial(env,cert));
+    printf("PUBKEY : %s\n", openssl_x509_get_cert_data(env,cert));
 
-        printf("\n*************END PRINTING********************\n"); 
+    printf("\n*************END PRINTING********************\n");
 
 
 }

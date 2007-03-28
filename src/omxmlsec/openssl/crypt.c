@@ -28,14 +28,14 @@
 
 AXIS2_EXTERN int AXIS2_CALL
 openssl_bc_crypt(const axis2_env_t *env,
-        openssl_cipher_ctx_t *oc_ctx,
-        oxs_buffer_t *input_buf,
-        oxs_buffer_t *output_buf,
-        int encrypt)
+                 openssl_cipher_ctx_t *oc_ctx,
+                 oxs_buffer_t *input_buf,
+                 oxs_buffer_t *output_buf,
+                 int encrypt)
 {
     EVP_CIPHER_CTX ctx ;
     oxs_key_t *okey = NULL;
-    
+
     unsigned char iv[EVP_MAX_IV_LENGTH];
     unsigned char key[EVP_MAX_KEY_LENGTH];
     int ret =0, iv_length =0, block_length =0;
@@ -80,11 +80,11 @@ openssl_bc_crypt(const axis2_env_t *env,
         unsigned char *out_buf = NULL;
         int  in_size =0, out_size =0, fixed=0, out_length = 0;
 
-        if (0 == oxs_buffer_get_size(input_buf, env)) {
-            last = 1;            
+    if (0 == oxs_buffer_get_size(input_buf, env)) {
+            last = 1;
             break; /*Quit loop if NO DATA!!! */
         }
-       
+
         /*If the amnt of data available is greater than the buffer size, we limit it to buffer size */
         if(oxs_buffer_get_size(input_buf, env) > BUFSIZE){
             in_size = BUFSIZE;
@@ -93,12 +93,12 @@ openssl_bc_crypt(const axis2_env_t *env,
         }
 
         out_size = oxs_buffer_get_size(output_buf, env);
-        
+
         /*Set the output buffer size*/
         status = oxs_buffer_set_max_size(output_buf, env, out_size + in_size + block_length);
 
         out_buf = oxs_buffer_get_data(output_buf, env) + out_size;        /*position to write*/
-        
+
 #ifndef OXS_OPENSSL_096
         /*If decrypt, we copy the final data to the out_buf of size block_length*/
         if(!ctx.encrypt) {
@@ -106,15 +106,15 @@ openssl_bc_crypt(const axis2_env_t *env,
                 memcpy(out_buf, ctx.final, block_length);
                 out_buf += block_length;
                 fixed = 1;
-            }else {
-                fixed = 0;
-            }
+        }else {
+            fixed = 0;
         }
+    }
 #endif
-        /* encrypt or decrypt */
-        ret = EVP_CipherUpdate(&ctx, out_buf, &out_length, oxs_buffer_get_data(input_buf, env), in_size);
+    /* encrypt or decrypt */
+    ret = EVP_CipherUpdate(&ctx, out_buf, &out_length, oxs_buffer_get_data(input_buf, env), in_size);
 
-#ifndef OXS_OPENSSL_096   
+#ifndef OXS_OPENSSL_096
         /*If decrypt, we copy data from the out_buf to the ctx.final*/
         if(!ctx.encrypt) {
             if (block_length > 1 && !ctx.buf_len) {
@@ -130,7 +130,7 @@ openssl_bc_crypt(const axis2_env_t *env,
         }
 #endif
         /* set correct output buffer size */
-        status = oxs_buffer_set_size(output_buf, env, out_size + out_length);    
+        status = oxs_buffer_set_size(output_buf, env, out_size + out_length);
         if(AXIS2_FAILURE == status){
             return -1;
         }
@@ -139,7 +139,7 @@ openssl_bc_crypt(const axis2_env_t *env,
         if(AXIS2_FAILURE == status){
             return -1;
         }
-         
+
     }/*End of for loop*/
 
     /********************************Finalize*****************************************************/
@@ -149,7 +149,7 @@ openssl_bc_crypt(const axis2_env_t *env,
         unsigned char pad[EVP_MAX_BLOCK_LENGTH];
         unsigned char *out_buf = NULL;
         int out_size = 0,  out_length = 0, out_length2 = 0;
-        
+
         out_size = oxs_buffer_get_size(output_buf, env);
         status = oxs_buffer_set_max_size(output_buf,  env, out_size + 2 * block_length);
         out_buf = oxs_buffer_get_data(output_buf, env)  + out_size;/*position to write*/
@@ -166,7 +166,7 @@ openssl_bc_crypt(const axis2_env_t *env,
             ret = EVP_CipherUpdate(&ctx, out_buf, &out_length, pad, pad_length);
             out_buf += out_length;
         }
-#endif        
+#endif
         /* finalize  */
         ret = EVP_CipherFinal(&ctx, out_buf, &out_length2);
 #ifndef OXS_OPENSSL_096
@@ -183,13 +183,13 @@ openssl_bc_crypt(const axis2_env_t *env,
 #endif
         /* set correct output buffer size */
         status = oxs_buffer_set_size(output_buf, env, out_size + out_length + out_length2);
-        
+
         EVP_CIPHER_CTX_cleanup(&ctx);
         /*return the length of the outputbuf*/
         return out_size + out_length + out_length2;
     }else{
         return -1;
     }
-    
+
 }
 

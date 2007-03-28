@@ -28,8 +28,8 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_pkcs12_load(const axis2_env_t *env,
-    axis2_char_t *filename,
-    PKCS12 **p12)
+                    axis2_char_t *filename,
+                    PKCS12 **p12)
 {
     FILE *fp = NULL;
 
@@ -53,11 +53,11 @@ openssl_pkcs12_load(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_pkcs12_parse(const axis2_env_t *env,
-    axis2_char_t *password ,
-    PKCS12 *p12,
-    EVP_PKEY **prvkey,
-    X509 **cert,
-    STACK_OF(X509) **ca)
+                     axis2_char_t *password ,
+                     PKCS12 *p12,
+                     EVP_PKEY **prvkey,
+                     X509 **cert,
+                     STACK_OF(X509) **ca)
 {
     /*Parse the pkcs store*/
     if (!PKCS12_parse(p12, password, prvkey, cert, ca)) {
@@ -70,7 +70,7 @@ openssl_pkcs12_parse(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_pkcs12_free(const axis2_env_t *env,
-    PKCS12 *p12)
+                    PKCS12 *p12)
 {
 
     PKCS12_free(p12);

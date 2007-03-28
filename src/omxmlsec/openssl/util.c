@@ -37,14 +37,14 @@ generate_random_data(const axis2_env_t *env, oxs_buffer_t *buffer, int size)
     if (ret < 0)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_DEFAULT, "RAND_bytes failed %d", size);
+                  OXS_ERROR_DEFAULT, "RAND_bytes failed %d", size);
         return AXIS2_FAILURE;
     }
     /*Encoding make it easier to handle random data*/
-#if 0    
+#if 0
     int encodedlen;
     axis2_char_t *encoded_str = NULL;
-    
+
     encodedlen = axis2_base64_encode_len(size);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
     ret = axis2_base64_encode(encoded_str, (const char *)temp_buffer, size);
@@ -70,7 +70,7 @@ openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property
     if (!cprop)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "openssl_cipher_property is NULL");
+                  "openssl_cipher_property is NULL");
 
         return AXIS2_FAILURE;
 
@@ -80,7 +80,7 @@ openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property
     if (!cipher_name)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "openssl_cipher_property name is NULL");
+                  "openssl_cipher_property name is NULL");
 
         return AXIS2_FAILURE;
 
@@ -90,7 +90,7 @@ openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property
     if (!cipher)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "openssl_get_evp_cipher_by_name failed");
+                  "openssl_get_evp_cipher_by_name failed");
 
         return AXIS2_FAILURE;
     }

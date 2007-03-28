@@ -30,10 +30,10 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_pem_buf_read_pkey(const axis2_env_t *env,
-    axis2_char_t *b64_encoded_buf,
-    axis2_char_t *password,
-    openssl_pem_pkey_type_t type,
-    EVP_PKEY **pkey)
+                          axis2_char_t *b64_encoded_buf,
+                          axis2_char_t *password,
+                          openssl_pem_pkey_type_t type,
+                          EVP_PKEY **pkey)
 {
     unsigned char *buff = NULL;
     BIO *bio = NULL;
@@ -51,13 +51,13 @@ openssl_pem_buf_read_pkey(const axis2_env_t *env,
     ilen = axis2_strlen(b64_encoded_buf);
     EVP_DecodeInit(&ctx);
     EVP_DecodeUpdate(&ctx, (unsigned char*)buff, &len,
-                   (unsigned char*)b64_encoded_buf, ilen);
+                     (unsigned char*)b64_encoded_buf, ilen);
     EVP_DecodeFinal(&ctx, (unsigned char*)buff, &ret);
     ret += len;
     if ((bio = BIO_new_mem_buf(buff, ilen)) == NULL)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "BIO memeory allocation failure");
+                  "BIO memeory allocation failure");
         return AXIS2_FAILURE;
     }
     /*Load*/
@@ -66,7 +66,7 @@ openssl_pem_buf_read_pkey(const axis2_env_t *env,
     }else{
         *pkey = d2i_PrivateKey_bio(bio, NULL);
     }
-    
+
     /*Free*/
     BIO_free(bio);
     bio = NULL;
@@ -75,7 +75,7 @@ openssl_pem_buf_read_pkey(const axis2_env_t *env,
 
     if(!*pkey){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "private key is NULL");
+                  "private key is NULL");
         return AXIS2_FAILURE;
     }
     return AXIS2_SUCCESS;
@@ -83,19 +83,19 @@ openssl_pem_buf_read_pkey(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_pem_read_pkey(const axis2_env_t *env,
-    axis2_char_t *filename,
-    axis2_char_t *password,
-    openssl_pem_pkey_type_t type,
-    EVP_PKEY **pkey)
+                      axis2_char_t *filename,
+                      axis2_char_t *password,
+                      openssl_pem_pkey_type_t type,
+                      EVP_PKEY **pkey)
 {
     BIO *bio;
-    int ret; 
+    int ret;
 
     bio = BIO_new_file(filename, "r");
 
     if(type == OPENSSL_PEM_PKEY_TYPE_PRIVATE_KEY){
         *pkey = PEM_read_bio_PrivateKey(bio, NULL, 0 , password);
-    }else if(type == OPENSSL_PEM_PKEY_TYPE_PUBLIC_KEY){ 
+    }else if(type == OPENSSL_PEM_PKEY_TYPE_PUBLIC_KEY){
         *pkey = PEM_read_bio_PUBKEY(bio, NULL, 0 , password);
     }else{/*Type unknown*/
         /*Try to read the prv key first*/

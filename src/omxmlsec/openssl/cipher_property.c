@@ -25,7 +25,7 @@
 
 
 struct openssl_cipher_property_t
-{    
+{
     EVP_CIPHER                  *cipher;
     axis2_char_t                *name;
     axis2_char_t                *url;
