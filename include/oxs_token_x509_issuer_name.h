@@ -34,20 +34,20 @@ extern "C"
 {
 #endif
 
-/**
-* X509IssuerName element
-*/
+    /**
+    * X509IssuerName element
+    */
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_issuer_name(const axis2_env_t *env,
-        axiom_node_t *issuer_name_node);
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_issuer_name(const axis2_env_t *env,
+                              axiom_node_t *issuer_name_node);
 
-AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_issuer_name_element(const axis2_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* value );
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_issuer_name_element(const axis2_env_t *env,
+                                        axiom_node_t *parent,
+                                        axis2_char_t* value );
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

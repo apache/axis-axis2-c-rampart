@@ -28,7 +28,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_security_context_token_t rp_security_context_token_t;
 
     AXIS2_EXTERN rp_security_context_token_t *AXIS2_CALL
@@ -86,4 +86,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

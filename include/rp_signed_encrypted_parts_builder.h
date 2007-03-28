@@ -31,10 +31,10 @@ extern "C"
 #endif
 
 
-   AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL
-   rp_signed_encrypted_parts_builder_build(
-                const axis2_env_t *env,
-                axiom_node_t *parts);
+    AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL
+    rp_signed_encrypted_parts_builder_build(
+        const axis2_env_t *env,
+        axiom_node_t *parts);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_signed_encrypted_parts_builder_set_properties(
@@ -43,13 +43,13 @@ extern "C"
         axis2_char_t *local_name,
         rp_signed_encrypted_parts_t *signed_encrypted_parts,
         const axis2_env_t *env);
-    
-   AXIS2_EXTERN struct rp_header_t *AXIS2_CALL
-   rp_signed_encrypted_parts_builder_build_header(
-        axiom_element_t *element,
-        const axis2_env_t *env);
+
+    AXIS2_EXTERN struct rp_header_t *AXIS2_CALL
+                rp_signed_encrypted_parts_builder_build_header(
+                    axiom_element_t *element,
+                    const axis2_env_t *env);
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef RP_INCLUDES_H
 #define RP_INCLUDES_H
 
@@ -31,7 +31,7 @@
 #include <axis2_env.h>
 #include <axiom.h>
 #include <axiom_soap.h>
-#include <axis2_qname.h> 
+#include <axis2_qname.h>
 #include <rp_defines.h>
 
 
@@ -44,7 +44,7 @@ extern "C"
 {
 #endif
 
-/** @} */
+    /** @} */
 
 #ifdef __cplusplus
 }

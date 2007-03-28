@@ -38,7 +38,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_secpolicy_t rp_secpolicy_t;
 
     AXIS2_EXTERN rp_secpolicy_t *AXIS2_CALL
@@ -48,7 +48,7 @@ extern "C"
     rp_secpolicy_free(
         rp_secpolicy_t *secpolicy,
         const axis2_env_t *env);
-   
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_secpolicy_set_binding(
         rp_secpolicy_t *secpolicy,
@@ -173,4 +173,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

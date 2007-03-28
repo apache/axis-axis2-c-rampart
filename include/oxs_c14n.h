@@ -34,7 +34,7 @@
 #include <axis2_utils.h>
 #include <axis2_env.h>
 #include <axis2_string.h>
-#include <axiom_document.h> 
+#include <axiom_document.h>
 #include <axis2_array_list.h>
 #include <axis2_stream.h>
 
@@ -50,7 +50,7 @@ extern "C"
         const axis2_array_list_t *ns_prefixes,
         const axiom_node_t *node,
         const axis2_char_t* algo
-        );
+    );
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_algo(
@@ -60,7 +60,7 @@ extern "C"
         const axis2_array_list_t *ns_prefixes,
         const axiom_node_t *node,
         const axis2_char_t *algo
-        );
+    );
 
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -72,7 +72,7 @@ extern "C"
         const axis2_bool_t exclusive,
         const axis2_array_list_t *ns_prefixes,
         const axiom_node_t *node
-        );
+    );
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply (
@@ -83,7 +83,7 @@ extern "C"
         const axis2_bool_t exclusive,
         const axis2_array_list_t *ns_prefixes,
         const axiom_node_t *node
-        );
+    );
 
 #ifdef __cplusplus
 }

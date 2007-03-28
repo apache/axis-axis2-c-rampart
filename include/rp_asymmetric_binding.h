@@ -30,7 +30,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_asymmetric_binding_t rp_asymmetric_binding_t;
 
     AXIS2_EXTERN rp_asymmetric_binding_t *AXIS2_CALL
@@ -40,7 +40,7 @@ extern "C"
     rp_asymmetric_binding_free(
         rp_asymmetric_binding_t *asymmetric_binding,
         const axis2_env_t *env);
-   
+
     AXIS2_EXTERN rp_symmetric_asymmetric_binding_commons_t *AXIS2_CALL
     rp_asymmetric_binding_get_symmetric_asymmetric_binding_commons(
         rp_asymmetric_binding_t *asymmetric_binding,
@@ -77,5 +77,5 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif
 

@@ -30,7 +30,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_transport_binding_t rp_transport_binding_t;
 
     AXIS2_EXTERN rp_transport_binding_t *AXIS2_CALL
@@ -40,7 +40,7 @@ extern "C"
     rp_transport_binding_free(
         rp_transport_binding_t *transport_binding,
         const axis2_env_t *env);
-   
+
     AXIS2_EXTERN rp_binding_commons_t *AXIS2_CALL
     rp_transport_binding_get_binding_commons(
         rp_transport_binding_t *transport_binding,
@@ -66,4 +66,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

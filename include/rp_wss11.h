@@ -28,7 +28,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_wss11_t rp_wss11_t;
 
     AXIS2_EXTERN rp_wss11_t *AXIS2_CALL
@@ -36,73 +36,73 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_free(rp_wss11_t *wss11,
-                 const axis2_env_t *env);
+                  const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_must_support_ref_key_identifier(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_must_support_ref_key_identifier(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t must_support_ref_key_identifier);
+            const axis2_env_t *env,
+            axis2_bool_t must_support_ref_key_identifier);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_must_support_ref_issuer_serial(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_must_support_ref_issuer_serial(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t must_support_ref_issuer_serial);
+            const axis2_env_t *env,
+            axis2_bool_t must_support_ref_issuer_serial);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_must_support_ref_external_uri(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_must_support_ref_external_uri(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t must_support_ref_external_uri);
+            const axis2_env_t *env,
+            axis2_bool_t must_support_ref_external_uri);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_must_support_ref_embedded_token(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_must_support_ref_embedded_token(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t must_support_ref_embedded_token);
-    
+            const axis2_env_t *env,
+            axis2_bool_t must_support_ref_embedded_token);
+
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_must_support_ref_thumbprint(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_must_support_ref_thumbprint(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t must_support_ref_thumbprint);
+            const axis2_env_t *env,
+            axis2_bool_t must_support_ref_thumbprint);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_must_support_ref_encryptedkey(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t must_support_ref_encryptedkey);
+            const axis2_env_t *env,
+            axis2_bool_t must_support_ref_encryptedkey);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_must_support_ref_encryptedkey(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
- 
+            const axis2_env_t *env);
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_wss11_set_require_signature_confirmation(rp_wss11_t *wss11,
-                            const axis2_env_t *env,
-                            axis2_bool_t require_signature_confirmation);
+            const axis2_env_t *env,
+            axis2_bool_t require_signature_confirmation);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_wss11_get_require_signature_confirmation(rp_wss11_t *wss11,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

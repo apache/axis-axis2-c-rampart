@@ -28,7 +28,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_rampart_config_t rp_rampart_config_t;
 
     AXIS2_EXTERN rp_rampart_config_t *AXIS2_CALL
@@ -36,32 +36,32 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_free(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+                           const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_user(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_user(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env,
-            axis2_char_t *user);
+                               const axis2_env_t *env,
+                               axis2_char_t *user);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_encryption_user(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_encryption_user(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env,
-            axis2_char_t *encryption_user);
+                                          const axis2_env_t *env,
+                                          axis2_char_t *encryption_user);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_password_callback_class(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_password_callback_class(rp_rampart_config_t *rampart_config,
@@ -70,8 +70,8 @@ extern "C"
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_authenticate_module(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_authenticate_module(rp_rampart_config_t *rampart_config,
@@ -80,28 +80,28 @@ extern "C"
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_password_type(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_password_type(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env,
-            axis2_char_t *password_type);
+                                        const axis2_env_t *env,
+                                        axis2_char_t *password_type);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_private_key_file(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_private_key_file(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env,
-            axis2_char_t *private_key_file);
+                                           const axis2_env_t *env,
+                                           axis2_char_t *private_key_file);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_receiver_certificate_file(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_receiver_certificate_file(rp_rampart_config_t *rampart_config,
@@ -110,25 +110,25 @@ extern "C"
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_certificate_file(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_certificate_file(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env,
-            axis2_char_t *certificate_file);
+                                           const axis2_env_t *env,
+                                           axis2_char_t *certificate_file);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_rampart_config_get_time_to_live(
-            rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env);
+        rp_rampart_config_t *rampart_config,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_set_time_to_live(rp_rampart_config_t *rampart_config,
-            const axis2_env_t *env,
-            axis2_char_t *time_to_live);
+                                       const axis2_env_t *env,
+                                       axis2_char_t *time_to_live);
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

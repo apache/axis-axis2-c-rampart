@@ -14,39 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #ifndef OXS_TOKENS_H
 #define OXS_TOKENS_H
 
-#include <axis2_qname.h> 
+#include <axis2_qname.h>
 #include <oxs_token_binary_security_token.h>
 #include <oxs_token_embedded.h>
-#include <oxs_token_reference_list.h>            
+#include <oxs_token_reference_list.h>
 #include <oxs_token_transforms.h>
-#include <oxs_token_c14n_method.h>            
-#include <oxs_token_encrypted_data.h>     
-#include <oxs_token_security_token_reference.h>  
+#include <oxs_token_c14n_method.h>
+#include <oxs_token_encrypted_data.h>
+#include <oxs_token_security_token_reference.h>
 #include <oxs_token_x509_certificate.h>
-#include <oxs_token_cipher_data.h>            
-#include <oxs_token_encrypted_key.h>      
+#include <oxs_token_cipher_data.h>
+#include <oxs_token_encrypted_key.h>
 #include <oxs_token_x509_data.h>
-#include <oxs_token_cipher_value.h>           
-#include <oxs_token_encryption_method.h>  
-#include <oxs_token_signature.h>                 
+#include <oxs_token_cipher_value.h>
+#include <oxs_token_encryption_method.h>
+#include <oxs_token_signature.h>
 #include <oxs_token_x509_issuer_name.h>
-#include <oxs_token_data_reference.h>         
-#include <oxs_token_key_identifier.h>     
-#include <oxs_token_signature_method.h>          
+#include <oxs_token_data_reference.h>
+#include <oxs_token_key_identifier.h>
+#include <oxs_token_signature_method.h>
 #include <oxs_token_x509_issuer_serial.h>
-#include <oxs_token_digest_method.h>          
-#include <oxs_token_key_info.h>           
-#include <oxs_token_signature_value.h>           
+#include <oxs_token_digest_method.h>
+#include <oxs_token_key_info.h>
+#include <oxs_token_signature_value.h>
 #include <oxs_token_x509_serial_number.h>
-#include <oxs_token_digest_value.h>           
-#include <oxs_token_key_name.h>           
+#include <oxs_token_digest_value.h>
+#include <oxs_token_key_name.h>
 #include <oxs_token_signed_info.h>
-#include <oxs_token_ds_reference.h>           
-#include <oxs_token_reference.h>          
+#include <oxs_token_ds_reference.h>
+#include <oxs_token_reference.h>
 #include <oxs_token_transform.h>
 
 
@@ -61,7 +61,7 @@ extern "C"
 {
 #endif
 
-/** @} */
+    /** @} */
 
 #ifdef __cplusplus
 }

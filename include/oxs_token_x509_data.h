@@ -34,14 +34,14 @@ extern "C"
 {
 #endif
 
-/**
-* X509Data element
-*/
-AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_x509_data_element(const axis2_env_t *env,
-        axiom_node_t *parent);
+    /**
+    * X509Data element
+    */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_x509_data_element(const axis2_env_t *env,
+                                      axiom_node_t *parent);
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

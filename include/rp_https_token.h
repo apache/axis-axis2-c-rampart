@@ -28,7 +28,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_https_token_t rp_https_token_t;
 
     AXIS2_EXTERN rp_https_token_t *AXIS2_CALL
@@ -36,36 +36,36 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_https_token_free(rp_https_token_t *https_token,
-                 const axis2_env_t *env);
+                        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_https_token_get_inclusion(rp_https_token_t *https_token,
-                       const axis2_env_t *env);
+                                 const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_https_token_set_inclusion(rp_https_token_t *https_token,
-                       const axis2_env_t *env,
-                       axis2_char_t *inclusion);
+                                 const axis2_env_t *env,
+                                 axis2_char_t *inclusion);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_https_token_get_derivedkeys(rp_https_token_t *https_token,
-                            const axis2_env_t *env);
+                                   const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_https_token_set_derivedkeys(rp_https_token_t *https_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t derivedkeys);
+                                   const axis2_env_t *env,
+                                   axis2_bool_t derivedkeys);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_https_token_get_require_client_certificate(rp_https_token_t *https_token,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_https_token_set_require_client_certificate(rp_https_token_t *https_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t require_client_certificate);
+            const axis2_env_t *env,
+            axis2_bool_t require_client_certificate);
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

@@ -32,23 +32,23 @@ extern "C"
 {
 #endif
 
-/** @defgroup key_file_type 
- * @ingroup 
- * @{
- */
+    /** @defgroup key_file_type
+     * @ingroup 
+     * @{
+     */
 
-    typedef enum 
+    typedef enum
     {
         AXIS2_KEY_TYPE_UNKNOWN = 0,
         AXIS2_KEY_TYPE_PEM,
         AXIS2_KEY_TYPE_DER
     }axis2_key_type_t;
 
-    
 
-/** @} */
+
+    /** @} */
 #ifdef __cplusplus
 }
 #endif
 
-#endif                          
+#endif

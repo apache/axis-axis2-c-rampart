@@ -43,14 +43,14 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_secpolicy_builder_set_properties(
-                const axis2_env_t *env,
-                rp_secpolicy_t *secpolicy,
-                axiom_node_t *node,
-                axiom_element_t *element,
-                axis2_char_t *local_name);
+        const axis2_env_t *env,
+        rp_secpolicy_t *secpolicy,
+        axiom_node_t *node,
+        axiom_element_t *element,
+        axis2_char_t *local_name);
 
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

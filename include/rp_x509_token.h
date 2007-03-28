@@ -28,7 +28,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_x509_token_t rp_x509_token_t;
 
     AXIS2_EXTERN rp_x509_token_t *AXIS2_CALL
@@ -36,75 +36,75 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_free(rp_x509_token_t *x509_token,
-                 const axis2_env_t *env);
+                       const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_x509_token_get_inclusion(rp_x509_token_t *x509_token,
-                       const axis2_env_t *env);
+                                const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_inclusion(rp_x509_token_t *x509_token,
-                       const axis2_env_t *env,
-                       axis2_char_t *inclusion);
+                                const axis2_env_t *env,
+                                axis2_char_t *inclusion);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_x509_token_get_derivedkeys(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env);
+                                  const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_derivedkeys(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t derivedkeys);
+                                  const axis2_env_t *env,
+                                  axis2_bool_t derivedkeys);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_x509_token_get_require_key_identifier_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_require_key_identifier_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t require_key_identifier_reference);
+            const axis2_env_t *env,
+            axis2_bool_t require_key_identifier_reference);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_x509_token_get_require_issuer_serial_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_require_issuer_serial_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t require_issuer_serial_reference);
+            const axis2_env_t *env,
+            axis2_bool_t require_issuer_serial_reference);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_x509_token_get_require_embedded_token_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_require_embedded_token_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t require_embedded_token_reference);
+            const axis2_env_t *env,
+            axis2_bool_t require_embedded_token_reference);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_x509_token_get_require_thumb_print_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_require_thumb_print_reference(rp_x509_token_t *x509_token,
-                            const axis2_env_t *env,
-                            axis2_bool_t require_thumb_print_reference);
+            const axis2_env_t *env,
+            axis2_bool_t require_thumb_print_reference);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_x509_token_get_token_version_and_type(rp_x509_token_t *x509_token,
-                       const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_x509_token_set_token_version_and_type(rp_x509_token_t *x509_token,
-                       const axis2_env_t *env,
-                       axis2_char_t *token_version_and_type);
+            const axis2_env_t *env,
+            axis2_char_t *token_version_and_type);
 
 
-    
+
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

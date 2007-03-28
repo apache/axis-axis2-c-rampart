@@ -31,26 +31,26 @@
 extern "C" {
 #endif
 
-/**
-  * @defgroup 
-  * @ingroup 
-  */
+    /**
+      * @defgroup 
+      * @ingroup 
+      */
 
 
-  /** 
-  * Calculate the digest of the input
-  * @return calculated digest
-  */ 
-AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-   openssl_sha1(const axis2_env_t *env,
+    /**
+    * Calculate the digest of the input
+    * @return calculated digest
+    */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    openssl_sha1(const axis2_env_t *env,
+                 axis2_char_t *input,
+                 int length);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    openssl_md5(const axis2_env_t *env,
                 axis2_char_t *input,
                 int length);
-                                                                            
-AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-openssl_md5(const axis2_env_t *env,
-            axis2_char_t *input,
-            int length);
-/* @} */
+    /* @} */
 #ifdef __cplusplus
 }
 #endif

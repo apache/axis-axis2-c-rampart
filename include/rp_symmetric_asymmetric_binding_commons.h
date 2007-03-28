@@ -29,7 +29,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_symmetric_asymmetric_binding_commons_t rp_symmetric_asymmetric_binding_commons_t;
 
     AXIS2_EXTERN rp_symmetric_asymmetric_binding_commons_t *AXIS2_CALL
@@ -98,4 +98,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

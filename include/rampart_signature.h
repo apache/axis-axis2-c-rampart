@@ -33,14 +33,14 @@ extern "C" {
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_sig_sign_message(const axis2_env_t *env,
-            axis2_msg_ctx_t *msg_ctx,
-            rampart_context_t *rampart_context,
-            axiom_soap_envelope_t *soap_envelope,
-            axiom_node_t *sec_node);
-    
+                             axis2_msg_ctx_t *msg_ctx,
+                             rampart_context_t *rampart_context,
+                             axiom_soap_envelope_t *soap_envelope,
+                             axiom_node_t *sec_node);
 
 
-/* @} */
+
+    /* @} */
 #ifdef __cplusplus
 }
 #endif

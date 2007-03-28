@@ -32,9 +32,9 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_property_t rp_property_t;
- 
+
 
     AXIS2_EXTERN rp_property_t *AXIS2_CALL
     rp_property_create(const axis2_env_t *env);
@@ -43,7 +43,7 @@ extern "C"
     rp_property_free(
         rp_property_t *property,
         const axis2_env_t *env);
-   
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_property_set_value(
         rp_property_t *property,
@@ -64,4 +64,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

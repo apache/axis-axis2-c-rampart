@@ -41,7 +41,7 @@ extern "C"
         RAMPART_AUTHN_PROVIDER_USER_NOT_FOUND,
         RAMPART_AUTHN_PROVIDER_GENERAL_ERROR
     } rampart_authn_provider_status;
-   
+
     typedef enum rampart_authn_provider_status rampart_authn_provider_status_t;
 
     /**
@@ -51,7 +51,7 @@ extern "C"
      * @{
      */
 
-    /** 
+    /**
      * Type name for struct rampart_authn_provider_ops 
      */
     typedef struct rampart_authn_provider_ops rampart_authn_provider_ops_t;
@@ -61,36 +61,36 @@ extern "C"
      */
 
     typedef struct rampart_authn_provider rampart_authn_provider_t;
-    
+
     /**
      */
-     struct rampart_authn_provider_ops
-    {            
-           
+    struct rampart_authn_provider_ops
+    {
 
-            rampart_authn_provider_status_t (AXIS2_CALL*
-            rampart_authn_provider_check_password)(
-                rampart_authn_provider_t *authn_provider,
-                const axis2_env_t* env,
-                axis2_msg_ctx_t *msg_ctx,
-                const axis2_char_t *username, 
-                const axis2_char_t *password
-            );
-            
-            rampart_authn_provider_status_t (AXIS2_CALL*
-            rampart_authn_provider_check_password_digest)(
-                rampart_authn_provider_t *authn_provider,
-                const axis2_env_t* env,
-                axis2_msg_ctx_t *msg_ctx,
-                const axis2_char_t *username,
-                const axis2_char_t *nonce, 
-                const axis2_char_t *created, 
-                const char *digest
-            );
 
-            axis2_status_t (AXIS2_CALL*
-            free)(rampart_authn_provider_t *authn_provider,
-                  const axis2_env_t* env);
+        rampart_authn_provider_status_t (AXIS2_CALL*
+                                         rampart_authn_provider_check_password)(
+                                             rampart_authn_provider_t *authn_provider,
+                                             const axis2_env_t* env,
+                                             axis2_msg_ctx_t *msg_ctx,
+                                             const axis2_char_t *username,
+                                             const axis2_char_t *password
+                                         );
+
+        rampart_authn_provider_status_t (AXIS2_CALL*
+                                         rampart_authn_provider_check_password_digest)(
+                                             rampart_authn_provider_t *authn_provider,
+                                             const axis2_env_t* env,
+                                             axis2_msg_ctx_t *msg_ctx,
+                                             const axis2_char_t *username,
+                                             const axis2_char_t *nonce,
+                                             const axis2_char_t *created,
+                                             const char *digest
+                                         );
+
+        axis2_status_t (AXIS2_CALL*
+                        free)(rampart_authn_provider_t *authn_provider,
+                              const axis2_env_t* env);
 
     };
 
@@ -99,8 +99,8 @@ extern "C"
         rampart_authn_provider_ops_t *ops;
     };
 
-/*************************** Function macros **********************************/
-/*TODO write the implementation*/
+    /*************************** Function macros **********************************/
+    /*TODO write the implementation*/
 #define RAMPART_AUTHN_PROVIDER_FREE(authn_provider, env) \
       ((authn_provider)->ops->free (authn_provider, env))
 

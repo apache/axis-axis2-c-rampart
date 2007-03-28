@@ -36,29 +36,29 @@ extern "C"
 {
 #endif
 
-typedef enum{
-    OXS_KIBP_UNKNOWN = 0,
-    OXS_KIBP_X509DATA_X509CERTIFICATE,
-    OXS_KIBP_X509DATA_ISSUER_SERIAL,
-}oxs_key_info_build_pattern_t;
+    typedef enum{
+        OXS_KIBP_UNKNOWN = 0,
+        OXS_KIBP_X509DATA_X509CERTIFICATE,
+        OXS_KIBP_X509DATA_ISSUER_SERIAL,
+    }oxs_key_info_build_pattern_t;
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_info_build(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert,
-    oxs_key_info_build_pattern_t pattern);
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_xml_key_info_build(const axis2_env_t *env,
+                           axiom_node_t *parent,
+                           oxs_x509_cert_t *cert,
+                           oxs_key_info_build_pattern_t pattern);
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_info_build_x509_data_x509_certificate(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert);
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_xml_key_info_build_x509_data_x509_certificate(const axis2_env_t *env,
+            axiom_node_t *parent,
+            oxs_x509_cert_t *cert);
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_info_build_x509_data_issuer_serial(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert);
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_xml_key_info_build_x509_data_issuer_serial(const axis2_env_t *env,
+            axiom_node_t *parent,
+            oxs_x509_cert_t *cert);
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

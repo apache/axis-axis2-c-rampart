@@ -30,7 +30,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_binding_commons_t rp_binding_commons_t;
 
     AXIS2_EXTERN rp_binding_commons_t *AXIS2_CALL
@@ -38,84 +38,84 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_free(rp_binding_commons_t *binding_commons,
-                                    const axis2_env_t *env);
+                            const axis2_env_t *env);
 
     AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
     rp_binding_commons_get_algorithmsuite(rp_binding_commons_t *binding_commons,
-                                    const axis2_env_t *env);
+                                          const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_algorithmsuite(rp_binding_commons_t *binding_commons,
-                                    const axis2_env_t *env,
-                                    rp_algorithmsuite_t *algorithmsuite);
-    
+                                          const axis2_env_t *env,
+                                          rp_algorithmsuite_t *algorithmsuite);
+
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_binding_commons_get_include_timestamp(rp_binding_commons_t *binding_commons,
-                                    const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_include_timestamp(rp_binding_commons_t *binding_commons,
-                                    const axis2_env_t *env,
-                                    axis2_bool_t include_timestamp);
+            const axis2_env_t *env,
+            axis2_bool_t include_timestamp);
 
     AXIS2_EXTERN rp_layout_t *AXIS2_CALL
     rp_binding_commons_get_layout(rp_binding_commons_t *binding_commons,
-                                   const axis2_env_t *env);
+                                  const axis2_env_t *env);
 
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_layout(rp_binding_commons_t *binding_commons,
-                                    const axis2_env_t *env,
-                                    rp_layout_t *layout);
+                                  const axis2_env_t *env,
+                                  rp_layout_t *layout);
 
     AXIS2_EXTERN rp_supporting_tokens_t *AXIS2_CALL
     rp_binding_commons_get_signed_supporting_tokens(
-                    rp_binding_commons_t *binding_commons,
-                    const axis2_env_t *env);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_signed_supporting_tokens(
-                    rp_binding_commons_t *binding_commons,
-                    const axis2_env_t *env,
-                    rp_supporting_tokens_t *signed_supporting_tokens);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env,
+        rp_supporting_tokens_t *signed_supporting_tokens);
 
 
     AXIS2_EXTERN rp_supporting_tokens_t *AXIS2_CALL
     rp_binding_commons_get_signed_endorsing_supporting_tokens(
-                    rp_binding_commons_t *binding_commons,
-                    const axis2_env_t *env);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env);
 
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_signed_endorsing_supporting_tokens(
-                    rp_binding_commons_t *binding_commons,
-                    const axis2_env_t *env,
-                    rp_supporting_tokens_t *signed_endorsing_supporting_tokens);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env,
+        rp_supporting_tokens_t *signed_endorsing_supporting_tokens);
 
     AXIS2_EXTERN rp_supporting_tokens_t *AXIS2_CALL
     rp_binding_commons_get_endorsing_supporting_tokens(
-                rp_binding_commons_t *binding_commons,
-                const axis2_env_t *env);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_endorsing_supporting_tokens(
-                rp_binding_commons_t *binding_commons,
-                const axis2_env_t *env,
-                rp_supporting_tokens_t *endorsing_supporting_tokens);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env,
+        rp_supporting_tokens_t *endorsing_supporting_tokens);
 
     AXIS2_EXTERN rp_supporting_tokens_t *AXIS2_CALL
     rp_binding_commons_get_supporting_tokens(
-                rp_binding_commons_t *binding_commons,
-                const axis2_env_t *env);
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_binding_commons_set_supporting_tokens(
-                rp_binding_commons_t *binding_commons,
-                const axis2_env_t *env,
-                rp_supporting_tokens_t *supporting_tokens);
- 
-    
+        rp_binding_commons_t *binding_commons,
+        const axis2_env_t *env,
+        rp_supporting_tokens_t *supporting_tokens);
+
+
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

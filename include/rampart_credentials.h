@@ -40,7 +40,7 @@ extern "C"
         RAMPART_CREDENTIALS_USER_NOT_FOUND,
         RAMPART_CREDENTIALS_GENERAL_ERROR
     } rampart_credentials_status;
-   
+
     typedef enum rampart_credentials_status rampart_credentials_status_t;
 
     /**
@@ -50,7 +50,7 @@ extern "C"
      * @{
      */
 
-    /** 
+    /**
      * Type name for struct rampart_credentials_ops 
      */
     typedef struct rampart_credentials_ops rampart_credentials_ops_t;
@@ -60,28 +60,28 @@ extern "C"
      */
 
     typedef struct rampart_credentials rampart_credentials_t;
-    
+
     /**
      */
-     struct rampart_credentials_ops
-    {            
-           
-            /**
-             * Implementation must provide both username and the password.
-             *
-             */
-            rampart_credentials_status_t (AXIS2_CALL*
-            rampart_credentials_username_get)(
-                rampart_credentials_t *credentials,
-                const axis2_env_t* env,
-                axis2_msg_ctx_t *msg_ctx,
-                axis2_char_t **username, 
-                axis2_char_t **password
-            );
-            
-            axis2_status_t (AXIS2_CALL*
-            free)(rampart_credentials_t *credentials,
-                  const axis2_env_t* env);
+    struct rampart_credentials_ops
+    {
+
+        /**
+         * Implementation must provide both username and the password.
+         *
+         */
+        rampart_credentials_status_t (AXIS2_CALL*
+                                      rampart_credentials_username_get)(
+                                          rampart_credentials_t *credentials,
+                                          const axis2_env_t* env,
+                                          axis2_msg_ctx_t *msg_ctx,
+                                          axis2_char_t **username,
+                                          axis2_char_t **password
+                                      );
+
+        axis2_status_t (AXIS2_CALL*
+                        free)(rampart_credentials_t *credentials,
+                              const axis2_env_t* env);
 
     };
 
@@ -90,7 +90,7 @@ extern "C"
         rampart_credentials_ops_t *ops;
     };
 
-/*************************** Function macros **********************************/
+    /*************************** Function macros **********************************/
 #define RAMPART_CREDENTIALS_FREE(credentials, env) \
       ((credentials)->ops->free (credentials, env))
 

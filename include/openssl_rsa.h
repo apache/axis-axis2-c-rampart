@@ -35,81 +35,81 @@
 extern "C" {
 #endif
 
-/** @defgroup
- * @ingroup
- * @{
- */
+    /** @defgroup
+     * @ingroup
+     * @{
+     */
 
-  /**
-    * Decrypts data using a private key specified in @pkey
-    * @rsa pointer to openssl_rsa struct
-    * @env pointer to environment struct
-    * @pkey private key for decryption
-    * @in input data
-    * @out output data
-    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
-    **/
-	int AXIS2_CALL
-	openssl_rsa_prv_decrypt(
-		const axis2_env_t *env,
-		const openssl_pkey_t *pkey,
-		const axis2_char_t *padding,
-		oxs_buffer_t *in,
-		oxs_buffer_t *out);
+    /**
+      * Decrypts data using a private key specified in @pkey
+      * @rsa pointer to openssl_rsa struct
+      * @env pointer to environment struct
+      * @pkey private key for decryption
+      * @in input data
+      * @out output data
+      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+      **/
+    int AXIS2_CALL
+    openssl_rsa_prv_decrypt(
+        const axis2_env_t *env,
+        const openssl_pkey_t *pkey,
+        const axis2_char_t *padding,
+        oxs_buffer_t *in,
+        oxs_buffer_t *out);
 
-  /**
-    * Encrypts data using a public key specified in @pkey
-    * @rsa pointer to openssl_rsa struct
-    * @env pointer to environment struct
-    * @pkey public key for encryption
-    * @in input data
-    * @out output data
-    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
-    **/
-	int AXIS2_CALL
-	openssl_rsa_pub_encrypt(
-		const axis2_env_t *env,
-		const openssl_pkey_t *pkey,
-		const axis2_char_t *padding,
-		oxs_buffer_t *in,
-		oxs_buffer_t *out);
-      
-  /**
-    * Sign data using a private key specified in @pkey
-    * @rsa pointer to openssl_rsa struct
-    * @env pointer to environment struct
-    * @pkey private key for decryption
-    * @in input data
-    * @out output data
-    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
-    **/
-	int AXIS2_CALL
-	openssl_rsa_prv_encrypt(
-		const axis2_env_t *env,
-		const openssl_pkey_t *pkey,
-		const axis2_char_t *padding,
-		oxs_buffer_t *in,
-		oxs_buffer_t *out);
-      
-  /**
-    * Verifies data using a public key specified in @pkey
-    * @rsa pointer to openssl_rsa struct
-    * @env pointer to environment struct
-    * @pkey public key for encryption
-    * @in input data
-    * @out output data
-    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
-    **/
-	int AXIS2_CALL
-	openssl_rsa_pub_decrypt(
-		const axis2_env_t *env,
-		const openssl_pkey_t *pkey,
-		const axis2_char_t *padding,
-		oxs_buffer_t *in,
-		oxs_buffer_t *out);
+    /**
+      * Encrypts data using a public key specified in @pkey
+      * @rsa pointer to openssl_rsa struct
+      * @env pointer to environment struct
+      * @pkey public key for encryption
+      * @in input data
+      * @out output data
+      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+      **/
+    int AXIS2_CALL
+    openssl_rsa_pub_encrypt(
+        const axis2_env_t *env,
+        const openssl_pkey_t *pkey,
+        const axis2_char_t *padding,
+        oxs_buffer_t *in,
+        oxs_buffer_t *out);
+
+    /**
+      * Sign data using a private key specified in @pkey
+      * @rsa pointer to openssl_rsa struct
+      * @env pointer to environment struct
+      * @pkey private key for decryption
+      * @in input data
+      * @out output data
+      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+      **/
+    int AXIS2_CALL
+    openssl_rsa_prv_encrypt(
+        const axis2_env_t *env,
+        const openssl_pkey_t *pkey,
+        const axis2_char_t *padding,
+        oxs_buffer_t *in,
+        oxs_buffer_t *out);
+
+    /**
+      * Verifies data using a public key specified in @pkey
+      * @rsa pointer to openssl_rsa struct
+      * @env pointer to environment struct
+      * @pkey public key for encryption
+      * @in input data
+      * @out output data
+      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+      **/
+    int AXIS2_CALL
+    openssl_rsa_pub_decrypt(
+        const axis2_env_t *env,
+        const openssl_pkey_t *pkey,
+        const axis2_char_t *padding,
+        oxs_buffer_t *in,
+        oxs_buffer_t *out);
 
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

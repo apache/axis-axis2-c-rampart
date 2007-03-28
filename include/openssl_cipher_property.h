@@ -29,91 +29,91 @@ extern "C" {
 #endif
 
 
-/** Type name for struct  openssl_cipher_property */
-typedef struct openssl_cipher_property_t openssl_cipher_property_t;
+    /** Type name for struct  openssl_cipher_property */
+    typedef struct openssl_cipher_property_t openssl_cipher_property_t;
 
 
-EVP_CIPHER * AXIS2_CALL
-openssl_cipher_property_get_cipher(
-    const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env);
+    EVP_CIPHER * AXIS2_CALL
+    openssl_cipher_property_get_cipher(
+        const openssl_cipher_property_t *cprop,
+        const axis2_env_t *env);
 
-axis2_char_t * AXIS2_CALL
-openssl_cipher_property_get_name(
-    const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env);
+    axis2_char_t * AXIS2_CALL
+    openssl_cipher_property_get_name(
+        const openssl_cipher_property_t *cprop,
+        const axis2_env_t *env);
 
-axis2_char_t * AXIS2_CALL
-openssl_cipher_property_get_url(
-    const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env);
+    axis2_char_t * AXIS2_CALL
+    openssl_cipher_property_get_url(
+        const openssl_cipher_property_t *cprop,
+        const axis2_env_t *env);
 
-int AXIS2_CALL
-openssl_cipher_property_get_key_size(
-    const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env);
+    int AXIS2_CALL
+    openssl_cipher_property_get_key_size(
+        const openssl_cipher_property_t *cprop,
+        const axis2_env_t *env);
 
-int AXIS2_CALL
-openssl_cipher_property_get_block_size(
-    const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env);
+    int AXIS2_CALL
+    openssl_cipher_property_get_block_size(
+        const openssl_cipher_property_t *cprop,
+        const axis2_env_t *env);
 
-int AXIS2_CALL
-openssl_cipher_property_get_iv_size(
-    const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env);
-    
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_set_cipher(
-    openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
-    EVP_CIPHER *cipher);
+    int AXIS2_CALL
+    openssl_cipher_property_get_iv_size(
+        const openssl_cipher_property_t *cprop,
+        const axis2_env_t *env);
 
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_set_name(
-    openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
-    axis2_char_t *name);
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_set_cipher(
+        openssl_cipher_property_t *cprop,
+        const axis2_env_t *env,
+        EVP_CIPHER *cipher);
 
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_set_url(
-    openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
-    axis2_char_t *name);
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_set_name(
+        openssl_cipher_property_t *cprop,
+        const axis2_env_t *env,
+        axis2_char_t *name);
 
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_set_key_size(
-    openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
-    int   key_size);
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_set_url(
+        openssl_cipher_property_t *cprop,
+        const axis2_env_t *env,
+        axis2_char_t *name);
 
-
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_set_block_size(
-    openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
-    int  block_size);
-
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_set_iv_size(
-    openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
-    int   iv_size);
- 
-axis2_status_t AXIS2_CALL
-openssl_cipher_property_free(openssl_cipher_property_t * cprop, const axis2_env_t *env);
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_set_key_size(
+        openssl_cipher_property_t *cprop,
+        const axis2_env_t *env,
+        int   key_size);
 
 
-/**
-* Create a fresh block cipher property
-*@return cipher_prop_ptr
-*/
-AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
-openssl_cipher_property_create(const axis2_env_t *env);
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_set_block_size(
+        openssl_cipher_property_t *cprop,
+        const axis2_env_t *env,
+        int  block_size);
+
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_set_iv_size(
+        openssl_cipher_property_t *cprop,
+        const axis2_env_t *env,
+        int   iv_size);
+
+    axis2_status_t AXIS2_CALL
+    openssl_cipher_property_free(openssl_cipher_property_t * cprop, const axis2_env_t *env);
+
+
+    /**
+    * Create a fresh block cipher property
+    *@return cipher_prop_ptr
+    */
+    AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
+    openssl_cipher_property_create(const axis2_env_t *env);
 
 
 
-/* @} */
+    /* @} */
 #ifdef __cplusplus
 }
 #endif

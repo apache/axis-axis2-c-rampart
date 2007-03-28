@@ -34,9 +34,9 @@ extern "C"
 
     AXIS2_EXTERN rp_https_token_t *AXIS2_CALL
     rp_https_token_builder_build(
-            const axis2_env_t *env,
-            axiom_node_t *https,
-            axiom_element_t *https_ele);
+        const axis2_env_t *env,
+        axiom_node_t *https,
+        axiom_element_t *https_ele);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_https_token_builder_set_inclusion_value(
@@ -63,4 +63,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

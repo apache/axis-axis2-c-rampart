@@ -36,55 +36,55 @@
 extern "C"
 {
 #endif
-/**
- * Signs an input buffer @input using the RSA-SHA1 algorithm.
- * Result will be placed in output buffer @output
- * @env pointer to environment struct
- * @sign_ctx the signature context
- * @input input buffer
- * @output output buffer
- * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
- */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
-    oxs_sign_ctx_t *sign_ctx,
-    oxs_buffer_t *input,
-    oxs_buffer_t *output);
+    /**
+     * Signs an input buffer @input using the RSA-SHA1 algorithm.
+     * Result will be placed in output buffer @output
+     * @env pointer to environment struct
+     * @sign_ctx the signature context
+     * @input input buffer
+     * @output output buffer
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
+                          oxs_sign_ctx_t *sign_ctx,
+                          oxs_buffer_t *input,
+                          oxs_buffer_t *output);
 
-/**
- * Signs a content placed in @input buf using the information
- * available in the signature context @sign_ctx.
- * The result will be placed in the buffer @output.
- * Note that the result is base64 encoded.
- * @env pointer to environment struct
- * @sign_ctx the signature context
- * @input input buffer
- * @output output buffer
- * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
- */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_sig_sign(const axis2_env_t *env,
-    oxs_sign_ctx_t *sign_ctx,
-    oxs_buffer_t *input,
-    oxs_buffer_t *output);
+    /**
+     * Signs a content placed in @input buf using the information
+     * available in the signature context @sign_ctx.
+     * The result will be placed in the buffer @output.
+     * Note that the result is base64 encoded.
+     * @env pointer to environment struct
+     * @sign_ctx the signature context
+     * @input input buffer
+     * @output output buffer
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_sig_sign(const axis2_env_t *env,
+                 oxs_sign_ctx_t *sign_ctx,
+                 oxs_buffer_t *input,
+                 oxs_buffer_t *output);
 
-/**
- * Verifies a @signature with @content using the information
- * available in the signature content @sign_ctx.
- * Note that the signature should be the base64 encoded value of a digital signature.
- * @env pointer to environment struct
- * @sign_ctx the signature context
- * @content the content that's signed
- * @signature the signature value
- * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
- */
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_sig_verify(const axis2_env_t *env,
-    oxs_sign_ctx_t *sign_ctx,
-    axis2_char_t *content,
-    axis2_char_t *signature);
+    /**
+     * Verifies a @signature with @content using the information
+     * available in the signature content @sign_ctx.
+     * Note that the signature should be the base64 encoded value of a digital signature.
+     * @env pointer to environment struct
+     * @sign_ctx the signature context
+     * @content the content that's signed
+     * @signature the signature value
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_sig_verify(const axis2_env_t *env,
+                   oxs_sign_ctx_t *sign_ctx,
+                   axis2_char_t *content,
+                   axis2_char_t *signature);
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

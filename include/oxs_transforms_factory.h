@@ -37,12 +37,12 @@ extern "C"
 {
 #endif
 
-AXIS2_EXTERN oxs_transform_t *AXIS2_CALL
-oxs_transforms_factory_produce_transform(const axis2_env_t *env,
-    axis2_char_t *id);
+    AXIS2_EXTERN oxs_transform_t *AXIS2_CALL
+    oxs_transforms_factory_produce_transform(const axis2_env_t *env,
+            axis2_char_t *id);
 
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

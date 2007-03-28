@@ -31,11 +31,11 @@ extern "C"
 {
 #endif
 
-/*Default values*/
+    /*Default values*/
 #define RAMPART_DEFAULT_KT_ALGO OXS_DEFAULT_KT_ALGO_HREF
 #define RAMPART_STR_DEFAULT OXS_STR_DEFAULT
 
-/* rampart element names*/
+    /* rampart element names*/
 #define RAMPART_SECURITY "Security"
 #define RAMPART_SECURITY_USERNAMETOKEN "UsernameToken"
 #define RAMPART_SECURITY_USERNAMETOKEN_USERNAME "Username"
@@ -46,31 +46,31 @@ extern "C"
 #define RAMPART_SECURITY_TIMESTAMP "Timestamp"
 #define RAMPART_SECURITY_TIMESTAMP_CREATED "Created"
 #define RAMPART_SECURITY_TIMESTAMP_EXPIRES "Expires"
-#define RAMPART_RAMPART "rampart"   
+#define RAMPART_RAMPART "rampart"
 
-/*Rampart URIs*/
+    /*Rampart URIs*/
 #define RAMPART_WSSE "wsse"
 #define RAMPART_WSSE_XMLNS "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 #define RAMPART_WSU "wsu"
 #define RAMPART_WSU_XMLNS "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-#define RAMPART_PASSWORD_DIGEST_URI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"  
+#define RAMPART_PASSWORD_DIGEST_URI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
-#define RAMPART_PASSWORD_TEXT_URI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText" 
+#define RAMPART_PASSWORD_TEXT_URI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
 
 
 #define RAMPART_INFLOW_SECURITY_POLICY              "InflowSecurityPolicy"
 #define RAMPART_OUTFLOW_SECURITY_POLICY             "OutflowSecurityPolicy"
 
 #define INFLOW_RAMPART_CONTEXT                      "InflowRampartContext"
-#define OUTFLOW_RAMPART_CONTEXT                     "OutflowRampartContext"   
+#define OUTFLOW_RAMPART_CONTEXT                     "OutflowRampartContext"
 
 #define IN_MESSAGE_SECURITY                          "InMessageSecurity"
-#define OUT_MESSAGE_SECURITY                         "OutMessageSEcurity"                                
+#define OUT_MESSAGE_SECURITY                         "OutMessageSEcurity"
 #define RAMPART_PASSWORD_TEXT                       "plainText"
 #define RAMPART_PASSWORD_DIGEST                     "Digest"
 
 
-/************fault codes***************/
+    /************fault codes***************/
 #define RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN    "wsse:UnsupportedSecurityToken"
 #define RAMPART_FAULT_UNSUPPORTED_ALGORITHM         "wsse:UnsupportedAlgorithm"
 #define RAMPART_FAULT_INVALID_SECURITY              "wsse:InvalidSecurity"
@@ -79,18 +79,18 @@ extern "C"
 #define RAMPART_FAULT_FAILED_CHECK                  "wsse:FailedCheck"
 #define RAMPART_FAULT_SECURITY_TOKEN_UNAVAILABLE    "wsse:SecurityTokenUnavailable"
 
-/***********fault related strings*********/
+    /***********fault related strings*********/
 #define RAMPART_FAULT_IN_TIMESTAMP             "wsse:Timestamp"
 #define RAMPART_FAULT_IN_USERNAMETOKEN         "wsse:UsernameToken"
 #define RAMPART_FAULT_IN_ENCRYPTED_KEY         "xenc:EncryptedKey"
 #define RAMPART_FAULT_IN_ENCRYPTED_DATA        "xenc:EncryptedData"
 
-/*Dynamically set values*/
+    /*Dynamically set values*/
 #define RAMPART_ACTION_PASSWORD "password"
 #define RAMPART_ACTION_ENC_USER_PASSWORD "encUserPassword"
 #define RAMPART_CALLBACK_SPECIFIC_PROPERTY "callbackSpecificProperty"
 
-/*Security processed results*/
+    /*Security processed results*/
 #define RAMPART_SECURITY_PROCESSED_RESULTS "SecurityProcessedResults"
 #define RAMPART_SPR_UT_USERNAME "SPR_UT_username"
 #define RAMPART_SPR_UT_CREATED "SPR_UT_created"
@@ -105,7 +105,7 @@ extern "C"
 #define RAMPART_YES "YES"
 #define RAMPART_NO "NO"
 
-#define RAMPART_STR_DIRECT_REFERENCE    OXS_STR_DIRECT_REFERENCE 
+#define RAMPART_STR_DIRECT_REFERENCE    OXS_STR_DIRECT_REFERENCE
 #define RAMPART_STR_KEY_IDENTIFIER      OXS_STR_KEY_IDENTIFIER
 #define RAMPART_STR_EMBEDDED            OXS_STR_EMBEDDED
 #define RAMPART_STR_ISSUER_SERIAL       OXS_STR_ISSUER_SERIAL
@@ -113,8 +113,8 @@ extern "C"
 #define RAMPART_STR_EXTERNAL_URI        OXS_STR_EXTERNAL_URI
 #define RAMPART_STR_ENCRYPTED_KEY       OXS_STR_ENCRYPTED_KEY
 
-#define AXIS2_PEM 10    
-    
+#define AXIS2_PEM 10
+
 #ifdef __cplusplus
 }
 #endif

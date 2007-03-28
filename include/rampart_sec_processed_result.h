@@ -31,60 +31,60 @@
 extern "C" {
 #endif
 
-/**
-  * @defgroup Rampart_Util
-  * @ingroup Rampart_Util
-  */
-/**
-*   Set a security processed result to the message context
-*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_set_security_processed_result(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *key,
-        void *value);
-/**
-*   Get a security processed result from a message context.
-*   A service  may use this method to retirieve a particular result by the key
-*   @env the environment 
-*   @msg_ctx the message context in which data are extracted
-*   @key as specified in rampart_constants section SPR
-*
-*/
-AXIS2_EXTERN void *AXIS2_CALL
-rampart_get_security_processed_result(const axis2_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_char_t *key);
+    /**
+      * @defgroup Rampart_Util
+      * @ingroup Rampart_Util
+      */
+    /**
+    *   Set a security processed result to the message context
+    */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_set_security_processed_result(const axis2_env_t *env,
+                                          axis2_msg_ctx_t *msg_ctx,
+                                          axis2_char_t *key,
+                                          void *value);
+    /**
+    *   Get a security processed result from a message context.
+    *   A service  may use this method to retirieve a particular result by the key
+    *   @env the environment 
+    *   @msg_ctx the message context in which data are extracted
+    *   @key as specified in rampart_constants section SPR
+    *
+    */
+    AXIS2_EXTERN void *AXIS2_CALL
+    rampart_get_security_processed_result(const axis2_env_t *env,
+                                          axis2_msg_ctx_t *msg_ctx,
+                                          axis2_char_t *key);
 
-/**
-*   Set a security processed result property to the message context
-*   @env the environment 
-*   @msg_ctx the message context in which data are extracted
-*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_set_security_processed_results_property(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx);
+    /**
+    *   Set a security processed result property to the message context
+    *   @env the environment 
+    *   @msg_ctx the message context in which data are extracted
+    */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_set_security_processed_results_property(const axis2_env_t *env,
+            axis2_msg_ctx_t *msg_ctx);
 
-/**
-*   Get the complete set of security processed results
-*   @env the environment 
-*   @msg_ctx the message context in which data are extracted
-*/
-AXIS2_EXTERN axis2_hash_t* AXIS2_CALL
-rampart_get_all_security_processed_results(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx);
+    /**
+    *   Get the complete set of security processed results
+    *   @env the environment 
+    *   @msg_ctx the message context in which data are extracted
+    */
+    AXIS2_EXTERN axis2_hash_t* AXIS2_CALL
+    rampart_get_all_security_processed_results(const axis2_env_t *env,
+            axis2_msg_ctx_t *msg_ctx);
 
-/**
- * Prints all ke/val pairs in the security processed results
- *   @env the environment 
- *   @msg_ctx the message context in which data are extracted
- *
- */
-AXIS2_EXTERN void AXIS2_CALL
-rampart_print_security_processed_results_set(const axis2_env_t *env,
-    axis2_msg_ctx_t *msg_ctx);
+    /**
+     * Prints all ke/val pairs in the security processed results
+     *   @env the environment 
+     *   @msg_ctx the message context in which data are extracted
+     *
+     */
+    AXIS2_EXTERN void AXIS2_CALL
+    rampart_print_security_processed_results_set(const axis2_env_t *env,
+            axis2_msg_ctx_t *msg_ctx);
 
-/* @} */
+    /* @} */
 #ifdef __cplusplus
 }
 #endif

@@ -34,17 +34,17 @@ extern "C"
 {
 #endif
 
-/**
-* EncryptedData  element
-*/
-AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_encrypted_data_element(const axis2_env_t *env,
-                        axiom_node_t *parent,
-                        axis2_char_t* type_attribute,
-                        axis2_char_t* id
-                    );
+    /**
+    * EncryptedData  element
+    */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_encrypted_data_element(const axis2_env_t *env,
+                                           axiom_node_t *parent,
+                                           axis2_char_t* type_attribute,
+                                           axis2_char_t* id
+                                          );
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

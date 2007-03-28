@@ -36,14 +36,14 @@ extern "C"
 #define __FUNCTION__ NULL
 #endif
 
-/*Macros for locating thr error*/
+    /*Macros for locating thr error*/
 #define FUNCTION_NAME __FUNCTION__
 #define LINE_NUMBER __LINE__
 #define FILE_NAME __FILE__
 
 #define ERROR_LOCATION FILE_NAME,LINE_NUMBER,FUNCTION_NAME
 
-/*Error codes*/
+    /*Error codes*/
 #define OXS_ERROR_DEFAULT               0
 #define OXS_ERROR_ENCRYPT_FAILED        1
 #define OXS_ERROR_DECRYPT_FAILED        2
@@ -60,57 +60,57 @@ extern "C"
 #define OXS_ERROR_SIGN_FAILED          13
 #define OXS_ERROR_SIG_VERIFICATION_FAILED        14
 
-typedef struct _oxs_error_description oxs_error_description, *oxs_error_description_ptr;
+    typedef struct _oxs_error_description oxs_error_description, *oxs_error_description_ptr;
 
-/**
-*   Structure to hold error descriptions
-*   @param code Error Code
-*   @param message Error Message
-*/
-struct _oxs_error_description
-{
-    int code;
-    const char* message;
-};
+    /**
+    *   Structure to hold error descriptions
+    *   @param code Error Code
+    *   @param message Error Message
+    */
+    struct _oxs_error_description
+    {
+        int code;
+        const char* message;
+    };
 
-/**
-* Given the error code @code get the error message from the table
-* @param code  Error code
-* @return error message
-*/
-AXIS2_EXTERN const char* AXIS2_CALL
-oxs_errors_get_msg_by_code(int code);
+    /**
+    * Given the error code @code get the error message from the table
+    * @param code  Error code
+    * @return error message
+    */
+    AXIS2_EXTERN const char* AXIS2_CALL
+    oxs_errors_get_msg_by_code(int code);
 
-/**
-* Given position @pos get the error message from the table
-* @param pos  Position of the table
-* @return error message
-*/
-AXIS2_EXTERN const char* AXIS2_CALL
-oxs_errors_get_msg(unsigned int pos);
+    /**
+    * Given position @pos get the error message from the table
+    * @param pos  Position of the table
+    * @return error message
+    */
+    AXIS2_EXTERN const char* AXIS2_CALL
+    oxs_errors_get_msg(unsigned int pos);
 
-/**
-* Given position @pos get the error code from the table
-* @param pos  Position of the table
-* @return error code
-*/
-AXIS2_EXTERN int AXIS2_CALL
-oxs_errors_get_code(unsigned int pos);
+    /**
+    * Given position @pos get the error code from the table
+    * @param pos  Position of the table
+    * @return error code
+    */
+    AXIS2_EXTERN int AXIS2_CALL
+    oxs_errors_get_code(unsigned int pos);
 
-/**
- * Print/log the error message
- * @file:      file name
- * @line:      line number 
- * @func:      function 
- * @code:      the error code.
- * @msg:       the error message 
- *
- */
-AXIS2_EXTERN void AXIS2_CALL
-oxs_error(const axis2_env_t *env, const char* file, int line, const char* func,
-        int code, const char* msg,...);
+    /**
+     * Print/log the error message
+     * @file:      file name
+     * @line:      line number 
+     * @func:      function 
+     * @code:      the error code.
+     * @msg:       the error message 
+     *
+     */
+    AXIS2_EXTERN void AXIS2_CALL
+    oxs_error(const axis2_env_t *env, const char* file, int line, const char* func,
+              int code, const char* msg,...);
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

@@ -35,18 +35,18 @@ extern "C"
 #endif
 
 
-/**
-* Signature Method element
-*/
-AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_signature_method_element(const axis2_env_t *env,
-                        axiom_node_t *parent,
-                        axis2_char_t *algorithm
-                    );
+    /**
+    * Signature Method element
+    */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_signature_method_element(const axis2_env_t *env,
+            axiom_node_t *parent,
+            axis2_char_t *algorithm
+                                            );
 
-AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_signature_method(const axis2_env_t *env, axiom_node_t *enc_mtd_node);
-/** @} */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    oxs_token_get_signature_method(const axis2_env_t *env, axiom_node_t *enc_mtd_node);
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

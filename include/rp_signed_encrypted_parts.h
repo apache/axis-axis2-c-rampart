@@ -29,8 +29,8 @@
 extern "C"
 {
 #endif
-    
-    typedef struct rp_signed_encrypted_parts_t rp_signed_encrypted_parts_t; 
+
+    typedef struct rp_signed_encrypted_parts_t rp_signed_encrypted_parts_t;
     struct rp_header_t;
 
     AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL
@@ -38,39 +38,39 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_signed_encrypted_parts_free(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env);
+                                   const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_signed_encrypted_parts_get_body(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env);
+                                       const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_signed_encrypted_parts_set_body(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env,
-                                    axis2_bool_t body);
-    
+                                       const axis2_env_t *env,
+                                       axis2_bool_t body);
+
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_signed_encrypted_parts_get_signedparts(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_signed_encrypted_parts_set_signedparts(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env,
-                                    axis2_bool_t signedparts);
+            const axis2_env_t *env,
+            axis2_bool_t signedparts);
 
     AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
     rp_signed_encrypted_parts_get_headers(
-                                    rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env);
+        rp_signed_encrypted_parts_t *signed_encrypted_parts,
+        const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_signed_encrypted_parts_add_header(
-                                    rp_signed_encrypted_parts_t *signed_encrypted_parts,
-                                    const axis2_env_t *env,
-                                    struct rp_header_t *header);
+        rp_signed_encrypted_parts_t *signed_encrypted_parts,
+        const axis2_env_t *env,
+        struct rp_header_t *header);
 
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif
 

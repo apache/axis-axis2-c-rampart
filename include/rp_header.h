@@ -28,7 +28,7 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_header_t rp_header_t;
 
     AXIS2_EXTERN rp_header_t *AXIS2_CALL
@@ -59,4 +59,4 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif

@@ -35,33 +35,33 @@
 extern "C" {
 #endif
 
-/** @defgroup
- * @ingroup
- * @{
- */
+    /** @defgroup
+     * @ingroup
+     * @{
+     */
 
-/*Load*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_load(const axis2_env_t *env,
-    axis2_char_t *filename,
-    PKCS12 **p12);
+    /*Load*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    openssl_pkcs12_load(const axis2_env_t *env,
+                        axis2_char_t *filename,
+                        PKCS12 **p12);
 
-/*Parse*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_parse(const axis2_env_t *env,
-    axis2_char_t *password ,
-    PKCS12 *p12,
-    EVP_PKEY **prvkey,
-    X509 **cert,
-    STACK_OF(X509) **ca);
+    /*Parse*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    openssl_pkcs12_parse(const axis2_env_t *env,
+                         axis2_char_t *password ,
+                         PKCS12 *p12,
+                         EVP_PKEY **prvkey,
+                         X509 **cert,
+                         STACK_OF(X509) **ca);
 
-/*Free*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_free(const axis2_env_t *env,
-    PKCS12 *p12);
+    /*Free*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    openssl_pkcs12_free(const axis2_env_t *env,
+                        PKCS12 *p12);
 
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

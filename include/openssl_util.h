@@ -29,21 +29,21 @@
 extern "C" {
 #endif
 
-/*Generate a random sgtring.*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-generate_random_data(const axis2_env_t *env, oxs_buffer_t *buffer, int size);
+    /*Generate a random sgtring.*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    generate_random_data(const axis2_env_t *env, oxs_buffer_t *buffer, int size);
 
-/*Get the cipher property for a given cipher name
-  @see openssl_cipher_property.h*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property_t *cprop);
+    /*Get the cipher property for a given cipher name
+      @see openssl_cipher_property.h*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property_t *cprop);
 
-/*Get a cipher for a given name*/
-AXIS2_EXTERN EVP_CIPHER*  AXIS2_CALL
-openssl_get_evp_cipher_by_name(const axis2_env_t *env, axis2_char_t *cipher_name);
+    /*Get a cipher for a given name*/
+    AXIS2_EXTERN EVP_CIPHER*  AXIS2_CALL
+    openssl_get_evp_cipher_by_name(const axis2_env_t *env, axis2_char_t *cipher_name);
 
 
-/* @} */
+    /* @} */
 #ifdef __cplusplus
 }
 #endif

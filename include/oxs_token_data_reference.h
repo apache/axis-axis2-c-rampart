@@ -34,19 +34,19 @@ extern "C"
 {
 #endif
 
-/**
-* Data Reference element
-*/
-AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_data_reference_element(const axis2_env_t *env,
-                        axiom_node_t *parent,
-                        axis2_char_t *data_ref
-                    );
+    /**
+    * Data Reference element
+    */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_data_reference_element(const axis2_env_t *env,
+                                           axiom_node_t *parent,
+                                           axis2_char_t *data_ref
+                                          );
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_data_reference(const axis2_env_t *env, axiom_node_t *data_ref_node);
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_data_reference(const axis2_env_t *env, axiom_node_t *data_ref_node);
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

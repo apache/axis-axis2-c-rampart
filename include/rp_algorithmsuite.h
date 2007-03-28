@@ -28,148 +28,148 @@
 extern "C"
 {
 #endif
-    
+
     typedef struct rp_algorithmsuite_t rp_algorithmsuite_t;
-    
+
     AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
     rp_algorithmsuite_create(const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_free(rp_algorithmsuite_t *algorithmsuite,
-                        const axis2_env_t *env);
+                           const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_algosuite_string(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                           const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_algosuite(rp_algorithmsuite_t *algorithmsuite,
-                             const axis2_env_t *env,
-                             axis2_char_t *algosuite_string);
+                                    const axis2_env_t *env,
+                                    axis2_char_t *algosuite_string);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_symmetric_signature(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_symmetric_signature(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *symmetric_signature);
-    
+            const axis2_env_t *env,
+            axis2_char_t *symmetric_signature);
+
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_asymmetric_signature(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_asymmetric_signature(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *asymmetric_signature);
+            const axis2_env_t *env,
+            axis2_char_t *asymmetric_signature);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_computed_key(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                       const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_computed_key(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *computed_key);
+                                       const axis2_env_t *env,
+                                       axis2_char_t *computed_key);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_digest(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                 const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_encryption(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                     const axis2_env_t *env);
 
     AXIS2_EXTERN int AXIS2_CALL
     rp_algorithmsuite_get_max_symmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_max_symmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            int max_symmetric_keylength);
+            const axis2_env_t *env,
+            int max_symmetric_keylength);
 
     AXIS2_EXTERN int AXIS2_CALL
     rp_algorithmsuite_get_min_symmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN int AXIS2_CALL
     rp_algorithmsuite_get_max_asymmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_max_asymmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            int max_asymmetric_keylength);
+            const axis2_env_t *env,
+            int max_asymmetric_keylength);
 
     AXIS2_EXTERN int AXIS2_CALL
     rp_algorithmsuite_get_min_asymmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_min_asymmetric_keylength(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            int min_asymmetric_keylength);
+            const axis2_env_t *env,
+            int min_asymmetric_keylength);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_symmetrickeywrap(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                           const axis2_env_t *env);
 
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_asymmetrickeywrap(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                            const axis2_env_t *env);
 
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_signature_key_derivation(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_encryption_key_derivation(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_soap_normalization(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_soap_normalization(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *soap_normalization);
+            const axis2_env_t *env,
+            axis2_char_t *soap_normalization);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_str_transformation(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+            const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_str_transformation(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *str_transformation);
+            const axis2_env_t *env,
+            axis2_char_t *str_transformation);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_c14n(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                               const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_c14n(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *c14n);
+                               const axis2_env_t *env,
+                               axis2_char_t *c14n);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_algorithmsuite_get_xpath(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env);
+                                const axis2_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_algorithmsuite_set_xpath(rp_algorithmsuite_t *algorithmsuite,
-                            const axis2_env_t *env,
-                            axis2_char_t *xpath);
-        
+                                const axis2_env_t *env,
+                                axis2_char_t *xpath);
+
 #ifdef __cplusplus
 }
 #endif
-#endif  
+#endif
