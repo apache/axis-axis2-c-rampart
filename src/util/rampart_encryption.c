@@ -22,7 +22,6 @@
 #include <oxs_utility.h>
 #include <rampart_encryption.h>
 #include <oxs_key.h>
-#include <rampart_action.h>
 #include <rampart_constants.h>
 #include <rampart_handler_util.h>
 #include <oxs_tokens.h>

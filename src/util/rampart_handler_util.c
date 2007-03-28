@@ -30,10 +30,6 @@
 #include <axis2_conf_ctx.h>
 #include <oxs_axiom.h>
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_callback_encuser_password(const axis2_env_t *env,
-            rampart_actions_t *actions,
-            axis2_msg_ctx_t *msg_ctx);
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_get_property_from_ctx(const axis2_env_t *env,
@@ -44,16 +40,6 @@ AXIS2_EXTERN axis2_param_t* AXIS2_CALL
 rampart_get_security_param(const axis2_env_t *env,
         axis2_msg_ctx_t *msg_ctx,
         axis2_char_t *parameter);
-
-AXIS2_EXTERN axis2_array_list_t* AXIS2_CALL
-rampart_get_actions(const axis2_env_t *env,
-        axis2_ctx_t *ctx,
-        axis2_param_t *param_x_flow_security);
-
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_get_action_params(const axis2_env_t *env,
-        axis2_param_t *param_action,
-        const axis2_char_t *key);
 
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 rampart_get_security_token(const axis2_env_t *env,
@@ -79,46 +65,6 @@ rampart_get_policy_location(const axis2_env_t *env,
 
 /**********************end of header functions ****************************/
 
-axis2_char_t* AXIS2_CALL
-rampart_callback_encuser_password(const axis2_env_t *env,
-            rampart_actions_t *actions,
-            axis2_msg_ctx_t *msg_ctx)
-{
-    axis2_char_t *enc_user = NULL;
-    axis2_char_t *pw_callback_module = NULL;
-    axis2_char_t *password = NULL;
-    axis2_ctx_t *ctx = NULL;
-
-    /*Check if encUserPassword is in the context. This is designed specially for PHP
-    i.e.In any context in the context hierarchy starting from msg, op, svc, etc.*/
-    ctx = axis2_msg_ctx_get_base(msg_ctx, env);
-    password = rampart_get_property_from_ctx(env, ctx,  RAMPART_ACTION_ENC_USER_PASSWORD);
-    if (password)
-    {
-        return password;
-    }
-    /*If not found then callback the password*/ 
-
-    enc_user = RAMPART_ACTIONS_GET_ENC_USER(actions, env);
-    pw_callback_module = RAMPART_ACTIONS_GET_PW_CB_CLASS(actions, env);
-    if(!pw_callback_module){
-        return NULL;
-    }
-    if(!enc_user){
-        /*If a special enc_user hasn't specified try to get the user.
-         * But it is advisable to use enc_user instead of user.*/
-        enc_user = RAMPART_ACTIONS_GET_USER(actions, env);
-        if(!enc_user){
-            return NULL;
-        }
-    }
-    /*Get axis2_ctx_t. This is designed specially for PHP*/
-
-/*  password = rampart_callback_password(env, pw_callback_module, enc_user, ctx);*/
-/*  password = rampart_callback_password(env, pw_callback_module, enc_user);*/
-
-    return password;
-}
 
 axis2_char_t* AXIS2_CALL
 rampart_get_property_from_ctx(const axis2_env_t *env,
@@ -153,76 +99,6 @@ rampart_get_security_param(const axis2_env_t *env,
 }
 
 
-axis2_array_list_t *AXIS2_CALL
-rampart_get_actions(const axis2_env_t *env,
-        axis2_ctx_t *ctx,
-        axis2_param_t *param_x_flow_security)
-{
-    axis2_array_list_t *action_list = NULL;
-    int param_type;
-    if (!param_x_flow_security)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu]param_in_flow_security is NULL");
-        return action_list;
-    }
-
-    /*ERROR HERE param returns TEXT even for DOM*/
-    param_type = axis2_param_get_param_type(param_x_flow_security, env);
-
-    action_list = axis2_param_get_value_list(param_x_flow_security, env);
-    if (!action_list)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu] action_list is NULL ... ERROR ");
-    }
-    return action_list;
-}
-
-
-axis2_char_t* AXIS2_CALL
-rampart_get_action_params(const axis2_env_t *env,
-        axis2_param_t *param_action,
-        const axis2_char_t *key)
-{
-    axis2_char_t *value = NULL;
-    axis2_char_t *tmp_key = NULL;
-    axis2_char_t * param_name = NULL;
-    axis2_array_list_t *param_list = NULL;
-    axis2_param_t *param = NULL;
-    int param_type;
-    int i, size = 0;
-
-    if (!param_action)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu] param_action is NULL");
-    }
-
-    param_type = axis2_param_get_param_type(param_action, env);
-    param_name = axis2_param_get_name(param_action, env);
-
-    param_list = axis2_param_get_value_list(param_action, env);
-    if (!param_list)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu] param list is NULL");
-    }
-
-    size = axis2_array_list_size(param_list, env);
-    for (i = 0; i < size; i = i + 1)
-    {
-        param = (axis2_param_t*) axis2_array_list_get(param_list, env, i);
-        if (param)
-        {
-            tmp_key = axis2_param_get_name(param, env);
-
-            if (0 == axis2_strcmp(tmp_key , key))
-            {
-                value = axis2_param_get_value(param, env);
-                return value;
-            }
-        }
-    }
-
-    return value;
-}
 
 axiom_node_t *AXIS2_CALL
 rampart_get_security_token(const axis2_env_t *env,

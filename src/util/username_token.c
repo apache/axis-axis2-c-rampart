@@ -34,16 +34,6 @@
 
 /** public functions*/
 
-/*
-axis2_status_t AXIS2_CALL
-rampart_username_token_build(rampart_username_token_t *username_token,
-        const axis2_env_t *env,
-        axis2_ctx_t *ctx,
-        rampart_actions_t *actions,
-        axiom_node_t *sec_node,
-        axiom_namespace_t *sec_ns_obj);
-*/
-
 
 
 

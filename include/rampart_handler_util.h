@@ -27,7 +27,6 @@
 #include <axis2_msg_info_headers.h>
 #include <axis2_property.h>
 #include <rampart_constants.h>
-#include <rampart_action.h>
 #include <rampart_util.h>
 #include <axis2_conf_ctx.h>
 
@@ -45,17 +44,6 @@ extern "C"
 {
 #endif
 
-/**
- * Get the encryption user password from the callback module
- * @param env pointer to environment struct
- * @param ctx axis2 context
- * @param actions rampart actions to get parameters
- * @return password or NULL on failure
- */
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_callback_encuser_password(const axis2_env_t *env,
-            rampart_actions_t *actions,
-            axis2_msg_ctx_t *msg_ctx);
 
 /**
  * Get properties from the axis2 context
@@ -83,36 +71,8 @@ rampart_get_security_param( const axis2_env_t *env,
                        axis2_msg_ctx_t *msg_ctx,
                       axis2_char_t *parameter);
     
- /**
- * Get actions specified in In/OutflowSecurity
- * @param env pointer to environment struct    
- * @param ctx context
- * @param Outflowsecurity
- * @return parameters in an array list
- */   
-AXIS2_EXTERN axis2_array_list_t* AXIS2_CALL
-rampart_get_actions( const axis2_env_t *env,
-                     axis2_ctx_t *ctx,
-                     axis2_param_t *param_x_flow_security);
-    
-
  
                                
- /**
- * Get the value of the action parameter given the key name
- * Here the key name means the name of the subelement of the 
- * action element.
- * @param env pointer to environment struct
- * @param param_action action parameter
- * @param key element name as a string
- * @return the value of the element
- */   
- 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_get_action_params( const axis2_env_t *env,
-                   axis2_param_t *param_action,
-                   const axis2_char_t *key);
-
                                
  /**
  * Get the security token from the header block

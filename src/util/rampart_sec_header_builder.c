@@ -180,7 +180,7 @@ rampart_shb_build_message(const axis2_env_t *env,
         }            
 
             /*If both encryption and signature is done we should interchange them.
-             * because the action done last should appear first in the header. */
+             * because the a-ction done last should appear first in the header. */
         sig_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_SIGNATURE);
         enc_key_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_ENCRYPTED_KEY);
         if(sig_node && enc_key_node)
