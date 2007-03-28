@@ -37,8 +37,8 @@ unsigned char *AXIS2_CALL
 oxs_key_get_data(
     const oxs_key_t *key,
     const axis2_env_t *env)
-{    
-    AXIS2_ENV_CHECK(env, NULL);    
+{
+    AXIS2_ENV_CHECK(env, NULL);
 
     return oxs_buffer_get_data(key->buf, env);
 }
@@ -48,7 +48,7 @@ oxs_key_get_name(
     const oxs_key_t *key,
     const axis2_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);    
+    AXIS2_ENV_CHECK(env, NULL);
 
     return key->name;
 
@@ -60,7 +60,7 @@ oxs_key_get_size(
     const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     return oxs_buffer_get_size(key->buf, env);
 }
 
@@ -114,7 +114,7 @@ oxs_key_set_usage(
 AXIS2_EXTERN oxs_key_t *AXIS2_CALL
 oxs_key_create(const axis2_env_t *env)
 {
-	oxs_key_t *key = NULL;
+    oxs_key_t *key = NULL;
     AXIS2_ENV_CHECK(env, NULL);
 
     key = (oxs_key_t*)AXIS2_MALLOC(env->allocator, sizeof(oxs_key_t));
@@ -128,7 +128,7 @@ oxs_key_create(const axis2_env_t *env)
     key->buf = NULL;
     key->name = NULL;
     key->usage = -1;
-    
+
     /*additionally we need to create a buffer to keep data*/
     key->buf = oxs_buffer_create(env);
 
@@ -138,7 +138,7 @@ oxs_key_create(const axis2_env_t *env)
 
 axis2_status_t AXIS2_CALL
 oxs_key_free(oxs_key_t *key,
-        const axis2_env_t *env)
+             const axis2_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -155,11 +155,11 @@ oxs_key_free(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_populate(oxs_key_t *key,
-        const axis2_env_t *env,
-        unsigned char *data,
-        axis2_char_t *name,
-        int size,
-        int usage)
+                 const axis2_env_t *env,
+                 unsigned char *data,
+                 axis2_char_t *name,
+                 int size,
+                 int usage)
 {
     int ret;
 
@@ -176,8 +176,8 @@ oxs_key_populate(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_read_from_file(oxs_key_t *key,
-        const axis2_env_t *env,
-        axis2_char_t *file_name)
+                       const axis2_env_t *env,
+                       axis2_char_t *file_name)
 {
     oxs_buffer_t *buf = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -186,8 +186,8 @@ oxs_key_read_from_file(oxs_key_t *key,
     status = oxs_buffer_read_file(buf, env, file_name);
 
     status = oxs_key_populate(key, env,
-            oxs_buffer_get_data(buf, env), file_name,
-            oxs_buffer_get_size(buf, env), OXS_KEY_USAGE_NONE);
+                              oxs_buffer_get_data(buf, env), file_name,
+                              oxs_buffer_get_size(buf, env), OXS_KEY_USAGE_NONE);
 
     return status;
 
@@ -195,8 +195,8 @@ oxs_key_read_from_file(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_for_algo(oxs_key_t *key,
-        const axis2_env_t *env,
-        axis2_char_t *key_algo)
+                 const axis2_env_t *env,
+                 axis2_char_t *key_algo)
 {
     oxs_buffer_t *key_buf = NULL;
     openssl_cipher_property_t * cprop = NULL;
@@ -209,7 +209,7 @@ oxs_key_for_algo(oxs_key_t *key,
     if (!cprop)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
-                "openssl_get_cipher_property failed");
+                  "openssl_get_cipher_property failed");
         return AXIS2_FAILURE;
     }
 
@@ -221,7 +221,7 @@ oxs_key_for_algo(oxs_key_t *key,
     if (ret == AXIS2_FAILURE)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
-                "generate_random_data failed");
+                  "generate_random_data failed");
         return AXIS2_FAILURE;
     }
 
@@ -229,8 +229,8 @@ oxs_key_for_algo(oxs_key_t *key,
     temp_str = oxs_buffer_get_data(key_buf, env);
 
     ret = oxs_key_populate(key, env,
-            oxs_buffer_get_data(key_buf, env), NULL,
-            oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
+                           oxs_buffer_get_data(key_buf, env), NULL,
+                           oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
 
     /* Duplicate key data and free key_buf*/
     return ret;

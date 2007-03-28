@@ -31,11 +31,11 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_axiom_add_attribute(const axis2_env_t *env,
-    axiom_node_t* node,
-    axis2_char_t* attribute_ns,
-    axis2_char_t* attribute_ns_uri,
-    axis2_char_t* attribute,
-    axis2_char_t* value)
+                        axiom_node_t* node,
+                        axis2_char_t* attribute_ns,
+                        axis2_char_t* attribute_ns_uri,
+                        axis2_char_t* attribute,
+                        axis2_char_t* value)
 {
     axiom_attribute_t *attr = NULL;
     axiom_element_t *ele = NULL;
@@ -47,7 +47,7 @@ oxs_axiom_add_attribute(const axis2_env_t *env,
     ele =  AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     attr =  axiom_attribute_create(env, attribute , value, ns);
     status = axiom_element_add_attribute(ele, env, attr, node);
-    
+
     return status;
 }
 
@@ -70,7 +70,7 @@ oxs_axiom_get_number_of_children_with_qname(const axis2_env_t *env,
     if (!parent_ele)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "Cannot find %s element", local_name);
+                  "Cannot find %s element", local_name);
         return -1;
     }
 
@@ -90,13 +90,13 @@ oxs_axiom_get_number_of_children_with_qname(const axis2_env_t *env,
  * */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_axiom_get_node_by_local_name(const axis2_env_t *env,
-    axiom_node_t *node,
-    axis2_char_t *local_name)
+                                 axiom_node_t *node,
+                                 axis2_char_t *local_name)
 {
     axis2_char_t *temp_name = NULL;
-    
+
     if(!node){return NULL;}
-    
+
     if(AXIOM_NODE_GET_NODE_TYPE(node, env) != AXIOM_ELEMENT){return NULL;}
 
     temp_name = axiom_util_get_localname(node, env);
@@ -106,20 +106,20 @@ oxs_axiom_get_node_by_local_name(const axis2_env_t *env,
         /*Gottcha.. return this node*/
         return node;
     }else{
-        /*Doesn't match? Get the first child*/    
+        /*Doesn't match? Get the first child*/
         axiom_node_t *temp_node = NULL;
 
         temp_node = axiom_node_get_first_element(node, env);
         while (temp_node)
         {
-            axiom_node_t *res_node = NULL;       
+            axiom_node_t *res_node = NULL;
             res_node = oxs_axiom_get_node_by_local_name(env, temp_node, local_name);
             if(res_node){
                 return res_node;
             }
             temp_node = AXIOM_NODE_GET_NEXT_SIBLING(temp_node, env);
-        } 
-    
+        }
+
     }
     return NULL;
 }
@@ -129,15 +129,15 @@ oxs_axiom_get_node_by_local_name(const axis2_env_t *env,
  * */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_axiom_get_node_by_id(const axis2_env_t *env,
-    axiom_node_t *node,
-    axis2_char_t *attr,
-    axis2_char_t *val)
+                         axiom_node_t *node,
+                         axis2_char_t *attr,
+                         axis2_char_t *val)
 {
     axis2_char_t *attribute_value = NULL;
     axis2_char_t *localname = NULL;
-    
+
     if(!node){return NULL;}
-    
+
     if(AXIOM_NODE_GET_NODE_TYPE(node, env) != AXIOM_ELEMENT){return NULL;}
 
     localname = axiom_util_get_localname(node, env);
@@ -148,20 +148,20 @@ oxs_axiom_get_node_by_id(const axis2_env_t *env,
         /*Gottcha.. return this node*/
         return node;
     }else{
-        /*Doesn't match? Get the first child*/    
+        /*Doesn't match? Get the first child*/
         axiom_node_t *temp_node = NULL;
 
         temp_node = axiom_node_get_first_element(node, env);
         while (temp_node)
         {
-            axiom_node_t *res_node = NULL;       
+            axiom_node_t *res_node = NULL;
             res_node = oxs_axiom_get_node_by_id(env, temp_node, attr, val);
             if(res_node){
                 return res_node;
             }
             temp_node = AXIOM_NODE_GET_NEXT_SIBLING(temp_node, env);
-        } 
-    
+        }
+
     }
     return NULL;
 }
@@ -169,24 +169,24 @@ oxs_axiom_get_node_by_id(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_axiom_get_attribute_value_of_node_by_name(const axis2_env_t *env,
-    axiom_node_t *node,
-    axis2_char_t *attribute_name)
+        axiom_node_t *node,
+        axis2_char_t *attribute_name)
 {
     axis2_char_t *attribute_value = NULL;
     axiom_element_t *ele = NULL;
-    
+
     ele = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     attribute_value = axiom_element_get_attribute_value_by_name(ele, env, attribute_name);
-    
+
     return attribute_value;
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_axiom_get_first_child_node_by_name(const axis2_env_t *env,
-        axiom_node_t* parent,
-        axis2_char_t* local_name,
-        axis2_char_t* ns_uri,
-        axis2_char_t* prefix)
+                                       axiom_node_t* parent,
+                                       axis2_char_t* local_name,
+                                       axis2_char_t* ns_uri,
+                                       axis2_char_t* prefix)
 {
     axis2_qname_t *qname = NULL;
     axiom_node_t *node = NULL;
@@ -199,7 +199,7 @@ oxs_axiom_get_first_child_node_by_name(const axis2_env_t *env,
     if (!parent_ele)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "Cannot find %s element", local_name);
+                  "Cannot find %s element", local_name);
         return NULL;
     }
     /*Get the child*/
@@ -212,7 +212,7 @@ oxs_axiom_get_first_child_node_by_name(const axis2_env_t *env,
     if (!node)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "Cannot find child %s of %s", local_name, parent_name);
+                  "Cannot find child %s of %s", local_name, parent_name);
         return NULL;
     }
     return node;
@@ -246,16 +246,16 @@ oxs_axiom_deserialize_node(const axis2_env_t *env,  axis2_char_t* buffer)
     if (!buffer)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "buffer is NULL");
+                  "buffer is NULL");
         return NULL;
     }
     reader = axiom_xml_reader_create_for_memory(env,
-            (void*)buffer, axis2_strlen(buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+             (void*)buffer, axis2_strlen(buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
 
     if (!reader)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "axiom_xml_reader is NULL");
+                  "axiom_xml_reader is NULL");
         return NULL;
     }
 
@@ -263,7 +263,7 @@ oxs_axiom_deserialize_node(const axis2_env_t *env,  axis2_char_t* buffer)
     if (!builder)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "axiom_stax_builder is NULL");
+                  "axiom_stax_builder is NULL");
         return NULL;
     }
 
@@ -271,14 +271,14 @@ oxs_axiom_deserialize_node(const axis2_env_t *env,  axis2_char_t* buffer)
     if (!doc)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "axiom_document is NULL");
+                  "axiom_document is NULL");
         return NULL;
     }
     node = axiom_document_build_all(doc, env);
     if (!node)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "Building node failed");
+                  "Building node failed");
         return NULL;
     }
 

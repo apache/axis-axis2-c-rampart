@@ -22,7 +22,7 @@
 
 
 struct oxs_ctx_t
-{    
+{
     /*Encryption mode*/
     oxs_ctx_mode_t mode;
 
@@ -81,7 +81,7 @@ oxs_ctx_create(const axis2_env_t *env)
 /*public functions*/
 axis2_status_t AXIS2_CALL
 oxs_ctx_free(oxs_ctx_t *ctx,
-        const axis2_env_t *env
+             const axis2_env_t *env
             )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

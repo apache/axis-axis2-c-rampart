@@ -30,8 +30,8 @@
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_mgr_load_key(const axis2_env_t *env,
-    oxs_asym_ctx_t *ctx,
-    axis2_char_t *password)
+                     oxs_asym_ctx_t *ctx,
+                     axis2_char_t *password)
 {
     axis2_char_t *filename = NULL;
     axis2_char_t *pem_buf = NULL;
@@ -50,13 +50,13 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
      * Else we will look for a file name to load the certificate/private key*/
     pem_buf = oxs_asym_ctx_get_pem_buf(ctx, env);
     if(pem_buf){
-        if( OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT == oxs_asym_ctx_get_operation(ctx, env) || 
-            OXS_ASYM_CTX_OPERATION_PUB_DECRYPT == oxs_asym_ctx_get_operation(ctx, env)){
+        if( OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT == oxs_asym_ctx_get_operation(ctx, env) ||
+                OXS_ASYM_CTX_OPERATION_PUB_DECRYPT == oxs_asym_ctx_get_operation(ctx, env)){
             /*load certificate from buf*/
             status = openssl_x509_load_from_buffer(env, pem_buf, &cert);
         }else{
             /*load private key from buf*/
-            status = openssl_pem_buf_read_pkey(env, pem_buf, password, OPENSSL_PEM_PKEY_TYPE_PRIVATE_KEY, &prvkey); 
+            status = openssl_pem_buf_read_pkey(env, pem_buf, password, OPENSSL_PEM_PKEY_TYPE_PRIVATE_KEY, &prvkey);
             if(status == AXIS2_FAILURE){
                 prvkey = NULL;
             }
@@ -71,8 +71,8 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
 
         if(OXS_ASYM_CTX_FORMAT_PEM == oxs_asym_ctx_get_format(ctx, env)){
             oxs_asym_ctx_operation_t operation ;
-		    format = OPENSSL_X509_FORMAT_PEM;
-        
+            format = OPENSSL_X509_FORMAT_PEM;
+
 
             /*First let's check if this is a file containing a certificate*/
             status = openssl_x509_load_from_pem(env, filename,  &cert);
@@ -100,13 +100,13 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
             status = openssl_x509_load_from_pkcs12(env, filename, password, &cert, &prvkey, &ca);
             if(AXIS2_FAILURE == status){
                 oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                            "Error reading the certificate");
+                          "Error reading the certificate");
                 return AXIS2_FAILURE;
             }
         }
-        
+
     }/*end of pem_buf*/
-    
+
     /*Wht ever the way, right now we should have either the public key or the private key*/
 
     /*If the prvkey is available, populate the openssl_pkey*/
@@ -141,7 +141,7 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
         /*Additionally we need to set the public key*/
         openssl_x509_get_pubkey(env, cert, &pubkey);
         open_pubkey = openssl_pkey_create(env);
-        openssl_pkey_populate(open_pubkey, env, pubkey, openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert), OPENSSL_PKEY_TYPE_PUBLIC_KEY); 
+        openssl_pkey_populate(open_pubkey, env, pubkey, openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert), OPENSSL_PKEY_TYPE_PUBLIC_KEY);
         /*Set the public key to the x509 certificate*/
         oxs_x509_cert_set_public_key(oxs_cert, env, open_pubkey);
         /*Set the x509 certificate to the asym ctx*/
@@ -150,7 +150,7 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
     /*If this fails to get anything return failure*/
     if((!cert) && (!pubkey) && (!prvkey)){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "Error reading the key");
+                  "Error reading the key");
         return AXIS2_FAILURE;
     }
     return AXIS2_SUCCESS;
@@ -160,16 +160,16 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
 /*These are new set of functions that break-up the complex logic in oxs_key_mgr_load_key()*/
 
 AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
-oxs_key_mgr_load_private_key_from_string(const axis2_env_t *env, 
-    axis2_char_t *pem_string, /*in PEM format*/
-    axis2_char_t *password)
+oxs_key_mgr_load_private_key_from_string(const axis2_env_t *env,
+        axis2_char_t *pem_string, /*in PEM format*/
+        axis2_char_t *password)
 {
     openssl_pkey_t *open_prvkey = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     EVP_PKEY *prvkey = NULL;
- 
+
     /*load private key from buf*/
-    status = openssl_pem_buf_read_pkey(env, pem_string, password, OPENSSL_PEM_PKEY_TYPE_PRIVATE_KEY, &prvkey); 
+    status = openssl_pem_buf_read_pkey(env, pem_string, password, OPENSSL_PEM_PKEY_TYPE_PRIVATE_KEY, &prvkey);
     /*Populate*/
     if(prvkey){
         open_prvkey = openssl_pkey_create(env);
@@ -182,9 +182,9 @@ oxs_key_mgr_load_private_key_from_string(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
-oxs_key_mgr_load_private_key_from_pem_file(const axis2_env_t *env, 
-    axis2_char_t *filename,
-    axis2_char_t *password)
+oxs_key_mgr_load_private_key_from_pem_file(const axis2_env_t *env,
+        axis2_char_t *filename,
+        axis2_char_t *password)
 {
     openssl_pkey_t *open_prvkey = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -200,17 +200,17 @@ oxs_key_mgr_load_private_key_from_pem_file(const axis2_env_t *env,
     }else{
         return NULL;
     }
-    
+
     return open_prvkey;
 }
 
 /*Private function to convert X509* -> oxs_x509_cert_t* */
 static oxs_x509_cert_t*
 oxs_key_mgr_convert_to_x509(const axis2_env_t *env,
-    X509 *cert)
+                            X509 *cert)
 {
     oxs_x509_cert_t *oxs_cert = NULL;
-        
+
     if(cert){
         EVP_PKEY *pubkey = NULL;
         openssl_pkey_t *open_pubkey = NULL;
@@ -238,7 +238,7 @@ oxs_key_mgr_convert_to_x509(const axis2_env_t *env,
 
 AXIS2_EXTERN oxs_x509_cert_t* AXIS2_CALL
 oxs_key_mgr_load_x509_cert_from_pem_file(const axis2_env_t *env,
-    axis2_char_t *filename)
+        axis2_char_t *filename)
 {
     X509 *cert = NULL;
     oxs_x509_cert_t *oxs_cert = NULL;
@@ -251,23 +251,23 @@ oxs_key_mgr_load_x509_cert_from_pem_file(const axis2_env_t *env,
 
 AXIS2_EXTERN oxs_x509_cert_t* AXIS2_CALL
 oxs_key_mgr_load_x509_cert_from_string(const axis2_env_t *env,
-    axis2_char_t *pem_string)
+                                       axis2_char_t *pem_string)
 {
     X509 *cert = NULL;
     oxs_x509_cert_t *oxs_cert = NULL;
     openssl_x509_load_from_buffer(env, pem_string, &cert);
-  
+
     oxs_cert = oxs_key_mgr_convert_to_x509(env, cert);
 
-    return oxs_cert; 
+    return oxs_cert;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_mgr_read_pkcs12_key_store(const axis2_env_t *env,
-    axis2_char_t *filename,
-    axis2_char_t *password,
-    oxs_x509_cert_t **cert,
-    openssl_pkey_t **prv_key)
+                                  axis2_char_t *filename,
+                                  axis2_char_t *password,
+                                  oxs_x509_cert_t **cert,
+                                  openssl_pkey_t **prv_key)
 {
     X509 *c = NULL;
     STACK_OF(X509) *ca = NULL;
@@ -277,16 +277,16 @@ oxs_key_mgr_read_pkcs12_key_store(const axis2_env_t *env,
     status = openssl_x509_load_from_pkcs12(env, filename, password, &c, &pkey, &ca);
     if(AXIS2_FAILURE == status){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                      "Error reading the PKCS12 Key Store");
+                  "Error reading the PKCS12 Key Store");
         return AXIS2_FAILURE;
-    } 
+    }
     if(pkey){
         *prv_key = openssl_pkey_create(env);
         openssl_pkey_populate(*prv_key, env, pkey, filename, OPENSSL_PKEY_TYPE_PRIVATE_KEY);
     }
-    
+
     if(c){
-        *cert = oxs_key_mgr_convert_to_x509(env, c);       
+        *cert = oxs_key_mgr_convert_to_x509(env, c);
     }
 
     return AXIS2_SUCCESS;

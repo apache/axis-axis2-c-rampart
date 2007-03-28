@@ -107,7 +107,7 @@ oxs_transform_set_transform_func(
     return AXIS2_SUCCESS;
 }
 
-    /*Create function*/
+/*Create function*/
 AXIS2_EXTERN oxs_transform_t *AXIS2_CALL
 oxs_transform_create(const axis2_env_t *env)
 {
@@ -126,10 +126,10 @@ oxs_transform_create(const axis2_env_t *env)
     return transform;
 }
 
-    /*Free*/
+/*Free*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_transform_free(oxs_transform_t *transform,
-        const axis2_env_t *env)
+                   const axis2_env_t *env)
 {
     /*TODO free*/
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

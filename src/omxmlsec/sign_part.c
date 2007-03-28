@@ -171,7 +171,7 @@ oxs_sign_part_create(const axis2_env_t *env)
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_free(oxs_sign_part_t *sign_part,
-        const axis2_env_t *env)
+                   const axis2_env_t *env)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

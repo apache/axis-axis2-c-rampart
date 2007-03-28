@@ -26,7 +26,7 @@
  * */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_util_generate_id(const axis2_env_t *env,
-        axis2_char_t *prefix)
+                     axis2_char_t *prefix)
 {
     axis2_char_t *id = NULL;
     char _id[50];
@@ -36,12 +36,12 @@ oxs_util_generate_id(const axis2_env_t *env,
     sprintf(_id, "%s-%s",prefix,random);
     id = (axis2_char_t*)axis2_strdup(_id, env);
     return id;
-    
+
 }
 
 AXIS2_EXTERN oxs_asym_ctx_format_t AXIS2_CALL
 oxs_util_get_format_by_file_extension(const axis2_env_t *env,
-        axis2_char_t *file_name)
+                                      axis2_char_t *file_name)
 {
     axis2_char_t *extension = NULL;
     if(!file_name){
@@ -53,7 +53,7 @@ oxs_util_get_format_by_file_extension(const axis2_env_t *env,
         /*Its safe to assume that PEM can be without extension*/
         return OXS_ASYM_CTX_FORMAT_PEM;
     }
-    
+
     if((strcmp(extension, ".pfx") == 0) ){
         return OXS_ASYM_CTX_FORMAT_PKCS12;
     }else{
@@ -65,13 +65,13 @@ oxs_util_get_format_by_file_extension(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_util_get_newline_removed_string(const axis2_env_t *env,
-        axis2_char_t *input)
+                                    axis2_char_t *input)
 {
     axis2_char_t *output = NULL;
     int i = 0;
 
     output = AXIS2_MALLOC(env->allocator,  axis2_strlen(input)+1);
-    
+
     while(*input!='\0')
     {
         if(*input!='\n')
@@ -81,6 +81,6 @@ oxs_util_get_newline_removed_string(const axis2_env_t *env,
         }
         input++;
     }
-    output[i]='\0';   
-    return output; 
+    output[i]='\0';
+    return output;
 }

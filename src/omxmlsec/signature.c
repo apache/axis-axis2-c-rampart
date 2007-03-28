@@ -31,9 +31,9 @@
 /*Private functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
-    oxs_sign_ctx_t *sign_ctx,
-    oxs_buffer_t *input,
-    oxs_buffer_t *output)
+                      oxs_sign_ctx_t *sign_ctx,
+                      oxs_buffer_t *input,
+                      oxs_buffer_t *output)
 {
     axis2_char_t *encoded_str = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -50,9 +50,9 @@ oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
     if(signedlen < 0){
         /*Error*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,
-                        "Signature failed. The length of signature is %d", signedlen);
+                  "Signature failed. The length of signature is %d", signedlen);
     }
-    
+
     /*Base64 encode*/
     encodedlen = axis2_base64_encode_len(signedlen);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
@@ -60,17 +60,17 @@ oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
     status = oxs_buffer_populate(output, env, (unsigned char*)axis2_strdup(encoded_str, env), encodedlen);
 
     /*Free signed_result_buf*/
-    
+
     return AXIS2_SUCCESS;
 }
 
 
 /*Public functions*/
-AXIS2_EXTERN axis2_status_t AXIS2_CALL 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_sign(const axis2_env_t *env,
-    oxs_sign_ctx_t *sign_ctx,
-    oxs_buffer_t *input,
-    oxs_buffer_t *output)
+             oxs_sign_ctx_t *sign_ctx,
+             oxs_buffer_t *input,
+             oxs_buffer_t *output)
 {
     axis2_char_t *sign_algo = NULL;
 
@@ -80,15 +80,15 @@ oxs_sig_sign(const axis2_env_t *env,
 
     /*Prepare content and sign*/
     if(0==(axis2_strcmp(sign_algo, OXS_HREF_RSA_SHA1))){
-        oxs_sig_sign_rsa_sha1(env, sign_ctx, input, output);    
+        oxs_sig_sign_rsa_sha1(env, sign_ctx, input, output);
     }else if(0==(axis2_strcmp(sign_algo, OXS_HREF_DSA_SHA1))){
         /*Error we do not support*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                        "Cannot support cipher %s", sign_algo);
+                  "Cannot support cipher %s", sign_algo);
         return AXIS2_FAILURE;
     }else{
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                        "Cannot support cipher %s", sign_algo);
+                  "Cannot support cipher %s", sign_algo);
         return AXIS2_FAILURE;
     }
 
@@ -98,13 +98,13 @@ oxs_sig_sign(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_verify(const axis2_env_t *env,
-    oxs_sign_ctx_t *sign_ctx,
-    axis2_char_t *content,
-    axis2_char_t *signature)
+               oxs_sign_ctx_t *sign_ctx,
+               axis2_char_t *content,
+               axis2_char_t *signature)
 {
     axis2_status_t status = AXIS2_FAILURE;
-    oxs_buffer_t *in_buf =  NULL;    
-    oxs_buffer_t *sig_buf =  NULL;   
+    oxs_buffer_t *in_buf =  NULL;
+    oxs_buffer_t *sig_buf =  NULL;
     openssl_pkey_t *pubkey = NULL;
 
     unsigned char* decoded_data = NULL;
@@ -118,13 +118,13 @@ oxs_sig_verify(const axis2_env_t *env,
     if (decoded_len < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,
-                    "axis2_base64_decode_binary failed");
+                  "axis2_base64_decode_binary failed");
         return AXIS2_FAILURE;
     }
-    
+
     /*Create the signature buffer*/
     sig_buf = oxs_buffer_create(env);
-    ret = oxs_buffer_populate(sig_buf, env, decoded_data, decoded_len);     
+    ret = oxs_buffer_populate(sig_buf, env, decoded_data, decoded_len);
 
     /*Create the input buffer*/
     in_buf = oxs_buffer_create(env);
@@ -137,7 +137,7 @@ oxs_sig_verify(const axis2_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot obtain the public key.");
         return AXIS2_FAILURE;
     }
-    
+
     /*Call OpenSSL function to verify the signature*/
     status = openssl_sig_verify(env, pubkey, in_buf, sig_buf);
     if(AXIS2_SUCCESS != status){
@@ -149,5 +149,5 @@ oxs_sig_verify(const axis2_env_t *env,
         AXIS2_LOG_INFO(env->log, "[oxs][sig] Signature verification SUCCESS " );
         return AXIS2_SUCCESS;
     }
-    
+
 }

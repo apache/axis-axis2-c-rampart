@@ -25,7 +25,7 @@
 
 AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
 oxs_get_cipher_property_for_url(const axis2_env_t *env,
-        axis2_char_t *url)
+                                axis2_char_t *url)
 {
     openssl_cipher_property_t *cprop = NULL;
     axis2_char_t *cipher_name = NULL;
@@ -37,7 +37,7 @@ oxs_get_cipher_property_for_url(const axis2_env_t *env,
     cipher_name = oxs_get_cipher_name_for_url(env, url);
     if((!cipher_name) || (0 == axis2_strcmp(cipher_name, ""))){
         oxs_error(env, ERROR_LOCATION,
-                        OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
+                  OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
         return NULL;
     }
     ret = openssl_cipher_property_set_name(cprop, env , cipher_name);
@@ -46,7 +46,7 @@ oxs_get_cipher_property_for_url(const axis2_env_t *env,
     if (ret == AXIS2_FAILURE)
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
+                  OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
         return NULL;
 
     }
@@ -55,7 +55,7 @@ oxs_get_cipher_property_for_url(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_get_cipher_name_for_url(const axis2_env_t *env,
-        axis2_char_t *url)
+                            axis2_char_t *url)
 {
 
     axis2_char_t *cipher_name = NULL;
@@ -83,7 +83,7 @@ oxs_get_cipher_name_for_url(const axis2_env_t *env,
     else
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_UNSUPPORTED_ALGO, "Algorithm not supported");
+                  OXS_ERROR_UNSUPPORTED_ALGO, "Algorithm not supported");
         return NULL;
     }
 
@@ -92,7 +92,7 @@ oxs_get_cipher_name_for_url(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_get_cipher_url_for_name(const axis2_env_t *env,
-        axis2_char_t *name)
+                            axis2_char_t *name)
 {
 
     axis2_char_t *cipher_url = NULL;
@@ -120,7 +120,7 @@ oxs_get_cipher_url_for_name(const axis2_env_t *env,
     else
     {
         oxs_error(env, ERROR_LOCATION,
-                OXS_ERROR_INVALID_DATA, "Name not supported");
+                  OXS_ERROR_INVALID_DATA, "Name not supported");
         return NULL;
     }
 

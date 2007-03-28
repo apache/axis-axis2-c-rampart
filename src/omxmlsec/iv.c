@@ -26,7 +26,7 @@
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_iv_generate_for_algo(const axis2_env_t *env,
-        axis2_char_t *key_algo)
+                         axis2_char_t *key_algo)
 {
     axis2_char_t* iv = NULL;
     openssl_cipher_property_t *cprop = NULL;
@@ -35,7 +35,7 @@ oxs_iv_generate_for_algo(const axis2_env_t *env,
     if (!cprop)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
-                "openssl_get_cipher_property failed");
+                  "openssl_get_cipher_property failed");
         return NULL;
     }
     size = openssl_cipher_property_get_iv_size(cprop, env);

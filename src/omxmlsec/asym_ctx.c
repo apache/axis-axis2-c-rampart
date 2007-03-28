@@ -28,8 +28,8 @@ struct oxs_asym_ctx_t
     axis2_char_t *password;
     axis2_char_t *algorithm;
     axis2_char_t *st_ref_pattern;
-    oxs_asym_ctx_operation_t operation;   
-    oxs_asym_ctx_format_t format;   
+    oxs_asym_ctx_operation_t operation;
+    oxs_asym_ctx_format_t format;
     oxs_x509_cert_t *certificate;
     openssl_pkey_t *private_key;
 
@@ -263,7 +263,7 @@ oxs_asym_ctx_set_private_key(
 }
 
 
-AXIS2_EXTERN 
+AXIS2_EXTERN
 oxs_asym_ctx_t *AXIS2_CALL
 oxs_asym_ctx_create(const axis2_env_t *env)
 {
@@ -286,7 +286,7 @@ oxs_asym_ctx_create(const axis2_env_t *env)
     asym_ctx->st_ref_pattern = NULL;
     asym_ctx->operation = -1;
     asym_ctx->certificate = NULL;
-    
+
     return asym_ctx;
 }
 
@@ -294,7 +294,7 @@ oxs_asym_ctx_create(const axis2_env_t *env)
 AXIS2_EXTERN
 axis2_status_t AXIS2_CALL
 oxs_asym_ctx_free(oxs_asym_ctx_t *asym_ctx,
-        const axis2_env_t *env)
+                  const axis2_env_t *env)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

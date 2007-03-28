@@ -35,16 +35,16 @@
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_xml_key_info_build(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert,
-    oxs_key_info_build_pattern_t pattern)
+                       axiom_node_t *parent,
+                       oxs_x509_cert_t *cert,
+                       oxs_key_info_build_pattern_t pattern)
 {
     axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *key_info_node = NULL;
-    
+
     /*Build the KeyInfo node*/
-    key_info_node = oxs_token_build_key_info_element(env, parent);        
-    
+    key_info_node = oxs_token_build_key_info_element(env, parent);
+
     if(OXS_KIBP_X509DATA_X509CERTIFICATE == pattern){
         status = oxs_xml_key_info_build_x509_data_x509_certificate(env, key_info_node, cert);
     }else if(OXS_KIBP_X509DATA_ISSUER_SERIAL == pattern){
@@ -57,8 +57,8 @@ oxs_xml_key_info_build(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_xml_key_info_build_x509_data_x509_certificate(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert)
+        axiom_node_t *parent,
+        oxs_x509_cert_t *cert)
 {
     axiom_node_t *x509_data_node = NULL;
     axiom_node_t *x509_certificate_node = NULL;
@@ -77,10 +77,10 @@ oxs_xml_key_info_build_x509_data_x509_certificate(const axis2_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_xml_key_info_build_x509_data_issuer_serial(const axis2_env_t *env,
-    axiom_node_t *parent,
-    oxs_x509_cert_t *cert)
+        axiom_node_t *parent,
+        oxs_x509_cert_t *cert)
 {
-    
+
     axiom_node_t *x509_data_node = NULL;
     axiom_node_t *x509_issuer_serial_node = NULL;
 

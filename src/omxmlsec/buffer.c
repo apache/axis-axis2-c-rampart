@@ -60,9 +60,9 @@ oxs_buffer_create(const axis2_env_t *env)
     if (status == AXIS2_FAILURE)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "oxs_buffer_set_max_size");
+                  "oxs_buffer_set_max_size");
         return NULL;
-    }    
+    }
 
     return buffer;
 
@@ -73,7 +73,7 @@ oxs_buffer_free(
     oxs_buffer_t *buffer,
     const axis2_env_t *env
 )
-{    
+{
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     if (buffer->data)
@@ -103,7 +103,7 @@ oxs_buffer_remove_head(
         if (!buffer->data)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "oxs_buffer_remove_head failed. data is NULL");
+                      "oxs_buffer_remove_head failed. data is NULL");
             return  AXIS2_FAILURE;
         }
         buffer->size -= size;
@@ -120,7 +120,7 @@ oxs_buffer_remove_head(
         if (!buffer->data)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "oxs_buffer_remove_head failed");
+                      "oxs_buffer_remove_head failed");
             return  AXIS2_FAILURE;
         }
         memset(buffer->data + buffer->size, 0, buffer->max_size - buffer->size);
@@ -151,7 +151,7 @@ oxs_buffer_remove_tail(
         if (buffer->data)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "");
+                      "");
             return  AXIS2_FAILURE;
         }
         memset(buffer->data + buffer->size, 0, buffer->max_size - buffer->size);
@@ -177,7 +177,7 @@ oxs_buffer_populate(
         if (!data)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "data is NULL");
+                      "data is NULL");
             return AXIS2_FAILURE;
         }
 
@@ -204,7 +204,7 @@ oxs_buffer_append(
         if (!data)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "data is NULL");
+                      "data is NULL");
             return AXIS2_FAILURE;
         }
 
@@ -230,7 +230,7 @@ oxs_buffer_prepend(
         if (!data)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "Passed data is NULL");
+                      "Passed data is NULL");
             return AXIS2_FAILURE;
         }
 
@@ -262,7 +262,7 @@ oxs_buffer_read_file(
     if (f == NULL)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "");
+                  "");
         return AXIS2_FAILURE;
     }
 
@@ -283,7 +283,7 @@ oxs_buffer_read_file(
         {
             fclose(f);
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "");
+                      "");
             return AXIS2_FAILURE;
         }
 
@@ -311,7 +311,7 @@ oxs_buffer_set_size(
     if (status == AXIS2_FAILURE)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "oxs_buffer_set_max_size failed");
+                  "oxs_buffer_set_max_size failed");
         return AXIS2_FAILURE;
     }
     /*Now set the size*/
@@ -339,12 +339,12 @@ oxs_buffer_set_max_size(
 
     switch (buffer->alloc_mode)
     {
-        case oxs_alloc_mode_exact:
-            new_size = size + 8;
-            break;
-        case oxs_alloc_mode_double:
-            new_size = 2 * size + 32;
-            break;
+    case oxs_alloc_mode_exact:
+        new_size = size + 8;
+        break;
+    case oxs_alloc_mode_double:
+        new_size = 2 * size + 32;
+        break;
     }
 
     if (new_size < OXS_BUFFER_INITIAL_SIZE)
@@ -355,16 +355,16 @@ oxs_buffer_set_max_size(
     /*If there are data already then use realloc instead of malloc*/
     if (buffer->data)
     {
-#if 0        
+#if 0
         new_data = (unsigned char*)AXIS2_REALLOC(env->allocator, buffer_impl->data, new_size);
 #else
 
         /*Assign extra amnt of memory*/
         new_data = (unsigned char*)AXIS2_MALLOC(env->allocator, new_size + buffer->max_size);
-        
+
         /*Copy to newdata*/
         new_data = memcpy(new_data, buffer->data, buffer->size);
-    
+
 #endif
     }
     else
@@ -375,7 +375,7 @@ oxs_buffer_set_max_size(
     if (new_data == NULL)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                "");
+                  "");
         return AXIS2_FAILURE;
     }
 
@@ -387,7 +387,7 @@ oxs_buffer_set_max_size(
         if (buffer->data == NULL)
         {
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                    "");
+                      "");
             return AXIS2_FAILURE;
         }
         memset(buffer->data + buffer->size, 0, buffer->max_size - buffer->size);
