@@ -65,7 +65,7 @@ oxs_token_build_data_reference_list(const axis2_env_t *env, axiom_node_t *parent
         axis2_char_t *id = NULL;
 
         /*We need to prepend # to the id in the list to create the reference*/
-        id = axis2_stracat("#",(axis2_char_t*)axis2_array_list_get(id_list, env, i), env);
+        id = axis2_stracat(env, "#",(axis2_char_t*)axis2_array_list_get(id_list, env, i));
         data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, id);
 
         if(!data_ref_node) {return AXIS2_FAILURE;}
