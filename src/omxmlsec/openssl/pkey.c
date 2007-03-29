@@ -140,7 +140,7 @@ openssl_pkey_set_name(
         pkey->name = NULL;
     }
 
-    pkey->name = axis2_strdup(name, env);
+    pkey->name = axis2_strdup(env, name);
 
     return AXIS2_SUCCESS;
 }

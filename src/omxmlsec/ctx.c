@@ -335,7 +335,7 @@ oxs_ctx_set_id(
         AXIS2_FREE(env->allocator, ctx->id);
         ctx->id = NULL;
     }
-    ctx->id = axis2_strdup(id, env);
+    ctx->id = axis2_strdup(env, id);
 
     return AXIS2_SUCCESS;
 }
@@ -355,7 +355,7 @@ oxs_ctx_set_type(
         AXIS2_FREE(env->allocator, ctx->type);
         ctx->type = NULL;
     }
-    ctx->type = axis2_strdup(type, env);
+    ctx->type = axis2_strdup(env, type);
 
     return AXIS2_SUCCESS;
 }
@@ -375,7 +375,7 @@ oxs_ctx_set_mime_type(
         AXIS2_FREE(env->allocator, ctx->mime_type);
         ctx->mime_type = NULL;
     }
-    ctx->mime_type = axis2_strdup(mime_type, env);
+    ctx->mime_type = axis2_strdup(env, mime_type);
 
     return AXIS2_SUCCESS;
 }
@@ -395,7 +395,7 @@ oxs_ctx_set_encoding(
         AXIS2_FREE(env->allocator, ctx->encoding);
         ctx->encoding = NULL;
     }
-    ctx->encoding = axis2_strdup(encoding, env);
+    ctx->encoding = axis2_strdup(env, encoding);
 
     return AXIS2_SUCCESS;
 }
@@ -415,7 +415,7 @@ oxs_ctx_set_recipient(
         AXIS2_FREE(env->allocator, ctx->recipient);
         ctx->recipient = NULL;
     }
-    ctx->recipient = axis2_strdup(recipient, env);
+    ctx->recipient = axis2_strdup(env, recipient);
 
     return AXIS2_SUCCESS;
 }
@@ -435,7 +435,7 @@ oxs_ctx_set_carried_key_name(
         AXIS2_FREE(env->allocator, ctx->carried_key_name);
         ctx->carried_key_name = NULL;
     }
-    ctx->carried_key_name = axis2_strdup(carried_key_name, env);
+    ctx->carried_key_name = axis2_strdup(env, carried_key_name);
 
     return AXIS2_SUCCESS;
 }
@@ -455,7 +455,7 @@ oxs_ctx_set_enc_mtd_algorithm(
         AXIS2_FREE(env->allocator, ctx->enc_mtd_algorithm);
         ctx->enc_mtd_algorithm = NULL;
     }
-    ctx->enc_mtd_algorithm = axis2_strdup(enc_mtd_algorithm, env);
+    ctx->enc_mtd_algorithm = axis2_strdup(env, enc_mtd_algorithm);
 
     return AXIS2_SUCCESS;
 }
@@ -475,7 +475,7 @@ oxs_ctx_set_input_data(
         AXIS2_FREE(env->allocator, ctx->input_data);
         ctx->input_data = NULL;
     }
-    ctx->input_data = axis2_strdup(input_data, env) ;
+    ctx->input_data = axis2_strdup(env, input_data) ;
 
     return AXIS2_SUCCESS;
 }

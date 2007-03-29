@@ -44,7 +44,7 @@ openssl_x509_load_from_buffer(const axis2_env_t *env,
     int decoded_len = -1;
 
     /*We should remove new lines here.*/
-    buf_to_format = (axis2_char_t*)axis2_strdup(b64_encoded_buf,env);
+    buf_to_format = (axis2_char_t*)axis2_strdup(env, b64_encoded_buf);
     if(buf_to_format)
     {
         formatted_buf = oxs_util_get_newline_removed_string(env,buf_to_format);
@@ -221,7 +221,7 @@ openssl_x509_get_cert_data(const axis2_env_t *env,
     core_tail = axis2_strstr(unformatted, "\n");
     res = axis2_strstr(core_tail,"-----END");
     res[0] = '\0';
-    core = (axis2_char_t*)axis2_strdup(core_tail,env);
+    core = (axis2_char_t*)axis2_strdup(env, core_tail);
     if(core)
     {
         buffer = oxs_util_get_newline_removed_string(env,core);
@@ -307,7 +307,7 @@ openssl_x509_get_subject_key_identifier(const axis2_env_t *env,
     EVP_EncodeFinal(&ctx, (unsigned char*)(output+len), &ret);
 
     ret += len;
-    ski = axis2_strdup(output, env);
+    ski = axis2_strdup(env, output);
     return ski;
 }
 

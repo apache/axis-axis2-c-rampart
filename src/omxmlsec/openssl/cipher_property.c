@@ -128,7 +128,7 @@ openssl_cipher_property_set_name(
         AXIS2_FREE(env->allocator, cprop->name);
         cprop->name = NULL;
     }
-    cprop->name = axis2_strdup(name, env);
+    cprop->name = axis2_strdup(env, name);
     return AXIS2_SUCCESS;
 }
 
@@ -147,7 +147,7 @@ openssl_cipher_property_set_url(
         AXIS2_FREE(env->allocator, cprop->url);
         cprop->url = NULL;
     }
-    cprop->url = axis2_strdup(url, env);
+    cprop->url = axis2_strdup(env, url);
     return AXIS2_SUCCESS;
 }
 

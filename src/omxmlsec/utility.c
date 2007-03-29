@@ -34,7 +34,7 @@ oxs_util_generate_id(const axis2_env_t *env,
 
     random =  axis2_strndup(axis2_uuid_gen(env),18, env);
     sprintf(_id, "%s-%s",prefix,random);
-    id = (axis2_char_t*)axis2_strdup(_id, env);
+    id = (axis2_char_t*)axis2_strdup(env, _id);
     return id;
 
 }

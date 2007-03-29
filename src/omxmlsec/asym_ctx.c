@@ -132,7 +132,7 @@ oxs_asym_ctx_set_file_name(
         AXIS2_FREE(env->allocator, asym_ctx->file_name);
         asym_ctx->file_name = NULL;
     }
-    asym_ctx->file_name = axis2_strdup(file_name, env);
+    asym_ctx->file_name = axis2_strdup(env, file_name);
     return AXIS2_SUCCESS;
 }
 
@@ -149,7 +149,7 @@ oxs_asym_ctx_set_pem_buf(
         AXIS2_FREE(env->allocator, asym_ctx->pem_buf);
         asym_ctx->pem_buf = NULL;
     }
-    asym_ctx->pem_buf = axis2_strdup(pem_buf, env);
+    asym_ctx->pem_buf = axis2_strdup(env, pem_buf);
     return AXIS2_SUCCESS;
 }
 
@@ -166,7 +166,7 @@ oxs_asym_ctx_set_password(
         AXIS2_FREE(env->allocator, asym_ctx->password);
         asym_ctx->password = NULL;
     }
-    asym_ctx->password = axis2_strdup(password, env);
+    asym_ctx->password = axis2_strdup(env, password);
     return AXIS2_SUCCESS;
 }
 
@@ -195,7 +195,7 @@ oxs_asym_ctx_set_algorithm(
         AXIS2_FREE(env->allocator, asym_ctx->algorithm);
         asym_ctx->algorithm = NULL;
     }
-    asym_ctx->algorithm = axis2_strdup(algorithm, env);
+    asym_ctx->algorithm = axis2_strdup(env, algorithm);
     return AXIS2_SUCCESS;
 }
 
@@ -211,7 +211,7 @@ oxs_asym_ctx_set_st_ref_pattern(
         AXIS2_FREE(env->allocator, asym_ctx->st_ref_pattern);
         asym_ctx->st_ref_pattern = NULL;
     }
-    asym_ctx->st_ref_pattern = axis2_strdup(st_ref_pattern, env);
+    asym_ctx->st_ref_pattern = axis2_strdup(env, st_ref_pattern);
     return AXIS2_SUCCESS;
 }
 

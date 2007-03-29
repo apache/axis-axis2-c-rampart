@@ -174,7 +174,7 @@ openssl_cipher_ctx_set_iv(openssl_cipher_ctx_t *ctx,
         AXIS2_FREE(env->allocator, ctx->iv);
         ctx->iv = NULL;
     }
-    ctx->iv = axis2_strdup(iv, env);
+    ctx->iv = axis2_strdup(env, iv);
 
     return AXIS2_SUCCESS;
 }
@@ -194,7 +194,7 @@ openssl_cipher_ctx_set_pad(openssl_cipher_ctx_t *ctx,
         AXIS2_FREE(env->allocator, ctx->pad);
         ctx->pad = NULL;
     }
-    ctx->pad = axis2_strdup(pad, env);
+    ctx->pad = axis2_strdup(env, pad);
 
     return AXIS2_SUCCESS;
 }

@@ -57,7 +57,7 @@ oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
     encodedlen = axis2_base64_encode_len(signedlen);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
     ret = axis2_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(signed_result_buf, env), signedlen);
-    status = oxs_buffer_populate(output, env, (unsigned char*)axis2_strdup(encoded_str, env), encodedlen);
+    status = oxs_buffer_populate(output, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
 
     /*Free signed_result_buf*/
 

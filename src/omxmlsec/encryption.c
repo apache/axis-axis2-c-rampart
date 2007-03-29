@@ -118,7 +118,7 @@ oxs_encryption_symmetric_crypt(const axis2_env_t *env,
         }
 
         /*Attach the result to the result buf*/
-        ret = oxs_buffer_populate(result, env, (unsigned char*)axis2_strdup(encoded_str, env), encodedlen);
+        ret = oxs_buffer_populate(result, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
 
         /*Free*/
         oxs_buffer_free(output, env);
@@ -228,7 +228,7 @@ oxs_encryption_asymmetric_crypt(const axis2_env_t *env,
         encodedlen = axis2_base64_encode_len(enclen);
         encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
         ret = axis2_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(out_buf, env), enclen);
-        status = oxs_buffer_populate(result, env, (unsigned char*)axis2_strdup(encoded_str, env), encodedlen);
+        status = oxs_buffer_populate(result, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
 
         /*Free*/
         oxs_buffer_free(out_buf, env);
