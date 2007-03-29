@@ -37,9 +37,9 @@
 			<sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
 				<wsp:Policy>
                     <!--Please uncomment ONE of these to select an identifier pattern-->
-                    <sp:MustSupportRefKeyIdentifier/>
-                    <!--sp:MustSupportRefEmbeddedToken/-->
-                    <!--sp:MustSupportRefIssuerSerial-->
+                    <!--sp:MustSupportRefKeyIdentifier/-->
+                    <sp:MustSupportRefEmbeddedToken/>
+                    <!--sp:MustSupportRefIssuerSerial/-->
 				</wsp:Policy>
 			</sp:Wss10>
 			<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
