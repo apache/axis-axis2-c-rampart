@@ -48,11 +48,11 @@ ramaprt_get_sample_password_from_file(const axis2_env_t *env,
           res = axis2_strstr(line, ":");
           ch = res[0];
           res[0] = '\0';
-          un = (axis2_char_t *) axis2_strdup(line, env);
+          un = (axis2_char_t *) axis2_strdup(env, line);
           res[0] = ch;
           if(0 == axis2_strcmp(un, username)){
-             pw = (axis2_char_t *) axis2_strdup(&(res[1]), env);
-             password = axis2_strndup(pw, axis2_strlen(pw)-1, env); /*We need to remove the end of line character*/
+             pw = (axis2_char_t *) axis2_strdup(env, &(res[1]));
+             password = axis2_strndup(env, pw, axis2_strlen(pw)-1); /*We need to remove the end of line character*/
 
              break;
           }

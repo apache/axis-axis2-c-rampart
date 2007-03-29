@@ -17,9 +17,11 @@ Following is a summary of scenarios available.
 Scenario    Summary
 -------------------
 1.          Timestamp
-2.          UsernameToken+Timestamp
-3.          Client-Encrypt(IssuerSerial)           
-4.          Client-Encrypt(RefKeyIdentifier)       
-5.          Client-Encrypt(Embedded)               
-6.          Client-Encrypt(DirectReference)        
-7.          Both client and server Encrypts
+2.          UsernameToken
+3.          Client Encrypt(DirectReference)        
+4.          Client Encrypt(IssuerSerial/RefKeyIdentifier/Embedded)           
+5.          Client Sign(DirectReference)        
+6.          Client Sign(IssuerSerial/RefKeyIdentifier/Embedded)           
+7.          Timestamp, UsernameToken, Encrypt, Sign (Sign before encrypt)
+8.          Timestamp, UsernameToken, Encrypt, Sign (Encrypt before sign)
+

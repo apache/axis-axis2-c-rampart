@@ -116,7 +116,7 @@ rampart_get_security_token(const axis2_env_t *env,
     sec_headers = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, RAMPART_WSSE_XMLNS);
     if (sec_headers)
     {
-        sec_ns_str = axis2_strdup(RAMPART_WSSE_XMLNS, env);
+        sec_ns_str = axis2_strdup(env, RAMPART_WSSE_XMLNS);
 
         header_block_ht = axiom_soap_header_get_all_header_blocks(soap_header, env);
         if (!header_block_ht)
