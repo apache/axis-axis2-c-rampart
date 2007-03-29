@@ -54,7 +54,7 @@ callback_get_sample_password_from_file(rampart_callback_t *rcb,
           res[0] = ch;
           if(0 == axis2_strcmp(un, username)){
              pw = (axis2_char_t *) axis2_strdup(env, &(res[1]));
-             password = axis2_strndup(pw, axis2_strlen(pw)-1, env); /*We need to remove the end of line character*/
+             password = axis2_strndup(env, pw, axis2_strlen(pw)-1); /*We need to remove the end of line character*/
 
              break;
           }

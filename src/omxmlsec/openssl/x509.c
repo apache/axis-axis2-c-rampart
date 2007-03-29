@@ -387,7 +387,7 @@ openssl_x509_get_info(const axis2_env_t *env,
         i2a_ASN1_OBJECT(out, ci->key->algor->algorithm);
     }
     n = BIO_get_mem_data(out, &data);
-    result = axis2_strndup( data, n, env );
+    result = axis2_strndup( env, data, n);
     BIO_free(out);
     out = NULL;
 

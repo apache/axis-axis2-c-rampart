@@ -350,7 +350,7 @@ rampart_sig_sign_message(const axis2_env_t *env,
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
             return AXIS2_FAILURE;
         }
-        cert_id_ref = axis2_stracat("#",cert_id,env);
+        cert_id_ref = axis2_stracat(env, "#",cert_id);
         reference_node = oxs_token_build_reference_element(env,str_node,cert_id_ref,OXS_VALUE_X509V3);
         if(!reference_node)
         {

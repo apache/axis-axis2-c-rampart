@@ -52,11 +52,10 @@ oxs_encryption_symmetric_crypt(const axis2_env_t *env,
         return AXIS2_FAILURE;
     }
     /*Get the IV*/
-    iv = axis2_strndup((axis2_char_t*)oxs_iv_generate_for_algo(
-                           env,
+    iv = axis2_strndup(env,
+              (axis2_char_t*)oxs_iv_generate_for_algo(env,
                            oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env)),
-                       openssl_cipher_property_get_iv_size(cprop, env),
-                       env);
+                       openssl_cipher_property_get_iv_size(cprop, env));
 
     /*Create the openssl context*/
     oc_ctx = openssl_cipher_ctx_create(env);
