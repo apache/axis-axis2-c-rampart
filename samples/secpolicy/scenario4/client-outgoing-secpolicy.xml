@@ -31,15 +31,9 @@
 							<sp:Strict/>
 						</wsp:Policy>
 					</sp:Layout>
-                    <sp:IncludeTimestamp/>
                     <sp:EncryptBeforeSigning/>
 				</wsp:Policy>
             </sp:AsymmetricBinding>
-            <sp:SignedSupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-            <wsp:Policy>
-                <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Always"/>
-            </wsp:Policy>
-            </sp:SignedSupportingTokens>
 			<sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
 				<wsp:Policy>
                     <!--Please uncomment ONE of these to select an identifier pattern-->

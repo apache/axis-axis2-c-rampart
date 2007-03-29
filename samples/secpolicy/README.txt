@@ -22,6 +22,8 @@ Scenario    Summary
 4.          Client Encrypt(IssuerSerial/RefKeyIdentifier/Embedded)           
 5.          Client Sign(DirectReference)        
 6.          Client Sign(IssuerSerial/RefKeyIdentifier/Embedded)           
-7.          Timestamp, UsernameToken, Encrypt, Sign (Sign before encrypt)
-8.          Timestamp, UsernameToken, Encrypt, Sign (Encrypt before sign)
+7.          Timestamp, UsernameToken, Encrypt, Sign (Encrypt before sign/ Sign
+before encrypt)
+8.          A complete scenario, where both client and server encrypt/sign,
+add Timestamps, Usernametokens.
 
