@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_util.h>
 #include <oxs_axiom.h>
 #include <oxs_error.h>
@@ -67,7 +67,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_free(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
     /**
     *Removes the first (size) charcters from the buffer
@@ -79,7 +79,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_remove_head(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         int size
     );
     /**
@@ -92,7 +92,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_remove_tail(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         int size
     );
     /**
@@ -106,7 +106,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_populate(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         unsigned char *data,
         int size
     );
@@ -121,7 +121,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_append(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         unsigned char *data,
         int size
     );
@@ -136,7 +136,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_prepend(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         unsigned char *data,
         int size
     );
@@ -150,7 +150,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_read_file(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const axis2_char_t *filename
     );
     /**
@@ -163,7 +163,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_set_size(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         int size
     );
     /**
@@ -176,7 +176,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_buffer_set_max_size(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         int size
     );
     /**
@@ -188,7 +188,7 @@ extern "C"
     unsigned char* AXIS2_CALL
     oxs_buffer_get_data(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
     /**
     *Returns the effective length of the buffer
@@ -199,7 +199,7 @@ extern "C"
     int AXIS2_CALL
     oxs_buffer_get_size(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
     /**
     *Returns the maximum size of the buffer
@@ -210,13 +210,13 @@ extern "C"
     int AXIS2_CALL
     oxs_buffer_get_max_size(
         oxs_buffer_t *buffer,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
 
 
     AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
-    oxs_buffer_create(const axis2_env_t *env);
+    oxs_buffer_create(const axutil_env_t *env);
 
 
     /** @} */

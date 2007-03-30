@@ -30,7 +30,7 @@
 #include <axiom_util.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_axiom_add_attribute(const axis2_env_t *env,
+oxs_axiom_add_attribute(const axutil_env_t *env,
                         axiom_node_t* node,
                         axis2_char_t* attribute_ns,
                         axis2_char_t* attribute_ns_uri,
@@ -52,7 +52,7 @@ oxs_axiom_add_attribute(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-oxs_axiom_get_number_of_children_with_qname(const axis2_env_t *env,
+oxs_axiom_get_number_of_children_with_qname(const axutil_env_t *env,
         axiom_node_t* parent,
         axis2_char_t* local_name,
         axis2_char_t* ns_uri,
@@ -89,7 +89,7 @@ oxs_axiom_get_number_of_children_with_qname(const axis2_env_t *env,
  * Traverse thru the node and its children. Check if the localname is equal to the given name
  * */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_axiom_get_node_by_local_name(const axis2_env_t *env,
+oxs_axiom_get_node_by_local_name(const axutil_env_t *env,
                                  axiom_node_t *node,
                                  axis2_char_t *local_name)
 {
@@ -128,7 +128,7 @@ oxs_axiom_get_node_by_local_name(const axis2_env_t *env,
  * Traverse thru the node and its children. Check if the id attribute is equal to the given value
  * */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_axiom_get_node_by_id(const axis2_env_t *env,
+oxs_axiom_get_node_by_id(const axutil_env_t *env,
                          axiom_node_t *node,
                          axis2_char_t *attr,
                          axis2_char_t *val)
@@ -168,7 +168,7 @@ oxs_axiom_get_node_by_id(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_axiom_get_attribute_value_of_node_by_name(const axis2_env_t *env,
+oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
         axiom_node_t *node,
         axis2_char_t *attribute_name)
 {
@@ -182,7 +182,7 @@ oxs_axiom_get_attribute_value_of_node_by_name(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_axiom_get_first_child_node_by_name(const axis2_env_t *env,
+oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
                                        axiom_node_t* parent,
                                        axis2_char_t* local_name,
                                        axis2_char_t* ns_uri,
@@ -220,7 +220,7 @@ oxs_axiom_get_first_child_node_by_name(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_axiom_get_node_content(const axis2_env_t *env, axiom_node_t* node)
+oxs_axiom_get_node_content(const axutil_env_t *env, axiom_node_t* node)
 {
     axiom_element_t *ele = NULL;
     axis2_char_t *content = NULL;
@@ -235,7 +235,7 @@ oxs_axiom_get_node_content(const axis2_env_t *env, axiom_node_t* node)
 }
 
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
-oxs_axiom_deserialize_node(const axis2_env_t *env,  axis2_char_t* buffer)
+oxs_axiom_deserialize_node(const axutil_env_t *env,  axis2_char_t* buffer)
 {
 
     axiom_document_t *doc = NULL;
@@ -286,7 +286,7 @@ oxs_axiom_deserialize_node(const axis2_env_t *env,  axis2_char_t* buffer)
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_axiom_check_node_name(const axis2_env_t *env, axiom_node_t* node, axis2_char_t* name, axis2_char_t* ns)
+oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_char_t* name, axis2_char_t* ns)
 {
     int ret_name, ret_ns;
     axiom_element_t * ele = NULL;

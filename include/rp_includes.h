@@ -27,8 +27,8 @@
 #include <axis2_error.h>
 #include <axis2_utils_defines.h>
 #include <axis2_log_default.h>
-#include <axis2_error_default.h>
-#include <axis2_env.h>
+#include <axutil_error_default.h>
+#include <axutil_env.h>
 #include <axiom.h>
 #include <axiom_soap.h>
 #include <axis2_qname.h>

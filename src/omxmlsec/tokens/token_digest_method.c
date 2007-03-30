@@ -24,7 +24,7 @@
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_digest_method_element(const axis2_env_t *env,
+oxs_token_build_digest_method_element(const axutil_env_t *env,
                                       axiom_node_t *parent,
                                       axis2_char_t* algorithm
                                      )
@@ -62,7 +62,7 @@ oxs_token_build_digest_method_element(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_digest_method(const axis2_env_t *env, axiom_node_t *digest_mtd_node)
+oxs_token_get_digest_method(const axutil_env_t *env, axiom_node_t *digest_mtd_node)
 {
     axis2_char_t *digest_mtd = NULL;
     axiom_element_t *digest_mtd_ele = NULL;

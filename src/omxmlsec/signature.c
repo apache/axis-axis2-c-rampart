@@ -30,7 +30,7 @@
 
 /*Private functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
+oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
                       oxs_sign_ctx_t *sign_ctx,
                       oxs_buffer_t *input,
                       oxs_buffer_t *output)
@@ -67,7 +67,7 @@ oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_sig_sign(const axis2_env_t *env,
+oxs_sig_sign(const axutil_env_t *env,
              oxs_sign_ctx_t *sign_ctx,
              oxs_buffer_t *input,
              oxs_buffer_t *output)
@@ -97,7 +97,7 @@ oxs_sig_sign(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_sig_verify(const axis2_env_t *env,
+oxs_sig_verify(const axutil_env_t *env,
                oxs_sign_ctx_t *sign_ctx,
                axis2_char_t *content,
                axis2_char_t *signature)

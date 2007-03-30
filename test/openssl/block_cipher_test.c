@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <axis2_util.h>
 #include <oxs_constants.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <oxs_buffer.h>
 #include <oxs_error.h>
 #include <openssl_cipher_ctx.h>
@@ -28,15 +28,15 @@
 
 
 
-axis2_env_t *test_init()
+axutil_env_t *test_init()
 {
     axutil_allocator_t *allocator = axutil_allocator_init(NULL);
     axis2_error_t *error = (axis2_error_t*)axis2_error_create(allocator);
-    axis2_env_t *env = axis2_env_create_with_error(allocator, error);
+    axutil_env_t *env = axutil_env_create_with_error(allocator, error);
     return env;
 }
 #if 0
-int decrypt(axis2_env_t *env, oxs_buffer_ptr in, unsigned char *key, unsigned char *iv)
+int decrypt(axutil_env_t *env, oxs_buffer_ptr in, unsigned char *key, unsigned char *iv)
 {
     openssl_evp_block_cipher_ctx_ptr bc_ctx = NULL;
     oxs_buffer_ptr out = NULL;
@@ -86,7 +86,7 @@ int main()
     oxs_buffer_ptr encoded_buf = NULL;
     oxs_buffer_ptr out = NULL;
     */
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     oxs_buffer_ptr in = NULL;
     axis2_char_t *plain_text = NULL;
     unsigned char *out_main_buf = NULL , *out_main_buf2 = NULL;

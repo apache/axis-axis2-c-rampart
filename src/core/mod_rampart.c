@@ -20,20 +20,20 @@
 
 axis2_status_t AXIS2_CALL
 mod_rampart_shutdown(axis2_module_t *module,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
 mod_rampart_init(axis2_module_t *module,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_conf_ctx_t *conf_ctx,
         axis2_module_desc_t *module_desc);
 
 axis2_status_t AXIS2_CALL
 mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 axis2_module_t *
-mod_rampart_create(const axis2_env_t *env)
+mod_rampart_create(const axutil_env_t *env)
 {
     axis2_module_t *module = NULL;
     module = AXIS2_MALLOC(env->allocator,
@@ -53,7 +53,7 @@ mod_rampart_create(const axis2_env_t *env)
 
 axis2_status_t AXIS2_CALL
 mod_rampart_init(axis2_module_t *module,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_conf_ctx_t *conf_ctx,
         axis2_module_desc_t *module_desc)
 {
@@ -64,7 +64,7 @@ mod_rampart_init(axis2_module_t *module,
 
 axis2_status_t AXIS2_CALL
 mod_rampart_shutdown(axis2_module_t *module,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_LOG_INFO(env->log,"[rampart][mod_rampart] mod_rampart shutdown");
     if (module->ops)
@@ -92,7 +92,7 @@ mod_rampart_shutdown(axis2_module_t *module,
 
 axis2_status_t AXIS2_CALL
 mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -118,7 +118,7 @@ mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
 
 AXIS2_EXPORT int
 axis2_get_instance(axis2_module_t **inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     *inst = mod_rampart_create(env);
     if (!(*inst))
@@ -131,7 +131,7 @@ axis2_get_instance(axis2_module_t **inst,
 
 AXIS2_EXPORT int
 axis2_remove_instance(axis2_module_t *inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)

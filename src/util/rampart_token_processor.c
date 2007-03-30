@@ -34,7 +34,7 @@
 #include <rampart_token_processor.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_process_security_token_reference(const axis2_env_t *env,
+rampart_token_process_security_token_reference(const axutil_env_t *env,
         axiom_node_t *st_ref_node,
         axiom_node_t *scope_node,/*Can be NULL for all other scenarios but the Direct Reference*/
         oxs_x509_cert_t *cert)
@@ -64,7 +64,7 @@ rampart_token_process_security_token_reference(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_process_direct_ref(const axis2_env_t *env,
+rampart_token_process_direct_ref(const axutil_env_t *env,
                                  axiom_node_t *ref_node,
                                  axiom_node_t *scope_node,
                                  oxs_x509_cert_t *cert)
@@ -101,7 +101,7 @@ rampart_token_process_direct_ref(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_process_embedded(const axis2_env_t *env,
+rampart_token_process_embedded(const axutil_env_t *env,
                                axiom_node_t *embed_node,
                                oxs_x509_cert_t *cert)
 {
@@ -131,7 +131,7 @@ rampart_token_process_embedded(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_process_key_identifier(const axis2_env_t *env,
+rampart_token_process_key_identifier(const axutil_env_t *env,
                                      axiom_node_t *ki_node,
                                      oxs_x509_cert_t *cert)
 {
@@ -144,7 +144,7 @@ rampart_token_process_key_identifier(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_process_x509_data(const axis2_env_t *env,
+rampart_token_process_x509_data(const axutil_env_t *env,
                                 axiom_node_t *x509_data_node,
                                 oxs_x509_cert_t *cert)
 {

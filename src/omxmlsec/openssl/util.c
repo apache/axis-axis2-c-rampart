@@ -27,7 +27,7 @@
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-generate_random_data(const axis2_env_t *env, oxs_buffer_t *buffer, int size)
+generate_random_data(const axutil_env_t *env, oxs_buffer_t *buffer, int size)
 {
     axis2_status_t status =  AXIS2_FAILURE;
     int ret;
@@ -61,7 +61,7 @@ generate_random_data(const axis2_env_t *env, oxs_buffer_t *buffer, int size)
 
 
 AXIS2_EXTERN axis2_status_t  AXIS2_CALL
-openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property_t *cprop)
+openssl_populate_cipher_property(const axutil_env_t *env, openssl_cipher_property_t *cprop)
 {
     EVP_CIPHER* cipher;
     EVP_CIPHER_CTX ctx;
@@ -110,7 +110,7 @@ openssl_populate_cipher_property(const axis2_env_t *env, openssl_cipher_property
 }
 
 AXIS2_EXTERN EVP_CIPHER*  AXIS2_CALL
-openssl_get_evp_cipher_by_name(const axis2_env_t *env, axis2_char_t *cipher_name)
+openssl_get_evp_cipher_by_name(const axutil_env_t *env, axis2_char_t *cipher_name)
 {
     EVP_CIPHER* cipher = NULL;
 

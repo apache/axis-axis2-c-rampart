@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <axis2_util.h>
 #include <oxs_constants.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <oxs_buffer.h>
 #include <oxs_error.h>
 #include <openssl_rsa.h>
@@ -26,16 +26,16 @@
 #include <openssl_constants.h>
 #include <oxs_axis2_utils.h>
 
-axis2_env_t *test_init()
+axutil_env_t *test_init()
 {
     axutil_allocator_t *allocator = axutil_allocator_init(NULL);
     axis2_error_t *error = (axis2_error_t*)axis2_error_create(allocator);
-    axis2_env_t *env = axis2_env_create_with_error(allocator, error);
+    axutil_env_t *env = axutil_env_create_with_error(allocator, error);
     return env;
 }
 
 int md5(){
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     axis2_char_t *plaintext = NULL;
 
     env = test_init();
@@ -48,7 +48,7 @@ int md5(){
 
 int encdec()
 {
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     evp_pkey_ptr pubk, prvk = NULL;
     unsigned char *plaintxt = NULL, *encrypted = NULL, *decrypted = NULL;
     oxs_buffer_ptr randkey = NULL;

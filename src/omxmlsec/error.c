@@ -78,7 +78,7 @@ oxs_errors_get_msg(unsigned int pos)
 }
 
 AXIS2_EXTERN void   AXIS2_CALL
-oxs_error(const axis2_env_t *env, const char* file, int line, const char* func,
+oxs_error(const axutil_env_t *env, const char* file, int line, const char* func,
           int code, const char* msg, ...)
 {
     const char* error_msg = NULL;

@@ -25,7 +25,7 @@
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_x509_issuer_serial_with_data(const axis2_env_t *env,
+oxs_token_build_x509_issuer_serial_with_data(const axutil_env_t *env,
         axiom_node_t *parent,
         axis2_char_t *issuer_name,
         axis2_char_t *serial_number)
@@ -46,7 +46,7 @@ oxs_token_build_x509_issuer_serial_with_data(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_x509_issuer_serial_element(const axis2_env_t *env,
+oxs_token_build_x509_issuer_serial_element(const axutil_env_t *env,
         axiom_node_t *parent)
 {
     axiom_node_t *x509_issuer_serial_node = NULL;

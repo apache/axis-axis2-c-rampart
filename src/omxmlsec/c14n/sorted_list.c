@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include "c14n_sorted_list.h"
 
 /*
@@ -34,7 +34,7 @@ sorted_list_iterate(
     c14n_sorted_list_t *root,
     const void *ctx,
     void(*perform)(const void *, const void *),
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     if (!root) return;
@@ -68,7 +68,7 @@ sorted_list_insert(
 void
 sorted_list_free_container(
     c14n_sorted_list_t *root,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     if (!root) return;
@@ -89,7 +89,7 @@ void
 sorted_list_free(
     c14n_sorted_list_t *root,
     void(*free)(const void *, const void *),
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     sorted_list_iterate(root, NULL, free, env);

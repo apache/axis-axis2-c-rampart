@@ -40,7 +40,7 @@
 /*Public functions*/
 
 oxs_x509_cert_t *AXIS2_CALL
-rampart_sig_get_cert(const axis2_env_t *env,
+rampart_sig_get_cert(const axutil_env_t *env,
                      rampart_context_t *rampart_context)
 {
     void *key_buf = NULL;
@@ -91,7 +91,7 @@ rampart_sig_get_cert(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_sig_sign_message(const axis2_env_t *env,
+rampart_sig_sign_message(const axutil_env_t *env,
                          axis2_msg_ctx_t *msg_ctx,
                          rampart_context_t *rampart_context,
                          axiom_soap_envelope_t *soap_envelope,

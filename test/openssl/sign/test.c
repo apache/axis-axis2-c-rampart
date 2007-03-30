@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <axis2_util.h>
 #include <oxs_constants.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <oxs_buffer.h>
 #include <oxs_error.h>
 #include <oxs_key_mgr.h>
@@ -33,7 +33,7 @@
 #include <oxs_axiom.h>
 #include <axiom.h>
 #include <axiom_xml_reader.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <oxs_ctx.h>
 #include <oxs_key.h>
 #include <oxs_key_mgr.h>
@@ -48,7 +48,7 @@
 #include <oxs_xml_key_info_builder.h>
 
 axiom_node_t* 
-load_sample_xml(const axis2_env_t *env,
+load_sample_xml(const axutil_env_t *env,
         axis2_char_t* filename
                )
 {
@@ -73,7 +73,7 @@ load_sample_xml(const axis2_env_t *env,
 }
 
 axis2_char_t *
-c14n(axis2_env_t *env, axis2_char_t* filename)
+c14n(axutil_env_t *env, axis2_char_t* filename)
 {
     axiom_document_t *doc = NULL;
     axis2_char_t *algo = NULL;
@@ -90,7 +90,7 @@ c14n(axis2_env_t *env, axis2_char_t* filename)
     return c14nized;
 }
 
-axis2_char_t* digest(axis2_env_t *env, axis2_char_t *in){
+axis2_char_t* digest(axutil_env_t *env, axis2_char_t *in){
     axis2_char_t *dg = NULL;
     FILE *outf = NULL;
 
@@ -103,7 +103,7 @@ axis2_char_t* digest(axis2_env_t *env, axis2_char_t *in){
 
 int main()
 {
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     oxs_buffer_t *inbuf = NULL;
     oxs_buffer_t *outbuf = NULL;
@@ -113,7 +113,7 @@ int main()
     char *data = "Winners in good times and survivors in hard times";
     int len = -1;
 
-    env = axis2_env_create_all("./openssl.log", AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("./openssl.log", AXIS2_LOG_LEVEL_TRACE);
 #if 0
     /*new code*/
     {

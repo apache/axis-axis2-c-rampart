@@ -26,7 +26,7 @@
 
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -46,7 +46,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
+    oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
                           oxs_sign_ctx_t *sign_ctx,
                           oxs_buffer_t *input,
                           oxs_buffer_t *output);
@@ -63,7 +63,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_sig_sign(const axis2_env_t *env,
+    oxs_sig_sign(const axutil_env_t *env,
                  oxs_sign_ctx_t *sign_ctx,
                  oxs_buffer_t *input,
                  oxs_buffer_t *output);
@@ -79,7 +79,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_sig_verify(const axis2_env_t *env,
+    oxs_sig_verify(const axutil_env_t *env,
                    oxs_sign_ctx_t *sign_ctx,
                    axis2_char_t *content,
                    axis2_char_t *signature);

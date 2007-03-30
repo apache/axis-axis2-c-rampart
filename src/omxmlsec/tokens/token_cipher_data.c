@@ -25,7 +25,7 @@
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_cipher_data_element(const axis2_env_t *env,
+oxs_token_build_cipher_data_element(const axutil_env_t *env,
                                     axiom_node_t *parent
                                    )
 {
@@ -48,7 +48,7 @@ oxs_token_build_cipher_data_element(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_cipher_value_from_cipher_data(const axis2_env_t *env,
+oxs_token_get_cipher_value_from_cipher_data(const axutil_env_t *env,
         axiom_node_t *cd_node)
 {
     axiom_node_t *cv_node = NULL;

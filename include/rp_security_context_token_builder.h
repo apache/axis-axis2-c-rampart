@@ -34,13 +34,13 @@ extern "C"
 
     AXIS2_EXTERN rp_security_context_token_t *AXIS2_CALL
     rp_security_context_token_builder_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *security_context,
         axiom_element_t *security_context_ele);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_security_context_token_builder_set_inclusion_value(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rp_security_context_token_t *token,
         axiom_element_t *element);
 
@@ -50,7 +50,7 @@ extern "C"
         axiom_element_t *element,
         axis2_char_t *local_name,
         rp_security_context_token_t *security_context_token,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

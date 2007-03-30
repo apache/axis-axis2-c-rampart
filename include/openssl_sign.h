@@ -40,7 +40,7 @@ extern "C" {
      * The result would be placed in the @output_buf
      */
     AXIS2_EXTERN int AXIS2_CALL
-    openssl_sig_sign(const axis2_env_t *env,
+    openssl_sig_sign(const axutil_env_t *env,
                      openssl_pkey_t *prvkey,
                      oxs_buffer_t *input_buf,
                      oxs_buffer_t *output_buf);
@@ -50,7 +50,7 @@ extern "C" {
      * using the public key @pubkey
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    openssl_sig_verify(const axis2_env_t *env,
+    openssl_sig_verify(const axutil_env_t *env,
                        openssl_pkey_t *pubkey,
                        oxs_buffer_t *input_buf,
                        oxs_buffer_t *sig_buf);

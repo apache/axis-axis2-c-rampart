@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -39,11 +39,11 @@ extern "C"
     */
 
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_token_get_digest_value(const axis2_env_t *env,
+    oxs_token_get_digest_value(const axutil_env_t *env,
                                axiom_node_t *sv_node);
 
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_digest_value_element(const axis2_env_t *env,
+    oxs_token_build_digest_value_element(const axutil_env_t *env,
                                          axiom_node_t *parent,
                                          axis2_char_t* digest_val
                                         );

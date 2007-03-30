@@ -25,7 +25,7 @@
  * Specially used in xml encryption and signature references.
  * */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_util_generate_id(const axis2_env_t *env,
+oxs_util_generate_id(const axutil_env_t *env,
                      axis2_char_t *prefix)
 {
     axis2_char_t *id = NULL;
@@ -40,7 +40,7 @@ oxs_util_generate_id(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN oxs_asym_ctx_format_t AXIS2_CALL
-oxs_util_get_format_by_file_extension(const axis2_env_t *env,
+oxs_util_get_format_by_file_extension(const axutil_env_t *env,
                                       axis2_char_t *file_name)
 {
     axis2_char_t *extension = NULL;
@@ -64,7 +64,7 @@ oxs_util_get_format_by_file_extension(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_util_get_newline_removed_string(const axis2_env_t *env,
+oxs_util_get_newline_removed_string(const axutil_env_t *env,
                                     axis2_char_t *input)
 {
     axis2_char_t *output = NULL;

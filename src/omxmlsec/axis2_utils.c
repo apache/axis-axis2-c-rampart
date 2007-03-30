@@ -19,7 +19,7 @@
 #include <axis2_util.h>
 #include <oxs_axis2_utils.h>
 #if 0
-AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_decode(axis2_env_t *env,
+AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_decode(axutil_env_t *env,
         oxs_buffer_t *coded_buf)
 {
     axis2_char_t *plain_str = NULL;/* Here plain can be binary sometimes */
@@ -34,7 +34,7 @@ AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_decode(axis2_env_t *env,
     return out_buf;
 }
 
-AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_encode(axis2_env_t *env,
+AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_encode(axutil_env_t *env,
         oxs_buffer_t *plain_buf)
 {
     axis2_char_t *encoded_str = NULL;

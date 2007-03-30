@@ -43,7 +43,7 @@ struct openssl_pkey_t
 
 
 AXIS2_EXTERN openssl_pkey_t *AXIS2_CALL
-openssl_pkey_create(const axis2_env_t *env)
+openssl_pkey_create(const axutil_env_t *env)
 {
     openssl_pkey_t * pkey = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -65,7 +65,7 @@ openssl_pkey_create(const axis2_env_t *env)
 EVP_PKEY *AXIS2_CALL
 openssl_pkey_get_key(
     const openssl_pkey_t *pkey,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, NULL);
@@ -76,7 +76,7 @@ openssl_pkey_get_key(
 axis2_char_t *AXIS2_CALL
 openssl_pkey_get_name(
     const openssl_pkey_t *pkey,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, NULL);
@@ -87,7 +87,7 @@ openssl_pkey_get_name(
 int AXIS2_CALL
 openssl_pkey_get_size(
     const openssl_pkey_t *pkey,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -97,7 +97,7 @@ openssl_pkey_get_size(
 int AXIS2_CALL
 openssl_pkey_get_type(
     const openssl_pkey_t *pkey,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -108,7 +108,7 @@ openssl_pkey_get_type(
 axis2_status_t AXIS2_CALL
 openssl_pkey_set_key(
     openssl_pkey_t *pkey,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     EVP_PKEY *key
 )
 {
@@ -128,7 +128,7 @@ openssl_pkey_set_key(
 axis2_status_t AXIS2_CALL
 openssl_pkey_set_name(
     openssl_pkey_t *pkey,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *name
 )
 {
@@ -148,7 +148,7 @@ openssl_pkey_set_name(
 axis2_status_t AXIS2_CALL
 openssl_pkey_set_type(
     openssl_pkey_t *pkey,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int type
 )
 {
@@ -163,7 +163,7 @@ openssl_pkey_set_type(
 axis2_status_t AXIS2_CALL
 openssl_pkey_load(
     openssl_pkey_t *pkey,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *filename,
     axis2_char_t *password
 )
@@ -206,7 +206,7 @@ openssl_pkey_load(
 axis2_status_t AXIS2_CALL
 openssl_pkey_populate(
     openssl_pkey_t *pkey,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     EVP_PKEY *key,
     axis2_char_t *name,
     int type
@@ -226,7 +226,7 @@ openssl_pkey_populate(
 axis2_status_t AXIS2_CALL
 openssl_pkey_free(
     openssl_pkey_t *pkey,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
 

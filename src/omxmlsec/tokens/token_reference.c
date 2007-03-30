@@ -24,7 +24,7 @@
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_reference_element(const axis2_env_t *env,
+oxs_token_build_reference_element(const axutil_env_t *env,
                                   axiom_node_t *parent,
                                   axis2_char_t *ref,
                                   axis2_char_t *value_type)
@@ -62,7 +62,7 @@ oxs_token_build_reference_element(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_reference(const axis2_env_t *env, axiom_node_t *ref_node)
+oxs_token_get_reference(const axutil_env_t *env, axiom_node_t *ref_node)
 {
     axis2_char_t *ref = NULL;
     axiom_element_t *reference_ele = NULL;
@@ -81,7 +81,7 @@ oxs_token_get_reference(const axis2_env_t *env, axiom_node_t *ref_node)
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_reference_value_type(const axis2_env_t *env, axiom_node_t *ref_node)
+oxs_token_get_reference_value_type(const axutil_env_t *env, axiom_node_t *ref_node)
 {
     axis2_char_t *val_type = NULL;
     axiom_element_t *reference_ele = NULL;

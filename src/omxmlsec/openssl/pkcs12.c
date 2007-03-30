@@ -27,7 +27,7 @@
 #include <openssl_pkcs12.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_load(const axis2_env_t *env,
+openssl_pkcs12_load(const axutil_env_t *env,
                     axis2_char_t *filename,
                     PKCS12 **p12)
 {
@@ -52,7 +52,7 @@ openssl_pkcs12_load(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_parse(const axis2_env_t *env,
+openssl_pkcs12_parse(const axutil_env_t *env,
                      axis2_char_t *password ,
                      PKCS12 *p12,
                      EVP_PKEY **prvkey,
@@ -69,7 +69,7 @@ openssl_pkcs12_parse(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_free(const axis2_env_t *env,
+openssl_pkcs12_free(const axutil_env_t *env,
                     PKCS12 *p12)
 {
 

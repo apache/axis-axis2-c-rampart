@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -38,13 +38,13 @@ extern "C"
     * X509Data element
     */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_x509_issuer_serial_with_data(const axis2_env_t *env,
+    oxs_token_build_x509_issuer_serial_with_data(const axutil_env_t *env,
             axiom_node_t *parent,
             axis2_char_t *issuer_name,
             axis2_char_t *serial_number);
 
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_x509_issuer_serial_element(const axis2_env_t *env,
+    oxs_token_build_x509_issuer_serial_element(const axutil_env_t *env,
             axiom_node_t *parent);
 
 

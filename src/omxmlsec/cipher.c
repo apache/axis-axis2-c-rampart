@@ -24,7 +24,7 @@
 
 
 AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
-oxs_get_cipher_property_for_url(const axis2_env_t *env,
+oxs_get_cipher_property_for_url(const axutil_env_t *env,
                                 axis2_char_t *url)
 {
     openssl_cipher_property_t *cprop = NULL;
@@ -54,7 +54,7 @@ oxs_get_cipher_property_for_url(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_get_cipher_name_for_url(const axis2_env_t *env,
+oxs_get_cipher_name_for_url(const axutil_env_t *env,
                             axis2_char_t *url)
 {
 
@@ -91,7 +91,7 @@ oxs_get_cipher_name_for_url(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_get_cipher_url_for_name(const axis2_env_t *env,
+oxs_get_cipher_url_for_name(const axutil_env_t *env,
                             axis2_char_t *name)
 {
 

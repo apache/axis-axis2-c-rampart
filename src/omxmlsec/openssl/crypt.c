@@ -27,7 +27,7 @@
 #define BUFSIZE 64
 
 AXIS2_EXTERN int AXIS2_CALL
-openssl_bc_crypt(const axis2_env_t *env,
+openssl_bc_crypt(const axutil_env_t *env,
                  openssl_cipher_ctx_t *oc_ctx,
                  oxs_buffer_t *input_buf,
                  oxs_buffer_t *output_buf,

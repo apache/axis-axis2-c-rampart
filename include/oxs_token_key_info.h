@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -38,7 +38,7 @@ extern "C"
     * KeyInfo element
     */
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
-    oxs_token_build_key_info_element(const axis2_env_t *env,
+    oxs_token_build_key_info_element(const axutil_env_t *env,
                                      axiom_node_t *parent
                                     );
 

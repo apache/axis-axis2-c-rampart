@@ -36,7 +36,7 @@
 
 /*Private functions*/
 axis2_status_t AXIS2_CALL
-rampart_interchange_nodes(const axis2_env_t *env,
+rampart_interchange_nodes(const axutil_env_t *env,
                           axiom_node_t *node_to_move,
                           axiom_node_t *node_before)
 {
@@ -56,7 +56,7 @@ rampart_interchange_nodes(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_shb_build_message(const axis2_env_t *env,
+rampart_shb_build_message(const axutil_env_t *env,
                           axis2_msg_ctx_t *msg_ctx,
                           rampart_context_t *rampart_context,
                           axiom_soap_envelope_t *soap_envelope)

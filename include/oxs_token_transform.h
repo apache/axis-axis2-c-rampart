@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -39,13 +39,13 @@ extern "C"
     * ds:Transform element
     */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_transform_element(const axis2_env_t *env,
+    oxs_token_build_transform_element(const axutil_env_t *env,
                                       axiom_node_t *parent,
                                       axis2_char_t *algorithm
                                      );
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    oxs_token_get_transform(const axis2_env_t *env, axiom_node_t *transform_node);
+    oxs_token_get_transform(const axutil_env_t *env, axiom_node_t *transform_node);
     /** @} */
 #ifdef __cplusplus
 }

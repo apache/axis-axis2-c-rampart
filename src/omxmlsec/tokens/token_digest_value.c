@@ -24,7 +24,7 @@
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_digest_value(const axis2_env_t *env,
+oxs_token_get_digest_value(const axutil_env_t *env,
                            axiom_node_t *digest_val_node)
 {
     axis2_char_t *digest_val = NULL;
@@ -35,7 +35,7 @@ oxs_token_get_digest_value(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_digest_value_element(const axis2_env_t *env,
+oxs_token_build_digest_value_element(const axutil_env_t *env,
                                      axiom_node_t *parent,
                                      axis2_char_t* digest_val
                                     )

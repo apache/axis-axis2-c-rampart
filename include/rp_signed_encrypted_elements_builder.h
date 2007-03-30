@@ -32,7 +32,7 @@ extern "C"
 
     AXIS2_EXTERN rp_signed_encrypted_elements_t *AXIS2_CALL
     rp_signed_encrypted_elements_builder_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *elements);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -41,13 +41,13 @@ extern "C"
         axiom_element_t *element,
         axis2_char_t *local_name,
         rp_signed_encrypted_elements_t *signed_encrypted_elements,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_signed_encrypted_elements_builder_set_xpath_version(
         axiom_element_t *element,
         rp_signed_encrypted_elements_t *signed_encrypted_elements,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 
 

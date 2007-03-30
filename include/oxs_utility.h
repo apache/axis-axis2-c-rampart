@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <oxs_asym_ctx.h>
 
 #ifdef __cplusplus
@@ -41,7 +41,7 @@ extern "C"
      * @return the generated id
      **/
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_util_generate_id(const axis2_env_t *env,
+    oxs_util_generate_id(const axutil_env_t *env,
                          axis2_char_t *prefix);
 
     /**
@@ -51,7 +51,7 @@ extern "C"
      * @param file_name the file name 
      **/
     AXIS2_EXTERN oxs_asym_ctx_format_t AXIS2_CALL
-    oxs_util_get_format_by_file_extension(const axis2_env_t *env,
+    oxs_util_get_format_by_file_extension(const axutil_env_t *env,
                                           axis2_char_t *file_name);
 
 
@@ -62,7 +62,7 @@ extern "C"
      * return the newline removed buffer.
      **/
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    oxs_util_get_newline_removed_string(const axis2_env_t *env,
+    oxs_util_get_newline_removed_string(const axutil_env_t *env,
                                         axis2_char_t *input);
 
 

@@ -38,7 +38,7 @@ struct openssl_cipher_property_t
 EVP_CIPHER * AXIS2_CALL
 openssl_cipher_property_get_cipher(
     const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -48,7 +48,7 @@ openssl_cipher_property_get_cipher(
 axis2_char_t * AXIS2_CALL
 openssl_cipher_property_get_name(
     const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -58,7 +58,7 @@ openssl_cipher_property_get_name(
 axis2_char_t * AXIS2_CALL
 openssl_cipher_property_get_url(
     const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -69,7 +69,7 @@ openssl_cipher_property_get_url(
 int AXIS2_CALL
 openssl_cipher_property_get_key_size(
     const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -79,7 +79,7 @@ openssl_cipher_property_get_key_size(
 int AXIS2_CALL
 openssl_cipher_property_get_block_size(
     const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -89,7 +89,7 @@ openssl_cipher_property_get_block_size(
 int AXIS2_CALL
 openssl_cipher_property_get_iv_size(
     const openssl_cipher_property_t *cprop,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -99,7 +99,7 @@ openssl_cipher_property_get_iv_size(
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_set_cipher(
     openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     EVP_CIPHER *cipher)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -116,7 +116,7 @@ openssl_cipher_property_set_cipher(
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_set_name(
     openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *name)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -135,7 +135,7 @@ openssl_cipher_property_set_name(
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_set_url(
     openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *url)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -154,7 +154,7 @@ openssl_cipher_property_set_url(
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_set_key_size(
     openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int   key_size)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -167,7 +167,7 @@ openssl_cipher_property_set_key_size(
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_set_block_size(
     openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int  block_size)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -180,7 +180,7 @@ openssl_cipher_property_set_block_size(
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_set_iv_size(
     openssl_cipher_property_t *cprop,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int   iv_size)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -192,7 +192,7 @@ openssl_cipher_property_set_iv_size(
 
 
 AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
-openssl_cipher_property_create(const axis2_env_t *env)
+openssl_cipher_property_create(const axutil_env_t *env)
 {
     openssl_cipher_property_t *cprop = NULL;
 
@@ -217,7 +217,7 @@ openssl_cipher_property_create(const axis2_env_t *env)
 
 
 axis2_status_t AXIS2_CALL
-openssl_cipher_property_free(openssl_cipher_property_t * cprop, const axis2_env_t *env)
+openssl_cipher_property_free(openssl_cipher_property_t * cprop, const axutil_env_t *env)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

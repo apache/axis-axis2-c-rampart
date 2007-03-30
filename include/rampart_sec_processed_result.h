@@ -18,7 +18,7 @@
 #include <rampart_constants.h>
 #include <axis2_utils_defines.h>
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 /**
   * @file rampart_sec_processed_result.h
@@ -39,7 +39,7 @@ extern "C" {
     *   Set a security processed result to the message context
     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_set_security_processed_result(const axis2_env_t *env,
+    rampart_set_security_processed_result(const axutil_env_t *env,
                                           axis2_msg_ctx_t *msg_ctx,
                                           axis2_char_t *key,
                                           void *value);
@@ -52,7 +52,7 @@ extern "C" {
     *
     */
     AXIS2_EXTERN void *AXIS2_CALL
-    rampart_get_security_processed_result(const axis2_env_t *env,
+    rampart_get_security_processed_result(const axutil_env_t *env,
                                           axis2_msg_ctx_t *msg_ctx,
                                           axis2_char_t *key);
 
@@ -62,7 +62,7 @@ extern "C" {
     *   @msg_ctx the message context in which data are extracted
     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_set_security_processed_results_property(const axis2_env_t *env,
+    rampart_set_security_processed_results_property(const axutil_env_t *env,
             axis2_msg_ctx_t *msg_ctx);
 
     /**
@@ -71,7 +71,7 @@ extern "C" {
     *   @msg_ctx the message context in which data are extracted
     */
     AXIS2_EXTERN axis2_hash_t* AXIS2_CALL
-    rampart_get_all_security_processed_results(const axis2_env_t *env,
+    rampart_get_all_security_processed_results(const axutil_env_t *env,
             axis2_msg_ctx_t *msg_ctx);
 
     /**
@@ -81,7 +81,7 @@ extern "C" {
      *
      */
     AXIS2_EXTERN void AXIS2_CALL
-    rampart_print_security_processed_results_set(const axis2_env_t *env,
+    rampart_print_security_processed_results_set(const axutil_env_t *env,
             axis2_msg_ctx_t *msg_ctx);
 
     /* @} */

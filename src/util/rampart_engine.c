@@ -28,22 +28,22 @@
 rampart_context_t *AXIS2_CALL
 get_rampart_context_with_secpolicy_from_om(
     rampart_context_t *rampart_context,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 
 rampart_context_t *AXIS2_CALL
 build_rampart_context_from_file(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *file_name);
 
 rampart_context_t *AXIS2_CALL
 get_rampart_context_in_server_side(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     const axis2_char_t *key);
 
 
 AXIS2_EXTERN rampart_context_t* AXIS2_CALL
-rampart_engine_init(const axis2_env_t *env,
+rampart_engine_init(const axutil_env_t *env,
                     axis2_msg_ctx_t *msg_ctx,
                     axis2_bool_t is_inflow)
 {
@@ -126,7 +126,7 @@ rampart_engine_init(const axis2_env_t *env,
 rampart_context_t *AXIS2_CALL
 get_rampart_context_with_secpolicy_from_om(
     rampart_context_t *rampart_context,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     axiom_node_t *policy_node = NULL;
     rp_secpolicy_t *secpolicy = NULL;
@@ -149,7 +149,7 @@ get_rampart_context_with_secpolicy_from_om(
 
 rampart_context_t *AXIS2_CALL
 build_rampart_context_from_file(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *file_name)
 {
     rp_secpolicy_t *secpolicy = NULL;
@@ -219,7 +219,7 @@ build_rampart_context_from_file(
 
 rampart_context_t *AXIS2_CALL
 get_rampart_context_in_server_side(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     const axis2_char_t *key)
 {
@@ -289,7 +289,7 @@ get_rampart_context_in_server_side(
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_engine_shutdown(const axis2_env_t *env,
+rampart_engine_shutdown(const axutil_env_t *env,
                         rampart_context_t *rampart_context)
 {
 

@@ -26,7 +26,7 @@
 
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -46,7 +46,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_sig_sign(const axis2_env_t *env,
+    oxs_xml_sig_sign(const axutil_env_t *env,
                      oxs_sign_ctx_t *sign_ctx,
                      axiom_node_t *parent,
                      axiom_node_t **sig_node);
@@ -60,7 +60,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_sig_verify(const axis2_env_t *env,
+    oxs_xml_sig_verify(const axutil_env_t *env,
                        oxs_sign_ctx_t *sign_ctx,
                        axiom_node_t *signature_node,
                        axiom_node_t *scope_node);
@@ -73,7 +73,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_sig_verify_sign_part(const axis2_env_t *env,
+    oxs_xml_sig_verify_sign_part(const axutil_env_t *env,
                                  oxs_sign_part_t *sign_part);
 
     /**
@@ -83,7 +83,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_sig_verify_digests(const axis2_env_t *env,
+    oxs_xml_sig_verify_digests(const axutil_env_t *env,
                                oxs_sign_ctx_t *sign_ctx);
 
 
@@ -96,7 +96,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_sig_process_ref_node(const axis2_env_t *env,
+    oxs_xml_sig_process_ref_node(const axutil_env_t *env,
                                  oxs_sign_part_t *sign_part,
                                  axiom_node_t *ref_node,
                                  axiom_node_t *scope_node);
@@ -110,7 +110,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_sig_process_signature_node(const axis2_env_t *env,
+    oxs_xml_sig_process_signature_node(const axutil_env_t *env,
                                        oxs_sign_ctx_t *sign_ctx,
                                        axiom_node_t *signature_node,
                                        axiom_node_t *scope_node);

@@ -37,7 +37,7 @@ struct openssl_cipher_ctx_t
 
 /******************* end of function headers ******************************/
 AXIS2_EXTERN openssl_cipher_ctx_t *AXIS2_CALL
-openssl_cipher_ctx_create(const axis2_env_t *env)
+openssl_cipher_ctx_create(const axutil_env_t *env)
 {
     openssl_cipher_ctx_t *ctx = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -61,7 +61,7 @@ openssl_cipher_ctx_create(const axis2_env_t *env)
 /* public functions*/
 axis2_status_t AXIS2_CALL
 openssl_cipher_ctx_free(openssl_cipher_ctx_t *ctx,
-                        const axis2_env_t *env
+                        const axutil_env_t *env
                        )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -86,7 +86,7 @@ openssl_cipher_ctx_free(openssl_cipher_ctx_t *ctx,
 
 const EVP_CIPHER* AXIS2_CALL
 openssl_cipher_ctx_get_cipher(openssl_cipher_ctx_t *ctx,
-                              const axis2_env_t *env)
+                              const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -95,7 +95,7 @@ openssl_cipher_ctx_get_cipher(openssl_cipher_ctx_t *ctx,
 
 oxs_key_t *AXIS2_CALL
 openssl_cipher_ctx_get_key(openssl_cipher_ctx_t *ctx,
-                           const axis2_env_t *env
+                           const axutil_env_t *env
                           )
 {
     AXIS2_ENV_CHECK(env, NULL);
@@ -105,7 +105,7 @@ openssl_cipher_ctx_get_key(openssl_cipher_ctx_t *ctx,
 
 axis2_char_t *AXIS2_CALL
 openssl_cipher_ctx_get_iv(openssl_cipher_ctx_t *ctx,
-                          const axis2_env_t *env
+                          const axutil_env_t *env
                          )
 {
     AXIS2_ENV_CHECK(env, NULL);
@@ -115,7 +115,7 @@ openssl_cipher_ctx_get_iv(openssl_cipher_ctx_t *ctx,
 
 axis2_char_t *AXIS2_CALL
 openssl_cipher_ctx_get_pad(openssl_cipher_ctx_t *ctx,
-                           const axis2_env_t *env
+                           const axutil_env_t *env
                           )
 {
     AXIS2_ENV_CHECK(env, NULL);
@@ -125,7 +125,7 @@ openssl_cipher_ctx_get_pad(openssl_cipher_ctx_t *ctx,
 
 axis2_status_t AXIS2_CALL
 openssl_cipher_ctx_set_cipher(openssl_cipher_ctx_t *ctx,
-                              const axis2_env_t *env,
+                              const axutil_env_t *env,
                               const EVP_CIPHER *cipher
                              )
 {
@@ -143,7 +143,7 @@ openssl_cipher_ctx_set_cipher(openssl_cipher_ctx_t *ctx,
 
 axis2_status_t AXIS2_CALL
 openssl_cipher_ctx_set_key(openssl_cipher_ctx_t *ctx,
-                           const axis2_env_t *env,
+                           const axutil_env_t *env,
                            oxs_key_t *key
                           )
 {
@@ -162,7 +162,7 @@ openssl_cipher_ctx_set_key(openssl_cipher_ctx_t *ctx,
 
 axis2_status_t AXIS2_CALL
 openssl_cipher_ctx_set_iv(openssl_cipher_ctx_t *ctx,
-                          const axis2_env_t *env,
+                          const axutil_env_t *env,
                           axis2_char_t *iv
                          )
 {
@@ -182,7 +182,7 @@ openssl_cipher_ctx_set_iv(openssl_cipher_ctx_t *ctx,
 
 axis2_status_t AXIS2_CALL
 openssl_cipher_ctx_set_pad(openssl_cipher_ctx_t *ctx,
-                           const axis2_env_t *env,
+                           const axutil_env_t *env,
                            axis2_char_t *pad
                           )
 {

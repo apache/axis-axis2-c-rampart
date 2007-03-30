@@ -33,7 +33,7 @@
 #include <oxs_tokens.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_build_security_token_reference(const axis2_env_t *env,
+rampart_token_build_security_token_reference(const axutil_env_t *env,
         axiom_node_t *parent,
         oxs_x509_cert_t *cert,
         rampart_token_build_pattern_t pattern)
@@ -62,7 +62,7 @@ rampart_token_build_security_token_reference(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_build_embedded(const axis2_env_t *env,
+rampart_token_build_embedded(const axutil_env_t *env,
                              axiom_node_t *parent,
                              oxs_x509_cert_t *cert)
 {
@@ -83,7 +83,7 @@ rampart_token_build_embedded(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_build_key_identifier(const axis2_env_t *env,
+rampart_token_build_key_identifier(const axutil_env_t *env,
                                    axiom_node_t *parent,
                                    oxs_x509_cert_t *cert)
 {
@@ -100,7 +100,7 @@ rampart_token_build_key_identifier(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_build_x509_data_x509_certificate(const axis2_env_t *env,
+rampart_token_build_x509_data_x509_certificate(const axutil_env_t *env,
         axiom_node_t *parent,
         oxs_x509_cert_t *cert)
 {
@@ -121,7 +121,7 @@ rampart_token_build_x509_data_x509_certificate(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_token_build_x509_data_issuer_serial(const axis2_env_t *env,
+rampart_token_build_x509_data_issuer_serial(const axutil_env_t *env,
         axiom_node_t *parent,
         oxs_x509_cert_t *cert)
 {

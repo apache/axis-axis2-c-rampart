@@ -38,7 +38,7 @@
 
 /*This method is common for both signing and verification*/
 static axis2_char_t *
-oxs_xml_sig_transform_n_digest(const axis2_env_t *env,
+oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
                                axiom_node_t *node,
                                axutil_array_list_t *transforms,
                                axis2_char_t *digest_mtd)
@@ -119,7 +119,7 @@ oxs_xml_sig_transform_n_digest(const axis2_env_t *env,
 
 /*parent is ds:SignedInfo*/
 static axis2_status_t
-oxs_xml_sig_build_reference(const axis2_env_t *env,
+oxs_xml_sig_build_reference(const axutil_env_t *env,
                             axiom_node_t *parent,
                             oxs_sign_part_t *sign_part)
 {
@@ -176,7 +176,7 @@ oxs_xml_sig_build_reference(const axis2_env_t *env,
  *  C14N -> Serialize -> Sign the <SignedInfo> element
  */
 static axis2_status_t
-oxs_xml_sig_sign_signed_info(const axis2_env_t *env,
+oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
                              axiom_node_t *signature_node,
                              axiom_node_t *signed_info_node,
                              oxs_sign_ctx_t *sign_ctx)
@@ -220,7 +220,7 @@ oxs_xml_sig_sign_signed_info(const axis2_env_t *env,
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_sig_sign(const axis2_env_t *env,
+oxs_xml_sig_sign(const axutil_env_t *env,
                  oxs_sign_ctx_t *sign_ctx,
                  axiom_node_t *parent,
                  axiom_node_t **sig_node)
@@ -273,7 +273,7 @@ oxs_xml_sig_sign(const axis2_env_t *env,
 
 /*Populates a sign_part according to the <ds:Reference> node*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_sig_process_ref_node(const axis2_env_t *env,
+oxs_xml_sig_process_ref_node(const axutil_env_t *env,
                              oxs_sign_part_t *sign_part,
                              axiom_node_t *ref_node,
                              axiom_node_t *scope_node)
@@ -389,7 +389,7 @@ oxs_xml_sig_process_ref_node(const axis2_env_t *env,
  *      3.3. Transforms*/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_sig_process_signature_node(const axis2_env_t *env,
+oxs_xml_sig_process_signature_node(const axutil_env_t *env,
                                    oxs_sign_ctx_t *sign_ctx,
                                    axiom_node_t *signature_node,
                                    axiom_node_t *scope_node)
@@ -485,7 +485,7 @@ oxs_xml_sig_process_signature_node(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_sig_verify_sign_part(const axis2_env_t *env,
+oxs_xml_sig_verify_sign_part(const axutil_env_t *env,
                              oxs_sign_part_t *sign_part)
 {
     axis2_char_t *id = NULL;
@@ -520,7 +520,7 @@ oxs_xml_sig_verify_sign_part(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_sig_verify_digests(const axis2_env_t *env,
+oxs_xml_sig_verify_digests(const axutil_env_t *env,
                            oxs_sign_ctx_t *sign_ctx)
 {
     axis2_status_t status = AXIS2_FAILURE;
@@ -546,7 +546,7 @@ oxs_xml_sig_verify_digests(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_sig_verify(const axis2_env_t *env,
+oxs_xml_sig_verify(const axutil_env_t *env,
                    oxs_sign_ctx_t *sign_ctx,
                    axiom_node_t *signature_node,
                    axiom_node_t *scope_node)

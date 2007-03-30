@@ -24,9 +24,9 @@
 
 #include <axiom.h>
 #include <axis2_util.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_log_default.h>
-#include <axis2_error_default.h>
+#include <axutil_error_default.h>
 #include <stdio.h>
 #include <axiom_xml_reader.h>
 
@@ -37,12 +37,12 @@ extern "C"
 
     AXIS2_EXTERN rp_secpolicy_t *AXIS2_CALL
     rp_policy_create_from_file(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *filename);
 
     AXIS2_EXTERN rp_secpolicy_t *AXIS2_CALL
     rp_policy_create_from_om_node(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *root);
 
 

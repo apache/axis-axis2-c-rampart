@@ -34,7 +34,7 @@ extern "C"
 
     AXIS2_EXTERN rp_layout_t *AXIS2_CALL
     rp_layout_builder_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *layout);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -43,7 +43,7 @@ extern "C"
         axiom_element_t *element,
         axis2_char_t *value,
         rp_layout_t *layout,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 
 #ifdef __cplusplus

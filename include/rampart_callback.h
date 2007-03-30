@@ -65,7 +65,7 @@ extern "C"
          */
         axis2_char_t *(AXIS2_CALL*
                        callback_password)(rampart_callback_t *callback,
-                                          const axis2_env_t *env,
+                                          const axutil_env_t *env,
                                           const axis2_char_t *username,
                                           void *param);
 
@@ -77,7 +77,7 @@ extern "C"
          */
         axis2_status_t (AXIS2_CALL*
                         free)(rampart_callback_t *rcb,
-                              const axis2_env_t* env);
+                              const axutil_env_t* env);
 
     };
 

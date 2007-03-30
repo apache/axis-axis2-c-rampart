@@ -23,7 +23,7 @@
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_key_name_element(const axis2_env_t *env,
+oxs_token_build_key_name_element(const axutil_env_t *env,
                                  axiom_node_t *parent,
                                  axis2_char_t* key_name_val
                                 )

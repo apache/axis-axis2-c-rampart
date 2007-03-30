@@ -5,7 +5,7 @@
 
 AXIS2_EXTERN rp_secpolicy_t *AXIS2_CALL 
 rp_policy_create_from_file(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *filename)
 {
 
@@ -57,7 +57,7 @@ rp_policy_create_from_file(
 
 AXIS2_EXTERN rp_secpolicy_t *AXIS2_CALL 
 rp_policy_create_from_om_node(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_node_t *root)
 {
 

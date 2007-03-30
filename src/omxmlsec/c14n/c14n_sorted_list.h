@@ -46,13 +46,13 @@ extern "C"
         c14n_sorted_list_t *root,
         const void *ctx,
         void(*perform)(const void *, const void *),
-        const axis2_env_t *env
+        const axutil_env_t *env
         );
 
     void
     sorted_list_free_container(
         c14n_sorted_list_t *root,
-        const axis2_env_t *env
+        const axutil_env_t *env
         );
 
 #ifdef __cplusplus

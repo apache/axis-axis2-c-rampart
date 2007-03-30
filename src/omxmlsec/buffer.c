@@ -37,7 +37,7 @@ struct oxs_buffer
 /******************** end of function headers *****************/
 
 AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
-oxs_buffer_create(const axis2_env_t *env)
+oxs_buffer_create(const axutil_env_t *env)
 {
     oxs_buffer_t *buffer = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -71,7 +71,7 @@ oxs_buffer_create(const axis2_env_t *env)
 axis2_status_t AXIS2_CALL
 oxs_buffer_free(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -91,7 +91,7 @@ oxs_buffer_free(
 axis2_status_t AXIS2_CALL
 oxs_buffer_remove_head(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int size
 )
 {
@@ -132,7 +132,7 @@ oxs_buffer_remove_head(
 axis2_status_t AXIS2_CALL
 oxs_buffer_remove_tail(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int size
 )
 {
@@ -164,7 +164,7 @@ oxs_buffer_remove_tail(
 axis2_status_t AXIS2_CALL
 oxs_buffer_populate(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     unsigned char *data,
     int size
 )
@@ -191,7 +191,7 @@ oxs_buffer_populate(
 axis2_status_t AXIS2_CALL
 oxs_buffer_append(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     unsigned char *data,
     int size
 )
@@ -218,7 +218,7 @@ oxs_buffer_append(
 axis2_status_t AXIS2_CALL
 oxs_buffer_prepend(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     unsigned char *data,
     int size
 )
@@ -247,7 +247,7 @@ oxs_buffer_prepend(
 axis2_status_t AXIS2_CALL
 oxs_buffer_read_file(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axis2_char_t *filename
 )
 {
@@ -298,7 +298,7 @@ oxs_buffer_read_file(
 axis2_status_t AXIS2_CALL
 oxs_buffer_set_size(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int size
 )
 {
@@ -323,7 +323,7 @@ oxs_buffer_set_size(
 axis2_status_t AXIS2_CALL
 oxs_buffer_set_max_size(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int size
 )
 {
@@ -399,7 +399,7 @@ oxs_buffer_set_max_size(
 unsigned char* AXIS2_CALL
 oxs_buffer_get_data(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, NULL);
@@ -410,7 +410,7 @@ oxs_buffer_get_data(
 int AXIS2_CALL
 oxs_buffer_get_size(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -421,7 +421,7 @@ oxs_buffer_get_size(
 int AXIS2_CALL
 oxs_buffer_get_max_size(
     oxs_buffer_t *buffer,
-    const axis2_env_t *env
+    const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

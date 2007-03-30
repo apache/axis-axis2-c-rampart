@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <oxs_buffer.h>
 #include <oxs_key.h>
@@ -70,7 +70,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_free(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -82,7 +82,7 @@ extern "C"
     oxs_ctx_mode_t AXIS2_CALL
     oxs_ctx_get_mode(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -94,7 +94,7 @@ extern "C"
     oxs_ctx_operation_t AXIS2_CALL
     oxs_ctx_get_operation(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
 
@@ -107,7 +107,7 @@ extern "C"
     oxs_key_t *AXIS2_CALL
     oxs_ctx_get_key(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -119,7 +119,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_id(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -131,7 +131,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_type(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
     /**
      * 
@@ -142,7 +142,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_mime_type(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -154,7 +154,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_encoding(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -166,7 +166,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_recipient(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -178,7 +178,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_carried_key_name(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -190,7 +190,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_enc_mtd_algorithm(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -202,7 +202,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_ctx_get_input_data(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
     /**
      * 
@@ -214,7 +214,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_mode(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         oxs_ctx_mode_t mode
     );
 
@@ -228,7 +228,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_operation(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         oxs_ctx_operation_t operation
     );
 
@@ -242,7 +242,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_key(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         oxs_key_t *key
     );
     /**
@@ -255,7 +255,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_id(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *id
     );
 
@@ -269,7 +269,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_type(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *type
     );
 
@@ -283,7 +283,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_mime_type(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *mime_type
     );
 
@@ -298,7 +298,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_encoding(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *encoding
     );
 
@@ -312,7 +312,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_recipient(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *recipient
     );
 
@@ -327,7 +327,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_carried_key_name(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *carried_key_name
     );
 
@@ -341,7 +341,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_enc_mtd_algorithm(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *enc_mtd_algorithm
     );
     /**
@@ -354,7 +354,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_ctx_set_input_data(
         oxs_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *input_data
     );
 
@@ -362,7 +362,7 @@ extern "C"
 
     /*Create function*/
     AXIS2_EXTERN oxs_ctx_t *AXIS2_CALL
-    oxs_ctx_create(const axis2_env_t *env);
+    oxs_ctx_create(const axutil_env_t *env);
 
 
     /** @} */

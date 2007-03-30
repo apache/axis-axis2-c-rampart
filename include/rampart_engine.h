@@ -41,12 +41,12 @@ extern "C"
 #endif
 
     AXIS2_EXTERN rampart_context_t* AXIS2_CALL
-    rampart_engine_init(const axis2_env_t *env,
+    rampart_engine_init(const axutil_env_t *env,
                         axis2_msg_ctx_t *msg_ctx,
                         axis2_bool_t is_inflow);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_engine_shutdown(const axis2_env_t *env,
+    rampart_engine_shutdown(const axutil_env_t *env,
                             rampart_context_t *rampart_context);
 
 

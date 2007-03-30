@@ -26,12 +26,12 @@ rp_algorithmsuite_builder_set_algosuite(
         axiom_element_t *element,
         axis2_char_t *algosuite_string,
         rp_algorithmsuite_t *algorithmsuite,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 
 AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
 rp_algorithmsuite_builder_build(
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axiom_node_t *algorithmsuite)
 {
     rp_algorithmsuite_t *algorithm_suite = NULL;
@@ -84,7 +84,7 @@ rp_algorithmsuite_builder_set_algosuite(
         axiom_element_t *element,
         axis2_char_t *algosuite_string,
         rp_algorithmsuite_t *algorithmsuite,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 
 {
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);

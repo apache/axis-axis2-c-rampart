@@ -34,11 +34,11 @@ extern "C" {
      */
 #if 0
     /*Decoded buffer will be returned*/
-    AXIS2_EXTERN oxs_buffer_ptr AXIS2_CALL  oxs_base64_decode(axis2_env_t *env,
+    AXIS2_EXTERN oxs_buffer_ptr AXIS2_CALL  oxs_base64_decode(axutil_env_t *env,
             oxs_buffer_ptr coded_buf);
 
     /*Encoded input buffer will be returned*/
-    AXIS2_EXTERN oxs_buffer_ptr AXIS2_CALL  oxs_base64_encode(axis2_env_t *env,
+    AXIS2_EXTERN oxs_buffer_ptr AXIS2_CALL  oxs_base64_encode(axutil_env_t *env,
             oxs_buffer_ptr plain_buf);
 #endif
 

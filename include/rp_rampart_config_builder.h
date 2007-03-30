@@ -32,11 +32,11 @@ extern "C"
 #endif
 
     AXIS2_EXTERN rp_rampart_config_t *AXIS2_CALL
-    rp_rampart_config_builder_build(const axis2_env_t *env, axiom_node_t *config);
+    rp_rampart_config_builder_build(const axutil_env_t *env, axiom_node_t *config);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_rampart_config_builder_populate(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rp_rampart_config_t *rampart_config,
         axiom_node_t *node,
         axiom_element_t *element,

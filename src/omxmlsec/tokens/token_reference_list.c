@@ -24,7 +24,7 @@
 #include <axutil_array_list.h>
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_reference_list_element(const axis2_env_t *env,
+oxs_token_build_reference_list_element(const axutil_env_t *env,
                                        axiom_node_t *parent )
 {
     axiom_node_t *reference_list_node = NULL;
@@ -47,7 +47,7 @@ oxs_token_build_reference_list_element(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_token_build_data_reference_list(const axis2_env_t *env, axiom_node_t *parent, axutil_array_list_t *id_list)
+oxs_token_build_data_reference_list(const axutil_env_t *env, axiom_node_t *parent, axutil_array_list_t *id_list)
 {
     axiom_node_t *ref_list_node = NULL;
     int i=0;
@@ -75,7 +75,7 @@ oxs_token_build_data_reference_list(const axis2_env_t *env, axiom_node_t *parent
 }
 
 AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
-oxs_token_get_reference_list_data(const axis2_env_t *env, axiom_node_t *ref_list_node)
+oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_list_node)
 {
     axutil_array_list_t *list = NULL;
     axiom_children_qname_iterator_t *iter = NULL;

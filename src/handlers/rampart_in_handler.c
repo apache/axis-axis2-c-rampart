@@ -42,14 +42,14 @@
 
 axis2_status_t AXIS2_CALL
 rampart_in_handler_invoke(struct axis2_handler *handler,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         struct axis2_msg_ctx *msg_ctx);
 
 
 /**********************end of header functions ****************************/
 
 AXIS2_EXTERN axis2_handler_t *AXIS2_CALL
-rampart_in_handler_create(const axis2_env_t *env,
+rampart_in_handler_create(const axutil_env_t *env,
          axis2_string_t *name)
 {
     axis2_handler_t *handler = NULL;
@@ -68,7 +68,7 @@ rampart_in_handler_create(const axis2_env_t *env,
 
 axis2_status_t AXIS2_CALL
 rampart_in_handler_invoke(struct axis2_handler *handler,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         struct axis2_msg_ctx *msg_ctx)
 {
     axiom_soap_envelope_t *soap_envelope = NULL;

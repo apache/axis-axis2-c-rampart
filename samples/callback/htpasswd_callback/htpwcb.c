@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <axis2_defines.h>
 #include <axis2_error.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_utils.h>
 #include <rampart_callback.h>
 #include <axis2_string.h>
@@ -28,7 +28,7 @@
 
 axis2_char_t* AXIS2_CALL
 get_ht_password(rampart_callback_t *rcb,
-        const axis2_env_t *env, 
+        const axutil_env_t *env, 
         const axis2_char_t *username, 
         void *param)
 {
@@ -84,7 +84,7 @@ get_ht_password(rampart_callback_t *rcb,
  */
 AXIS2_EXPORT int
 axis2_get_instance(rampart_callback_t **inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     rampart_callback_t* rcb = NULL;
 
@@ -110,7 +110,7 @@ axis2_get_instance(rampart_callback_t **inst,
 
 AXIS2_EXPORT int
 axis2_remove_instance(rampart_callback_t *inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)

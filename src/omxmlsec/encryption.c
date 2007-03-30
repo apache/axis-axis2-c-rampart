@@ -33,7 +33,7 @@
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_encryption_symmetric_crypt(const axis2_env_t *env,
+oxs_encryption_symmetric_crypt(const axutil_env_t *env,
                                oxs_ctx_t * enc_ctx,
                                oxs_buffer_t *input,
                                oxs_buffer_t *result)
@@ -175,7 +175,7 @@ oxs_encryption_symmetric_crypt(const axis2_env_t *env,
 
 
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
-oxs_encryption_asymmetric_crypt(const axis2_env_t *env,
+oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
                                 oxs_asym_ctx_t *ctx,
                                 oxs_buffer_t *input,
                                 oxs_buffer_t *result)

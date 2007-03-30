@@ -54,7 +54,7 @@ extern "C"
      */
 
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    rampart_get_property_from_ctx( const axis2_env_t *env,
+    rampart_get_property_from_ctx( const axutil_env_t *env,
                                    axis2_ctx_t *ctx,
                                    const axis2_char_t *key);
 
@@ -67,7 +67,7 @@ extern "C"
     */
 
     AXIS2_EXTERN axis2_param_t* AXIS2_CALL
-    rampart_get_security_param( const axis2_env_t *env,
+    rampart_get_security_param( const axutil_env_t *env,
                                 axis2_msg_ctx_t *msg_ctx,
                                 axis2_char_t *parameter);
 
@@ -82,7 +82,7 @@ extern "C"
     * @return soap_header security element node
     */
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
-    rampart_get_security_token(const axis2_env_t *env,
+    rampart_get_security_token(const axutil_env_t *env,
                                axis2_msg_ctx_t *msg_ctx,
                                axiom_soap_header_t *soap_header);
 
@@ -96,7 +96,7 @@ extern "C"
     * @return soap_header security element node
     */
     AXIS2_EXTERN void AXIS2_CALL
-    rampart_create_fault_envelope(const axis2_env_t *env,
+    rampart_create_fault_envelope(const axutil_env_t *env,
                                   const axis2_char_t *sub_code,
                                   const axis2_char_t *reason_text,
                                   const axis2_char_t *detail_node_text,
@@ -109,7 +109,7 @@ extern "C"
      * @param  sec_node the reference to the security node
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_validate_security_token(const axis2_env_t *env,
+    rampart_validate_security_token(const axutil_env_t *env,
                                     axis2_msg_ctx_t *msg_ctx,
                                     axiom_node_t *sec_node);
     /**
@@ -120,7 +120,7 @@ extern "C"
      * @return the loaded configuration params
      */
     AXIS2_EXTERN void *AXIS2_CALL
-    rampart_get_rampart_configuration(const axis2_env_t *env,
+    rampart_get_rampart_configuration(const axutil_env_t *env,
                                       axis2_msg_ctx_t *msg_ctx,
                                       axis2_char_t *param_name);
     /**
@@ -130,7 +130,7 @@ extern "C"
      * @return if engaged returns AXIS2_TRUE, else returns AXIS2_FALSE
      */
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    rampart_is_rampart_engaged(const axis2_env_t *env,
+    rampart_is_rampart_engaged(const axutil_env_t *env,
                                axis2_msg_ctx_t *msg_ctx);
 
 

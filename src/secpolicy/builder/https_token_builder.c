@@ -20,7 +20,7 @@
 
 AXIS2_EXTERN rp_https_token_t *AXIS2_CALL
 rp_https_token_builder_build(
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axiom_node_t *https,
             axiom_element_t *https_ele)
 {
@@ -99,7 +99,7 @@ rp_https_token_builder_build(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_https_token_builder_set_inclusion_value(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rp_https_token_t *token,
         axiom_element_t *element)
 {
@@ -122,7 +122,7 @@ rp_https_token_builder_set_inclusion_value(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_https_token_builder_set_req_client_cert(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rp_https_token_t *token,
         axiom_element_t *element)
 {
@@ -151,7 +151,7 @@ rp_https_token_builder_set_properties(
         axiom_element_t *element,
         axis2_char_t *local_name,
         rp_https_token_t *https_token,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
 

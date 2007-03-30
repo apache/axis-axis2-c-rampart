@@ -27,7 +27,7 @@
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <oxs_asym_ctx.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_qname.h>
 #include <oxs_x509_cert.h>
 #include <openssl_pkey.h>
@@ -47,7 +47,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_key_mgr_load_key(const axis2_env_t *env,
+    oxs_key_mgr_load_key(const axutil_env_t *env,
                          oxs_asym_ctx_t *ctx,
                          axis2_char_t *password);
     /**
@@ -61,7 +61,7 @@ extern "C"
      * @return the generated key
      */
     AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
-    oxs_key_mgr_load_private_key_from_string(const axis2_env_t *env,
+    oxs_key_mgr_load_private_key_from_string(const axutil_env_t *env,
             axis2_char_t *pem_buf, /*in PEM format*/
             axis2_char_t *password);
     /**
@@ -72,7 +72,7 @@ extern "C"
      *  @return the generated key
      */
     AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
-    oxs_key_mgr_load_private_key_from_pem_file(const axis2_env_t *env,
+    oxs_key_mgr_load_private_key_from_pem_file(const axutil_env_t *env,
             axis2_char_t *file_name,
             axis2_char_t *password);
 
@@ -86,7 +86,7 @@ extern "C"
      * @return the generated X509 certificate
      */
     AXIS2_EXTERN oxs_x509_cert_t* AXIS2_CALL
-    oxs_key_mgr_load_x509_cert_from_string(const axis2_env_t *env,
+    oxs_key_mgr_load_x509_cert_from_string(const axutil_env_t *env,
                                            axis2_char_t *pem_buf);
 
     /**
@@ -96,7 +96,7 @@ extern "C"
      * @return the generated X509 certificate
      */
     AXIS2_EXTERN oxs_x509_cert_t* AXIS2_CALL
-    oxs_key_mgr_load_x509_cert_from_pem_file(const axis2_env_t *env,
+    oxs_key_mgr_load_x509_cert_from_pem_file(const axutil_env_t *env,
             axis2_char_t *filename);
 
     /**
@@ -109,7 +109,7 @@ extern "C"
      * @return the generated X509 certificate
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_key_mgr_read_pkcs12_key_store(const axis2_env_t *env,
+    oxs_key_mgr_read_pkcs12_key_store(const axutil_env_t *env,
                                       axis2_char_t *pkcs12_file,
                                       axis2_char_t *password,
                                       oxs_x509_cert_t **cert,

@@ -34,7 +34,7 @@ extern "C"
 
     AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
     rp_algorithmsuite_builder_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *algorithmsuite);
 
 

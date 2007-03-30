@@ -33,7 +33,7 @@
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_process_X509SKI(const axis2_env_t *env,
+oxs_xml_key_process_X509SKI(const axutil_env_t *env,
                             axiom_node_t *X509SKI_node,
                             oxs_x509_cert_t *cert)
 {
@@ -55,7 +55,7 @@ oxs_xml_key_process_X509SKI(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_process_X509SubjectName(const axis2_env_t *env,
+oxs_xml_key_process_X509SubjectName(const axutil_env_t *env,
                                     axiom_node_t *X509_subj_name_node,
                                     oxs_x509_cert_t *cert)
 {
@@ -76,7 +76,7 @@ oxs_xml_key_process_X509SubjectName(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_process_X509IssuerSerial(const axis2_env_t *env,
+oxs_xml_key_process_X509IssuerSerial(const axutil_env_t *env,
                                      axiom_node_t *X509_issuer_serial_node,
                                      oxs_x509_cert_t *cert)
 {
@@ -111,7 +111,7 @@ oxs_xml_key_process_X509IssuerSerial(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_process_X509Certificate(const axis2_env_t *env,
+oxs_xml_key_process_X509Certificate(const axutil_env_t *env,
                                     axiom_node_t *X509_cert_node,
                                     oxs_x509_cert_t *cert)
 {
@@ -137,7 +137,7 @@ oxs_xml_key_process_X509Certificate(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
-oxs_xml_key_process_X509Data(const axis2_env_t *env,
+oxs_xml_key_process_X509Data(const axutil_env_t *env,
                              axiom_node_t *X509_data_node,
                              oxs_x509_cert_t *cert)
 {

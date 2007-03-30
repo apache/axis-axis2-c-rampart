@@ -20,7 +20,7 @@
 
 AXIS2_EXTERN rp_layout_t *AXIS2_CALL
 rp_layout_builder_build(
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axiom_node_t *layout)
 {
     rp_layout_t *lay_out = NULL;
@@ -73,7 +73,7 @@ rp_layout_builder_set_value(
         axiom_element_t *element,
         axis2_char_t *value,
         rp_layout_t *layout,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
 

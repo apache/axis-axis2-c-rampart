@@ -29,7 +29,7 @@
  * 2. Else if the key file name has specified, Take that as the source.
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_key_mgr_load_key(const axis2_env_t *env,
+oxs_key_mgr_load_key(const axutil_env_t *env,
                      oxs_asym_ctx_t *ctx,
                      axis2_char_t *password)
 {
@@ -160,7 +160,7 @@ oxs_key_mgr_load_key(const axis2_env_t *env,
 /*These are new set of functions that break-up the complex logic in oxs_key_mgr_load_key()*/
 
 AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
-oxs_key_mgr_load_private_key_from_string(const axis2_env_t *env,
+oxs_key_mgr_load_private_key_from_string(const axutil_env_t *env,
         axis2_char_t *pem_string, /*in PEM format*/
         axis2_char_t *password)
 {
@@ -182,7 +182,7 @@ oxs_key_mgr_load_private_key_from_string(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
-oxs_key_mgr_load_private_key_from_pem_file(const axis2_env_t *env,
+oxs_key_mgr_load_private_key_from_pem_file(const axutil_env_t *env,
         axis2_char_t *filename,
         axis2_char_t *password)
 {
@@ -206,7 +206,7 @@ oxs_key_mgr_load_private_key_from_pem_file(const axis2_env_t *env,
 
 /*Private function to convert X509* -> oxs_x509_cert_t* */
 static oxs_x509_cert_t*
-oxs_key_mgr_convert_to_x509(const axis2_env_t *env,
+oxs_key_mgr_convert_to_x509(const axutil_env_t *env,
                             X509 *cert)
 {
     oxs_x509_cert_t *oxs_cert = NULL;
@@ -237,7 +237,7 @@ oxs_key_mgr_convert_to_x509(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN oxs_x509_cert_t* AXIS2_CALL
-oxs_key_mgr_load_x509_cert_from_pem_file(const axis2_env_t *env,
+oxs_key_mgr_load_x509_cert_from_pem_file(const axutil_env_t *env,
         axis2_char_t *filename)
 {
     X509 *cert = NULL;
@@ -250,7 +250,7 @@ oxs_key_mgr_load_x509_cert_from_pem_file(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN oxs_x509_cert_t* AXIS2_CALL
-oxs_key_mgr_load_x509_cert_from_string(const axis2_env_t *env,
+oxs_key_mgr_load_x509_cert_from_string(const axutil_env_t *env,
                                        axis2_char_t *pem_string)
 {
     X509 *cert = NULL;
@@ -263,7 +263,7 @@ oxs_key_mgr_load_x509_cert_from_string(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_key_mgr_read_pkcs12_key_store(const axis2_env_t *env,
+oxs_key_mgr_read_pkcs12_key_store(const axutil_env_t *env,
                                   axis2_char_t *filename,
                                   axis2_char_t *password,
                                   oxs_x509_cert_t **cert,

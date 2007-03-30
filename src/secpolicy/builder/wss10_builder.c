@@ -20,7 +20,7 @@
 
 AXIS2_EXTERN rp_wss10_t *AXIS2_CALL
 rp_wss10_builder_build(
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axiom_node_t *wss)
 {
     rp_wss10_t *wss10 = NULL;
@@ -86,7 +86,7 @@ rp_wss10_builder_set_properties(
         axiom_element_t *element,
         axis2_char_t *local_name,
         rp_wss10_t *wss10,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
 

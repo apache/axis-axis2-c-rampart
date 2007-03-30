@@ -39,11 +39,11 @@ extern "C"
 #endif
 
     AXIS2_EXTERN rp_secpolicy_t *AXIS2_CALL
-    rp_secpolicy_builder_build(const axis2_env_t *env, axiom_node_t *all);
+    rp_secpolicy_builder_build(const axutil_env_t *env, axiom_node_t *all);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_secpolicy_builder_set_properties(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rp_secpolicy_t *secpolicy,
         axiom_node_t *node,
         axiom_element_t *element,

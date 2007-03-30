@@ -19,7 +19,7 @@
 #include <axis2_utils_defines.h>
 #include <axis2_defines.h>
 #include <axutil_date_time.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_property.h>
 #include <axis2_msg_ctx.h>
 #include <rampart_authn_provider.h>
@@ -49,7 +49,7 @@ extern "C" {
      * @return the loaded module
      */
     AXIS2_EXTERN void* AXIS2_CALL
-    rampart_load_module(const axis2_env_t *env,
+    rampart_load_module(const axutil_env_t *env,
                         axis2_char_t *module_name);
 
     /**
@@ -59,7 +59,7 @@ extern "C" {
      * @return the loaded credentails module
      */
     AXIS2_EXTERN rampart_credentials_t* AXIS2_CALL
-    rampart_load_credentials_module(const axis2_env_t *env,
+    rampart_load_credentials_module(const axutil_env_t *env,
                                     axis2_char_t *cred_module_name);
 
     /**
@@ -72,7 +72,7 @@ extern "C" {
      * @return the status of the operation
      */
     AXIS2_EXTERN rampart_credentials_status_t AXIS2_CALL
-    rampart_call_credentials(const axis2_env_t *env,
+    rampart_call_credentials(const axutil_env_t *env,
                              rampart_credentials_t *cred_module,
                              axis2_msg_ctx_t *ctx,
                              axis2_char_t **username,
@@ -85,7 +85,7 @@ extern "C" {
      * @return creatd athenticaiton module
      */
     AXIS2_EXTERN rampart_authn_provider_t* AXIS2_CALL
-    rampart_load_auth_module(const axis2_env_t *env,
+    rampart_load_auth_module(const axutil_env_t *env,
                              axis2_char_t *auth_module_name);
 
     /**
@@ -100,7 +100,7 @@ extern "C" {
      * @param msg_ctx the message context
      */
     AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
-    rampart_authenticate_un_pw(const axis2_env_t *env,
+    rampart_authenticate_un_pw(const axutil_env_t *env,
                                rampart_authn_provider_t *authp,
                                const axis2_char_t *username,
                                const axis2_char_t *password,
@@ -116,7 +116,7 @@ extern "C" {
      * @return the loaded callback module
      */
     AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
-    rampart_load_pwcb_module(const axis2_env_t *env,
+    rampart_load_pwcb_module(const axutil_env_t *env,
                              axis2_char_t *callback_module_name);
 
     /**
@@ -127,7 +127,7 @@ extern "C" {
        *@return the password for the user or NULL if failed
        */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    rampart_callback_password(const axis2_env_t *env,
+    rampart_callback_password(const axutil_env_t *env,
                               rampart_callback_t *callback_module,
                               const axis2_char_t *username);
 
@@ -137,7 +137,7 @@ extern "C" {
       * @return generated nonce
       */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_generate_nonce(const axis2_env_t *env);
+    rampart_generate_nonce(const axutil_env_t *env);
 
     /**
       * Generates the nonce. Nonce is a base64 encoded random string.
@@ -145,7 +145,7 @@ extern "C" {
       * @return generated nonce
       **/
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    rampart_generate_time(const axis2_env_t *env, int ttl);
+    rampart_generate_time(const axutil_env_t *env, int ttl);
 
     /**
      * Check if @dt1 < @dt2. if not returns a false
@@ -154,7 +154,7 @@ extern "C" {
      * @param dt2 date time 2
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1, axis2_char_t *dt2);
+    rampart_compare_date_time(const axutil_env_t *env, axis2_char_t *dt1, axis2_char_t *dt2);
 
     /**
      * Print or log information (Only use for debugging)
@@ -162,7 +162,7 @@ extern "C" {
      * @param info the information to be printed
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_print_info(const axis2_env_t *env, axis2_char_t* info);
+    rampart_print_info(const axutil_env_t *env, axis2_char_t* info);
 
     /* @} */
 #ifdef __cplusplus

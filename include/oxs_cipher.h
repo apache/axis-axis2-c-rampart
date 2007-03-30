@@ -27,7 +27,7 @@
 #include <axis2_defines.h>
 #include <oxs_constants.h>
 #include <openssl_cipher_property.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -40,7 +40,7 @@ extern "C"
      * @return the property 
      */
     AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
-    oxs_get_cipher_property_for_url(const axis2_env_t *env,
+    oxs_get_cipher_property_for_url(const axutil_env_t *env,
                                     axis2_char_t *url);
 
     /**
@@ -50,7 +50,7 @@ extern "C"
      * @return the name as a string	
      */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_get_cipher_name_for_url(const axis2_env_t *env,
+    oxs_get_cipher_name_for_url(const axutil_env_t *env,
                                 axis2_char_t *url);
 
     /**
@@ -60,7 +60,7 @@ extern "C"
      *@return the url as a string
      */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_get_cipher_url_for_name(const axis2_env_t *env,
+    oxs_get_cipher_url_for_name(const axutil_env_t *env,
                                 axis2_char_t *name);
 
     /** @} */

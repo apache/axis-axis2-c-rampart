@@ -43,7 +43,7 @@
 /*#define PRINTINFO 1 */
 
 AXIS2_EXTERN void* AXIS2_CALL
-rampart_load_module(const axis2_env_t *env,
+rampart_load_module(const axutil_env_t *env,
                     axis2_char_t *module_name)
 {
     axutil_dll_desc_t *dll_desc = NULL;
@@ -67,7 +67,7 @@ rampart_load_module(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN rampart_credentials_status_t AXIS2_CALL
-rampart_call_credentials(const axis2_env_t *env,
+rampart_call_credentials(const axutil_env_t *env,
                          rampart_credentials_t *cred_module,
                          axis2_msg_ctx_t *msg_ctx,
                          axis2_char_t **username,
@@ -80,7 +80,7 @@ rampart_call_credentials(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN rampart_credentials_t* AXIS2_CALL
-rampart_load_credentials_module(const axis2_env_t *env,
+rampart_load_credentials_module(const axutil_env_t *env,
                                 axis2_char_t *cred_module_name)
 {
     rampart_credentials_t *cred = NULL;
@@ -96,7 +96,7 @@ rampart_load_credentials_module(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN rampart_authn_provider_t* AXIS2_CALL
-rampart_load_auth_module(const axis2_env_t *env,
+rampart_load_auth_module(const axutil_env_t *env,
                          axis2_char_t *auth_module_name)
 {
     rampart_authn_provider_t *authp = NULL;
@@ -112,7 +112,7 @@ rampart_load_auth_module(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
-rampart_authenticate_un_pw(const axis2_env_t *env,
+rampart_authenticate_un_pw(const axutil_env_t *env,
                            rampart_authn_provider_t *authp,
                            const axis2_char_t *username,
                            const axis2_char_t *password,
@@ -138,7 +138,7 @@ rampart_authenticate_un_pw(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
-rampart_load_pwcb_module(const axis2_env_t *env,
+rampart_load_pwcb_module(const axutil_env_t *env,
                          axis2_char_t *callback_module_name)
 {
     rampart_callback_t *cb = NULL;
@@ -156,7 +156,7 @@ rampart_load_pwcb_module(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_callback_password(const axis2_env_t *env,
+rampart_callback_password(const axutil_env_t *env,
                           rampart_callback_t *callback_module,
                           const axis2_char_t *username)
 {
@@ -171,7 +171,7 @@ rampart_callback_password(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_generate_nonce(const axis2_env_t *env)
+rampart_generate_nonce(const axutil_env_t *env)
 {
     oxs_buffer_t *buffer = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -190,7 +190,7 @@ rampart_generate_nonce(const axis2_env_t *env)
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_generate_time(const axis2_env_t *env, int ttl)
+rampart_generate_time(const axutil_env_t *env, int ttl)
 {
     axutil_date_time_t *dt = NULL;
     axis2_char_t *dt_str = NULL;
@@ -203,7 +203,7 @@ rampart_generate_time(const axis2_env_t *env, int ttl)
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1_str, axis2_char_t *dt2_str)
+rampart_compare_date_time(const axutil_env_t *env, axis2_char_t *dt1_str, axis2_char_t *dt2_str)
 {
     axis2_status_t status = AXIS2_FAILURE;
     axutil_date_time_t *dt1 = NULL;
@@ -324,7 +324,7 @@ rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1_str, axis2_c
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_print_info(const axis2_env_t *env, axis2_char_t* info)
+rampart_print_info(const axutil_env_t *env, axis2_char_t* info)
 {
 #ifdef PRINTINFO
     printf("[rampart]: %s\n", info);

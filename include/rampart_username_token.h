@@ -29,7 +29,7 @@ extern "C"
 #endif
 
 
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <rampart_constants.h>
 #include <rampart_crypto_util.h>
 #include <rampart_context.h>
@@ -37,7 +37,7 @@ extern "C"
 
     axis2_status_t AXIS2_CALL
     rampart_username_token_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rampart_context_t *rampart_context,
         axiom_node_t *sec_node,
         axiom_namespace_t *sec_ns_obj);
@@ -50,7 +50,7 @@ extern "C"
      */
     axis2_status_t AXIS2_CALL
     rampart_username_token_validate(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx,
         axiom_node_t *ut_node,
         rampart_context_t *rampart_context);

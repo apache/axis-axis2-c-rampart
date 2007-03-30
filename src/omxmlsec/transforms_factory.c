@@ -27,7 +27,7 @@
 
 /*Functions that implements transforms*/
 oxs_tr_dtype_t AXIS2_CALL
-oxs_transforms_exc_c14n(const axis2_env_t *env,
+oxs_transforms_exc_c14n(const axutil_env_t *env,
                         axiom_node_t *input,
                         oxs_tr_dtype_t input_dtype,
                         axis2_char_t **output)
@@ -54,7 +54,7 @@ oxs_transforms_exc_c14n(const axis2_env_t *env,
 
 /*Public functions*/
 AXIS2_EXTERN oxs_transform_t *AXIS2_CALL
-oxs_transforms_factory_produce_transform(const axis2_env_t *env,
+oxs_transforms_factory_produce_transform(const axutil_env_t *env,
         axis2_char_t *id)
 {
     oxs_transform_t *tr =  NULL;

@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <oxs_x509_cert.h>
 #include <openssl_pkey.h>
@@ -51,7 +51,7 @@ extern "C"
      * @return created signature context
      * */
     AXIS2_EXTERN oxs_sign_ctx_t *AXIS2_CALL
-    oxs_sign_ctx_create(const axis2_env_t *env);
+    oxs_sign_ctx_create(const axutil_env_t *env);
 
     /**
      * Free a signature context.
@@ -62,7 +62,7 @@ extern "C"
      **/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_free(oxs_sign_ctx_t *ctx,
-                      const axis2_env_t *env);
+                      const axutil_env_t *env);
 
 
     /**********************Getter functions******************************************/
@@ -75,7 +75,7 @@ extern "C"
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_sign_ctx_get_sign_mtd_algo(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**
      * Get cannocanicalization method of the signature context
@@ -86,7 +86,7 @@ extern "C"
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_sign_ctx_get_c14n_mtd(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**
      * Get sginature valueof the signature context
@@ -97,7 +97,7 @@ extern "C"
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_sign_ctx_get_sig_val(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**
      * Get signature parts of the signature context
@@ -108,7 +108,7 @@ extern "C"
     AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
     oxs_sign_ctx_get_sign_parts(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**
      * Get x509 certificate of the signature context
@@ -119,7 +119,7 @@ extern "C"
     AXIS2_EXTERN oxs_x509_cert_t *AXIS2_CALL
     oxs_sign_ctx_get_certificate(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
      * Get private key of the signature context
      * @sign_ctx the signature context
@@ -130,7 +130,7 @@ extern "C"
     AXIS2_EXTERN openssl_pkey_t *AXIS2_CALL
     oxs_sign_ctx_get_private_key(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**
      * Get public key of the signature context
@@ -141,7 +141,7 @@ extern "C"
     AXIS2_EXTERN openssl_pkey_t *AXIS2_CALL
     oxs_sign_ctx_get_public_key(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**
      * Get the operation of the signature context
@@ -152,7 +152,7 @@ extern "C"
     AXIS2_EXTERN oxs_sign_operation_t AXIS2_CALL
     oxs_sign_ctx_get_operation(
         const oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     /**********************Setter functions******************************************/
     /**
@@ -165,7 +165,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_sign_mtd_algo(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *sign_mtd_algo);
 
     /**
@@ -178,7 +178,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_c14n_mtd(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *c14n_mtd);
 
     /**
@@ -191,7 +191,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_sig_val(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *sig_val);
 
     /**
@@ -204,7 +204,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_sign_parts(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axutil_array_list_t *sign_parts);
 
     /**
@@ -217,7 +217,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_certificate(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         oxs_x509_cert_t *certificate);
 
     /**
@@ -230,7 +230,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_private_key(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         openssl_pkey_t *prv_key);
 
     /**
@@ -243,7 +243,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_public_key(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         openssl_pkey_t *pub_key);
 
     /**
@@ -256,7 +256,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_ctx_set_operation(
         oxs_sign_ctx_t *sign_ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         oxs_sign_operation_t operation);
     /** @} */
 #ifdef __cplusplus

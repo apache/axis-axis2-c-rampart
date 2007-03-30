@@ -36,7 +36,7 @@ struct oxs_key_t
 unsigned char *AXIS2_CALL
 oxs_key_get_data(
     const oxs_key_t *key,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -46,7 +46,7 @@ oxs_key_get_data(
 axis2_char_t *AXIS2_CALL
 oxs_key_get_name(
     const oxs_key_t *key,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
 
@@ -57,7 +57,7 @@ oxs_key_get_name(
 int AXIS2_CALL
 oxs_key_get_size(
     const oxs_key_t *key,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -67,7 +67,7 @@ oxs_key_get_size(
 int AXIS2_CALL
 oxs_key_get_usage(
     const oxs_key_t *key,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -79,7 +79,7 @@ oxs_key_get_usage(
 axis2_status_t AXIS2_CALL
 oxs_key_set_name(
     oxs_key_t *key,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *name)
 {
 
@@ -99,7 +99,7 @@ oxs_key_set_name(
 axis2_status_t AXIS2_CALL
 oxs_key_set_usage(
     oxs_key_t *key,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     int usage)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -112,7 +112,7 @@ oxs_key_set_usage(
 
 
 AXIS2_EXTERN oxs_key_t *AXIS2_CALL
-oxs_key_create(const axis2_env_t *env)
+oxs_key_create(const axutil_env_t *env)
 {
     oxs_key_t *key = NULL;
     AXIS2_ENV_CHECK(env, NULL);
@@ -138,7 +138,7 @@ oxs_key_create(const axis2_env_t *env)
 
 axis2_status_t AXIS2_CALL
 oxs_key_free(oxs_key_t *key,
-             const axis2_env_t *env)
+             const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
@@ -155,7 +155,7 @@ oxs_key_free(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_populate(oxs_key_t *key,
-                 const axis2_env_t *env,
+                 const axutil_env_t *env,
                  unsigned char *data,
                  axis2_char_t *name,
                  int size,
@@ -176,7 +176,7 @@ oxs_key_populate(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_read_from_file(oxs_key_t *key,
-                       const axis2_env_t *env,
+                       const axutil_env_t *env,
                        axis2_char_t *file_name)
 {
     oxs_buffer_t *buf = NULL;
@@ -195,7 +195,7 @@ oxs_key_read_from_file(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_for_algo(oxs_key_t *key,
-                 const axis2_env_t *env,
+                 const axutil_env_t *env,
                  axis2_char_t *key_algo)
 {
     oxs_buffer_t *key_buf = NULL;

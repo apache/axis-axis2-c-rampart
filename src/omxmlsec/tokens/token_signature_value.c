@@ -24,7 +24,7 @@
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_signature_value(const axis2_env_t *env,
+oxs_token_get_signature_value(const axutil_env_t *env,
                               axiom_node_t *sv_node)
 {
     axis2_char_t *sv = NULL;
@@ -35,7 +35,7 @@ oxs_token_get_signature_value(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_signature_value_element(const axis2_env_t *env,
+oxs_token_build_signature_value_element(const axutil_env_t *env,
                                         axiom_node_t *parent,
                                         axis2_char_t* signature_val
                                        )

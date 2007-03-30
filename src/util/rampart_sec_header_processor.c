@@ -40,7 +40,7 @@
 
 /*Private functions*/
 static axis2_bool_t
-rampart_shp_validate_qnames(const axis2_env_t *env,
+rampart_shp_validate_qnames(const axutil_env_t *env,
                             axiom_node_t *node)
 
 {
@@ -104,7 +104,7 @@ rampart_shp_validate_qnames(const axis2_env_t *env,
 }
 
 static oxs_x509_cert_t *get_receiver_x509_cert(
-                        const axis2_env_t *env,
+                        const axutil_env_t *env,
                         rampart_context_t *rampart_context)
 {
 
@@ -128,7 +128,7 @@ static oxs_x509_cert_t *get_receiver_x509_cert(
 
 
 static axis2_status_t
-rampart_shp_process_timestamptoken(const axis2_env_t *env,
+rampart_shp_process_timestamptoken(const axutil_env_t *env,
                                    axis2_msg_ctx_t *msg_ctx,
                                    rampart_context_t *rampart_context,
                                    axiom_node_t *sec_node)
@@ -178,7 +178,7 @@ rampart_shp_process_timestamptoken(const axis2_env_t *env,
 }
 
 static axis2_status_t
-rampart_shp_process_usernametoken(const axis2_env_t *env,
+rampart_shp_process_usernametoken(const axutil_env_t *env,
                                   axis2_msg_ctx_t *msg_ctx,
                                   rampart_context_t *rampart_context,
                                   axiom_node_t *sec_node)
@@ -226,7 +226,7 @@ rampart_shp_process_usernametoken(const axis2_env_t *env,
 }
 
 static axis2_status_t
-rampart_shp_process_encrypted_key(const axis2_env_t *env,
+rampart_shp_process_encrypted_key(const axutil_env_t *env,
                                   axis2_msg_ctx_t *msg_ctx,
                                   rampart_context_t *rampart_context,
                                   axiom_soap_envelope_t *soap_envelope,
@@ -445,7 +445,7 @@ rampart_shp_process_encrypted_key(const axis2_env_t *env,
 
 
 static axis2_status_t
-rampart_shp_process_signature(const axis2_env_t *env,
+rampart_shp_process_signature(const axutil_env_t *env,
                               axis2_msg_ctx_t *msg_ctx,
                               rampart_context_t *rampart_context,
                               axiom_soap_envelope_t *soap_envelope,
@@ -738,7 +738,7 @@ rampart_shp_process_signature(const axis2_env_t *env,
 /*Public functions*/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_shp_process_message(const axis2_env_t *env,
+rampart_shp_process_message(const axutil_env_t *env,
                             axis2_msg_ctx_t *msg_ctx,
                             rampart_context_t *rampart_context,
                             axiom_soap_envelope_t *soap_envelope,

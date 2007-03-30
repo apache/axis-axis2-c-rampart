@@ -37,29 +37,29 @@ extern "C"
 
 
     AXIS2_EXTERN rp_property_t *AXIS2_CALL
-    rp_property_create(const axis2_env_t *env);
+    rp_property_create(const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_property_free(
         rp_property_t *property,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_property_set_value(
         rp_property_t *property,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         void *value,
         int type);
 
     AXIS2_EXTERN void *AXIS2_CALL
     rp_property_get_value(
         rp_property_t *property,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     AXIS2_EXTERN int AXIS2_CALL
     rp_property_get_type(
         rp_property_t *property,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

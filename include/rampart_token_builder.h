@@ -19,7 +19,7 @@
 #include <axis2_utils_defines.h>
 #include <axis2_defines.h>
 #include <axutil_date_time.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_property.h>
 #include <axis2_msg_ctx.h>
 #include <rampart_authn_provider.h>
@@ -53,7 +53,7 @@ extern "C" {
      * depending on the @pattern. 
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_token_build_security_token_reference(const axis2_env_t *env,
+    rampart_token_build_security_token_reference(const axutil_env_t *env,
             axiom_node_t *parent,
             oxs_x509_cert_t *cert,
             rampart_token_build_pattern_t pattern);
@@ -68,7 +68,7 @@ extern "C" {
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_token_build_embedded(const axis2_env_t *env,
+    rampart_token_build_embedded(const axutil_env_t *env,
                                  axiom_node_t *parent,
                                  oxs_x509_cert_t *cert);
     /**
@@ -80,7 +80,7 @@ extern "C" {
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_token_build_key_identifier(const axis2_env_t *env,
+    rampart_token_build_key_identifier(const axutil_env_t *env,
                                        axiom_node_t *parent,
                                        oxs_x509_cert_t *cert);
 
@@ -97,7 +97,7 @@ extern "C" {
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_token_build_x509_data_x509_certificate(const axis2_env_t *env,
+    rampart_token_build_x509_data_x509_certificate(const axutil_env_t *env,
             axiom_node_t *parent,
             oxs_x509_cert_t *cert);
     /*
@@ -111,7 +111,7 @@ extern "C" {
      *          </SecurityTokenReference>
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_token_build_x509_data_issuer_serial(const axis2_env_t *env,
+    rampart_token_build_x509_data_issuer_serial(const axutil_env_t *env,
             axiom_node_t *parent,
             oxs_x509_cert_t *cert);
     /* @} */

@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <openssl_pkey.h>
 
@@ -48,7 +48,7 @@ extern "C"
      * @return created X509 certificate
      **/
     AXIS2_EXTERN oxs_x509_cert_t *AXIS2_CALL
-    oxs_x509_cert_create( const axis2_env_t *env);
+    oxs_x509_cert_create( const axutil_env_t *env);
 
     /**
      * Free function of the X509 certificate 
@@ -58,7 +58,7 @@ extern "C"
      **/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_free(oxs_x509_cert_t *x509_cert,
-                       const axis2_env_t *env);
+                       const axutil_env_t *env);
 
     /*Getters*/
     /**
@@ -69,7 +69,7 @@ extern "C"
      */
     AXIS2_EXTERN int AXIS2_CALL
     oxs_x509_cert_get_serial_number(oxs_x509_cert_t *x509_cert,
-                                    const axis2_env_t *env);
+                                    const axutil_env_t *env);
 
     /**
      * Get the subject of X509 Certificate
@@ -79,7 +79,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_subject(oxs_x509_cert_t *x509_cert,
-                              const axis2_env_t *env);
+                              const axutil_env_t *env);
 
     /**
      * Get the issuer of X509 Certificate
@@ -89,7 +89,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_issuer(oxs_x509_cert_t *x509_cert,
-                             const axis2_env_t *env);
+                             const axutil_env_t *env);
 
     /**
      * Get the key identifier of X509 Certificate
@@ -99,7 +99,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_key_identifier(oxs_x509_cert_t *x509_cert,
-                                     const axis2_env_t *env);
+                                     const axutil_env_t *env);
 
     /**
      * Get the finger print  of X509 Certificate
@@ -109,7 +109,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_fingerprint(oxs_x509_cert_t *x509_cert,
-                                  const axis2_env_t *env);
+                                  const axutil_env_t *env);
 
     /**
      * Get the expiration date  of X509 Certificate
@@ -119,7 +119,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_date(oxs_x509_cert_t *x509_cert,
-                           const axis2_env_t *env);
+                           const axutil_env_t *env);
 
     /**
      * Get the hash of X509 Certificate
@@ -129,7 +129,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_hash(oxs_x509_cert_t *x509_cert,
-                           const axis2_env_t *env);
+                           const axutil_env_t *env);
 
     /**
      * Get the data of X509 Certificate
@@ -140,7 +140,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_x509_cert_get_data(oxs_x509_cert_t *x509_cert,
-                           const axis2_env_t *env);
+                           const axutil_env_t *env);
 
     /**
      * Get the public key of X509 Certificate
@@ -150,7 +150,7 @@ extern "C"
      */
     AXIS2_EXTERN openssl_pkey_t *AXIS2_CALL
     oxs_x509_cert_get_public_key(oxs_x509_cert_t *x509_cert,
-                                 const axis2_env_t *env);
+                                 const axutil_env_t *env);
 
     /*Setters*/
     /**
@@ -162,7 +162,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_serial_number(oxs_x509_cert_t *x509_cert,
-                                    const axis2_env_t *env,
+                                    const axutil_env_t *env,
                                     int value);
 
     /**
@@ -174,7 +174,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_issuer(oxs_x509_cert_t *x509_cert,
-                             const axis2_env_t *env,
+                             const axutil_env_t *env,
                              axis2_char_t *value);
 
     /**
@@ -186,7 +186,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_key_identifier(oxs_x509_cert_t *x509_cert,
-                                     const axis2_env_t *env,
+                                     const axutil_env_t *env,
                                      axis2_char_t *value);
 
     /**
@@ -198,7 +198,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_subject(oxs_x509_cert_t *x509_cert,
-                              const axis2_env_t *env,
+                              const axutil_env_t *env,
                               axis2_char_t *value);
 
     /**
@@ -210,7 +210,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_fingerprint(oxs_x509_cert_t *x509_cert,
-                                  const axis2_env_t *env,
+                                  const axutil_env_t *env,
                                   axis2_char_t *value);
 
     /**
@@ -222,7 +222,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_date(oxs_x509_cert_t *x509_cert,
-                           const axis2_env_t *env,
+                           const axutil_env_t *env,
                            axis2_char_t *value);
 
     /**
@@ -234,7 +234,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_hash(oxs_x509_cert_t *x509_cert,
-                           const axis2_env_t *env,
+                           const axutil_env_t *env,
                            axis2_char_t *value);
 
     /**
@@ -247,7 +247,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_data(oxs_x509_cert_t *x509_cert,
-                           const axis2_env_t *env,
+                           const axutil_env_t *env,
                            axis2_char_t *value);
 
     /**
@@ -259,7 +259,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_set_public_key(oxs_x509_cert_t *x509_cert,
-                                 const axis2_env_t *env,
+                                 const axutil_env_t *env,
                                  openssl_pkey_t *public_key);
     /**
      * Copy contents of a certificate to another
@@ -270,7 +270,7 @@ extern "C"
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_x509_cert_copy_to(oxs_x509_cert_t *x509_cert,
-                          const axis2_env_t *env,
+                          const axutil_env_t *env,
                           oxs_x509_cert_t *to);
     /** @} */
 #ifdef __cplusplus

@@ -27,7 +27,7 @@
 #include <axis2_defines.h>
 #include <oxs_constants.h>
 #include <openssl_constants.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -44,7 +44,7 @@ extern "C"
      * @return the generated IV 
      */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_iv_generate_for_algo(const axis2_env_t *env,
+    oxs_iv_generate_for_algo(const axutil_env_t *env,
                              axis2_char_t *key_algo);
 
 

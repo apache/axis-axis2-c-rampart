@@ -51,7 +51,7 @@ extern "C" {
       **/
     int AXIS2_CALL
     openssl_rsa_prv_decrypt(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const openssl_pkey_t *pkey,
         const axis2_char_t *padding,
         oxs_buffer_t *in,
@@ -68,7 +68,7 @@ extern "C" {
       **/
     int AXIS2_CALL
     openssl_rsa_pub_encrypt(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const openssl_pkey_t *pkey,
         const axis2_char_t *padding,
         oxs_buffer_t *in,
@@ -85,7 +85,7 @@ extern "C" {
       **/
     int AXIS2_CALL
     openssl_rsa_prv_encrypt(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const openssl_pkey_t *pkey,
         const axis2_char_t *padding,
         oxs_buffer_t *in,
@@ -102,7 +102,7 @@ extern "C" {
       **/
     int AXIS2_CALL
     openssl_rsa_pub_decrypt(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const openssl_pkey_t *pkey,
         const axis2_char_t *padding,
         oxs_buffer_t *in,

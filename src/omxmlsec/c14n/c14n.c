@@ -22,7 +22,7 @@
 #include <axis2_error.h>
 #include <axis2_utils_defines.h>
 #include <axis2_utils.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_string.h>
 #include <axutil_array_list.h>
 #include <axiom_element.h>
@@ -71,7 +71,7 @@ typedef struct c14n_ns_stack {
 } c14n_ns_stack_t;
 
 typedef struct c14n_ctx {
-    const axis2_env_t *env;
+    const axutil_env_t *env;
     const axiom_document_t *doc;
     axis2_bool_t comments;
     axis2_char_t **outbuf;
@@ -417,7 +417,7 @@ c14n_ctx_free(
 
 static c14n_ctx_t*
 c14n_init(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_bool_t comments,
     axis2_char_t **outbuf,
@@ -502,7 +502,7 @@ c14n_get_algorithm(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_c14n_apply_stream_algo(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_stream_t *stream,
     const axutil_array_list_t *ns_prefixes,
@@ -532,7 +532,7 @@ oxs_c14n_apply_stream_algo(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_c14n_apply_algo(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_char_t **outbuf,
     const axutil_array_list_t *ns_prefixes,
@@ -562,7 +562,7 @@ oxs_c14n_apply_algo(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_c14n_apply_stream(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_bool_t comments,
     axis2_stream_t *stream,
@@ -657,7 +657,7 @@ oxs_c14n_apply_stream(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_c14n_apply(
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_bool_t comments,
     axis2_char_t **outbuf,

@@ -32,19 +32,19 @@ extern "C"
     typedef struct rp_layout_t rp_layout_t;
 
     AXIS2_EXTERN rp_layout_t *AXIS2_CALL
-    rp_layout_create(const axis2_env_t *env);
+    rp_layout_create(const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_layout_free(rp_layout_t *layout,
-                   const axis2_env_t *env);
+                   const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_layout_get_value(rp_layout_t *layout,
-                        const axis2_env_t *env);
+                        const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_layout_set_value(rp_layout_t *layout,
-                        const axis2_env_t *env,
+                        const axutil_env_t *env,
                         axis2_char_t *value);
 
 #ifdef __cplusplus

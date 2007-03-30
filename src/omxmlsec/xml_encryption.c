@@ -45,7 +45,7 @@
 *   
 */
 static axis2_status_t
-oxs_xml_enc_populate_stref_with_key_identifier(const axis2_env_t *env,
+oxs_xml_enc_populate_stref_with_key_identifier(const axutil_env_t *env,
         oxs_asym_ctx_t *asym_ctx,
         axiom_node_t *stref_node)
 {
@@ -77,7 +77,7 @@ oxs_xml_enc_populate_stref_with_key_identifier(const axis2_env_t *env,
 *   </KeyInfo>
 */
 static axis2_status_t
-oxs_xml_enc_populate_stref_with_bst(const axis2_env_t *env,
+oxs_xml_enc_populate_stref_with_bst(const axutil_env_t *env,
                                     oxs_asym_ctx_t *asym_ctx,
                                     axiom_node_t *stref_node,
                                     axiom_node_t *parent)
@@ -115,7 +115,7 @@ oxs_xml_enc_populate_stref_with_bst(const axis2_env_t *env,
 *   </KeyInfo>
 */
 static axis2_status_t
-oxs_xml_enc_populate_stref_with_embedded(const axis2_env_t *env,
+oxs_xml_enc_populate_stref_with_embedded(const axutil_env_t *env,
         oxs_asym_ctx_t *asym_ctx,
         axiom_node_t *stref_node)
 {
@@ -151,7 +151,7 @@ oxs_xml_enc_populate_stref_with_embedded(const axis2_env_t *env,
 *   </KeyInfo>
 */
 static axis2_status_t
-oxs_xml_enc_populate_stref_with_issuer_serial(const axis2_env_t *env,
+oxs_xml_enc_populate_stref_with_issuer_serial(const axutil_env_t *env,
         oxs_asym_ctx_t *asym_ctx,
         axiom_node_t *stref_node)
 {
@@ -178,7 +178,7 @@ oxs_xml_enc_populate_stref_with_issuer_serial(const axis2_env_t *env,
 }
 
 static axis2_status_t
-oxs_xml_enc_process_key_info(const axis2_env_t *env,
+oxs_xml_enc_process_key_info(const axutil_env_t *env,
                              oxs_asym_ctx_t *asym_ctx,
                              axiom_node_t *key_info_node,
                              axiom_node_t *parent_node)
@@ -228,7 +228,7 @@ oxs_xml_enc_process_key_info(const axis2_env_t *env,
 
 /*public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_enc_encrypt_node(const axis2_env_t *env,
+oxs_xml_enc_encrypt_node(const axutil_env_t *env,
                          oxs_ctx_t * enc_ctx,
                          axiom_node_t *node,
                          axiom_node_t **enc_type_node)
@@ -259,7 +259,7 @@ oxs_xml_enc_encrypt_node(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_enc_encrypt_data(const axis2_env_t *env,
+oxs_xml_enc_encrypt_data(const axutil_env_t *env,
                          oxs_ctx_t * enc_ctx,
                          oxs_buffer_t *content_buf,
                          axiom_node_t **enc_type_node)
@@ -299,7 +299,7 @@ oxs_xml_enc_encrypt_data(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_enc_decrypt_node(const axis2_env_t *env,
+oxs_xml_enc_decrypt_node(const axutil_env_t *env,
                          oxs_ctx_t * enc_ctx,
                          axiom_node_t *enc_type_node,
                          axiom_node_t **decrypted_node)
@@ -342,7 +342,7 @@ oxs_xml_enc_decrypt_node(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_enc_decrypt_data(const axis2_env_t *env,
+oxs_xml_enc_decrypt_data(const axutil_env_t *env,
                          oxs_ctx_t * enc_ctx,
                          axiom_node_t *enc_type_node,
                          oxs_buffer_t *result_buf)
@@ -394,7 +394,7 @@ oxs_xml_enc_decrypt_data(const axis2_env_t *env,
 
 /*For SOAP this parent is the wsse:Security node*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_enc_encrypt_key(const axis2_env_t *env,
+oxs_xml_enc_encrypt_key(const axutil_env_t *env,
                         oxs_asym_ctx_t * asym_ctx,
                         axiom_node_t *parent,
                         oxs_key_t *sym_key,
@@ -473,7 +473,7 @@ oxs_xml_enc_encrypt_key(const axis2_env_t *env,
 * Inspect the key node. Then populate the sym_key
 */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_enc_decrypt_key(const axis2_env_t *env,
+oxs_xml_enc_decrypt_key(const axutil_env_t *env,
                         oxs_asym_ctx_t * asym_ctx,
                         axiom_node_t *parent,
                         axiom_node_t *encrypted_key_node,

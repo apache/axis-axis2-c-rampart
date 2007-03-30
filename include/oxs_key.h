@@ -26,7 +26,7 @@
 
 #include <axis2_defines.h>
 #include <oxs_constants.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -59,7 +59,7 @@ extern "C"
     unsigned char *AXIS2_CALL
     oxs_key_get_data(
         const oxs_key_t *key,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
     * Gets the name of the key.
     * @param key oxs_key ptr to key
@@ -69,7 +69,7 @@ extern "C"
     axis2_char_t *AXIS2_CALL
     oxs_key_get_name(
         const oxs_key_t *key,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
     * Gets the size of the key.
     * @param key oxs_key ptr to key
@@ -79,7 +79,7 @@ extern "C"
     int AXIS2_CALL
     oxs_key_get_size(
         const oxs_key_t *key,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
     * Gets the usage of the key.
     * @param key oxs_key ptr to key
@@ -89,7 +89,7 @@ extern "C"
     int AXIS2_CALL
     oxs_key_get_usage(
         const oxs_key_t *key,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
 
     /**
@@ -102,7 +102,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_key_set_name(
         oxs_key_t *key,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *name);
 
 
@@ -116,7 +116,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_key_set_usage(
         oxs_key_t *key,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         int usage);
 
     /**
@@ -128,7 +128,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_key_free(
         oxs_key_t *key,
-        const axis2_env_t *env
+        const axutil_env_t *env
     );
 
     /**
@@ -144,7 +144,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_key_populate(
         oxs_key_t *key,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         unsigned char *data,
         axis2_char_t *name,
         int size,
@@ -159,7 +159,7 @@ extern "C"
     axis2_status_t AXIS2_CALL
     oxs_key_read_from_file(
         oxs_key_t *key,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *file_name);
 
     /**
@@ -170,12 +170,12 @@ extern "C"
     */
     axis2_status_t AXIS2_CALL
     oxs_key_for_algo(oxs_key_t *key,
-                     const axis2_env_t *env,
+                     const axutil_env_t *env,
                      axis2_char_t *key_algo);
 
 
     AXIS2_EXTERN oxs_key_t *AXIS2_CALL
-    oxs_key_create(const axis2_env_t *env);
+    oxs_key_create(const axutil_env_t *env);
 
 
 #ifdef __cplusplus

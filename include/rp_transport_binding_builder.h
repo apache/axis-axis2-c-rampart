@@ -34,12 +34,12 @@ extern "C"
 
     AXIS2_EXTERN rp_transport_binding_t *AXIS2_CALL
     rp_transport_binding_builder_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *transport);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_transport_binding_builder_set_token_type(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         rp_transport_binding_t *transport_binding,
         axiom_node_t *node,
         axiom_element_t *element,
@@ -47,7 +47,7 @@ extern "C"
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rp_transport_binding_builder_istoken(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *local_name);
 
 

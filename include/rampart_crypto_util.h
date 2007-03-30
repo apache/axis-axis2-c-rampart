@@ -17,7 +17,7 @@
 
 #include <axis2_utils_defines.h>
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 /**
   * @file rampart_crypto_util.h
@@ -44,7 +44,7 @@ extern "C" {
     * @return calculated hash
     */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_crypto_sha1(const axis2_env_t *env,
+    rampart_crypto_sha1(const axutil_env_t *env,
                         const axis2_char_t *nonce,
                         const axis2_char_t *created,
                         const axis2_char_t *password);

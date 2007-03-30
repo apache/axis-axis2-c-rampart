@@ -29,7 +29,7 @@ extern "C"
 
 #define RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE 300
 
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <rampart_constants.h>
 
     /**
@@ -44,7 +44,7 @@ extern "C"
 
     axis2_status_t AXIS2_CALL
     rampart_timestamp_token_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *sec_node,
         const  axiom_namespace_t *sec_ns_obj,
         int ttl);
@@ -57,7 +57,7 @@ extern "C"
     */
     axis2_status_t AXIS2_CALL
     rampart_timestamp_token_validate(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx,
         axiom_node_t *ts_node );
 

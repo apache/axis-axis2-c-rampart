@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <axis2_defines.h>
 #include <axis2_error.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_utils.h>
 #include <rampart_authn_provider.h>
 #include <rampart_crypto_util.h> 
@@ -27,7 +27,7 @@
 #include <axis2_string.h>
 
 axis2_char_t* AXIS2_CALL
-ramaprt_get_sample_password_from_file(const axis2_env_t *env,
+ramaprt_get_sample_password_from_file(const axutil_env_t *env,
         const axis2_char_t *username)
 {
     axis2_char_t * password = NULL;
@@ -68,7 +68,7 @@ ramaprt_get_sample_password_from_file(const axis2_env_t *env,
 }
 #if 0
 axis2_char_t* AXIS2_CALL
-ramaprt_get_sample_password(const axis2_env_t *env,
+ramaprt_get_sample_password(const axutil_env_t *env,
         const axis2_char_t *username)
 {
     /*First set pf password are for sample usernames*/
@@ -118,7 +118,7 @@ ramaprt_get_sample_password(const axis2_env_t *env,
 /*Two sample implementations*/
 rampart_authn_provider_status_t AXIS2_CALL
 rampart_sample_authn_provider_check_password(rampart_authn_provider_t *authn_provider,
-                const axis2_env_t* env,
+                const axutil_env_t* env,
                 axis2_msg_ctx_t *msg_ctx,
                 const axis2_char_t *username,
                 const axis2_char_t *password)
@@ -141,7 +141,7 @@ rampart_sample_authn_provider_check_password(rampart_authn_provider_t *authn_pro
 
 rampart_authn_provider_status_t AXIS2_CALL
 rampart_sample_authn_provider_check_password_digest(rampart_authn_provider_t *authn_provider,
-                const axis2_env_t* env,
+                const axutil_env_t* env,
                 axis2_msg_ctx_t *msg_ctx,
                 const axis2_char_t *username,
                 const axis2_char_t *nonce,
@@ -174,7 +174,7 @@ rampart_sample_authn_provider_check_password_digest(rampart_authn_provider_t *au
  */
 AXIS2_EXPORT int
 axis2_get_instance(rampart_authn_provider_t **inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     rampart_authn_provider_t* authn_p = NULL;
 
@@ -201,7 +201,7 @@ axis2_get_instance(rampart_authn_provider_t **inst,
 
 AXIS2_EXPORT int
 axis2_remove_instance(rampart_authn_provider_t *inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)

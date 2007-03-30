@@ -25,7 +25,7 @@
 
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_iv_generate_for_algo(const axis2_env_t *env,
+oxs_iv_generate_for_algo(const axutil_env_t *env,
                          axis2_char_t *key_algo)
 {
     axis2_char_t* iv = NULL;

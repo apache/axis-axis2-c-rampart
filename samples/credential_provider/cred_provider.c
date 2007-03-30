@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <axis2_defines.h>
 #include <axis2_error.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_utils.h>
 #include <rampart_credentials.h>
 #include <rampart_crypto_util.h> 
@@ -30,7 +30,7 @@
 rampart_credentials_status_t AXIS2_CALL
 rampart_sample_credentials_username_get(
                 rampart_credentials_t *credentials,
-                const axis2_env_t* env,
+                const axutil_env_t* env,
                 axis2_msg_ctx_t *msg_ctx,
                 axis2_char_t **username,
                 axis2_char_t **password
@@ -47,7 +47,7 @@ rampart_sample_credentials_username_get(
  */
 AXIS2_EXPORT int
 axis2_get_instance(rampart_credentials_t **inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     rampart_credentials_t* cred_p = NULL;
 
@@ -73,7 +73,7 @@ axis2_get_instance(rampart_credentials_t **inst,
 
 AXIS2_EXPORT int
 axis2_remove_instance(rampart_credentials_t *inst,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)

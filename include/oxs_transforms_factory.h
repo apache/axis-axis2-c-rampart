@@ -26,7 +26,7 @@
 
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -38,7 +38,7 @@ extern "C"
 #endif
 
     AXIS2_EXTERN oxs_transform_t *AXIS2_CALL
-    oxs_transforms_factory_produce_transform(const axis2_env_t *env,
+    oxs_transforms_factory_produce_transform(const axutil_env_t *env,
             axis2_char_t *id);
 
 

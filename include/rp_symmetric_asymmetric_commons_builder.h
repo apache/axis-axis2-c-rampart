@@ -36,7 +36,7 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_symmetric_asymmetric_commons_builder_build(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axiom_node_t *node,
         axiom_element_t *element,
         axis2_char_t *local_name,

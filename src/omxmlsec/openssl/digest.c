@@ -25,7 +25,7 @@
 #define SIZE_HASH 32
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-openssl_sha1(const axis2_env_t *env,
+openssl_sha1(const axutil_env_t *env,
              axis2_char_t *input,
              int length)
 {
@@ -45,7 +45,7 @@ openssl_sha1(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-openssl_md5(const axis2_env_t *env,
+openssl_md5(const axutil_env_t *env,
             axis2_char_t *input,
             int length)
 {

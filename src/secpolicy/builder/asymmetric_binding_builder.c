@@ -21,7 +21,7 @@
 #include <rp_token_builder.h>
 
 AXIS2_EXTERN rp_asymmetric_binding_t *AXIS2_CALL 
-rp_asymmetric_binding_builder_build(const axis2_env_t *env, axiom_node_t *asymmetric)
+rp_asymmetric_binding_builder_build(const axutil_env_t *env, axiom_node_t *asymmetric)
 {
     rp_asymmetric_binding_t *asymmetric_binding = NULL;
     rp_symmetric_asymmetric_binding_commons_t *as_commons = NULL;
@@ -93,7 +93,7 @@ rp_asymmetric_binding_builder_build(const axis2_env_t *env, axiom_node_t *asymme
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rp_asymmetric_binding_builder_set_token_type(
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             rp_asymmetric_binding_t *asymmetric_binding,
             axiom_node_t *node,
             axiom_element_t *element,
@@ -135,7 +135,7 @@ rp_asymmetric_binding_builder_set_token_type(
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rp_asymmetric_binding_builder_istoken(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *local_name)
 {
     AXIS2_ENV_CHECK(env,AXIS2_FALSE);

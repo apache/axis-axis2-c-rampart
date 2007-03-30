@@ -20,7 +20,7 @@
 
 #include <axis2_defines.h>
 #include <axis2_error.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_utils.h>
 #include <axis2_msg_ctx.h>
 
@@ -73,7 +73,7 @@ extern "C"
         rampart_credentials_status_t (AXIS2_CALL*
                                       rampart_credentials_username_get)(
                                           rampart_credentials_t *credentials,
-                                          const axis2_env_t* env,
+                                          const axutil_env_t* env,
                                           axis2_msg_ctx_t *msg_ctx,
                                           axis2_char_t **username,
                                           axis2_char_t **password
@@ -81,7 +81,7 @@ extern "C"
 
         axis2_status_t (AXIS2_CALL*
                         free)(rampart_credentials_t *credentials,
-                              const axis2_env_t* env);
+                              const axutil_env_t* env);
 
     };
 

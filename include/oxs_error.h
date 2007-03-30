@@ -25,7 +25,7 @@
   */
 
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -107,7 +107,7 @@ extern "C"
      *
      */
     AXIS2_EXTERN void AXIS2_CALL
-    oxs_error(const axis2_env_t *env, const char* file, int line, const char* func,
+    oxs_error(const axutil_env_t *env, const char* file, int line, const char* func,
               int code, const char* msg,...);
 
     /** @} */

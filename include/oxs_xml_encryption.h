@@ -26,7 +26,7 @@
 
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axis2_qname.h>
@@ -46,7 +46,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_enc_encrypt_node(const axis2_env_t *env,
+    oxs_xml_enc_encrypt_node(const axutil_env_t *env,
                              oxs_ctx_t * enc_ctx,
                              axiom_node_t *node,
                              axiom_node_t **enc_type_node);
@@ -61,7 +61,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_enc_decrypt_node(const axis2_env_t *env,
+    oxs_xml_enc_decrypt_node(const axutil_env_t *env,
                              oxs_ctx_t * enc_ctx,
                              axiom_node_t *enc_type_node,
                              axiom_node_t **decrypted_node);
@@ -76,7 +76,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_enc_encrypt_data(const axis2_env_t *env,
+    oxs_xml_enc_encrypt_data(const axutil_env_t *env,
                              oxs_ctx_t * enc_ctx,
                              oxs_buffer_t *content_buf,
                              axiom_node_t **enc_type_node);
@@ -91,7 +91,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_enc_decrypt_data(const axis2_env_t *env,
+    oxs_xml_enc_decrypt_data(const axutil_env_t *env,
                              oxs_ctx_t * enc_ctx,
                              axiom_node_t *enc_type_node,
                              oxs_buffer_t *result_buf);
@@ -107,7 +107,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_enc_encrypt_key(const axis2_env_t *env,
+    oxs_xml_enc_encrypt_key(const axutil_env_t *env,
                             oxs_asym_ctx_t * asym_ctx,
                             axiom_node_t *parent,
                             oxs_key_t *sym_key,
@@ -124,7 +124,7 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_xml_enc_decrypt_key(const axis2_env_t *env,
+    oxs_xml_enc_decrypt_key(const axutil_env_t *env,
                             oxs_asym_ctx_t * asym_ctx,
                             axiom_node_t *parent,
                             axiom_node_t *encrypted_key_node,

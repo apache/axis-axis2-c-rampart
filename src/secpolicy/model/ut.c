@@ -28,7 +28,7 @@ struct rp_username_token_t
 };
 
 AXIS2_EXTERN rp_username_token_t *AXIS2_CALL 
-rp_username_token_create(const axis2_env_t *env)
+rp_username_token_create(const axutil_env_t *env)
 {
     rp_username_token_t *username_token = NULL;
 
@@ -54,7 +54,7 @@ rp_username_token_create(const axis2_env_t *env)
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_username_token_free(
     rp_username_token_t *username_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -72,7 +72,7 @@ rp_username_token_free(
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL 
 rp_username_token_get_inclusion(
     rp_username_token_t *username_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     
@@ -82,7 +82,7 @@ rp_username_token_get_inclusion(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_username_token_set_inclusion(
     rp_username_token_t *username_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *inclusion)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -97,7 +97,7 @@ rp_username_token_set_inclusion(
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_username_token_get_derivedkeys(
     rp_username_token_t *username_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
         
@@ -107,7 +107,7 @@ rp_username_token_get_derivedkeys(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_username_token_set_derivedkeys(
     rp_username_token_t *username_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t derivedkeys)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -121,7 +121,7 @@ rp_username_token_set_derivedkeys(
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_username_token_get_useUTprofile10(
     rp_username_token_t *username_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
         
@@ -132,7 +132,7 @@ rp_username_token_get_useUTprofile10(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_username_token_set_useUTprofile10(
     rp_username_token_t *username_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t useUTprofile10)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -145,7 +145,7 @@ rp_username_token_set_useUTprofile10(
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_username_token_get_useUTprofile11(
     rp_username_token_t *username_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
         
@@ -155,7 +155,7 @@ rp_username_token_get_useUTprofile11(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_username_token_set_useUTprofile11(
     rp_username_token_t *username_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t useUTprofile11)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

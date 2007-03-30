@@ -22,12 +22,12 @@
 AXIS2_EXTERN rp_header_t *AXIS2_CALL
 rp_signed_encrypted_parts_builder_build_header(
     axiom_element_t *element,
-    const axis2_env_t *env);
+    const axutil_env_t *env);
 */
 
 AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL
 rp_signed_encrypted_parts_builder_build(
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axiom_node_t *parts)
 {
     rp_signed_encrypted_parts_t *signed_encrypted_parts = NULL;
@@ -90,7 +90,7 @@ rp_signed_encrypted_parts_builder_set_properties(
         axiom_element_t *element,
         axis2_char_t *local_name,
         rp_signed_encrypted_parts_t *signed_encrypted_parts,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
 
@@ -125,7 +125,7 @@ rp_signed_encrypted_parts_builder_set_properties(
 AXIS2_EXTERN rp_header_t *AXIS2_CALL 
 rp_signed_encrypted_parts_builder_build_header(
     axiom_element_t *element,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     rp_header_t *header = NULL;
     axis2_char_t *name = NULL;

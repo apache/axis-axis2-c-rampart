@@ -25,7 +25,7 @@
 /*TODO These names should be changed to oxs_token_build_XXX_node*/
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_encrypted_key_element(const axis2_env_t *env,
+oxs_token_build_encrypted_key_element(const axutil_env_t *env,
                                       axiom_node_t *parent)
 {
     axiom_node_t *encrypted_key_node = NULL;
@@ -51,7 +51,7 @@ oxs_token_build_encrypted_key_element(const axis2_env_t *env,
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_get_encrypted_key_node(const axis2_env_t *env,
+oxs_token_get_encrypted_key_node(const axutil_env_t *env,
                                  axiom_node_t *parent)
 {
     axiom_node_t *enc_key_node = NULL;

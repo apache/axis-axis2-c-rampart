@@ -29,7 +29,7 @@ struct rampart_rd_record_t
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_rd_record_get_id(
     const rampart_rd_record_t *rd_record,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return rd_record->id;
 }
@@ -37,7 +37,7 @@ rampart_rd_record_get_id(
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_rd_record_get_timestamp(
     const rampart_rd_record_t *rd_record,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return rd_record->timestamp;
 }
@@ -45,7 +45,7 @@ rampart_rd_record_get_timestamp(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_rd_record_set_id(
     rampart_rd_record_t *rd_record,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *id)
 {
 
@@ -61,7 +61,7 @@ rampart_rd_record_set_id(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_rd_record_set_timestamp(
     rampart_rd_record_t *rd_record,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *timestamp)
 {
 
@@ -75,7 +75,7 @@ rampart_rd_record_set_timestamp(
 }
 
 AXIS2_EXTERN rampart_rd_record_t *AXIS2_CALL
-rampart_rd_record_create(const axis2_env_t *env)
+rampart_rd_record_create(const axutil_env_t *env)
 {
     rampart_rd_record_t *rd_record = NULL;
 
@@ -96,7 +96,7 @@ rampart_rd_record_create(const axis2_env_t *env)
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_rd_record_free(rampart_rd_record_t *rd_record,
-                  const axis2_env_t *env)
+                  const axutil_env_t *env)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

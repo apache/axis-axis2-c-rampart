@@ -28,7 +28,7 @@ struct rp_signed_encrypted_parts_t
 };
 
 AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL 
-rp_signed_encrypted_parts_create(const axis2_env_t *env)
+rp_signed_encrypted_parts_create(const axutil_env_t *env)
 {
     rp_signed_encrypted_parts_t *signed_encrypted_parts = NULL;
 
@@ -58,7 +58,7 @@ rp_signed_encrypted_parts_create(const axis2_env_t *env)
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_signed_encrypted_parts_free(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-        const axis2_env_t *env)
+        const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -94,7 +94,7 @@ rp_signed_encrypted_parts_free(rp_signed_encrypted_parts_t *signed_encrypted_par
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_signed_encrypted_parts_get_body(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-            const axis2_env_t *env)
+            const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
         
@@ -103,7 +103,7 @@ rp_signed_encrypted_parts_get_body(rp_signed_encrypted_parts_t *signed_encrypted
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_signed_encrypted_parts_set_body(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axis2_bool_t body)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -115,7 +115,7 @@ rp_signed_encrypted_parts_set_body(rp_signed_encrypted_parts_t *signed_encrypted
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_signed_encrypted_parts_get_signedparts(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-            const axis2_env_t *env)
+            const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
         
@@ -124,7 +124,7 @@ rp_signed_encrypted_parts_get_signedparts(rp_signed_encrypted_parts_t *signed_en
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_signed_encrypted_parts_set_signedparts(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             axis2_bool_t signedparts)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -137,7 +137,7 @@ rp_signed_encrypted_parts_set_signedparts(rp_signed_encrypted_parts_t *signed_en
 AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 rp_signed_encrypted_parts_get_headers(
     rp_signed_encrypted_parts_t *signed_encrypted_parts,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -146,7 +146,7 @@ rp_signed_encrypted_parts_get_headers(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_signed_encrypted_parts_add_header(rp_signed_encrypted_parts_t *signed_encrypted_parts,
-            const axis2_env_t *env,
+            const axutil_env_t *env,
             rp_header_t *header)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

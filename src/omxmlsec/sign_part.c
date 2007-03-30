@@ -34,7 +34,7 @@ struct oxs_sign_part_t
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_sign_part_get_id(
     const oxs_sign_part_t *sign_part,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return sign_part->id;
 }
@@ -42,7 +42,7 @@ oxs_sign_part_get_id(
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_sign_part_get_digest_mtd(
     const oxs_sign_part_t *sign_part,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return sign_part->digest_mtd;
 }
@@ -50,7 +50,7 @@ oxs_sign_part_get_digest_mtd(
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_sign_part_get_digest_val(
     const oxs_sign_part_t *sign_part,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return sign_part->digest_val;
 }
@@ -58,7 +58,7 @@ oxs_sign_part_get_digest_val(
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 oxs_sign_part_get_node(
     const oxs_sign_part_t *sign_part,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return sign_part->node;
 }
@@ -66,7 +66,7 @@ oxs_sign_part_get_node(
 AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 oxs_sign_part_get_transforms(
     const oxs_sign_part_t *sign_part,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     return sign_part->transforms;
 }
@@ -74,7 +74,7 @@ oxs_sign_part_get_transforms(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_set_id(
     oxs_sign_part_t *sign_part,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *id)
 {
 
@@ -90,7 +90,7 @@ oxs_sign_part_set_id(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_set_digest_mtd(
     oxs_sign_part_t *sign_part,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *digest_mtd)
 {
 
@@ -106,7 +106,7 @@ oxs_sign_part_set_digest_mtd(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_set_digest_val(
     oxs_sign_part_t *sign_part,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *digest_val)
 {
 
@@ -122,7 +122,7 @@ oxs_sign_part_set_digest_val(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_set_node(
     oxs_sign_part_t *sign_part,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axiom_node_t *node)
 {
     if(sign_part->node){
@@ -135,7 +135,7 @@ oxs_sign_part_set_node(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_set_transforms(
     oxs_sign_part_t *sign_part,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axutil_array_list_t *transforms)
 {
     if(sign_part->transforms){
@@ -146,7 +146,7 @@ oxs_sign_part_set_transforms(
 }
 
 AXIS2_EXTERN oxs_sign_part_t *AXIS2_CALL
-oxs_sign_part_create(const axis2_env_t *env)
+oxs_sign_part_create(const axutil_env_t *env)
 {
     oxs_sign_part_t *sign_part = NULL;
 
@@ -171,7 +171,7 @@ oxs_sign_part_create(const axis2_env_t *env)
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_free(oxs_sign_part_t *sign_part,
-                   const axis2_env_t *env)
+                   const axutil_env_t *env)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

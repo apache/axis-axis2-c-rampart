@@ -60,17 +60,17 @@ extern "C" {
     } openssl_x509_info_type_t;
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    openssl_x509_load_from_buffer(const axis2_env_t *env,
+    openssl_x509_load_from_buffer(const axutil_env_t *env,
                                   axis2_char_t *b64_encoded_buf,
                                   X509 **cert);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    openssl_x509_load_from_pem(const axis2_env_t *env,
+    openssl_x509_load_from_pem(const axutil_env_t *env,
                                axis2_char_t *filename,
                                X509 **cert);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    openssl_x509_load_from_pkcs12(const axis2_env_t *env,
+    openssl_x509_load_from_pkcs12(const axutil_env_t *env,
                                   axis2_char_t *filename,
                                   axis2_char_t *password,
                                   X509 **cert,
@@ -78,41 +78,41 @@ extern "C" {
                                   STACK_OF(X509) **ca);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    openssl_x509_load_certificate(const axis2_env_t *env,
+    openssl_x509_load_certificate(const axutil_env_t *env,
                                   openssl_x509_format_t format,
                                   axis2_char_t *filename,
                                   axis2_char_t *password,
                                   X509 **cert);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    openssl_x509_get_cert_data(const axis2_env_t *env,
+    openssl_x509_get_cert_data(const axutil_env_t *env,
                                X509 *cert);
 
 
     AXIS2_EXTERN int AXIS2_CALL
-    openssl_x509_get_serial(const axis2_env_t *env,
+    openssl_x509_get_serial(const axutil_env_t *env,
                             X509 *cert);
 
     AXIS2_EXTERN unsigned long AXIS2_CALL
-    openssl_x509_get_subject_name_hash(const axis2_env_t *env,
+    openssl_x509_get_subject_name_hash(const axutil_env_t *env,
                                        X509 *cert);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    openssl_x509_get_pubkey(const axis2_env_t *env,
+    openssl_x509_get_pubkey(const axutil_env_t *env,
                             X509 *cert,
                             EVP_PKEY **pubkey);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    openssl_x509_get_subject_key_identifier(const axis2_env_t *env,
+    openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
                                             X509 *cert);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    openssl_x509_get_info(const axis2_env_t *env,
+    openssl_x509_get_info(const axutil_env_t *env,
                           openssl_x509_info_type_t type,
                           X509 *cert);
 
     AXIS2_EXTERN void AXIS2_CALL
-    openssl_x509_print(const axis2_env_t *env,
+    openssl_x509_print(const axutil_env_t *env,
                        X509 *cert);
 
     /** @} */

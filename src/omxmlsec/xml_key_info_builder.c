@@ -34,7 +34,7 @@
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_info_build(const axis2_env_t *env,
+oxs_xml_key_info_build(const axutil_env_t *env,
                        axiom_node_t *parent,
                        oxs_x509_cert_t *cert,
                        oxs_key_info_build_pattern_t pattern)
@@ -56,7 +56,7 @@ oxs_xml_key_info_build(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_info_build_x509_data_x509_certificate(const axis2_env_t *env,
+oxs_xml_key_info_build_x509_data_x509_certificate(const axutil_env_t *env,
         axiom_node_t *parent,
         oxs_x509_cert_t *cert)
 {
@@ -76,7 +76,7 @@ oxs_xml_key_info_build_x509_data_x509_certificate(const axis2_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_xml_key_info_build_x509_data_issuer_serial(const axis2_env_t *env,
+oxs_xml_key_info_build_x509_data_issuer_serial(const axutil_env_t *env,
         axiom_node_t *parent,
         oxs_x509_cert_t *cert)
 {

@@ -32,7 +32,7 @@
 #include <axis2_error.h>
 #include <axis2_utils_defines.h>
 #include <axis2_utils.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <axis2_string.h>
 #include <axiom_document.h>
 #include <axutil_array_list.h>
@@ -44,7 +44,7 @@ extern "C"
 #endif
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_stream_algo(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const axiom_document_t *doc,
         axis2_stream_t *stream,
         const axutil_array_list_t *ns_prefixes,
@@ -54,7 +54,7 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_algo(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const axiom_document_t *doc,
         axis2_char_t **outbuf,
         const axutil_array_list_t *ns_prefixes,
@@ -65,7 +65,7 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_stream(
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const axiom_document_t *doc,
         axis2_bool_t comments,
         axis2_stream_t *stream,
@@ -76,7 +76,7 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply (
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const axiom_document_t *doc,
         const axis2_bool_t comments,
         axis2_char_t **outbuf,

@@ -28,7 +28,7 @@ struct rp_security_context_token_t
 };
 
 AXIS2_EXTERN rp_security_context_token_t *AXIS2_CALL 
-rp_security_context_token_create(const axis2_env_t *env)
+rp_security_context_token_create(const axutil_env_t *env)
 {
     rp_security_context_token_t *security_context_token = NULL;
 
@@ -54,7 +54,7 @@ rp_security_context_token_create(const axis2_env_t *env)
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_security_context_token_free(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -72,7 +72,7 @@ rp_security_context_token_free(
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL 
 rp_security_context_token_get_inclusion(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
         
@@ -82,7 +82,7 @@ rp_security_context_token_get_inclusion(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_security_context_token_set_inclusion(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_char_t *inclusion)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -95,7 +95,7 @@ rp_security_context_token_set_inclusion(
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_security_context_token_get_derivedkeys(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -105,7 +105,7 @@ rp_security_context_token_get_derivedkeys(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_security_context_token_set_derivedkeys(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t derivedkeys)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -118,7 +118,7 @@ rp_security_context_token_set_derivedkeys(
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_security_context_token_get_require_external_uri_ref(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -128,7 +128,7 @@ rp_security_context_token_get_require_external_uri_ref(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_security_context_token_set_require_external_uri_ref(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t require_external_uri_ref)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -143,7 +143,7 @@ rp_security_context_token_set_require_external_uri_ref(
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
 rp_security_context_token_get_sc10_security_context_token(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env)
+    const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
@@ -153,7 +153,7 @@ rp_security_context_token_get_sc10_security_context_token(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_security_context_token_set_sc10_security_context_token(
     rp_security_context_token_t *security_context_token,
-    const axis2_env_t *env,
+    const axutil_env_t *env,
     axis2_bool_t sc10_security_context_token)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

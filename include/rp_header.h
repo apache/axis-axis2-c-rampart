@@ -32,28 +32,28 @@ extern "C"
     typedef struct rp_header_t rp_header_t;
 
     AXIS2_EXTERN rp_header_t *AXIS2_CALL
-    rp_header_create(const axis2_env_t *env);
+    rp_header_create(const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_header_free(rp_header_t *header,
-                   const axis2_env_t *env);
+                   const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_header_get_name(rp_header_t *header,
-                       const axis2_env_t *env);
+                       const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_header_set_name(rp_header_t *header,
-                       const axis2_env_t *env,
+                       const axutil_env_t *env,
                        axis2_char_t *name);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rp_header_get_namespace(rp_header_t *header,
-                            const axis2_env_t *env);
+                            const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rp_header_set_namespace(rp_header_t *header,
-                            const axis2_env_t *env,
+                            const axutil_env_t *env,
                             axis2_char_t *namespace);
 
 #ifdef __cplusplus

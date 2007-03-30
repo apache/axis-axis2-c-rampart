@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 #include <axis2_defines.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <openssl/evp.h>
 #include <oxs_key.h>
 /**
@@ -40,7 +40,7 @@ extern "C" {
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_free(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
      * Given the ctx return the CIPHER
      * @param ctx to the openssl cipher ctx struct
@@ -50,7 +50,7 @@ extern "C" {
     const EVP_CIPHER* AXIS2_CALL
     openssl_cipher_ctx_get_cipher(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
      * Given the ctx return key
      * @param ctx to the openssl cipher ctx struct
@@ -60,7 +60,7 @@ extern "C" {
     oxs_key_t *AXIS2_CALL
     openssl_cipher_ctx_get_key(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
      * Given the ctx return iv
      * @param ctx to the openssl cipher ctx struct
@@ -70,7 +70,7 @@ extern "C" {
     axis2_char_t *AXIS2_CALL
     openssl_cipher_ctx_get_iv(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
     /**
      * Given the ctx return the padding
      * @param ctx to the openssl cipher ctx struct
@@ -80,36 +80,36 @@ extern "C" {
     axis2_char_t *AXIS2_CALL
     openssl_cipher_ctx_get_pad(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env);
+        const axutil_env_t *env);
 
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_cipher(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         const EVP_CIPHER*);
 
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_key(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         oxs_key_t *key);
 
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_iv(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *iv);
 
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_pad(
         openssl_cipher_ctx_t *ctx,
-        const axis2_env_t *env,
+        const axutil_env_t *env,
         axis2_char_t *pad);
 
 
     /*Create function*/
     AXIS2_EXTERN openssl_cipher_ctx_t *AXIS2_CALL
-    openssl_cipher_ctx_create(const axis2_env_t *env);
+    openssl_cipher_ctx_create(const axutil_env_t *env);
 
     /* @} */
 #ifdef __cplusplus

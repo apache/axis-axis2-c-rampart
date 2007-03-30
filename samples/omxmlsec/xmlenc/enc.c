@@ -22,7 +22,7 @@
 #include <oxs_utility.h>
 #include <axiom.h>
 #include <axiom_xml_reader.h>
-#include <axis2_env.h>
+#include <axutil_env.h>
 #include <oxs_ctx.h>
 #include <oxs_key.h>
 #include <oxs_error.h>
@@ -33,7 +33,7 @@
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-load_sample_xml(const axis2_env_t *env,
+load_sample_xml(const axutil_env_t *env,
         axiom_node_t* tmpl,
         axis2_char_t* filename)
 {
@@ -57,7 +57,7 @@ load_sample_xml(const axis2_env_t *env,
 }
 
 
-oxs_key_t *create_key(axis2_env_t *env)
+oxs_key_t *create_key(axutil_env_t *env)
 {
     oxs_key_t *key = NULL;
     key = oxs_key_create(env);
@@ -66,7 +66,7 @@ oxs_key_t *create_key(axis2_env_t *env)
 }
 
 axis2_status_t 
-decrypt(axis2_env_t *env,  axis2_char_t *filename)
+decrypt(axutil_env_t *env,  axis2_char_t *filename)
 {
     oxs_ctx_t *ctx = NULL;
     axiom_node_t *tmpl = NULL;
@@ -104,7 +104,7 @@ decrypt(axis2_env_t *env,  axis2_char_t *filename)
 }
 
 axis2_status_t 
-encrypt(axis2_env_t *env,  axis2_char_t *filename)
+encrypt(axutil_env_t *env,  axis2_char_t *filename)
 {
     oxs_ctx_t *ctx = NULL;
     oxs_key_t *key = NULL;
@@ -152,11 +152,11 @@ encrypt(axis2_env_t *env,  axis2_char_t *filename)
 
 int main(int argc, char *argv[])
 {
-    axis2_env_t *env = NULL;
+    axutil_env_t *env = NULL;
     axis2_char_t *filename = NULL;
     axis2_char_t *operation = NULL;
 
-    env = axis2_env_create_all("enc.log", AXIS2_LOG_LEVEL_TRACE);
+    env = axutil_env_create_all("enc.log", AXIS2_LOG_LEVEL_TRACE);
 
     if (argc > 2){
         filename = argv[1];
