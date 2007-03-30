@@ -192,12 +192,12 @@ rampart_generate_nonce(const axis2_env_t *env)
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_generate_time(const axis2_env_t *env, int ttl)
 {
-    axis2_date_time_t *dt = NULL;
+    axutil_date_time_t *dt = NULL;
     axis2_char_t *dt_str = NULL;
 
-    dt = axis2_date_time_create_with_offset(env, ttl);
-    dt_str =  axis2_date_time_serialize_date_time(dt, env);
-    axis2_date_time_free(dt, env);
+    dt = axutil_date_time_create_with_offset(env, ttl);
+    dt_str =  axutil_date_time_serialize_date_time(dt, env);
+    axutil_date_time_free(dt, env);
     return dt_str;
 }
 
@@ -206,43 +206,43 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1_str, axis2_char_t *dt2_str)
 {
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_date_time_t *dt1 = NULL;
-    axis2_date_time_t *dt2 = NULL;
-    axis2_date_time_comp_result_t res = AXIS2_DATE_TIME_COMP_RES_UNKNOWN;
+    axutil_date_time_t *dt1 = NULL;
+    axutil_date_time_t *dt2 = NULL;
+    axutil_date_time_comp_result_t res = AXIS2_DATE_TIME_COMP_RES_UNKNOWN;
 #if 0
     int yyyy1, mm1, dd1, hh1, mi1, ss1, ml1;
     int yyyy2, mm2, dd2, hh2, mi2, ss2, ml2;
 #endif
-    dt1 = axis2_date_time_create(env);
-    dt2 = axis2_date_time_create(env);
+    dt1 = axutil_date_time_create(env);
+    dt2 = axutil_date_time_create(env);
 
-    status =  axis2_date_time_deserialize_date_time(dt1, env, dt1_str);
+    status =  axutil_date_time_deserialize_date_time(dt1, env, dt1_str);
     if (status == AXIS2_FAILURE)
     {
         return AXIS2_FAILURE;
     }
 
-    status =  axis2_date_time_deserialize_date_time(dt2, env, dt2_str);
+    status =  axutil_date_time_deserialize_date_time(dt2, env, dt2_str);
     if (status == AXIS2_FAILURE)
     {
         return AXIS2_FAILURE;
     }
 #if 0
-    yyyy1 =  axis2_date_time_get_year(dt1, env);
-    mm1 =  axis2_date_time_get_month(dt1, env);
-    dd1 =  axis2_date_time_get_date(dt1, env);
-    hh1 =   axis2_date_time_get_hour(dt1, env);
-    mi1 =  axis2_date_time_get_minute(dt1, env);
-    ss1 =  axis2_date_time_get_second(dt1, env);
-    ml1 =  axis2_date_time_get_msec(dt1, env);
+    yyyy1 =  axutil_date_time_get_year(dt1, env);
+    mm1 =  axutil_date_time_get_month(dt1, env);
+    dd1 =  axutil_date_time_get_date(dt1, env);
+    hh1 =   axutil_date_time_get_hour(dt1, env);
+    mi1 =  axutil_date_time_get_minute(dt1, env);
+    ss1 =  axutil_date_time_get_second(dt1, env);
+    ml1 =  axutil_date_time_get_msec(dt1, env);
 
-    yyyy2 =  axis2_date_time_get_year(dt2, env);
-    mm2 =  axis2_date_time_get_month(dt2, env);
-    dd2 =  axis2_date_time_get_date(dt2, env);
-    hh2 =   axis2_date_time_get_hour(dt2, env);
-    mi2 =  axis2_date_time_get_minute(dt2, env);
-    ss2 =  axis2_date_time_get_second(dt2, env);
-    ml2 =  axis2_date_time_get_msec(dt2, env);
+    yyyy2 =  axutil_date_time_get_year(dt2, env);
+    mm2 =  axutil_date_time_get_month(dt2, env);
+    dd2 =  axutil_date_time_get_date(dt2, env);
+    hh2 =   axutil_date_time_get_hour(dt2, env);
+    mi2 =  axutil_date_time_get_minute(dt2, env);
+    ss2 =  axutil_date_time_get_second(dt2, env);
+    ml2 =  axutil_date_time_get_msec(dt2, env);
     /**
     Comparison.
     We expect dt1_str < dt2_str/ Otherwise FAILURE
@@ -310,10 +310,10 @@ rampart_compare_date_time(const axis2_env_t *env, axis2_char_t *dt1_str, axis2_c
     }
     return AXIS2_SUCCESS;
 #else
-    /*Moved comparison logic to axis2_date_time */
+    /*Moved comparison logic to axutil_date_time */
 
     /*dt1<dt2 for SUCCESS*/
-    res = axis2_date_time_compare(dt1, env, dt2);
+    res = axutil_date_time_compare(dt1, env, dt2);
     if(AXIS2_DATE_TIME_COMP_RES_NOT_EXPIRED == res){
         return AXIS2_SUCCESS;
     }else{
