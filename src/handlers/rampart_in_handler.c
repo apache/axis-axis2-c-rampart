@@ -17,7 +17,7 @@
 
 #include <axis2_handler_desc.h>
 #include <axutil_array_list.h>
-#include <axis2_hash.h>
+#include <axutil_hash.h>
 #include <axiom_soap_const.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_soap_header.h>

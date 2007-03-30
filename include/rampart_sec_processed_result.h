@@ -70,7 +70,7 @@ extern "C" {
     *   @env the environment 
     *   @msg_ctx the message context in which data are extracted
     */
-    AXIS2_EXTERN axis2_hash_t* AXIS2_CALL
+    AXIS2_EXTERN axutil_hash_t* AXIS2_CALL
     rampart_get_all_security_processed_results(const axutil_env_t *env,
             axis2_msg_ctx_t *msg_ctx);
 

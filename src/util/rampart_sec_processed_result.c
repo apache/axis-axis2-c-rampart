@@ -32,13 +32,13 @@ rampart_set_security_processed_result(const axutil_env_t *env,
                                       axis2_char_t *key,
                                       void *value)
 {
-    axis2_hash_t *sec_processed_results = NULL;
+    axutil_hash_t *sec_processed_results = NULL;
 
     sec_processed_results = rampart_get_all_security_processed_results(env, msg_ctx);
     if(!sec_processed_results){
         return AXIS2_FAILURE;
     }
-    axis2_hash_set(sec_processed_results, key, AXIS2_HASH_KEY_STRING, value);
+    axutil_hash_set(sec_processed_results, key, AXIS2_HASH_KEY_STRING, value);
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][spr] Set %s in Security Processed Results of message context ", key);
     return AXIS2_SUCCESS;
 }
@@ -48,27 +48,27 @@ rampart_get_security_processed_result(const axutil_env_t *env,
                                       axis2_msg_ctx_t *msg_ctx,
                                       axis2_char_t *key)
 {
-    axis2_hash_t *sec_processed_results = NULL;
+    axutil_hash_t *sec_processed_results = NULL;
 
     sec_processed_results = rampart_get_all_security_processed_results(env, msg_ctx);
     if(!sec_processed_results){
         return NULL;
     }
-    return axis2_hash_get(sec_processed_results, key, AXIS2_HASH_KEY_STRING);
+    return axutil_hash_get(sec_processed_results, key, AXIS2_HASH_KEY_STRING);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_set_security_processed_results_property(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_hash_t *sec_processed_results = NULL;
+    axutil_hash_t *sec_processed_results = NULL;
     axis2_property_t *sec_processed_results_prop = NULL;
 
     if(!msg_ctx){
         return AXIS2_FAILURE;
     }
 
-    sec_processed_results = axis2_hash_make(env);
+    sec_processed_results = axutil_hash_make(env);
     sec_processed_results_prop = axis2_property_create(env);
 
     axis2_property_set_value(sec_processed_results_prop, env, sec_processed_results);
@@ -77,12 +77,12 @@ rampart_set_security_processed_results_property(const axutil_env_t *env,
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN axis2_hash_t* AXIS2_CALL
+AXIS2_EXTERN axutil_hash_t* AXIS2_CALL
 rampart_get_all_security_processed_results(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx)
 {
     axis2_property_t *sec_processed_results_prop = NULL;
-    axis2_hash_t *sec_processed_results = NULL;
+    axutil_hash_t *sec_processed_results = NULL;
 
     sec_processed_results_prop =  axis2_msg_ctx_get_property(msg_ctx, env, RAMPART_SECURITY_PROCESSED_RESULTS);
     if(!sec_processed_results_prop){
@@ -90,7 +90,7 @@ rampart_get_all_security_processed_results(const axutil_env_t *env,
         return NULL;
     }
 
-    sec_processed_results = (axis2_hash_t*)axis2_property_get_value(sec_processed_results_prop, env);
+    sec_processed_results = (axutil_hash_t*)axis2_property_get_value(sec_processed_results_prop, env);
     if(!sec_processed_results){
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][spr] Cannot get Security Processed Results Hash table from the property");
         return NULL;
@@ -103,8 +103,8 @@ AXIS2_EXTERN void AXIS2_CALL
 rampart_print_security_processed_results_set(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_hash_t *sec_processed_results = NULL;
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_t *sec_processed_results = NULL;
+    axutil_hash_index_t *hi = NULL;
     const void *key = NULL;
     void *val = NULL;
 
@@ -113,8 +113,8 @@ rampart_print_security_processed_results_set(const axutil_env_t *env,
         return;
     }
 
-    for (hi = axis2_hash_first(sec_processed_results, env); hi; hi = axis2_hash_next(env, hi)) {
-        axis2_hash_this(hi, &key, NULL, &val);
+    for (hi = axutil_hash_first(sec_processed_results, env); hi; hi = axutil_hash_next(env, hi)) {
+        axutil_hash_this(hi, &key, NULL, &val);
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][spr] (key, val) %s = %s\n", (axis2_char_t*)key, (axis2_char_t*)val);
     }
 

@@ -1024,8 +1024,8 @@ c14n_apply_on_attribute_axis(
     const c14n_ctx_t *ctx
 )
 {
-    axis2_hash_t *attr_ht = NULL;
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_t *attr_ht = NULL;
+    axutil_hash_index_t *hi = NULL;
     c14n_sorted_list_t *attr_list = c14n_sorted_list_create(ctx->env);
 
     attr_ht = axiom_element_get_all_attributes((axiom_element_t *)ele,
@@ -1033,11 +1033,11 @@ c14n_apply_on_attribute_axis(
 
     if(attr_ht)
     {
-        for (hi = axis2_hash_first(attr_ht, ctx->env); hi;
-                hi = axis2_hash_next(ctx->env, hi))
+        for (hi = axutil_hash_first(attr_ht, ctx->env); hi;
+                hi = axutil_hash_next(ctx->env, hi))
         {
             void *v = NULL;
-            axis2_hash_this(hi, NULL, NULL, &v);
+            axutil_hash_this(hi, NULL, NULL, &v);
 
             if (v)
             {
@@ -1262,8 +1262,8 @@ c14n_apply_on_namespace_axis(
     const c14n_ctx_t *ctx
 )
 {
-    axis2_hash_t *ns_ht = NULL;
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_t *ns_ht = NULL;
+    axutil_hash_index_t *hi = NULL;
 
     c14n_sorted_list_t *out_list = c14n_sorted_list_create(ctx->env);
 
@@ -1272,11 +1272,11 @@ c14n_apply_on_namespace_axis(
 
     if(ns_ht)
     {
-        for (hi = axis2_hash_first(ns_ht, ctx->env); hi;
-                hi = axis2_hash_next(ctx->env, hi))
+        for (hi = axutil_hash_first(ns_ht, ctx->env); hi;
+                hi = axutil_hash_next(ctx->env, hi))
         {
             void *v = NULL;
-            axis2_hash_this(hi, NULL, NULL, &v);
+            axutil_hash_this(hi, NULL, NULL, &v);
 
             if (v)
             {
@@ -1344,8 +1344,8 @@ c14n_apply_on_namespace_axis_exclusive(
     const c14n_ctx_t *ctx
 )
 {
-    axis2_hash_t *ns_ht = NULL;
-    axis2_hash_index_t *hi = NULL;
+    axutil_hash_t *ns_ht = NULL;
+    axutil_hash_index_t *hi = NULL;
     axiom_node_t *pnode = NULL;
     axiom_element_t *pele = NULL;
     axiom_namespace_t *ns = NULL;
@@ -1386,11 +1386,11 @@ c14n_apply_on_namespace_axis_exclusive(
 
         if (ns_ht)
         {
-            for (hi = axis2_hash_first(ns_ht, ctx->env); hi;
-                    hi = axis2_hash_next(ctx->env, hi))
+            for (hi = axutil_hash_first(ns_ht, ctx->env); hi;
+                    hi = axutil_hash_next(ctx->env, hi))
             {
                 void *v = NULL;
-                axis2_hash_this(hi, NULL, NULL, &v);
+                axutil_hash_this(hi, NULL, NULL, &v);
 
                 if (v)
                 {
@@ -1527,16 +1527,16 @@ c14n_ns_visibly_utilized(
         vu = AXIS2_TRUE;
     else
     {
-        axis2_hash_t *attr_ht = axiom_element_get_all_attributes(
+        axutil_hash_t *attr_ht = axiom_element_get_all_attributes(
                                     (axiom_element_t *)ele, ctx->env);
-        axis2_hash_index_t *hi = NULL;
+        axutil_hash_index_t *hi = NULL;
         if (attr_ht)
         {
-            for (hi = axis2_hash_first(attr_ht, ctx->env); hi;
-                    hi = axis2_hash_next(ctx->env, hi))
+            for (hi = axutil_hash_first(attr_ht, ctx->env); hi;
+                    hi = axutil_hash_next(ctx->env, hi))
             {
                 void *v = NULL;
-                axis2_hash_this(hi, NULL, NULL, &v);
+                axutil_hash_this(hi, NULL, NULL, &v);
 
                 if (v)
                 {
@@ -1606,8 +1606,8 @@ c14n_no_output_ancestor_uses_prefix(
     /* assuming the parent  of an element is always an element node in AXIOM*/
     while (parent_node)
     {
-        axis2_hash_index_t *hi = NULL;
-        axis2_hash_t *attr_ht = NULL;
+        axutil_hash_index_t *hi = NULL;
+        axutil_hash_t *attr_ht = NULL;
 
         /* TODO:
          * HACK: since we only use a single node as the subset
@@ -1643,11 +1643,11 @@ c14n_no_output_ancestor_uses_prefix(
                       (axiom_element_t *)parent_element, ctx->env);
         if (attr_ht)
         {
-            for (hi = axis2_hash_first(attr_ht, ctx->env); hi;
-                    hi = axis2_hash_next(ctx->env, hi))
+            for (hi = axutil_hash_first(attr_ht, ctx->env); hi;
+                    hi = axutil_hash_next(ctx->env, hi))
             {
                 void *v = NULL;
-                axis2_hash_this(hi, NULL, NULL, &v);
+                axutil_hash_this(hi, NULL, NULL, &v);
 
                 if (v)
                 {

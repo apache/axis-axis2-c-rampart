@@ -108,8 +108,8 @@ rampart_get_security_token(const axutil_env_t *env,
 {
     axutil_array_list_t *sec_headers = NULL;
     axis2_char_t *sec_ns_str = NULL;
-    axis2_hash_index_t *hash_index =  NULL;
-    axis2_hash_t *header_block_ht = NULL;
+    axutil_hash_index_t *hash_index =  NULL;
+    axutil_hash_t *header_block_ht = NULL;
     axiom_element_t *header_block_ele = NULL;
     axiom_node_t *header_block_node = NULL;
 
@@ -123,15 +123,15 @@ rampart_get_security_token(const axutil_env_t *env,
             return AXIS2_FAILURE;
 
         /*BETTER IF : If there are multiple security header elements, get the one with @role=rampart*/
-        for (hash_index = axis2_hash_first(header_block_ht, env); hash_index;
-                hash_index = axis2_hash_next(env, hash_index))
+        for (hash_index = axutil_hash_first(header_block_ht, env); hash_index;
+                hash_index = axutil_hash_next(env, hash_index))
         {
 
             void *hb = NULL;
             axiom_soap_header_block_t *header_block =    NULL;
             axis2_char_t *ele_localname = NULL;
 
-            axis2_hash_this(hash_index, NULL, NULL, &hb);
+            axutil_hash_this(hash_index, NULL, NULL, &hb);
             header_block = (axiom_soap_header_block_t *)hb;
             header_block_node = axiom_soap_header_block_get_base_node(header_block, env);
             header_block_ele  = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(header_block_node, env);
