@@ -21,7 +21,7 @@
  */
 #include <rampart_util.h>
 #include <axis2_util.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <axis2_msg_ctx.h>
 #include <rampart_constants.h>
 #include <rampart_sec_processed_result.h>
@@ -62,16 +62,16 @@ rampart_set_security_processed_results_property(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx)
 {
     axutil_hash_t *sec_processed_results = NULL;
-    axis2_property_t *sec_processed_results_prop = NULL;
+    axutil_property_t *sec_processed_results_prop = NULL;
 
     if(!msg_ctx){
         return AXIS2_FAILURE;
     }
 
     sec_processed_results = axutil_hash_make(env);
-    sec_processed_results_prop = axis2_property_create(env);
+    sec_processed_results_prop = axutil_property_create(env);
 
-    axis2_property_set_value(sec_processed_results_prop, env, sec_processed_results);
+    axutil_property_set_value(sec_processed_results_prop, env, sec_processed_results);
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_SECURITY_PROCESSED_RESULTS, sec_processed_results_prop);
 
     return AXIS2_SUCCESS;
@@ -81,7 +81,7 @@ AXIS2_EXTERN axutil_hash_t* AXIS2_CALL
 rampart_get_all_security_processed_results(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_property_t *sec_processed_results_prop = NULL;
+    axutil_property_t *sec_processed_results_prop = NULL;
     axutil_hash_t *sec_processed_results = NULL;
 
     sec_processed_results_prop =  axis2_msg_ctx_get_property(msg_ctx, env, RAMPART_SECURITY_PROCESSED_RESULTS);
@@ -90,7 +90,7 @@ rampart_get_all_security_processed_results(const axutil_env_t *env,
         return NULL;
     }
 
-    sec_processed_results = (axutil_hash_t*)axis2_property_get_value(sec_processed_results_prop, env);
+    sec_processed_results = (axutil_hash_t*)axutil_property_get_value(sec_processed_results_prop, env);
     if(!sec_processed_results){
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][spr] Cannot get Security Processed Results Hash table from the property");
         return NULL;

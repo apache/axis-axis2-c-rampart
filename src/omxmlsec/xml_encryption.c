@@ -16,7 +16,7 @@
  */
 
 #include <stdio.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <axiom_namespace.h>
 #include <axiom_node.h>
 #include <axiom_util.h>

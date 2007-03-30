@@ -21,9 +21,9 @@
 #include <axutil_env.h>
 #include <axis2_utils.h>
 #include <rampart_callback.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_svc_skeleton.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 
 #if 0
 axis2_char_t* AXIS2_CALL

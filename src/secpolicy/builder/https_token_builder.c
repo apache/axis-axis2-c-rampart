@@ -105,16 +105,16 @@ rp_https_token_builder_set_inclusion_value(
 {
 
 	axis2_char_t *inclusion_value = NULL;
-    axis2_qname_t *qname = NULL;	
+    axutil_qname_t *qname = NULL;	
 
 	AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
-    qname = axis2_qname_create(env,RP_INCLUDE_TOKEN,RP_SP_NS,RP_SP_PREFIX);
+    qname = axutil_qname_create(env,RP_INCLUDE_TOKEN,RP_SP_NS,RP_SP_PREFIX);
     if(!qname)
         return AXIS2_FAILURE;
     
     inclusion_value = axiom_element_get_attribute_value(element,env,qname);
                 
-    axis2_qname_free(qname,env);
+    axutil_qname_free(qname,env);
     qname = NULL;         
 
     return rp_https_token_set_inclusion(token,env,inclusion_value);    

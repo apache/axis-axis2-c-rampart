@@ -59,13 +59,13 @@ oxs_axiom_get_number_of_children_with_qname(const axutil_env_t *env,
         axis2_char_t* prefix)
 {
 
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
     axiom_element_t *parent_ele = NULL;
     axiom_children_qname_iterator_t *qname_iter = NULL;
     axiom_node_t *temp_node = NULL;
     int counter = 0;
 
-    qname = axis2_qname_create(env, local_name, ns_uri, prefix);
+    qname = axutil_qname_create(env, local_name, ns_uri, prefix);
     parent_ele = AXIOM_NODE_GET_DATA_ELEMENT(parent, env);
     if (!parent_ele)
     {
@@ -188,13 +188,13 @@ oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
                                        axis2_char_t* ns_uri,
                                        axis2_char_t* prefix)
 {
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
     axiom_node_t *node = NULL;
     axiom_element_t *parent_ele = NULL;
     axiom_element_t *ele = NULL;
     axis2_char_t *parent_name = NULL;
 
-    qname = axis2_qname_create(env, local_name, ns_uri, prefix);
+    qname = axutil_qname_create(env, local_name, ns_uri, prefix);
     parent_ele = AXIOM_NODE_GET_DATA_ELEMENT(parent, env);
     if (!parent_ele)
     {
@@ -205,7 +205,7 @@ oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
     /*Get the child*/
     ele = axiom_element_get_first_child_with_qname(parent_ele, env, qname, parent, &node);
 
-    axis2_qname_free(qname, env);
+    axutil_qname_free(qname, env);
     qname = NULL;
 
     parent_name = AXIOM_NODE_TO_STRING(parent, env);
@@ -292,12 +292,12 @@ oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_cha
     axiom_element_t * ele = NULL;
     axis2_char_t* namestr = NULL;
     axis2_char_t* ns_str = NULL;
-    axis2_qname_t* qname = NULL;
+    axutil_qname_t* qname = NULL;
 
     ele = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
     qname = axiom_element_get_qname(ele, env, node);
 
-    namestr = axis2_qname_get_localpart(qname, env);
+    namestr = axutil_qname_get_localpart(qname, env);
     ret_name =  axis2_strcmp(namestr, name) ;
 
 
@@ -305,7 +305,7 @@ oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_cha
 
     if (ns)
     {
-        ns_str = axis2_qname_get_uri(qname, env);
+        ns_str = axutil_qname_get_uri(qname, env);
         ret_ns =  axis2_strcmp(ns_str, ns) ;
         if (ret_ns < 0) return AXIS2_FAILURE;
         else   return AXIS2_SUCCESS;

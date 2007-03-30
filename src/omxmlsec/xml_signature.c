@@ -288,7 +288,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     oxs_sign_part_set_id(sign_part, env, ref_id);
 
     /*Remove the # from the id*/
-    ref_id2 =  axis2_string_substring_starting_at(axis2_strdup(env, ref_id), 1);
+    ref_id2 =  axutil_string_substring_starting_at(axis2_strdup(env, ref_id), 1);
 
     /*Find the node refered by this ref_id2 and set to the sign part*/
     reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "wsu:Id", ref_id2 );

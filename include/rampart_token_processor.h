@@ -20,7 +20,7 @@
 #include <axis2_defines.h>
 #include <axutil_date_time.h>
 #include <axutil_env.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <axis2_msg_ctx.h>
 #include <rampart_authn_provider.h>
 #include <rampart_credentials.h>

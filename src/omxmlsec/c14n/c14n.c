@@ -23,7 +23,7 @@
 #include <axis2_utils_defines.h>
 #include <axis2_utils.h>
 #include <axutil_env.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axutil_array_list.h>
 #include <axiom_element.h>
 #include <axiom_children_iterator.h>
@@ -75,7 +75,7 @@ typedef struct c14n_ctx {
     const axiom_document_t *doc;
     axis2_bool_t comments;
     axis2_char_t **outbuf;
-    axis2_stream_t *outstream;
+    axutil_stream_t *outstream;
     axis2_bool_t exclusive;
     axis2_bool_t use_stream;
     const axutil_array_list_t *ns_prefixes;
@@ -421,7 +421,7 @@ c14n_init(
     const axiom_document_t *doc,
     axis2_bool_t comments,
     axis2_char_t **outbuf,
-    axis2_stream_t *stream,
+    axutil_stream_t *stream,
     const axis2_bool_t exclusive,
     const axutil_array_list_t *ns_prefixes,
     const axis2_bool_t use_stream,
@@ -504,7 +504,7 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_c14n_apply_stream_algo(
     const axutil_env_t *env,
     const axiom_document_t *doc,
-    axis2_stream_t *stream,
+    axutil_stream_t *stream,
     const axutil_array_list_t *ns_prefixes,
     const axiom_node_t *node,
     const axis2_char_t* algo
@@ -565,7 +565,7 @@ oxs_c14n_apply_stream(
     const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_bool_t comments,
-    axis2_stream_t *stream,
+    axutil_stream_t *stream,
     const axis2_bool_t exclusive,
     const axutil_array_list_t *ns_prefixes,
     const axiom_node_t *node
@@ -576,7 +576,7 @@ oxs_c14n_apply_stream(
     axis2_status_t status = AXIS2_SUCCESS;
     axiom_element_t *root_ele = NULL;
     /*axiom_children_iterator_t *child_itr = NULL;*/
-    axis2_stream_t *outstream = NULL;
+    axutil_stream_t *outstream = NULL;
 
     ctx = c14n_init(env, doc, comments, NULL, stream, exclusive, ns_prefixes,
                     AXIS2_TRUE, node);
@@ -666,7 +666,7 @@ oxs_c14n_apply(
     const axiom_node_t *node
 )
 {
-    axis2_stream_t *stream = axis2_stream_create_basic(env);
+    axutil_stream_t *stream = axutil_stream_create_basic(env);
     axis2_status_t ret = oxs_c14n_apply_stream(env, doc, comments,
                          stream, exclusive, ns_prefixes, node);
 

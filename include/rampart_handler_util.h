@@ -25,7 +25,7 @@
 #include <axis2_op.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_msg_info_headers.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_util.h>
 #include <axis2_conf_ctx.h>
@@ -66,7 +66,7 @@ extern "C"
     * @return parameter 
     */
 
-    AXIS2_EXTERN axis2_param_t* AXIS2_CALL
+    AXIS2_EXTERN axutil_param_t* AXIS2_CALL
     rampart_get_security_param( const axutil_env_t *env,
                                 axis2_msg_ctx_t *msg_ctx,
                                 axis2_char_t *parameter);

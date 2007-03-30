@@ -18,7 +18,7 @@
 #ifndef OXS_TOKENS_H
 #define OXS_TOKENS_H
 
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <oxs_token_binary_security_token.h>
 #include <oxs_token_embedded.h>
 #include <oxs_token_reference_list.h>

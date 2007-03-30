@@ -60,7 +60,7 @@ int test(int argc, char **argv)
     axiom_xml_reader_t *xml_reader = NULL;
     axiom_stax_builder_t *om_builder = NULL;
     axiom_document_t *doc = NULL;
-    axis2_stream_t *stream = NULL;
+    axutil_stream_t *stream = NULL;
     axis2_char_t *c14n_doc = NULL;
     int len;
     axis2_status_t res = AXIS2_SUCCESS;
@@ -91,7 +91,7 @@ int test(int argc, char **argv)
     
     /*printf("\n--------------stream:\n");*/ /*removed for xml_pp*/
     
-    stream = axis2_stream_create_basic(env);
+    stream = axutil_stream_create_basic(env);
     
     axiom_node_t *root_node = axiom_document_get_root_element(doc, env);
     axiom_node_t *c14n_node = AXIOM_NODE_GET_FIRST_ELEMENT(root_node, env);

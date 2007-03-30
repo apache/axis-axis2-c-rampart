@@ -26,7 +26,7 @@
 #include <rp_secpolicy.h>
 #include <rampart_authn_provider.h>
 #include <rampart_util.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_callback.h>
 #include <rampart_authn_provider.h>

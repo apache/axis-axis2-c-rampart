@@ -17,12 +17,12 @@
 
 
 #include <axis2_handler_desc.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <axis2_svc.h>
 #include <axiom_soap.h>
 #include <rampart_util.h>
 #include <axis2_endpoint_ref.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_username_token.h>
 #include <rampart_handler_util.h>
@@ -46,7 +46,7 @@ rampart_out_handler_invoke(struct axis2_handler *handler,
 /**********************end of header functions ****************************/
 
 AXIS2_EXTERN axis2_handler_t *AXIS2_CALL
-rampart_out_handler_create(const axutil_env_t *env,  axis2_string_t *name)
+rampart_out_handler_create(const axutil_env_t *env,  axutil_string_t *name)
 {
     axis2_handler_t *handler = NULL;
 

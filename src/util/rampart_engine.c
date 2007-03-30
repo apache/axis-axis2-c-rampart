@@ -226,7 +226,7 @@ get_rampart_context_in_server_side(
 
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
-    axis2_property_t *property = NULL;
+    axutil_property_t *property = NULL;
 
     conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
     if(!conf_ctx)
@@ -243,7 +243,7 @@ get_rampart_context_in_server_side(
     property = axis2_ctx_get_property(ctx,env,key);
     if(property)
     {
-        return (rampart_context_t *)axis2_property_get_value(property,env);
+        return (rampart_context_t *)axutil_property_get_value(property,env);
     }
     else
     {
@@ -256,8 +256,8 @@ get_rampart_context_in_server_side(
             if(file_name)
             {
                 rampart_context = build_rampart_context_from_file(env,file_name);
-                property = axis2_property_create(env);
-                axis2_property_set_value(property,env,rampart_context);
+                property = axutil_property_create(env);
+                axutil_property_set_value(property,env,rampart_context);
                 axis2_ctx_set_property(ctx,env,key,property);
                 return rampart_context;
             }
@@ -273,8 +273,8 @@ get_rampart_context_in_server_side(
             if(file_name)
             {
                 rampart_context = build_rampart_context_from_file(env,file_name);
-                property = axis2_property_create(env);
-                axis2_property_set_value(property,env,rampart_context);
+                property = axutil_property_create(env);
+                axutil_property_set_value(property,env,rampart_context);
                 axis2_ctx_set_property(ctx,env,key,property);
                 return rampart_context;
             }

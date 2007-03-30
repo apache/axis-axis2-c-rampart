@@ -45,8 +45,8 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
 
 {
     axiom_element_t *node_ele = NULL;
-    axis2_qname_t *qname = NULL;
-    axis2_qname_t *node_qname = NULL;
+    axutil_qname_t *qname = NULL;
+    axutil_qname_t *node_qname = NULL;
     axis2_char_t *local_name = NULL;
 
     AXIS2_ENV_CHECK(env,AXIS2_FALSE);
@@ -60,19 +60,19 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
         return AXIS2_FALSE;
 
     if(axis2_strcmp(local_name,RAMPART_SECURITY_TIMESTAMP)==0)
-        qname = axis2_qname_create(env,local_name,RAMPART_WSU_XMLNS,RAMPART_WSU);
+        qname = axutil_qname_create(env,local_name,RAMPART_WSU_XMLNS,RAMPART_WSU);
 
     else if(axis2_strcmp(local_name,RAMPART_SECURITY_USERNAMETOKEN)==0)
-        qname = axis2_qname_create(env,local_name,RAMPART_WSSE_XMLNS,RAMPART_WSSE);
+        qname = axutil_qname_create(env,local_name,RAMPART_WSSE_XMLNS,RAMPART_WSSE);
 
     else if(axis2_strcmp(local_name,OXS_NODE_ENCRYPTED_KEY)==0)
-        qname = axis2_qname_create(env,local_name,OXS_ENC_NS,OXS_XENC);
+        qname = axutil_qname_create(env,local_name,OXS_ENC_NS,OXS_XENC);
 
     else if(axis2_strcmp(local_name,OXS_NODE_ENCRYPTED_DATA)==0)
-        qname = axis2_qname_create(env,local_name,OXS_ENC_NS,OXS_XENC);
+        qname = axutil_qname_create(env,local_name,OXS_ENC_NS,OXS_XENC);
 
     else if(axis2_strcmp(local_name,OXS_NODE_SIGNATURE)==0)
-        qname = axis2_qname_create(env,local_name,OXS_DSIG_NS,OXS_DS);
+        qname = axutil_qname_create(env,local_name,OXS_DSIG_NS,OXS_DS);
 
     else if(axis2_strcmp(local_name,OXS_NODE_BINARY_SECURITY_TOKEN)==0)
         return AXIS2_FALSE;
@@ -89,14 +89,14 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
 
     if(!node_qname)
     {
-        axis2_qname_free(qname,env);
+        axutil_qname_free(qname,env);
         qname = NULL;
         return AXIS2_FALSE;
     }
 
-    if(axis2_qname_equals(qname,env,node_qname))
+    if(axutil_qname_equals(qname,env,node_qname))
     {
-        axis2_qname_free(qname,env);
+        axutil_qname_free(qname,env);
         qname = NULL;
         return AXIS2_TRUE;
     }
@@ -382,7 +382,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Decrypting node, ID=%s", id);
 
         /*Need to remove # sign from the ID*/
-        id2 = axis2_string_substring_starting_at(id, 1);
+        id2 = axutil_string_substring_starting_at(id, 1);
         envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
         /*Search for the node by its ID*/

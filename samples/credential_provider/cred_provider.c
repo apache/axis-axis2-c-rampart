@@ -22,9 +22,9 @@
 #include <axis2_utils.h>
 #include <rampart_credentials.h>
 #include <rampart_crypto_util.h> 
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_svc_skeleton.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 
 
 rampart_credentials_status_t AXIS2_CALL

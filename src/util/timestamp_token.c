@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <axis2_svc.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_body.h>
 #include <axiom_soap_header_block.h>
 #include <axis2_endpoint_ref.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_crypto_util.h>
 #include <rampart_util.h>

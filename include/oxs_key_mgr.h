@@ -28,7 +28,7 @@
 #include <oxs_ctx.h>
 #include <oxs_asym_ctx.h>
 #include <axutil_env.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <oxs_x509_cert.h>
 #include <openssl_pkey.h>
 #include <openssl_x509.h>

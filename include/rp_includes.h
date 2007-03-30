@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <axis2_util.h>
 #include <axutil_allocator.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axutil_array_list.h>
 #include <axis2_const.h>
 #include <axutil_error.h>
@@ -31,7 +31,7 @@
 #include <axutil_env.h>
 #include <axiom.h>
 #include <axiom_soap.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <rp_defines.h>
 
 

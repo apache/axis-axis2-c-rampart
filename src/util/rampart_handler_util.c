@@ -17,13 +17,13 @@
 
 #include <rampart_handler_util.h>
 #include <axis2_handler_desc.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <axis2_svc.h>
 #include <axiom_soap_header.h>
 #include <axiom_soap_body.h>
 #include <axiom_soap_header_block.h>
 #include <axis2_endpoint_ref.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <rampart_constants.h>
 #include <axutil_dll_desc.h>
 #include <axutil_class_loader.h>
@@ -36,7 +36,7 @@ rampart_get_property_from_ctx(const axutil_env_t *env,
                               axis2_ctx_t *ctx,
                               const axis2_char_t *key);
 
-AXIS2_EXTERN axis2_param_t* AXIS2_CALL
+AXIS2_EXTERN axutil_param_t* AXIS2_CALL
 rampart_get_security_param(const axutil_env_t *env,
                            axis2_msg_ctx_t *msg_ctx,
                            axis2_char_t *parameter);
@@ -71,7 +71,7 @@ rampart_get_property_from_ctx(const axutil_env_t *env,
                               axis2_ctx_t *ctx,
                               const axis2_char_t *key)
 {
-    axis2_property_t* property = NULL;
+    axutil_property_t* property = NULL;
     axis2_char_t* str_property = NULL;
 
     /*Get value from the dynamic settings*/
@@ -79,7 +79,7 @@ rampart_get_property_from_ctx(const axutil_env_t *env,
     property =  axis2_ctx_get_property(ctx, env, key);
     if (property)
     {
-        str_property = axis2_property_get_value(property, env);
+        str_property = axutil_property_get_value(property, env);
         property = NULL;
     }
 
@@ -87,13 +87,13 @@ rampart_get_property_from_ctx(const axutil_env_t *env,
 }
 
 
-axis2_param_t* AXIS2_CALL
+axutil_param_t* AXIS2_CALL
 rampart_get_security_param(const axutil_env_t *env,
                            axis2_msg_ctx_t *msg_ctx,
                            axis2_char_t *parameter)
 {
     /*parameter can be either RAMPART_OUTFLOW_SECURITY or RAMPART_INFLOW_SECURITY*/
-    axis2_param_t *param = NULL;
+    axutil_param_t *param = NULL;
     param =  axis2_msg_ctx_get_parameter(msg_ctx, env, parameter);
     return param;
 }
@@ -204,7 +204,7 @@ rampart_get_rampart_configuration(const axutil_env_t *env,
                                   axis2_char_t *param_name)
 
 {
-    axis2_param_t *param_x_flow_security = NULL;
+    axutil_param_t *param_x_flow_security = NULL;
     void *value = NULL;
 
     param_x_flow_security = rampart_get_security_param(env, msg_ctx,
@@ -216,7 +216,7 @@ rampart_get_rampart_configuration(const axutil_env_t *env,
                        "[rampart][rampart_handler_utils] %s parameter is not set.",param_x_flow_security);
         return NULL;
     }
-    value = axis2_param_get_value(param_x_flow_security, env);
+    value = axutil_param_get_value(param_x_flow_security, env);
     return value;
 }
 
@@ -230,7 +230,7 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
     axutil_array_list_t *engaged_modules = NULL;
     int size = 0;
     int i = 0;
-    const axis2_qname_t *qname = NULL;
+    const axutil_qname_t *qname = NULL;
     axis2_char_t *local_name = NULL;
     axis2_conf_t *conf = NULL;
     struct axis2_conf_ctx *conf_ctx = NULL;
@@ -254,8 +254,8 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
         size = axutil_array_list_size(engaged_modules,env);
         for(i=0; i<size; i++)
         {
-            qname = (axis2_qname_t *) axutil_array_list_get(engaged_modules,env,i);
-            local_name = axis2_qname_get_localpart(qname,env);
+            qname = (axutil_qname_t *) axutil_array_list_get(engaged_modules,env,i);
+            local_name = axutil_qname_get_localpart(qname,env);
             if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
                 return AXIS2_TRUE;
         }
@@ -277,8 +277,8 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
         size = axutil_array_list_size(engaged_modules,env);
         for(i=0; i<size; i++)
         {
-            qname = (axis2_qname_t *) axutil_array_list_get(engaged_modules,env,i);
-            local_name = axis2_qname_get_localpart(qname,env);
+            qname = (axutil_qname_t *) axutil_array_list_get(engaged_modules,env,i);
+            local_name = axutil_qname_get_localpart(qname,env);
             if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
             {
                 axis2_conf_set_enable_security(conf,env,AXIS2_TRUE);

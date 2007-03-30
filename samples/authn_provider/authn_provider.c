@@ -22,9 +22,9 @@
 #include <axis2_utils.h>
 #include <rampart_authn_provider.h>
 #include <rampart_crypto_util.h> 
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axis2_svc_skeleton.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 
 axis2_char_t* AXIS2_CALL
 ramaprt_get_sample_password_from_file(const axutil_env_t *env,

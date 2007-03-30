@@ -29,7 +29,7 @@
 #include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
-#include <axis2_qname.h>
+#include <axutil_qname.h>
 #include <oxs_sign_ctx.h>
 
 #ifdef __cplusplus

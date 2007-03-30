@@ -22,7 +22,7 @@
 #include <rampart_util.h>
 #include <axis2_util.h>
 #include <axutil_base64.h>
-#include <axis2_property.h>
+#include <axutil_property.h>
 #include <time.h>
 #include <oxs_buffer.h>
 #include <openssl_util.h>
@@ -47,13 +47,13 @@ rampart_load_module(const axutil_env_t *env,
                     axis2_char_t *module_name)
 {
     axutil_dll_desc_t *dll_desc = NULL;
-    axis2_param_t *impl_info_param = NULL;
+    axutil_param_t *impl_info_param = NULL;
     void *ptr = NULL;
 
     dll_desc = axutil_dll_desc_create(env);
     axutil_dll_desc_set_name(dll_desc, env, module_name);
-    impl_info_param = axis2_param_create(env, NULL, NULL);
-    axis2_param_set_value(impl_info_param, env, dll_desc);
+    impl_info_param = axutil_param_create(env, NULL, NULL);
+    axutil_param_set_value(impl_info_param, env, dll_desc);
     axutil_class_loader_init(env);
     ptr = axutil_class_loader_create_dll(env, impl_info_param);
 

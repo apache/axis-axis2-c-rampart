@@ -80,7 +80,7 @@ oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_lis
     axutil_array_list_t *list = NULL;
     axiom_children_qname_iterator_t *iter = NULL;
     axiom_element_t *ref_list_ele = NULL;
-    axis2_qname_t *qname = NULL;
+    axutil_qname_t *qname = NULL;
 
     if (!ref_list_node)
     {
@@ -91,9 +91,9 @@ oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_lis
     ref_list_ele = AXIOM_NODE_GET_DATA_ELEMENT(ref_list_node, env);
 
     /*Get children*/
-    qname = axis2_qname_create(env, OXS_NODE_DATA_REFERENCE,OXS_ENC_NS,OXS_ENC_NS);
+    qname = axutil_qname_create(env, OXS_NODE_DATA_REFERENCE,OXS_ENC_NS,OXS_ENC_NS);
     iter = axiom_element_get_children_with_qname(ref_list_ele, env, qname, ref_list_node);
-    axis2_qname_free(qname, env);
+    axutil_qname_free(qname, env);
     qname = NULL;
 
     if(!iter){

@@ -33,10 +33,10 @@
 #include <axis2_utils_defines.h>
 #include <axis2_utils.h>
 #include <axutil_env.h>
-#include <axis2_string.h>
+#include <axutil_string.h>
 #include <axiom_document.h>
 #include <axutil_array_list.h>
-#include <axis2_stream.h>
+#include <axutil_stream.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -46,7 +46,7 @@ extern "C"
     oxs_c14n_apply_stream_algo(
         const axutil_env_t *env,
         const axiom_document_t *doc,
-        axis2_stream_t *stream,
+        axutil_stream_t *stream,
         const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node,
         const axis2_char_t* algo
@@ -68,7 +68,7 @@ extern "C"
         const axutil_env_t *env,
         const axiom_document_t *doc,
         axis2_bool_t comments,
-        axis2_stream_t *stream,
+        axutil_stream_t *stream,
         const axis2_bool_t exclusive,
         const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node
