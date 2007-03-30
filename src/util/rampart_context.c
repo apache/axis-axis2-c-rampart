@@ -90,21 +90,21 @@ axis2_status_t rampart_context_set_nodes_to_encrypt(
     rp_header_t *header,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_encrypt);
+    axutil_array_list_t *nodes_to_encrypt);
 */
 
 axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     rp_header_t *header,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_encrypt_or_sign);
+    axutil_array_list_t *nodes_to_encrypt_or_sign);
 
 axis2_status_t AXIS2_CALL
 rampart_context_get_nodes_to_protect(
     rampart_context_t *rampart_context,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_sign_or_encrypt,
+    axutil_array_list_t *nodes_to_sign_or_encrypt,
     axis2_bool_t is_sign);
 
 axis2_char_t *AXIS2_CALL
@@ -775,7 +775,7 @@ rampart_context_use_username_token(
     rp_supporting_tokens_t *signed_supporting,
     const axis2_env_t *env)
 {
-    axis2_array_list_t *array_list = NULL;
+    axutil_array_list_t *array_list = NULL;
     axis2_bool_t bvalidate = AXIS2_FALSE;
     array_list = rp_supporting_tokens_get_tokens(signed_supporting,env);
     if(!array_list)
@@ -784,11 +784,11 @@ rampart_context_use_username_token(
     else
     {
         int i = 0;
-        for (i = 0; i < axis2_array_list_size(array_list,env); i++)
+        for (i = 0; i < axutil_array_list_size(array_list,env); i++)
         {
             rp_property_t *token = NULL;
             token = (rp_property_t *)
-                    axis2_array_list_get(array_list,env, i);
+                    axutil_array_list_get(array_list,env, i);
             if (token)
             {
                 if(rp_property_get_type(token,env)==RP_TOKEN_USERNAME)
@@ -808,7 +808,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     rp_header_t *header,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_encrypt_or_sign)
+    axutil_array_list_t *nodes_to_encrypt_or_sign)
 {
     axis2_char_t *namespace = NULL;
     axis2_char_t *local_name = NULL;
@@ -832,23 +832,23 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     local_name = (axis2_char_t*) rp_header_get_name(header,env);
     if(!local_name)
     {
-        axis2_array_list_t *soap_header_blocks = NULL;
+        axutil_array_list_t *soap_header_blocks = NULL;
         int i = 0;
         soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header,env,namespace);
         if(!soap_header_blocks)
             return AXIS2_FAILURE;
 
-        for(i=0 ; i<axis2_array_list_size(soap_header_blocks,env); i++)
+        for(i=0 ; i<axutil_array_list_size(soap_header_blocks,env); i++)
         {
             axiom_soap_header_block_t *header_block = NULL;
             axiom_node_t *node = NULL;
-            header_block = (axiom_soap_header_block_t *)axis2_array_list_get(soap_header_blocks,env,i);
+            header_block = (axiom_soap_header_block_t *)axutil_array_list_get(soap_header_blocks,env,i);
             if(header_block)
             {
                 node = axiom_soap_header_block_get_base_node(header_block,env);
                 if(node)
                 {
-                    axis2_array_list_add(nodes_to_encrypt_or_sign,env,node);
+                    axutil_array_list_add(nodes_to_encrypt_or_sign,env,node);
                     return AXIS2_SUCCESS;
                 }
             }
@@ -882,7 +882,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
                         namespace_uri = axiom_namespace_get_uri(ns, env);
                         if (axis2_strcmp(namespace_uri,namespace) == 0)
                         {
-                            axis2_array_list_add(nodes_to_encrypt_or_sign,env,ret_node);
+                            axutil_array_list_add(nodes_to_encrypt_or_sign,env,ret_node);
                             return AXIS2_SUCCESS;
                         }
 
@@ -1287,7 +1287,7 @@ rampart_context_get_nodes_to_encrypt(
     rampart_context_t *rampart_context,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_encrypt)
+    axutil_array_list_t *nodes_to_encrypt)
 {
 
     return rampart_context_get_nodes_to_protect(rampart_context,env,soap_envelope,nodes_to_encrypt,AXIS2_FALSE);
@@ -1298,7 +1298,7 @@ rampart_context_get_nodes_to_sign(
     rampart_context_t *rampart_context,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_sign)
+    axutil_array_list_t *nodes_to_sign)
 {
 
     return rampart_context_get_nodes_to_protect(rampart_context,env,soap_envelope,nodes_to_sign,AXIS2_TRUE);
@@ -1311,11 +1311,11 @@ rampart_context_get_nodes_to_protect(
     rampart_context_t *rampart_context,
     const axis2_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
-    axis2_array_list_t *nodes_to_sign_or_encrypt,
+    axutil_array_list_t *nodes_to_sign_or_encrypt,
     axis2_bool_t is_sign)
 {
     rp_signed_encrypted_parts_t *signed_encrypted_parts = NULL;
-    axis2_array_list_t *parts = NULL;
+    axutil_array_list_t *parts = NULL;
     axis2_status_t status = AXIS2_FAILURE;
 
     if(is_sign)
@@ -1327,7 +1327,7 @@ rampart_context_get_nodes_to_protect(
         return AXIS2_FAILURE;
 
     parts = rp_signed_encrypted_parts_get_headers(signed_encrypted_parts,env);
-    if(!parts || (axis2_array_list_size(parts,env)==0))
+    if(!parts || (axutil_array_list_size(parts,env)==0))
     {
         if(rp_signed_encrypted_parts_get_body(signed_encrypted_parts,env))
         {
@@ -1343,7 +1343,7 @@ rampart_context_get_nodes_to_protect(
             body = axiom_soap_envelope_get_body(soap_envelope, env);
             body_node = axiom_soap_body_get_base_node(body, env);
             body_child_node = axiom_node_get_first_element(body_node, env);
-            axis2_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
+            axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
             return AXIS2_SUCCESS;
         }
         else
@@ -1359,10 +1359,10 @@ rampart_context_get_nodes_to_protect(
     else
     {
         int i = 0;
-        for(i=0; i<axis2_array_list_size(parts,env); i++)
+        for(i=0; i<axutil_array_list_size(parts,env); i++)
         {
             rp_header_t *header = NULL;
-            header = (rp_header_t *)axis2_array_list_get(parts,env,i);
+            header = (rp_header_t *)axutil_array_list_get(parts,env,i);
             if(header)
             {
                 status = rampart_context_set_nodes_to_encrypt_or_sign(header,env,soap_envelope,nodes_to_sign_or_encrypt);
@@ -1381,7 +1381,7 @@ rampart_context_get_nodes_to_protect(
             body = axiom_soap_envelope_get_body(soap_envelope, env);
             body_node = axiom_soap_body_get_base_node(body, env);
             body_child_node = axiom_node_get_first_element(body_node, env);
-            axis2_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
+            axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
             return AXIS2_SUCCESS;
         }
 
@@ -1396,14 +1396,14 @@ rampart_context_check_whether_to_encrypt(
     const axis2_env_t *env)
 {
     rp_signed_encrypted_parts_t *encrypted_parts = NULL;
-    axis2_array_list_t *parts = NULL;
+    axutil_array_list_t *parts = NULL;
 
     encrypted_parts = rp_secpolicy_get_encrypted_parts(rampart_context->secpolicy,env);
     if(!encrypted_parts)
         return AXIS2_FALSE;
 
     parts = rp_signed_encrypted_parts_get_headers(encrypted_parts,env);
-    if(!parts || (axis2_array_list_size(parts,env)==0))
+    if(!parts || (axutil_array_list_size(parts,env)==0))
     {
         if(rp_signed_encrypted_parts_get_body(encrypted_parts,env))
             return AXIS2_TRUE;
@@ -1424,14 +1424,14 @@ rampart_context_check_whether_to_sign(
     const axis2_env_t *env)
 {
     rp_signed_encrypted_parts_t *signed_parts = NULL;
-    axis2_array_list_t *parts = NULL;
+    axutil_array_list_t *parts = NULL;
 
     signed_parts = rp_secpolicy_get_signed_parts(rampart_context->secpolicy,env);
     if(!signed_parts)
         return AXIS2_FALSE;
 
     parts = rp_signed_encrypted_parts_get_headers(signed_parts,env);
-    if(!parts || (axis2_array_list_size(parts,env)==0))
+    if(!parts || (axutil_array_list_size(parts,env)==0))
     {
         if(rp_signed_encrypted_parts_get_body(signed_parts,env))
             return AXIS2_TRUE;

@@ -25,7 +25,7 @@
 #include <rampart_constants.h>
 #include <rampart_handler_util.h>
 #include <oxs_tokens.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <oxs_axiom.h>
 #include <oxs_asym_ctx.h>
 #include <oxs_xml_encryption.h>
@@ -43,8 +43,8 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
                             axiom_soap_envelope_t *soap_envelope,
                             axiom_node_t *sec_node)
 {
-    axis2_array_list_t *nodes_to_encrypt = NULL;
-    axis2_array_list_t *id_list = NULL;
+    axutil_array_list_t *nodes_to_encrypt = NULL;
+    axutil_array_list_t *id_list = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *enc_sym_algo = NULL;
     axis2_char_t *enc_asym_algo = NULL;
@@ -64,11 +64,11 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     int i = 0;
     /*Get nodes to be encrypted*/
     server_side = axis2_msg_ctx_get_server_side(msg_ctx,env);
-    nodes_to_encrypt = axis2_array_list_create(env,0);
+    nodes_to_encrypt = axutil_array_list_create(env,0);
 
     status = rampart_context_get_nodes_to_encrypt(rampart_context,env,soap_envelope,nodes_to_encrypt);
 
-    if((status!=AXIS2_SUCCESS)||(axis2_array_list_size(nodes_to_encrypt,env)==0))
+    if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_encrypt,env)==0))
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
         return AXIS2_SUCCESS;
@@ -105,10 +105,10 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
     }
 
     /*Create a list to store EncDataIds. This will be used in building the ReferenceList*/
-    id_list = axis2_array_list_create(env, 5);
+    id_list = axutil_array_list_create(env, 5);
 
     /*Repeat until all encryption parts are encrypted*/
-    for(i=0 ; i < axis2_array_list_size(nodes_to_encrypt, env); i++){
+    for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++){
         axiom_node_t *node_to_enc = NULL;
         axiom_node_t *parent_of_node_to_enc = NULL;
         axiom_node_t *enc_data_node = NULL;
@@ -117,7 +117,7 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
         axis2_status_t enc_status = AXIS2_FAILURE;
 
         /*Get the node to be encrypted*/
-        node_to_enc = (axiom_node_t *)axis2_array_list_get(nodes_to_encrypt, env, i);
+        node_to_enc = (axiom_node_t *)axutil_array_list_get(nodes_to_encrypt, env, i);
         if(!node_to_enc){
             return AXIS2_FAILURE;
         }
@@ -132,7 +132,7 @@ rampart_enc_encrypt_message(const axis2_env_t *env,
         id = oxs_util_generate_id(env,(axis2_char_t*)OXS_ENCDATA_ID);
         enc_data_node = oxs_token_build_encrypted_data_element(env, parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, id );
         enc_status = oxs_xml_enc_encrypt_node(env, enc_ctx, node_to_enc, &enc_data_node);
-        axis2_array_list_add(id_list, env, id);
+        axutil_array_list_add(id_list, env, id);
         if(AXIS2_FAILURE == enc_status){
             return AXIS2_FAILURE;
         }

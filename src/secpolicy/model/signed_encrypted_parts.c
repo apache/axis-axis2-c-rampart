@@ -23,7 +23,7 @@ struct rp_signed_encrypted_parts_t
 {
     axis2_bool_t body;
     axis2_bool_t signedparts;
-    axis2_array_list_t *headers;
+    axutil_array_list_t *headers;
 
 };
 
@@ -44,7 +44,7 @@ rp_signed_encrypted_parts_create(const axis2_env_t *env)
     }
     signed_encrypted_parts->headers = NULL;
 
-    signed_encrypted_parts->headers = axis2_array_list_create(env, 0);
+    signed_encrypted_parts->headers = axutil_array_list_create(env, 0);
     if (!(signed_encrypted_parts->headers) )
     {
         rp_signed_encrypted_parts_free(signed_encrypted_parts, env);
@@ -68,18 +68,18 @@ rp_signed_encrypted_parts_free(rp_signed_encrypted_parts_t *signed_encrypted_par
         if(signed_encrypted_parts->headers)
         {
             int i = 0;
-            for (i = 0; i < axis2_array_list_size(signed_encrypted_parts->headers,
+            for (i = 0; i < axutil_array_list_size(signed_encrypted_parts->headers,
                 env); i++)
             {
                 rp_header_t *header = NULL;
                 header = (rp_header_t *)
-                    axis2_array_list_get(signed_encrypted_parts->headers,env, i);
+                    axutil_array_list_get(signed_encrypted_parts->headers,env, i);
                 if (header)
                     rp_header_free(header, env);
 
                 header = NULL;
             }
-            axis2_array_list_free(signed_encrypted_parts->headers, env);
+            axutil_array_list_free(signed_encrypted_parts->headers, env);
             signed_encrypted_parts->headers = NULL;
 
         }
@@ -134,7 +134,7 @@ rp_signed_encrypted_parts_set_signedparts(rp_signed_encrypted_parts_t *signed_en
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 rp_signed_encrypted_parts_get_headers(
     rp_signed_encrypted_parts_t *signed_encrypted_parts,
     const axis2_env_t *env)
@@ -152,7 +152,7 @@ rp_signed_encrypted_parts_add_header(rp_signed_encrypted_parts_t *signed_encrypt
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,header,AXIS2_FAILURE);
         
-    axis2_array_list_add(signed_encrypted_parts->headers,env,header);    
+    axutil_array_list_add(signed_encrypted_parts->headers,env,header);    
     return AXIS2_SUCCESS;
 }
 

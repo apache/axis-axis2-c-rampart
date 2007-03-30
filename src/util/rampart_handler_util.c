@@ -106,7 +106,7 @@ rampart_get_security_token(const axis2_env_t *env,
                            axiom_soap_header_t *soap_header
                           )
 {
-    axis2_array_list_t *sec_headers = NULL;
+    axutil_array_list_t *sec_headers = NULL;
     axis2_char_t *sec_ns_str = NULL;
     axis2_hash_index_t *hash_index =  NULL;
     axis2_hash_t *header_block_ht = NULL;
@@ -162,10 +162,10 @@ rampart_create_fault_envelope(const axis2_env_t *env,
     axiom_node_t* text_om_node = NULL;
     axiom_element_t * text_om_ele = NULL;
     axiom_namespace_t *ns1 = NULL;
-    axis2_array_list_t *sub_codes = NULL;
+    axutil_array_list_t *sub_codes = NULL;
 
-    sub_codes = axis2_array_list_create(env, 1);
-    axis2_array_list_add(sub_codes, env, sub_code);
+    sub_codes = axutil_array_list_create(env, 1);
+    axutil_array_list_add(sub_codes, env, sub_code);
 
     ns1 = axiom_namespace_create(env, RAMPART_WSSE_XMLNS, RAMPART_WSSE);
     text_om_ele = axiom_element_create(env, NULL, "ProblemSecurityHeader", ns1, &text_om_node);
@@ -227,7 +227,7 @@ rampart_is_rampart_engaged(const axis2_env_t *env,
                            axis2_msg_ctx_t *msg_ctx)
 {
     struct axis2_svc *svc = NULL;
-    axis2_array_list_t *engaged_modules = NULL;
+    axutil_array_list_t *engaged_modules = NULL;
     int size = 0;
     int i = 0;
     const axis2_qname_t *qname = NULL;
@@ -251,10 +251,10 @@ rampart_is_rampart_engaged(const axis2_env_t *env,
     engaged_modules =  axis2_conf_get_all_engaged_modules(conf, env);
     if(engaged_modules)
     {
-        size = axis2_array_list_size(engaged_modules,env);
+        size = axutil_array_list_size(engaged_modules,env);
         for(i=0; i<size; i++)
         {
-            qname = (axis2_qname_t *) axis2_array_list_get(engaged_modules,env,i);
+            qname = (axis2_qname_t *) axutil_array_list_get(engaged_modules,env,i);
             local_name = axis2_qname_get_localpart(qname,env);
             if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
                 return AXIS2_TRUE;
@@ -274,10 +274,10 @@ rampart_is_rampart_engaged(const axis2_env_t *env,
     engaged_modules = axis2_svc_get_all_module_qnames(svc,env);
     if(engaged_modules)
     {
-        size = axis2_array_list_size(engaged_modules,env);
+        size = axutil_array_list_size(engaged_modules,env);
         for(i=0; i<size; i++)
         {
-            qname = (axis2_qname_t *) axis2_array_list_get(engaged_modules,env,i);
+            qname = (axis2_qname_t *) axutil_array_list_get(engaged_modules,env,i);
             local_name = axis2_qname_get_localpart(qname,env);
             if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
             {

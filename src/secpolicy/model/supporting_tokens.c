@@ -22,7 +22,7 @@
 struct rp_supporting_tokens_t
 {
     rp_algorithmsuite_t *algorithmsuite;
-    axis2_array_list_t *tokens;
+    axutil_array_list_t *tokens;
     rp_signed_encrypted_elements_t *signed_elements;
     rp_signed_encrypted_parts_t *signed_parts;
     rp_signed_encrypted_elements_t *encrypted_elements;
@@ -46,7 +46,7 @@ rp_supporting_tokens_create(const axis2_env_t *env)
         return NULL;
     }
     supporting_tokens->tokens = NULL;
-    supporting_tokens->tokens = axis2_array_list_create(env,0);
+    supporting_tokens->tokens = axutil_array_list_create(env,0);
     if (!(supporting_tokens->tokens))
     {
         rp_supporting_tokens_free(supporting_tokens, env);
@@ -75,18 +75,18 @@ rp_supporting_tokens_free(rp_supporting_tokens_t *supporting_tokens,
         if(supporting_tokens->tokens)
         {
             int i = 0;
-            for (i = 0; i < axis2_array_list_size(supporting_tokens->tokens,
+            for (i = 0; i < axutil_array_list_size(supporting_tokens->tokens,
                 env); i++)
             {
                 rp_property_t *token = NULL;
                 token = (rp_property_t *)
-                    axis2_array_list_get(supporting_tokens->tokens,env, i);
+                    axutil_array_list_get(supporting_tokens->tokens,env, i);
                 if (token)
                     rp_property_free(token, env);
 
                 token = NULL;
             }
-            axis2_array_list_free(supporting_tokens->tokens, env);
+            axutil_array_list_free(supporting_tokens->tokens, env);
             supporting_tokens->tokens = NULL;
 
         }
@@ -124,7 +124,7 @@ rp_supporting_tokens_free(rp_supporting_tokens_t *supporting_tokens,
 
 /* Implementations */
 
-AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 rp_supporting_tokens_get_tokens(
     rp_supporting_tokens_t *supporting_tokens,
     const axis2_env_t *env)
@@ -142,7 +142,7 @@ rp_supporting_tokens_add_token(rp_supporting_tokens_t *supporting_tokens,
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,token,AXIS2_FAILURE);
     
-    axis2_array_list_add(supporting_tokens->tokens,env,token);
+    axutil_array_list_add(supporting_tokens->tokens,env,token);
     return AXIS2_SUCCESS;
 }
 

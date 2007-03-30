@@ -44,9 +44,9 @@ extern "C"
                                           );
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_token_build_data_reference_list(const axis2_env_t *env, axiom_node_t *parent, axis2_array_list_t *id_list);
+    oxs_token_build_data_reference_list(const axis2_env_t *env, axiom_node_t *parent, axutil_array_list_t *id_list);
 
-    AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+    AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
     oxs_token_get_reference_list_data(const axis2_env_t *env, axiom_node_t *ref_list_node);
 
 

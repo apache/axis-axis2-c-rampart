@@ -24,7 +24,7 @@
 #include <axis2_utils.h>
 #include <axis2_env.h>
 #include <axis2_string.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axiom_element.h>
 #include <axiom_children_iterator.h>
 #include <axiom_document.h>
@@ -78,7 +78,7 @@ typedef struct c14n_ctx {
     axis2_stream_t *outstream;
     axis2_bool_t exclusive;
     axis2_bool_t use_stream;
-    const axis2_array_list_t *ns_prefixes;
+    const axutil_array_list_t *ns_prefixes;
     const axiom_node_t *node;
     c14n_ns_stack_t *ns_stack;
 } c14n_ctx_t;
@@ -423,7 +423,7 @@ c14n_init(
     axis2_char_t **outbuf,
     axis2_stream_t *stream,
     const axis2_bool_t exclusive,
-    const axis2_array_list_t *ns_prefixes,
+    const axutil_array_list_t *ns_prefixes,
     const axis2_bool_t use_stream,
     const axiom_node_t *node
 )
@@ -505,7 +505,7 @@ oxs_c14n_apply_stream_algo(
     const axis2_env_t *env,
     const axiom_document_t *doc,
     axis2_stream_t *stream,
-    const axis2_array_list_t *ns_prefixes,
+    const axutil_array_list_t *ns_prefixes,
     const axiom_node_t *node,
     const axis2_char_t* algo
 )
@@ -535,7 +535,7 @@ oxs_c14n_apply_algo(
     const axis2_env_t *env,
     const axiom_document_t *doc,
     axis2_char_t **outbuf,
-    const axis2_array_list_t *ns_prefixes,
+    const axutil_array_list_t *ns_prefixes,
     const axiom_node_t *node,
     const axis2_char_t *algo
 )
@@ -567,7 +567,7 @@ oxs_c14n_apply_stream(
     axis2_bool_t comments,
     axis2_stream_t *stream,
     const axis2_bool_t exclusive,
-    const axis2_array_list_t *ns_prefixes,
+    const axutil_array_list_t *ns_prefixes,
     const axiom_node_t *node
 )
 {
@@ -662,7 +662,7 @@ oxs_c14n_apply(
     axis2_bool_t comments,
     axis2_char_t **outbuf,
     const axis2_bool_t exclusive,
-    const axis2_array_list_t *ns_prefixes,
+    const axutil_array_list_t *ns_prefixes,
     const axiom_node_t *node
 )
 {
@@ -1489,8 +1489,8 @@ c14n_need_to_declare_ns(
 {
     axis2_bool_t vu = c14n_ns_visibly_utilized(ele, node, ns, ctx);
 
-    if (vu || (ctx->ns_prefixes && axis2_array_list_contains(
-                   (axis2_array_list_t*)(ctx->ns_prefixes), ctx->env,
+    if (vu || (ctx->ns_prefixes && axutil_array_list_contains(
+                   (axutil_array_list_t*)(ctx->ns_prefixes), ctx->env,
                    (void*)(axiom_namespace_get_prefix((axiom_namespace_t*)ns,
                                                       ctx->env)))))
         return c14n_no_output_ancestor_uses_prefix(ele, node, ns, ctx);

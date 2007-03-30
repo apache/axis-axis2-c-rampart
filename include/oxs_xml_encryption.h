@@ -111,7 +111,7 @@ extern "C"
                             oxs_asym_ctx_t * asym_ctx,
                             axiom_node_t *parent,
                             oxs_key_t *sym_key,
-                            axis2_array_list_t *id_list);
+                            axutil_array_list_t *id_list);
 
     /**
      * Decrypts  a key/data in asymmetric way as specified in @asym_ctx.

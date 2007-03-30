@@ -40,14 +40,14 @@
 static axis2_char_t *
 oxs_xml_sig_transform_n_digest(const axis2_env_t *env,
                                axiom_node_t *node,
-                               axis2_array_list_t *transforms,
+                               axutil_array_list_t *transforms,
                                axis2_char_t *digest_mtd)
 {
     axis2_char_t *serialized_node = NULL;
     axis2_char_t *digest = NULL;
     int i = 0;
 
-    if((transforms) && (0 < axis2_array_list_size(transforms, env))){
+    if((transforms) && (0 < axutil_array_list_size(transforms, env))){
         oxs_tr_dtype_t output_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;/*This will always be the current dtype*/
         void *tr_output = NULL;
         output_dtype = OXS_TRANSFORM_TYPE_NODE; /*We always begin with a node*/
@@ -55,7 +55,7 @@ oxs_xml_sig_transform_n_digest(const axis2_env_t *env,
         tr_output = node; /*The first transformation is applied to the node*/
 
         /*LOOP: Apply transforms. For example exclusive C14N*/
-        for (i = 0; i < axis2_array_list_size(transforms, env); i++){
+        for (i = 0; i < axutil_array_list_size(transforms, env); i++){
             oxs_transform_t *tr = NULL;
             oxs_transform_tr_func tr_func = NULL;
             oxs_tr_dtype_t input_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;
@@ -63,7 +63,7 @@ oxs_xml_sig_transform_n_digest(const axis2_env_t *env,
             axis2_char_t *tr_id = NULL;
 
             /*Get the ith transform*/
-            tr = (oxs_transform_t*)axis2_array_list_get(transforms, env, i);
+            tr = (oxs_transform_t*)axutil_array_list_get(transforms, env, i);
             tr_id = oxs_transform_get_id(tr, env);
             tr_func = oxs_transform_get_transform_function(tr, env);
             input_dtype = oxs_transform_get_input_data_type(tr, env);
@@ -127,7 +127,7 @@ oxs_xml_sig_build_reference(const axis2_env_t *env,
     axis2_char_t *digest_mtd = NULL;
     axis2_char_t *ref_id = NULL;
     axis2_char_t *id = NULL;
-    axis2_array_list_t *transforms = NULL;
+    axutil_array_list_t *transforms = NULL;
     axiom_node_t *node = NULL;
     axiom_node_t *reference_node = NULL;
     axiom_node_t *digest_value_node = NULL;
@@ -152,16 +152,16 @@ oxs_xml_sig_build_reference(const axis2_env_t *env,
     digest = oxs_xml_sig_transform_n_digest(env, node, transforms, digest_mtd);
 
     /*Build ds:Transforms node and its children*/
-    if((transforms) && (0 < axis2_array_list_size(transforms, env))){
+    if((transforms) && (0 < axutil_array_list_size(transforms, env))){
         axiom_node_t *transforms_node = NULL;
 
         transforms_node = oxs_token_build_transforms_element(env, reference_node);
-        for (i = 0; i < axis2_array_list_size(transforms, env); i++){
+        for (i = 0; i < axutil_array_list_size(transforms, env); i++){
             oxs_transform_t *tr = NULL;
             axis2_char_t *tr_id = NULL;
 
             /*Get the ith transform*/
-            tr = (oxs_transform_t*)axis2_array_list_get(transforms, env, i);
+            tr = (oxs_transform_t*)axutil_array_list_get(transforms, env, i);
             tr_id = oxs_transform_get_id(tr, env);
             oxs_token_build_transform_element(env, transforms_node, tr_id);
         }
@@ -231,7 +231,7 @@ oxs_xml_sig_sign(const axis2_env_t *env,
     axiom_node_t *c14n_mtd_node = NULL;
     axis2_char_t *sign_algo = NULL;
     axis2_char_t *c14n_algo = NULL;
-    axis2_array_list_t *sign_parts = NULL;
+    axutil_array_list_t *sign_parts = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     int i=0;
 
@@ -253,11 +253,11 @@ oxs_xml_sig_sign(const axis2_env_t *env,
     sign_parts = oxs_sign_ctx_get_sign_parts(sign_ctx , env);
 
     /*For each and every signature part in sig ctx,*/
-    for (i = 0; i < axis2_array_list_size(sign_parts, env); i++){
+    for (i = 0; i < axutil_array_list_size(sign_parts, env); i++){
         oxs_sign_part_t *sign_part =  NULL;
 
         /*TODO Get ith sign_part*/
-        sign_part = (oxs_sign_part_t*)axis2_array_list_get(sign_parts, env, i);
+        sign_part = (oxs_sign_part_t*)axutil_array_list_get(sign_parts, env, i);
         /*Create <ds:Reference> elements */
         oxs_xml_sig_build_reference(env, signed_info_node, sign_part);
 
@@ -306,10 +306,10 @@ oxs_xml_sig_process_ref_node(const axis2_env_t *env,
         /*Transforms found*/
         /*TODO*/
         axiom_node_t *tr_node = NULL;
-        axis2_array_list_t *tr_list = NULL;
+        axutil_array_list_t *tr_list = NULL;
 
         /*Create a list to hold transforms*/
-        tr_list = axis2_array_list_create(env, 1);
+        tr_list = axutil_array_list_create(env, 1);
         tr_node = axiom_node_get_first_element(child_node, env);
         /*Iterate thru all the <ds:Transform> nodes in <ds:Transforms>*/
         while(tr_node)
@@ -330,7 +330,7 @@ oxs_xml_sig_process_ref_node(const axis2_env_t *env,
                     return AXIS2_FAILURE;
                 }
                 /*Add the transform to the list*/
-                axis2_array_list_add(tr_list, env, tr);
+                axutil_array_list_add(tr_list, env, tr);
             }else{
                 /*<ds:Transforms> cant have any other element*/
                 oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"<ds:Transforms> cannot have node %s ", node_name );
@@ -398,7 +398,7 @@ oxs_xml_sig_process_signature_node(const axis2_env_t *env,
     axiom_node_t *signed_info_node = NULL;
     axiom_node_t *sig_val_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_array_list_t *sign_part_list = NULL;
+    axutil_array_list_t *sign_part_list = NULL;
 
     signed_info_node = oxs_axiom_get_first_child_node_by_name(env, signature_node,
                        OXS_NODE_SIGNEDINFO, OXS_DSIG_NS, OXS_DS );
@@ -411,7 +411,7 @@ oxs_xml_sig_process_signature_node(const axis2_env_t *env,
         return AXIS2_FAILURE;
     }
     /*Create the list for sign parts*/
-    sign_part_list = axis2_array_list_create(env,5);
+    sign_part_list = axutil_array_list_create(env,5);
 
     /*Process signed info element*/
     cur_node = axiom_node_get_first_element(signed_info_node, env);
@@ -444,7 +444,7 @@ oxs_xml_sig_process_signature_node(const axis2_env_t *env,
             }
 
             /*Now we have a new sign_part. Add it to the list.*/
-            axis2_array_list_add(sign_part_list, env, sign_part);
+            axutil_array_list_add(sign_part_list, env, sign_part);
 
         }else{
             /*We do not process*/
@@ -493,7 +493,7 @@ oxs_xml_sig_verify_sign_part(const axis2_env_t *env,
     axis2_char_t *digest_val = NULL;
     axis2_char_t *new_digest = NULL;
     axiom_node_t *node = NULL;
-    axis2_array_list_t *transforms = NULL;
+    axutil_array_list_t *transforms = NULL;
     axis2_status_t status = AXIS2_FAILURE;
 
     id =            oxs_sign_part_get_id(sign_part, env);
@@ -524,17 +524,17 @@ oxs_xml_sig_verify_digests(const axis2_env_t *env,
                            oxs_sign_ctx_t *sign_ctx)
 {
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_array_list_t *sign_parts = NULL;
+    axutil_array_list_t *sign_parts = NULL;
     int i = 0 ;
 
     /*Get the sign_part list*/
     sign_parts =  oxs_sign_ctx_get_sign_parts(sign_ctx, env);
     /*For each and every signature part in sig ctx,*/
-    for (i = 0; i < axis2_array_list_size(sign_parts, env); i++){
+    for (i = 0; i < axutil_array_list_size(sign_parts, env); i++){
         oxs_sign_part_t *sign_part =  NULL;
 
         /*Get ith sign_part*/
-        sign_part = (oxs_sign_part_t*)axis2_array_list_get(sign_parts, env, i);
+        sign_part = (oxs_sign_part_t*)axutil_array_list_get(sign_parts, env, i);
         status = oxs_xml_sig_verify_sign_part(env, sign_part);
         if(AXIS2_FAILURE == status){
             return AXIS2_FAILURE;

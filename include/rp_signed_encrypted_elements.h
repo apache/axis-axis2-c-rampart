@@ -48,7 +48,7 @@ extern "C"
             const axis2_env_t *env,
             axis2_bool_t signedelements);
 
-    AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+    AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
     rp_signed_encrypted_elements_get_xpath_expressions(
         rp_signed_encrypted_elements_t *signed_encrypted_elements,
         const axis2_env_t *env);

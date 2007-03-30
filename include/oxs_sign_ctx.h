@@ -105,7 +105,7 @@ extern "C"
      * @env the environemnt struct 
      * @return sgnature parts as a list
      */
-    AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+    AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
     oxs_sign_ctx_get_sign_parts(
         const oxs_sign_ctx_t *sign_ctx,
         const axis2_env_t *env);
@@ -205,7 +205,7 @@ extern "C"
     oxs_sign_ctx_set_sign_parts(
         oxs_sign_ctx_t *sign_ctx,
         const axis2_env_t *env,
-        axis2_array_list_t *sign_parts);
+        axutil_array_list_t *sign_parts);
 
     /**
      * Set the x509 certificate of the signature context @sign_ctx

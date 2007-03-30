@@ -22,7 +22,7 @@
 #include <axis2_util.h>
 #include <axutil_allocator.h>
 #include <axis2_string.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axis2_const.h>
 #include <axis2_error.h>
 #include <axis2_utils_defines.h>

@@ -74,8 +74,8 @@ axis2_status_t sign(axis2_env_t *env,
     oxs_sign_part_t *sign_part = NULL;
     oxs_sign_ctx_t *sign_ctx = NULL;
     oxs_transform_t *tr = NULL;
-    axis2_array_list_t *sign_parts = NULL;
-    axis2_array_list_t *tr_list = NULL;
+    axutil_array_list_t *sign_parts = NULL;
+    axutil_array_list_t *tr_list = NULL;
     axis2_char_t *id = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     FILE *outf;
@@ -95,10 +95,10 @@ axis2_status_t sign(axis2_env_t *env,
      /*Sign specific*/
     sign_part = oxs_sign_part_create(env);
 
-    tr_list = axis2_array_list_create(env, 1);
+    tr_list = axutil_array_list_create(env, 1);
     /*We need C14N transform*/
     tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_XML_EXC_C14N);
-    axis2_array_list_add(tr_list, env, tr);
+    axutil_array_list_add(tr_list, env, tr);
     oxs_sign_part_set_transforms(sign_part, env, tr_list);
 
     /*We need to sign this node add an ID to it*/
@@ -109,8 +109,8 @@ axis2_status_t sign(axis2_env_t *env,
 
     status = oxs_sign_part_set_digest_mtd(sign_part, env, OXS_HREF_SHA1);
 
-    sign_parts = axis2_array_list_create(env, 1);
-    axis2_array_list_add(sign_parts, env, sign_part);
+    sign_parts = axutil_array_list_create(env, 1);
+    axutil_array_list_add(sign_parts, env, sign_part);
     sign_ctx = oxs_sign_ctx_create(env);
     if(sign_ctx){
         axiom_node_t *sig_node = NULL;

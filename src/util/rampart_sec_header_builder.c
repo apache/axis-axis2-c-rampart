@@ -31,7 +31,7 @@
 #include <oxs_asym_ctx.h>
 #include <oxs_tokens.h>
 #include <axis2_utils.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <rampart_signature.h>
 
 /*Private functions*/

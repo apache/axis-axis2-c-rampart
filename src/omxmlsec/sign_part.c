@@ -26,7 +26,7 @@ struct oxs_sign_part_t
     axis2_char_t *digest_mtd;
     axis2_char_t *digest_val;
     axiom_node_t *node ; /*Shallow copies*/
-    axis2_array_list_t *transforms; /*Shallow copies*/
+    axutil_array_list_t *transforms; /*Shallow copies*/
 };
 
 
@@ -63,7 +63,7 @@ oxs_sign_part_get_node(
     return sign_part->node;
 }
 
-AXIS2_EXTERN axis2_array_list_t *AXIS2_CALL
+AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL
 oxs_sign_part_get_transforms(
     const oxs_sign_part_t *sign_part,
     const axis2_env_t *env)
@@ -136,7 +136,7 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_part_set_transforms(
     oxs_sign_part_t *sign_part,
     const axis2_env_t *env,
-    axis2_array_list_t *transforms)
+    axutil_array_list_t *transforms)
 {
     if(sign_part->transforms){
         sign_part->transforms = NULL;

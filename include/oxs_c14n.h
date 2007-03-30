@@ -35,7 +35,7 @@
 #include <axis2_env.h>
 #include <axis2_string.h>
 #include <axiom_document.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axis2_stream.h>
 
 #ifdef __cplusplus
@@ -47,7 +47,7 @@ extern "C"
         const axis2_env_t *env,
         const axiom_document_t *doc,
         axis2_stream_t *stream,
-        const axis2_array_list_t *ns_prefixes,
+        const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node,
         const axis2_char_t* algo
     );
@@ -57,7 +57,7 @@ extern "C"
         const axis2_env_t *env,
         const axiom_document_t *doc,
         axis2_char_t **outbuf,
-        const axis2_array_list_t *ns_prefixes,
+        const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node,
         const axis2_char_t *algo
     );
@@ -70,7 +70,7 @@ extern "C"
         axis2_bool_t comments,
         axis2_stream_t *stream,
         const axis2_bool_t exclusive,
-        const axis2_array_list_t *ns_prefixes,
+        const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node
     );
 
@@ -81,7 +81,7 @@ extern "C"
         const axis2_bool_t comments,
         axis2_char_t **outbuf,
         const axis2_bool_t exclusive,
-        const axis2_array_list_t *ns_prefixes,
+        const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node
     );
 

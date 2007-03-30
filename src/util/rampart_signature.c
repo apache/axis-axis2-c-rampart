@@ -23,7 +23,7 @@
 #include <oxs_utility.h>
 #include <rampart_constants.h>
 #include <oxs_tokens.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <oxs_axiom.h>
 #include <axis2_key_type.h>
 #include <oxs_key.h>
@@ -97,13 +97,13 @@ rampart_sig_sign_message(const axis2_env_t *env,
                          axiom_soap_envelope_t *soap_envelope,
                          axiom_node_t *sec_node)
 {
-    axis2_array_list_t *nodes_to_sign = NULL;
+    axutil_array_list_t *nodes_to_sign = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *asym_sig_algo = NULL;
     axis2_char_t *digest_method = NULL;
     oxs_sign_ctx_t *sign_ctx = NULL;
-    axis2_array_list_t *sign_parts = NULL;
-    /*axis2_array_list_t *tr_list = NULL;*/
+    axutil_array_list_t *sign_parts = NULL;
+    /*axutil_array_list_t *tr_list = NULL;*/
     axis2_char_t *prv_key_file = NULL;
     axis2_char_t *password = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
@@ -126,11 +126,11 @@ rampart_sig_sign_message(const axis2_env_t *env,
 
     /*Get nodes to be signed*/
     server_side = axis2_msg_ctx_get_server_side(msg_ctx,env);
-    nodes_to_sign = axis2_array_list_create(env,0);
+    nodes_to_sign = axutil_array_list_create(env,0);
 
     status = rampart_context_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);
 
-    if((status!=AXIS2_SUCCESS)||(axis2_array_list_size(nodes_to_sign,env)==0))
+    if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_sign,env)==0))
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] No parts specified or specified parts can't be found for Signature.");
         return AXIS2_SUCCESS;
@@ -146,7 +146,7 @@ rampart_sig_sign_message(const axis2_env_t *env,
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Required timestamp cannot be found.");
             return AXIS2_FAILURE;
         }
-        axis2_array_list_add(nodes_to_sign,env,ts_node);
+        axutil_array_list_add(nodes_to_sign,env,ts_node);
     }
     if(rampart_context_get_require_ut(rampart_context,env))
     {
@@ -157,7 +157,7 @@ rampart_sig_sign_message(const axis2_env_t *env,
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Required username token cannot be found.");
             return AXIS2_FAILURE;
         }
-        axis2_array_list_add(nodes_to_sign,env,ut_node);
+        axutil_array_list_add(nodes_to_sign,env,ut_node);
     }
     /*Now we have to check whether a token is specified.*/
     token = rampart_context_get_token(rampart_context,env,AXIS2_FALSE,server_side);
@@ -223,32 +223,32 @@ rampart_sig_sign_message(const axis2_env_t *env,
     asym_sig_algo = rampart_context_get_asym_sig_algo(rampart_context,env);
     digest_method = rampart_context_get_digest_mtd(rampart_context,env);
 
-    sign_parts = axis2_array_list_create(env,0);
-    /*tr_list = axis2_array_list_create(env,0);*/
+    sign_parts = axutil_array_list_create(env,0);
+    /*tr_list = axutil_array_list_create(env,0);*/
 
     /*Now we should create sign part for each node in the arraylist.*/
 
-    for(i=0 ; i < axis2_array_list_size(nodes_to_sign, env); i++)
+    for(i=0 ; i < axutil_array_list_size(nodes_to_sign, env); i++)
     {
         axiom_node_t *node_to_sign = NULL;
         axis2_char_t *id = NULL;
         oxs_sign_part_t *sign_part = NULL;
         oxs_transform_t *tr = NULL;
-        axis2_array_list_t *tr_list = NULL;
+        axutil_array_list_t *tr_list = NULL;
 
-        node_to_sign = (axiom_node_t *)axis2_array_list_get(nodes_to_sign,env,i);
+        node_to_sign = (axiom_node_t *)axutil_array_list_get(nodes_to_sign,env,i);
         if(node_to_sign)
         {
             sign_part = oxs_sign_part_create(env);
-            tr_list = axis2_array_list_create(env,0);
+            tr_list = axutil_array_list_create(env,0);
             id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_ID);
             tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_XML_EXC_C14N);
-            axis2_array_list_add(tr_list, env, tr);
+            axutil_array_list_add(tr_list, env, tr);
             oxs_sign_part_set_transforms(sign_part, env, tr_list);
             oxs_axiom_add_attribute(env, node_to_sign, OXS_WSU,RAMPART_WSU_XMLNS,OXS_ATTR_ID,id);
             oxs_sign_part_set_node(sign_part, env,node_to_sign);
             oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
-            axis2_array_list_add(sign_parts, env, sign_part);
+            axutil_array_list_add(sign_parts, env, sign_part);
         }
     }
     sign_ctx = oxs_sign_ctx_create(env);

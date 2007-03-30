@@ -32,7 +32,7 @@
 #include <oxs_asym_ctx.h>
 #include <oxs_tokens.h>
 #include <axis2_utils.h>
-#include <axis2_array_list.h>
+#include <axutil_array_list.h>
 #include <axis2_key_type.h>
 #include <rampart_token_processor.h>
 #include <oxs_sign_ctx.h>
@@ -235,7 +235,7 @@ rampart_shp_process_encrypted_key(const axis2_env_t *env,
 {
     axiom_node_t *ref_list_node = NULL;
     axiom_node_t *enc_mtd_node = NULL;
-    axis2_array_list_t *reference_list = NULL;
+    axutil_array_list_t *reference_list = NULL;
     axis2_char_t *enc_asym_algo = NULL;
     axis2_char_t *prv_key_file = NULL;
     axis2_char_t *password = NULL;
@@ -255,11 +255,11 @@ rampart_shp_process_encrypted_key(const axis2_env_t *env,
     ref_list_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_REFERENCE_LIST,OXS_ENC_NS,OXS_XENC);
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
     /*If there are no references. Nothing to do. Return success*/
-    if((!reference_list) || (0 == axis2_array_list_size(reference_list, env))){
+    if((!reference_list) || (0 == axutil_array_list_size(reference_list, env))){
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List is empty");
         return AXIS2_SUCCESS;
     }
-    AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List has %d node reference(s)", axis2_array_list_size(reference_list, env));
+    AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List has %d node reference(s)", axutil_array_list_size(reference_list, env));
 
     /*Get the algorithm to decrypt the sesison key*/
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,OXS_XENC);
@@ -361,7 +361,7 @@ rampart_shp_process_encrypted_key(const axis2_env_t *env,
     if(!enc_sym_algo_in_pol)
         return AXIS2_FAILURE;
 
-    for(i=0 ; i < axis2_array_list_size(reference_list, env); i++ )
+    for(i=0 ; i < axutil_array_list_size(reference_list, env); i++ )
     {
         axis2_char_t *id = NULL;
         axis2_char_t *id2 = NULL;
@@ -378,7 +378,7 @@ rampart_shp_process_encrypted_key(const axis2_env_t *env,
         soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
 
         /*Get the i-th element and decrypt it */
-        id = (axis2_char_t*)axis2_array_list_get(reference_list, env, i);
+        id = (axis2_char_t*)axutil_array_list_get(reference_list, env, i);
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Decrypting node, ID=%s", id);
 
         /*Need to remove # sign from the ID*/
