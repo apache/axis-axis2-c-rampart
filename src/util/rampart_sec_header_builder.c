@@ -30,7 +30,7 @@
 #include <oxs_axiom.h>
 #include <oxs_asym_ctx.h>
 #include <oxs_tokens.h>
-#include <axis2_utils.h>
+#include <axutil_utils.h>
 #include <axutil_array_list.h>
 #include <rampart_signature.h>
 

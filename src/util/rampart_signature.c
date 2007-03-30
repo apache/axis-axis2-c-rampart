@@ -17,7 +17,7 @@
 
 #include <rampart_signature.h>
 #include <stdio.h>
-#include <axis2_utils.h>
+#include <axutil_utils.h>
 #include <oxs_ctx.h>
 #include <oxs_error.h>
 #include <oxs_utility.h>

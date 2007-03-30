@@ -15,7 +15,7 @@
  */
 
 
-#include <axis2_utils_defines.h>
+#include <axutil_utils_defines.h>
 #include <axis2_defines.h>
 #include <axutil_env.h>
 

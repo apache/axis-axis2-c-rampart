@@ -20,8 +20,8 @@
 #include <stdio.h>
 #include <axis2_const.h>
 #include <axutil_error.h>
-#include <axis2_utils_defines.h>
-#include <axis2_utils.h>
+#include <axutil_utils_defines.h>
+#include <axutil_utils.h>
 #include <axutil_env.h>
 #include <axutil_string.h>
 #include <axutil_array_list.h>

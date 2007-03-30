@@ -19,7 +19,7 @@
 #include <axis2_defines.h>
 #include <axutil_error.h>
 #include <axutil_env.h>
-#include <axis2_utils.h>
+#include <axutil_utils.h>
 #include <rampart_authn_provider.h>
 #include <rampart_crypto_util.h> 
 #include <axutil_string.h>

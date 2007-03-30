@@ -25,7 +25,7 @@
 #include <axutil_array_list.h>
 #include <axis2_const.h>
 #include <axutil_error.h>
-#include <axis2_utils_defines.h>
+#include <axutil_utils_defines.h>
 #include <axutil_log_default.h>
 #include <axutil_error_default.h>
 #include <axutil_env.h>

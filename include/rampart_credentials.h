@@ -21,7 +21,7 @@
 #include <axis2_defines.h>
 #include <axutil_error.h>
 #include <axutil_env.h>
-#include <axis2_utils.h>
+#include <axutil_utils.h>
 #include <axis2_msg_ctx.h>
 
 /**
