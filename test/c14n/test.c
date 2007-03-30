@@ -18,7 +18,7 @@
 
 #include <stdio.h>
 #include <axis2_env.h>
-#include <axis2_allocator.h>
+#include <axutil_allocator.h>
 #include <axiom.h>
 #include <axiom_xml_reader.h>
 #include <axiom_stax_builder.h>
@@ -39,9 +39,9 @@ int main(int argc, char **argv)
 
 /*int test2()
 {
-    axis2_allocator_t *allocator = NULL;
+    axutil_allocator_t *allocator = NULL;
     axis2_env_t *env = NULL;
-    allocator = axis2_allocator_init(NULL);
+    allocator = axutil_allocator_init(NULL);
     env = axis2_env_create(allocator);
 
     axiom_namespace_t *ns1 = axiom_namespace_create(env, "urn:ns1", "ns1");
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 
 int test(int argc, char **argv)
 {
-    axis2_allocator_t *allocator = NULL;
+    axutil_allocator_t *allocator = NULL;
     axis2_env_t *env = NULL;
     
     axis2_char_t *file = NULL;
@@ -71,7 +71,7 @@ int test(int argc, char **argv)
         return 1;
     }
 
-    allocator = axis2_allocator_init(NULL);
+    allocator = axutil_allocator_init(NULL);
     env = axis2_env_create(allocator);
     
     file = argv[1];
