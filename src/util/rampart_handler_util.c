@@ -26,7 +26,7 @@
 #include <axis2_property.h>
 #include <rampart_constants.h>
 #include <axis2_dll_desc.h>
-#include <axis2_class_loader.h>
+#include <axutil_class_loader.h>
 #include <axis2_conf_ctx.h>
 #include <oxs_axiom.h>
 
