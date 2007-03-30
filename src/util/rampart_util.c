@@ -46,12 +46,12 @@ AXIS2_EXTERN void* AXIS2_CALL
 rampart_load_module(const axis2_env_t *env,
                     axis2_char_t *module_name)
 {
-    axis2_dll_desc_t *dll_desc = NULL;
+    axutil_dll_desc_t *dll_desc = NULL;
     axis2_param_t *impl_info_param = NULL;
     void *ptr = NULL;
 
-    dll_desc = axis2_dll_desc_create(env);
-    axis2_dll_desc_set_name(dll_desc, env, module_name);
+    dll_desc = axutil_dll_desc_create(env);
+    axutil_dll_desc_set_name(dll_desc, env, module_name);
     impl_info_param = axis2_param_create(env, NULL, NULL);
     axis2_param_set_value(impl_info_param, env, dll_desc);
     axutil_class_loader_init(env);
