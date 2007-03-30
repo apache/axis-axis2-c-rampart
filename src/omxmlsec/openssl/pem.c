@@ -45,7 +45,7 @@ openssl_pem_buf_read_pkey(const axis2_env_t *env,
     int ret = 0;
     int decode_len = 0;
 
-    decode_len = axis2_base64_decode_len(b64_encoded_buf);
+    decode_len = axutil_base64_decode_len(b64_encoded_buf);
     buff = AXIS2_MALLOC(env->allocator, decode_len + 1000);
 
     ilen = axis2_strlen(b64_encoded_buf);

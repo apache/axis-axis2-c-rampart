@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <rampart_util.h>
 #include <axis2_util.h>
-#include <axis2_base64.h>
+#include <axutil_base64.h>
 #include <oxs_buffer.h>
 #include <rampart_constants.h>
 #include <oxs_constants.h>

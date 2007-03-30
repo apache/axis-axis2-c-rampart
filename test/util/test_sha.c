@@ -2,7 +2,7 @@
 #include <rampart_util.h>
 #include <rampart_crypto_util.h>
 #include <axis2_util.h>
-#include <axis2_base64.h>
+#include <axutil_base64.h>
 
 axis2_env_t *test_init()
 {
@@ -36,7 +36,7 @@ int main()
 
 
     encodedStr = AXIS2_MALLOC(env->allocator, 20);
-    axis2_base64_encode_binary(encodedStr, hash, 20);
+    axutil_base64_encode_binary(encodedStr, hash, 20);
 
     printf("Hash = %s \n", encodedStr);
 #endif

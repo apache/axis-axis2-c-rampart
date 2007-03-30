@@ -45,9 +45,9 @@ generate_random_data(const axis2_env_t *env, oxs_buffer_t *buffer, int size)
     int encodedlen;
     axis2_char_t *encoded_str = NULL;
 
-    encodedlen = axis2_base64_encode_len(size);
+    encodedlen = axutil_base64_encode_len(size);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
-    ret = axis2_base64_encode(encoded_str, (const char *)temp_buffer, size);
+    ret = axutil_base64_encode(encoded_str, (const char *)temp_buffer, size);
     status = oxs_buffer_populate(buffer, env, (unsigned char*)encoded_str, size);
     AXIS2_FREE(env->allocator, encoded_str);
     encoded_str = NULL;

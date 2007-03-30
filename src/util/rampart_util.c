@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <rampart_util.h>
 #include <axis2_util.h>
-#include <axis2_base64.h>
+#include <axutil_base64.h>
 #include <axis2_property.h>
 #include <time.h>
 #include <oxs_buffer.h>
@@ -182,7 +182,7 @@ rampart_generate_nonce(const axis2_env_t *env)
     status = generate_random_data(env, buffer, 16);
     rand_str = (char*)oxs_buffer_get_data(buffer, env);
     encoded_str = AXIS2_MALLOC(env->allocator, sizeof(char) * (SIZE_NONCE+1));
-    axis2_base64_encode(encoded_str, rand_str, oxs_buffer_get_size(buffer, env));
+    axutil_base64_encode(encoded_str, rand_str, oxs_buffer_get_size(buffer, env));
     oxs_buffer_free(buffer, env);
 
     return encoded_str;

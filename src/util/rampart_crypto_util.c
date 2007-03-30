@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <rampart_crypto_util.h>
 #include <axis2_util.h>
-#include <axis2_base64.h>
+#include <axutil_base64.h>
 #include <openssl_digest.h>
 
 /*Calculate the hash of concatenated string of
@@ -43,9 +43,9 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axis2_env_t *env
     /*Decode the nonce first*/
     if(nonce){
         int ret;
-        decoded_nonce_length = axis2_base64_decode_len(nonce);
-        decoded_nonce = AXIS2_MALLOC(env->allocator, axis2_base64_decode_len(nonce));
-        ret = axis2_base64_decode(decoded_nonce, nonce);
+        decoded_nonce_length = axutil_base64_decode_len(nonce);
+        decoded_nonce = AXIS2_MALLOC(env->allocator, axutil_base64_decode_len(nonce));
+        ret = axutil_base64_decode(decoded_nonce, nonce);
     }
 
     if ((!nonce) && (!created))

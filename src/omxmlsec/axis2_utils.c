@@ -26,9 +26,9 @@ AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_decode(axis2_env_t *env,
     oxs_buffer_t *out_buf = NULL;
     int  ret, length;
 
-    length =  axis2_base64_decode_len((char*)(oxs_buffer_get_data(coded_buf, env)));
-    plain_str = AXIS2_MALLOC(env->allocator, axis2_base64_decode_len((char*)(oxs_buffer_get_data(coded_buf, env))));
-    ret =  axis2_base64_decode(plain_str, (char*)(oxs_buffer_get_data(coded_buf, env)));
+    length =  axutil_base64_decode_len((char*)(oxs_buffer_get_data(coded_buf, env)));
+    plain_str = AXIS2_MALLOC(env->allocator, axutil_base64_decode_len((char*)(oxs_buffer_get_data(coded_buf, env))));
+    ret =  axutil_base64_decode(plain_str, (char*)(oxs_buffer_get_data(coded_buf, env)));
     if (ret < 0) return NULL;
     out_buf = oxs_string_to_buffer(env, plain_str);
     return out_buf;
@@ -42,9 +42,9 @@ AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_encode(axis2_env_t *env,
 
     int ret;
 
-    encoded_str = AXIS2_MALLOC(env->allocator, (unsigned int)axis2_base64_encode_len(axis2_strlen((char*)(plain_buf->data))));
+    encoded_str = AXIS2_MALLOC(env->allocator, (unsigned int)axutil_base64_encode_len(axis2_strlen((char*)(plain_buf->data))));
 
-    ret =  axis2_base64_encode(encoded_str, (char*)(plain_buf->data), plain_buf->size);
+    ret =  axutil_base64_encode(encoded_str, (char*)(plain_buf->data), plain_buf->size);
     if (ret < 0) return NULL;
 
     /*Set to the output buffer */

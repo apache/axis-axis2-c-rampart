@@ -2,7 +2,7 @@
 #include <rampart_util.h>
 #include <rampart_crypto_util.h>
 #include <axis2_util.h>
-#include <axis2_base64.h>
+#include <axutil_base64.h>
 #include <axis2_date_time.h>
 
 axis2_env_t *test_init()

@@ -54,9 +54,9 @@ oxs_sig_sign_rsa_sha1(const axis2_env_t *env,
     }
 
     /*Base64 encode*/
-    encodedlen = axis2_base64_encode_len(signedlen);
+    encodedlen = axutil_base64_encode_len(signedlen);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
-    ret = axis2_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(signed_result_buf, env), signedlen);
+    ret = axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(signed_result_buf, env), signedlen);
     status = oxs_buffer_populate(output, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
 
     /*Free signed_result_buf*/
@@ -113,12 +113,12 @@ oxs_sig_verify(const axis2_env_t *env,
 
     /*Base64 decode the signature value and create the sig buffer*/
     /*Allocate enough space*/
-    decoded_data = AXIS2_MALLOC(env->allocator, axis2_base64_decode_len(signature));
-    decoded_len = axis2_base64_decode_binary(decoded_data, signature );
+    decoded_data = AXIS2_MALLOC(env->allocator, axutil_base64_decode_len(signature));
+    decoded_len = axutil_base64_decode_binary(decoded_data, signature );
     if (decoded_len < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,
-                  "axis2_base64_decode_binary failed");
+                  "axutil_base64_decode_binary failed");
         return AXIS2_FAILURE;
     }
 
