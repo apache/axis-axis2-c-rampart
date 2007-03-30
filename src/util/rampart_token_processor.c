@@ -108,8 +108,16 @@ rampart_token_process_embedded(const axis2_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *data = NULL;
     oxs_x509_cert_t *_cert = NULL;
+    axiom_node_t *bst_node = NULL;
 
-    data = oxs_axiom_get_node_content(env, embed_node);
+    bst_node = axiom_node_get_first_element(embed_node, env);
+
+    if(!bst_node){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "BST element is not found");
+        return AXIS2_FAILURE;
+    }
+
+    data = oxs_axiom_get_node_content(env, bst_node);
     /*Process data*/
     _cert = oxs_key_mgr_load_x509_cert_from_string(env, data);
     if(_cert){

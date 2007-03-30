@@ -103,6 +103,28 @@ rampart_shp_validate_qnames(const axis2_env_t *env,
     return AXIS2_FALSE;
 }
 
+static oxs_x509_cert_t *get_receiver_x509_cert(
+                        const axis2_env_t *env,
+                        rampart_context_t *rampart_context)
+{
+
+    axis2_char_t *file_name = NULL;
+    axis2_char_t *pem_buf = NULL;
+
+    pem_buf = (axis2_char_t *)rampart_context_get_receiver_certificate(rampart_context,env);
+    if(pem_buf)
+    {
+        return oxs_key_mgr_load_x509_cert_from_string(env,pem_buf);
+    }        
+    else
+    {
+        file_name = rampart_context_get_receiver_certificate_file(rampart_context,env);
+        if(!file_name)
+            return NULL;
+        else
+            return oxs_key_mgr_load_x509_cert_from_pem_file(env,file_name);    
+    }        
+}
 
 
 static axis2_status_t
@@ -563,7 +585,7 @@ rampart_shp_process_signature(const axis2_env_t *env,
 
     /*str_node = oxs_axiom_get_first_child_node_by_name(env,key_info_node,
                             OXS_NODE_SECURITY_TOKEN_REFRENCE,NULL,NULL);*/
-
+   
     if(str_node)
     {
         str_child_node = axiom_node_get_first_element(str_node,env);
@@ -579,6 +601,8 @@ rampart_shp_process_signature(const axis2_env_t *env,
                         AXIS2_LOG_INFO(env->log,"[Rampart][shp]Token is not included in the message.");
                         return AXIS2_FAILURE;
                     }
+                    cert = oxs_x509_cert_create(env);
+                    status = rampart_token_process_direct_ref(env,str_child_node,sec_node,cert);
                 }
                 else
                 {
@@ -589,7 +613,8 @@ rampart_shp_process_signature(const axis2_env_t *env,
                             AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
                             return AXIS2_FAILURE;
                         }
-
+                        cert = oxs_x509_cert_create(env);
+                        status = rampart_token_process_embedded(env,str_child_node,cert);
                     }
                     else if(0 == axis2_strcmp(str_child_name,OXS_NODE_KEY_IDENTIFIER))
                     {
@@ -598,6 +623,8 @@ rampart_shp_process_signature(const axis2_env_t *env,
                             AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
                             return AXIS2_FAILURE;
                         }
+                        cert = get_receiver_x509_cert(env,rampart_context);
+                        status = AXIS2_SUCCESS;
                     }
                     else if(0 == axis2_strcmp(str_child_name,OXS_NODE_X509_DATA))
                     {
@@ -606,6 +633,8 @@ rampart_shp_process_signature(const axis2_env_t *env,
                             AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
                             return AXIS2_FAILURE;
                         }
+                        cert = get_receiver_x509_cert(env,rampart_context);
+                        status = AXIS2_SUCCESS;
                     }
                     else
                     {
@@ -613,11 +642,9 @@ rampart_shp_process_signature(const axis2_env_t *env,
                         return AXIS2_FAILURE;
                     }
                 }
-                cert = oxs_x509_cert_create(env);
-                status = rampart_token_process_security_token_reference(env,str_node,sec_node,cert);
                 if(status!=AXIS2_SUCCESS || !cert)
                 {
-                    AXIS2_LOG_INFO(env->log,"[Rampart][shp]Cannot load the message to verify the message.");
+                    AXIS2_LOG_INFO(env->log,"[Rampart][shp]Cannot load the key to verify the message.");
                     return AXIS2_FAILURE;
                 }
             }

@@ -50,6 +50,9 @@
 			<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
 				<sp:Body/>
             </sp:EncryptedParts>
+            <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <sp:Body/>
+            </sp:SignedParts>
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                 <rampc:User>Gampola</rampc:User>
                 <rampc:TimeToLive>360</rampc:TimeToLive>

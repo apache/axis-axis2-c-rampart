@@ -129,8 +129,9 @@ rampart_token_build_x509_data_issuer_serial(const axis2_env_t *env,
     axiom_node_t *x509_issuer_serial_node = NULL;
 
     axis2_char_t *issuer = NULL;
-    axis2_char_t *serial_num = NULL;
+    /*axis2_char_t *serial_num = NULL;*/
     int serial = -1;
+    axis2_char_t serial_no[20];
 
     issuer = oxs_x509_cert_get_issuer(cert, env);
     serial = oxs_x509_cert_get_serial_number(cert, env);
@@ -139,10 +140,10 @@ rampart_token_build_x509_data_issuer_serial(const axis2_env_t *env,
         return AXIS2_FAILURE;
     }
 
-    sprintf(serial_num, "%d", serial);
+    sprintf(serial_no, "%d", serial);
     /*Build tokens*/
     x509_data_node = oxs_token_build_x509_data_element(env, parent);
-    x509_issuer_serial_node = oxs_token_build_x509_issuer_serial_with_data(env, x509_data_node, issuer, serial_num);
+    x509_issuer_serial_node = oxs_token_build_x509_issuer_serial_with_data(env, x509_data_node, issuer, serial_no);
 
     return AXIS2_SUCCESS;
 
