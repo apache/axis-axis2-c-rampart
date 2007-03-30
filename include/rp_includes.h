@@ -26,7 +26,7 @@
 #include <axis2_const.h>
 #include <axutil_error.h>
 #include <axis2_utils_defines.h>
-#include <axis2_log_default.h>
+#include <axutil_log_default.h>
 #include <axutil_error_default.h>
 #include <axutil_env.h>
 #include <axiom.h>
