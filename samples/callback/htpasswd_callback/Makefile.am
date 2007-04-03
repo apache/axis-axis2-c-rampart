@@ -5,4 +5,4 @@ libhtpwcb_la_SOURCES = htpwcb.c
 
 libhtpwcb_la_LIBADD  =
 INCLUDES = -I ../../../include \
-			-I$(AXIS2C_HOME)/include 
+			-I$(AXIS2C_HOME)/include/axis2-1.0
