@@ -59,9 +59,12 @@ rampart_out_handler_create(const axutil_env_t *env,  axutil_string_t *name)
     }
 
     /* set the base struct's invoke op */
+#if 0
     if (handler->ops)
         handler->ops->invoke = rampart_out_handler_invoke;
-
+#else
+    axis2_handler_set_invoke(handler, env, rampart_out_handler_invoke);
+#endif
     return handler;
 }
 

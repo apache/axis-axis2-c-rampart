@@ -59,9 +59,12 @@ rampart_in_handler_create(const axutil_env_t *env,
     {
         return NULL;
     }
+#if 0
     if (handler->ops)
         handler->ops->invoke = rampart_in_handler_invoke;
-
+#else
+     axis2_handler_set_invoke(handler, env, rampart_in_handler_invoke);
+#endif
     return handler;
 }
 

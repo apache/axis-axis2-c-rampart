@@ -32,6 +32,12 @@ axis2_status_t AXIS2_CALL
 mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
         const axutil_env_t *env);
 
+static const axis2_module_ops_t addr_module_ops_var = {
+    mod_rampart_init,
+    mod_rampart_shutdown,
+    mod_rampart_fill_handler_create_func_map
+    };
+
 axis2_module_t *
 mod_rampart_create(const axutil_env_t *env)
 {
@@ -40,14 +46,7 @@ mod_rampart_create(const axutil_env_t *env)
             sizeof(axis2_module_t));
 
 
-    module->ops = AXIS2_MALLOC(
-                env->allocator, sizeof(axis2_module_ops_t));
-
-    module->ops->shutdown = mod_rampart_shutdown;
-    module->ops->init = mod_rampart_init;
-    module->ops->fill_handler_create_func_map =
-        mod_rampart_fill_handler_create_func_map;
-
+    module->ops = &addr_module_ops_var;
     return module;
 }
 

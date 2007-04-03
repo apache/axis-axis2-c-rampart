@@ -280,14 +280,17 @@ oxs_key_mgr_read_pkcs12_key_store(const axutil_env_t *env,
                   "Error reading the PKCS12 Key Store");
         return AXIS2_FAILURE;
     }
-    if(pkey){
-        *prv_key = openssl_pkey_create(env);
-        openssl_pkey_populate(*prv_key, env, pkey, filename, OPENSSL_PKEY_TYPE_PRIVATE_KEY);
+    if(*prv_key){
+        if(pkey){
+            *prv_key = openssl_pkey_create(env);
+            openssl_pkey_populate(*prv_key, env, pkey, filename, OPENSSL_PKEY_TYPE_PRIVATE_KEY);
+        }
     }
 
-    if(c){
-        *cert = oxs_key_mgr_convert_to_x509(env, c);
+    if(*cert){
+        if(c){
+            *cert = oxs_key_mgr_convert_to_x509(env, c);
+        }
     }
-
     return AXIS2_SUCCESS;
 }
