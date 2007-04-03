@@ -66,11 +66,6 @@ mod_rampart_shutdown(axis2_module_t *module,
         const axutil_env_t *env)
 {
     AXIS2_LOG_INFO(env->log,"[rampart][mod_rampart] mod_rampart shutdown");
-    if (module->ops)
-    {
-        AXIS2_FREE(env->allocator, module->ops);
-        module->ops = NULL;
-    }
 
     if (module->handler_create_func_map)
     {
