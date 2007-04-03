@@ -21,7 +21,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <axutil_log_default.h>
-#include <platforms/axis2_platform_auto_sense.h>
+#include <platforms/axutil_platform_auto_sense.h>
 
 /*Table to map error codes with the error message*/
 #define OXS_ERRORS_MAX_NUMBER 64
