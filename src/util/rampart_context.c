@@ -1350,7 +1350,7 @@ rampart_context_set_ttl_from_file(
     if(!time_to_live)
         rampart_context->ttl = 300;
     else
-        rampart_context->ttl = axis2_atoi(time_to_live);
+        rampart_context->ttl = axutil_atoi(time_to_live);
 
     return AXIS2_SUCCESS;
 }
