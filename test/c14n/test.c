@@ -64,6 +64,7 @@ int test(int argc, char **argv)
     axis2_char_t *c14n_doc = NULL;
     int len;
     axis2_status_t res = AXIS2_SUCCESS;
+    axiom_node_t *c14n_node = NULL;
 
     if (argc < 2)
     {
@@ -94,7 +95,8 @@ int test(int argc, char **argv)
     stream = axutil_stream_create_basic(env);
     
     axiom_node_t *root_node = axiom_document_get_root_element(doc, env);
-    axiom_node_t *c14n_node = AXIOM_NODE_GET_FIRST_ELEMENT(root_node, env);
+    
+    c14n_node = axiom_node_get_first_element(root_node, env);
 
     if (argc>2 && !(argv[2][0]-'e'))
         res = oxs_c14n_apply_stream(env, doc, AXIS2_TRUE, stream, AXIS2_TRUE , NULL, c14n_node);
