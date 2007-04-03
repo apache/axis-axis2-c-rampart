@@ -31,7 +31,6 @@ extern "C"
 #endif
 
     typedef struct rp_signed_encrypted_parts_t rp_signed_encrypted_parts_t;
-    struct rp_header_t;
 
     AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL
     rp_signed_encrypted_parts_create(const axutil_env_t *env);
@@ -67,7 +66,7 @@ extern "C"
     rp_signed_encrypted_parts_add_header(
         rp_signed_encrypted_parts_t *signed_encrypted_parts,
         const axutil_env_t *env,
-        struct rp_header_t *header);
+        rp_header_t *header);
 
 #ifdef __cplusplus
 }

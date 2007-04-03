@@ -31,6 +31,8 @@ struct rp_secpolicy_t
     rp_signed_encrypted_parts_t *encrypted_parts;
     rp_signed_encrypted_elements_t *signed_elements;
     rp_signed_encrypted_elements_t *encrypted_elements;
+    rp_signed_encrypted_items_t *signed_items;
+    rp_signed_encrypted_items_t *encrypted_items;    
     rp_rampart_config_t *rampart_config;
     
 };
@@ -60,6 +62,8 @@ rp_secpolicy_create(const axutil_env_t *env)
     secpolicy->encrypted_parts = NULL;
     secpolicy->signed_elements = NULL;
     secpolicy->encrypted_elements = NULL;
+    secpolicy->signed_items = NULL;
+    secpolicy->encrypted_items = NULL;
     secpolicy->rampart_config = NULL;
 
     return secpolicy;
@@ -123,7 +127,17 @@ rp_secpolicy_free(
         {
             rp_signed_encrypted_elements_free(secpolicy->encrypted_elements,env);
             secpolicy->encrypted_elements = NULL;
+        }
+        if(secpolicy->signed_items)
+        {
+            rp_signed_encrypted_items_free(secpolicy->signed_items,env);
+            secpolicy->signed_items = NULL;
         }            
+        if(secpolicy->encrypted_items)
+        {
+            rp_signed_encrypted_items_free(secpolicy->encrypted_items,env);
+            secpolicy->encrypted_items = NULL;
+        }
         if(secpolicy->rampart_config)
         {
             rp_rampart_config_free(secpolicy->rampart_config,env);
@@ -345,6 +359,53 @@ rp_secpolicy_get_encrypted_elements(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     
     return secpolicy->encrypted_elements;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL 
+rp_secpolicy_set_signed_items(
+    rp_secpolicy_t *secpolicy,
+    const axutil_env_t *env,
+    rp_signed_encrypted_items_t *signed_items)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error,signed_items,AXIS2_FAILURE);
+
+    secpolicy->signed_items = signed_items; 
+    return AXIS2_SUCCESS;
+    
+}
+
+AXIS2_EXTERN rp_signed_encrypted_items_t *AXIS2_CALL
+rp_secpolicy_get_signed_items(
+    rp_secpolicy_t *secpolicy,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    
+    return secpolicy->signed_items;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL 
+rp_secpolicy_set_encrypted_items(
+    rp_secpolicy_t *secpolicy,
+    const axutil_env_t *env,
+    rp_signed_encrypted_items_t *encrypted_items)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error,encrypted_items,AXIS2_FAILURE);   
+
+    secpolicy->encrypted_items = encrypted_items; 
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN rp_signed_encrypted_items_t *AXIS2_CALL
+rp_secpolicy_get_encrypted_items(
+    rp_secpolicy_t *secpolicy,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    
+    return secpolicy->encrypted_items;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-#ifndef RP_SIGNED_ENCRYPTED_PARTS_BUILDER_H
-#define RP_SIGNED_ENCRYPTED_PARTS_BUILDER_H
+#ifndef RP_SIGNED_ENCRYPTED_ITEMS_BUILDER_H
+#define RP_SIGNED_ENCRYPTED_ITEMS_BUILDER_H
 
-/** @defgroup rp_signed_encrypted_parts_builder
- * @ingroup rp_signed_encrypted_parts_builder
+/** @defgroup rp_signed_encrypted_items_builder
+ * @ingroup rp_signed_encrypted_items_builder
  * @{
  */
 
 #include <rp_includes.h>
-#include <rp_signed_encrypted_parts.h>
+#include <rp_signed_encrypted_items.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -31,23 +31,23 @@ extern "C"
 #endif
 
 
-    AXIS2_EXTERN rp_signed_encrypted_parts_t *AXIS2_CALL
-    rp_signed_encrypted_parts_builder_build(
+    AXIS2_EXTERN rp_signed_encrypted_items_t *AXIS2_CALL
+    rp_signed_encrypted_items_builder_build(
         const axutil_env_t *env,
-        axiom_node_t *parts);
+        axiom_node_t *items);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rp_signed_encrypted_parts_builder_set_properties(
+    rp_signed_encrypted_items_builder_set_properties(
         axiom_node_t *node,
         axiom_element_t *element,
         axis2_char_t *local_name,
-        rp_signed_encrypted_parts_t *signed_encrypted_parts,
+        rp_signed_encrypted_items_t *signed_encrypted_items,
         const axutil_env_t *env);
 
-    AXIS2_EXTERN rp_header_t *AXIS2_CALL
-                rp_signed_encrypted_parts_builder_build_header(
-                    axiom_element_t *element,
-                    const axutil_env_t *env);
+    AXIS2_EXTERN rp_element_t *AXIS2_CALL
+    rp_signed_encrypted_items_builder_build_element(
+        axiom_element_t *element,
+        const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

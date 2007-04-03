@@ -32,6 +32,7 @@
 #include <rp_wss10_builder.h>
 #include <rp_wss11_builder.h>
 #include <rp_rampart_config_builder.h>
+#include <rp_signed_encrypted_items_builder.h>
 
 #ifdef __cplusplus
 extern "C"

@@ -299,8 +299,41 @@ rp_secpolicy_builder_set_properties(
         }
         else
             return AXIS2_FAILURE;
-    }        
+    }
 
+    else if(axis2_strcmp(local_name,RP_SIGNED_ITEMS)==0)
+    {
+        if( rp_match_rampart_config_qname(env,RP_SIGNED_ITEMS,node,element))
+        {
+            rp_signed_encrypted_items_t *signed_items = NULL;
+            signed_items = rp_signed_encrypted_items_builder_build(env,node);
+            if(!signed_items)
+                return AXIS2_FAILURE;
+
+            rp_signed_encrypted_items_set_signeditems(signed_items,env,AXIS2_TRUE);
+
+            return rp_secpolicy_set_signed_items(secpolicy,env,signed_items);
+        }
+        else
+            return AXIS2_FAILURE;
+    }
+    
+    else if(axis2_strcmp(local_name,RP_ENCRYPTED_ITEMS)==0)
+    {
+        if(rp_match_secpolicy_qname(env,RP_ENCRYPTED_ITEMS,node,element))
+        {
+            rp_signed_encrypted_items_t *encrypted_items = NULL;
+            encrypted_items = rp_signed_encrypted_items_builder_build(env,node);
+            if(!encrypted_items)
+                return AXIS2_FAILURE;
+
+            rp_signed_encrypted_items_set_signeditems(encrypted_items,env,AXIS2_FALSE);
+
+            return rp_secpolicy_set_encrypted_items(secpolicy,env,encrypted_items);
+        }
+        else return AXIS2_FAILURE;
+    }
+    
     else if(axis2_strcmp(local_name,RP_WSS10)==0)
     {
         if(rp_match_secpolicy_qname(env,RP_WSS10,node,element)) 

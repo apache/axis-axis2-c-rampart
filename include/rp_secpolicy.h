@@ -29,6 +29,7 @@
 #include <rp_transport_binding.h>
 #include <rp_signed_encrypted_parts.h>
 #include <rp_signed_encrypted_elements.h>
+#include <rp_signed_encrypted_items.h>
 #include <rp_supporting_tokens.h>
 #include <rp_rampart_config.h>
 #include <rp_wss10.h>
@@ -145,6 +146,28 @@ extern "C"
 
     AXIS2_EXTERN rp_signed_encrypted_elements_t *AXIS2_CALL
     rp_secpolicy_get_encrypted_elements(
+        rp_secpolicy_t *secpolicy,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rp_secpolicy_set_signed_items(
+        rp_secpolicy_t *secpolicy,
+        const axutil_env_t *env,
+        rp_signed_encrypted_items_t *signed_items);
+
+    AXIS2_EXTERN rp_signed_encrypted_items_t *AXIS2_CALL
+        rp_secpolicy_get_signed_items(
+        rp_secpolicy_t *secpolicy,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rp_secpolicy_set_encrypted_items(
+        rp_secpolicy_t *secpolicy,
+        const axutil_env_t *env,
+        rp_signed_encrypted_items_t *encrypted_items);
+    
+    AXIS2_EXTERN rp_signed_encrypted_items_t *AXIS2_CALL
+    rp_secpolicy_get_encrypted_items(
         rp_secpolicy_t *secpolicy,
         const axutil_env_t *env);
 

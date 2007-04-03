@@ -116,7 +116,7 @@ rampart_timestamp_token_validate(
     }
 
 
-    ts_ele = AXIOM_NODE_GET_DATA_ELEMENT(ts_node, env);
+    ts_ele = axiom_node_get_data_element(ts_node, env);
 
     if (!ts_ele)
     {
@@ -146,7 +146,7 @@ rampart_timestamp_token_validate(
     }
 
     /*Any TIMESTAMP containing an EXPIRES MUST contain a CREATED that preceeds its sibling EXPIRES.*/
-    expires_node =  AXIOM_NODE_GET_NEXT_SIBLING(created_node, env);
+    expires_node =  axiom_node_get_next_sibling(created_node, env);
     if (!expires_node)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][ts]Cannot find expires  in timestamp element...");

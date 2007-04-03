@@ -37,6 +37,7 @@
 #include <rampart_token_processor.h>
 #include <oxs_sign_ctx.h>
 #include <oxs_xml_signature.h>
+#include <oxs_key_mgr.h>
 
 /*Private functions*/
 static axis2_bool_t
@@ -51,7 +52,7 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
 
     AXIS2_ENV_CHECK(env,AXIS2_FALSE);
 
-    node_ele = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    node_ele = axiom_node_get_data_element(node, env);
     if(!node_ele)
         return AXIS2_FALSE;
 
@@ -542,7 +543,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
         {
             /*we do not need to process at this moment*/
         }
-        cur_node = AXIOM_NODE_GET_NEXT_SIBLING(cur_node, env);
+        cur_node = axiom_node_get_next_sibling(cur_node, env);
     }
 
     /*Get the key identifiers and build the certificate*/

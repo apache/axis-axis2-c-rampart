@@ -261,7 +261,7 @@ rampart_username_token_validate(
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-    ut_ele = AXIOM_NODE_GET_DATA_ELEMENT(ut_node, env);
+    ut_ele = axiom_node_get_data_element(ut_node, env);
     if(!ut_ele)
         return AXIS2_FAILURE;
 
@@ -291,14 +291,14 @@ rampart_username_token_validate(
     if (children)
     {
         /*Go thru children and find username token parameters*/
-        while (AXIS2_TRUE == AXIOM_CHILD_ELEMENT_ITERATOR_HAS_NEXT(children, env))
+        while (AXIS2_TRUE == axiom_child_element_iterator_has_next(children, env))
         {
             axiom_node_t *node = NULL;
             axiom_element_t *element = NULL;
             axis2_char_t *localname = NULL;
 
-            node = AXIOM_CHILD_ELEMENT_ITERATOR_NEXT(children, env);
-            element = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+            node = axiom_child_element_iterator_next(children, env);
+            element = axiom_node_get_data_element(node, env);
             localname =  axiom_element_get_localname(element, env);
 
             if (0 == axis2_strcmp(localname, RAMPART_SECURITY_USERNAMETOKEN_USERNAME))
