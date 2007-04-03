@@ -116,7 +116,7 @@ rampart_get_security_token(const axutil_env_t *env,
     sec_headers = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, RAMPART_WSSE_XMLNS);
     if (sec_headers)
     {
-        sec_ns_str = axis2_strdup(env, RAMPART_WSSE_XMLNS);
+        sec_ns_str = axutil_strdup(env, RAMPART_WSSE_XMLNS);
 
         header_block_ht = axiom_soap_header_get_all_header_blocks(soap_header, env);
         if (!header_block_ht)
@@ -137,7 +137,7 @@ rampart_get_security_token(const axutil_env_t *env,
             header_block_ele  = (axiom_element_t*)axiom_node_get_data_element(header_block_node, env);
             ele_localname = axiom_element_get_localname(header_block_ele, env);
 
-            if (axis2_strcmp(ele_localname, RAMPART_SECURITY) == 0)
+            if (axutil_strcmp(ele_localname, RAMPART_SECURITY) == 0)
             {
                 /*Set mustUnderstand = 0*/
                 axiom_soap_header_block_set_must_understand_with_bool(header_block, env, AXIS2_FALSE);
@@ -256,7 +256,7 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
         {
             qname = (axutil_qname_t *) axutil_array_list_get(engaged_modules,env,i);
             local_name = axutil_qname_get_localpart(qname,env);
-            if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
+            if(axutil_strcmp(local_name,RAMPART_RAMPART)==0)
                 return AXIS2_TRUE;
         }
     }
@@ -279,7 +279,7 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
         {
             qname = (axutil_qname_t *) axutil_array_list_get(engaged_modules,env,i);
             local_name = axutil_qname_get_localpart(qname,env);
-            if(axis2_strcmp(local_name,RAMPART_RAMPART)==0)
+            if(axutil_strcmp(local_name,RAMPART_RAMPART)==0)
             {
                 axis2_conf_set_enable_security(conf,env,AXIS2_TRUE);
                 return AXIS2_TRUE;

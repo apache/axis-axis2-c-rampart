@@ -116,7 +116,7 @@ rampart_enc_encrypt_message(const axutil_env_t *env,
     /*Get the symmetric encryption algorithm*/
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context,env);
     /*If not specified set the default*/
-    if(!enc_sym_algo ||  (0 == axis2_strcmp(enc_sym_algo, ""))){
+    if(!enc_sym_algo ||  (0 == axutil_strcmp(enc_sym_algo, ""))){
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No symmetric algorithm is specified for encryption. Using the default");
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }

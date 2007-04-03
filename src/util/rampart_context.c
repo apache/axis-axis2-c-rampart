@@ -771,9 +771,9 @@ rampart_context_validate_ut(
     if(bval)
     {
         inclusion = rp_username_token_get_inclusion(username_token,env);
-        if((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                (axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0))
+        if((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0))
             return bval;
         else
             bval = AXIS2_FALSE;
@@ -836,7 +836,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     if(!namespace)
         return AXIS2_FAILURE;
 
-    if(axis2_strcmp(namespace,RP_SECURITY_NS)==0)
+    if(axutil_strcmp(namespace,RP_SECURITY_NS)==0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace headers");
         return AXIS2_FAILURE;
@@ -868,7 +868,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
 
         }
     }
-    else if(axis2_strcmp(local_name,"Security")==0)
+    else if(axutil_strcmp(local_name,"Security")==0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt %s", local_name);
         return AXIS2_FAILURE;
@@ -893,7 +893,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
                     if(ns)
                     {
                         namespace_uri = axiom_namespace_get_uri(ns, env);
-                        if (axis2_strcmp(namespace_uri,namespace) == 0)
+                        if (axutil_strcmp(namespace_uri,namespace) == 0)
                         {
                             axutil_array_list_add(nodes_to_encrypt_or_sign,env,ret_node);
                             return AXIS2_SUCCESS;
@@ -923,7 +923,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
     if(!namespace)
         return AXIS2_FAILURE;
 
-    if(axis2_strcmp(namespace,RP_SECURITY_NS)==0)
+    if(axutil_strcmp(namespace,RP_SECURITY_NS)==0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace elements");
         return AXIS2_FAILURE;
@@ -957,7 +957,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
     }
 */  if(local_name)  
     {
-        if(axis2_strcmp(local_name,"Security")==0)
+        if(axutil_strcmp(local_name,"Security")==0)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt %s", local_name);
             return AXIS2_FAILURE;
@@ -982,7 +982,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
                         if(ns)
                         {
                             namespace_uri = axiom_namespace_get_uri(ns, env);
-                            if (axis2_strcmp(namespace_uri,namespace) == 0)
+                            if (axutil_strcmp(namespace_uri,namespace) == 0)
                             {
                                 axutil_array_list_add(nodes_to_encrypt_or_sign,env,ret_node);
                                 return AXIS2_SUCCESS;
@@ -1369,10 +1369,10 @@ rampart_context_is_encrypt_before_sign(
     else
     {
         protection_order = rp_symmetric_asymmetric_binding_commons_get_protection_order(sym_asym_commons,env);
-        if(!protection_order || axis2_strcmp(protection_order,RP_SIGN_BEFORE_ENCRYPTING)==0)
+        if(!protection_order || axutil_strcmp(protection_order,RP_SIGN_BEFORE_ENCRYPTING)==0)
             return AXIS2_FALSE;
 
-        else if(axis2_strcmp(protection_order,RP_ENCRYPT_BEFORE_SIGNING)==0)
+        else if(axutil_strcmp(protection_order,RP_ENCRYPT_BEFORE_SIGNING)==0)
             return AXIS2_TRUE;
     }
     return AXIS2_FALSE;
@@ -1893,12 +1893,12 @@ rampart_context_is_token_include(
         inclusion = rp_x509_token_get_inclusion(x509_token,env);
 
         if(server_side)
-            include = ((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                       (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0));
+            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0));
         else
-            include = ((axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                       (axis2_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                       (axis2_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
+            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
 
         return include;
     }
@@ -1955,13 +1955,13 @@ rampart_context_is_key_identifier_type_supported(
     axis2_char_t *identifier,
     const axutil_env_t *env)
 {
-    if(axis2_strcmp(identifier,RAMPART_STR_KEY_IDENTIFIER)==0)
+    if(axutil_strcmp(identifier,RAMPART_STR_KEY_IDENTIFIER)==0)
         return rampart_context_is_key_identifier_supported(token,rampart_context,env);
 
-    else if(axis2_strcmp(identifier,RAMPART_STR_ISSUER_SERIAL)==0)
+    else if(axutil_strcmp(identifier,RAMPART_STR_ISSUER_SERIAL)==0)
         return rampart_context_is_issuer_serial_supported(token,rampart_context,env);
 
-    else if(axis2_strcmp(identifier,RAMPART_STR_EMBEDDED)==0)
+    else if(axutil_strcmp(identifier,RAMPART_STR_EMBEDDED)==0)
         return rampart_context_is_embedded_token_supported(token,rampart_context,env);
 
     else

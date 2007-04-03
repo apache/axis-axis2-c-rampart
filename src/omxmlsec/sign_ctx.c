@@ -164,7 +164,7 @@ oxs_sign_ctx_set_sign_mtd_algo(
         AXIS2_FREE(env->allocator, sign_ctx->sign_mtd_algo);
         sign_ctx->sign_mtd_algo = NULL;
     }
-    sign_ctx->sign_mtd_algo = axis2_strdup(env,sign_mtd_algo);
+    sign_ctx->sign_mtd_algo = axutil_strdup(env,sign_mtd_algo);
     return AXIS2_SUCCESS;
 }
 
@@ -181,7 +181,7 @@ oxs_sign_ctx_set_c14n_mtd(
         AXIS2_FREE(env->allocator, sign_ctx->c14n_mtd);
         sign_ctx->c14n_mtd = NULL;
     }
-    sign_ctx->c14n_mtd = axis2_strdup(env, c14n_mtd);
+    sign_ctx->c14n_mtd = axutil_strdup(env, c14n_mtd);
     return AXIS2_SUCCESS;
 }
 
@@ -197,7 +197,7 @@ oxs_sign_ctx_set_sig_val(
         AXIS2_FREE(env->allocator, sign_ctx->sig_val);
         sign_ctx->sig_val = NULL;
     }
-    sign_ctx->sig_val = axis2_strdup(env, sig_val);
+    sign_ctx->sig_val = axutil_strdup(env, sig_val);
     return AXIS2_SUCCESS;
 }
 

@@ -50,27 +50,27 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axutil_env_t *en
 
     if ((!nonce) && (!created))
     {/*If both nonce and created are omitted*/
-        input = AXIS2_MALLOC(env->allocator,  axis2_strlen(password) + 1);
+        input = AXIS2_MALLOC(env->allocator,  axutil_strlen(password) + 1);
         sprintf(input, "%s",  password);
     }
     else if (!nonce)
     {/*If nonce is omitted*/
-        input = AXIS2_MALLOC(env->allocator, axis2_strlen(created) + axis2_strlen(password) + 1);
+        input = AXIS2_MALLOC(env->allocator, axutil_strlen(created) + axutil_strlen(password) + 1);
         sprintf(input, "%s%s",  created, password);
     }
     else  if (!created)
     {/*If created is omitted*/
-        input = AXIS2_MALLOC(env->allocator, decoded_nonce_length + axis2_strlen(password) + 1);
+        input = AXIS2_MALLOC(env->allocator, decoded_nonce_length + axutil_strlen(password) + 1);
         sprintf(input, "%s%s",  decoded_nonce, password);
     }
     else
     {/*If all nonce, created and password are present*/
         input = AXIS2_MALLOC(env->allocator,
-                             decoded_nonce_length + axis2_strlen(created) + axis2_strlen(password) + 1);
+                             decoded_nonce_length + axutil_strlen(created) + axutil_strlen(password) + 1);
         sprintf(input, "%s%s%s", decoded_nonce, created, password);
     }
 
-    digest = openssl_sha1(env, input, axis2_strlen(input));
+    digest = openssl_sha1(env, input, axutil_strlen(input));
     AXIS2_FREE(env->allocator, input);
     AXIS2_FREE(env->allocator, decoded_nonce);
     return digest;

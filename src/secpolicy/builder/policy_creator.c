@@ -77,7 +77,7 @@ rp_policy_create_from_om_node(
             local_name = axiom_element_get_localname(root_ele,env);
             if(local_name)
             {
-                if(axis2_strcmp(local_name,RP_POLICY)==0)
+                if(axutil_strcmp(local_name,RP_POLICY)==0)
                 {                    
                     if(!rp_match_policy_qname(env,local_name,root,root_ele))
                     {
@@ -105,7 +105,7 @@ rp_policy_create_from_om_node(
                 local_name = axiom_element_get_localname(exat_ele,env);
                 if(local_name)
                 {
-                    if(axis2_strcmp(local_name,RP_EXACTLY_ONE)==0)
+                    if(axutil_strcmp(local_name,RP_EXACTLY_ONE)==0)
                     {
                         if(!rp_match_policy_qname(env,local_name,exat_node,exat_ele))
                         {
@@ -136,7 +136,7 @@ rp_policy_create_from_om_node(
                 local_name = axiom_element_get_localname(all_ele,env);
                 if(local_name)
                 {
-                    if(axis2_strcmp(local_name,RP_ALL)==0)
+                    if(axutil_strcmp(local_name,RP_ALL)==0)
                     {
                         if(!rp_match_policy_qname(env,local_name,all_node,all_ele))
                         {

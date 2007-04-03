@@ -140,7 +140,7 @@ rampart_username_token_build(
         password_type = rampart_context_get_password_type(rampart_context,env);
         if(!password_type)
             password_type = RAMPART_PASSWORD_TEXT;
-        if (0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST))
+        if (0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST))
         {
             axis2_char_t *nonce_val = NULL;
             axis2_char_t *created_val = NULL;
@@ -301,12 +301,12 @@ rampart_username_token_validate(
             element = axiom_node_get_data_element(node, env);
             localname =  axiom_element_get_localname(element, env);
 
-            if (0 == axis2_strcmp(localname, RAMPART_SECURITY_USERNAMETOKEN_USERNAME))
+            if (0 == axutil_strcmp(localname, RAMPART_SECURITY_USERNAMETOKEN_USERNAME))
             {
                 username = axiom_element_get_text(element, env, node);
 
             }
-            else if (0 == axis2_strcmp(localname , RAMPART_SECURITY_USERNAMETOKEN_PASSWORD))
+            else if (0 == axutil_strcmp(localname , RAMPART_SECURITY_USERNAMETOKEN_PASSWORD))
             {
                 password_type = axiom_element_get_attribute_value_by_name(element,
                                 env,
@@ -323,17 +323,17 @@ rampart_username_token_validate(
                 if(!password_type_pol)
                     password_type_pol = RP_PLAINTEXT;
 
-                if(axis2_strcmp(password_type_pol,RP_DIGEST)==0)
+                if(axutil_strcmp(password_type_pol,RP_DIGEST)==0)
                 {
-                    if(0 != axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
+                    if(0 != axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
                     {
                         AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Password Type is Wrong");
                         return AXIS2_FAILURE;
                     }
                 }
-                else if(axis2_strcmp(password_type_pol,RP_PLAINTEXT)==0)
+                else if(axutil_strcmp(password_type_pol,RP_PLAINTEXT)==0)
                 {
-                    if(0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
+                    if(0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
                     {
                         AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Password Type is Wrong");
                         return AXIS2_FAILURE;
@@ -342,13 +342,13 @@ rampart_username_token_validate(
                 password = axiom_element_get_text(element, env, node);
 
             }
-            else if (0 == axis2_strcmp(localname,  RAMPART_SECURITY_USERNAMETOKEN_NONCE))
+            else if (0 == axutil_strcmp(localname,  RAMPART_SECURITY_USERNAMETOKEN_NONCE))
             {
                 nonce = axiom_element_get_text(element, env, node);
                 rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_UT_NONCE, nonce);
 
             }
-            else if (0 == axis2_strcmp(localname ,  RAMPART_SECURITY_USERNAMETOKEN_CREATED))
+            else if (0 == axutil_strcmp(localname ,  RAMPART_SECURITY_USERNAMETOKEN_CREATED))
             {
                 created = axiom_element_get_text(element, env, node);
                 rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_UT_CREATED, created);
@@ -391,7 +391,7 @@ rampart_username_token_validate(
      *use function pointers. */
 
     /*authn_module_name = "/home/kau/axis2/c/deploy/bin/samples/rampart/authn_provider/libauthn.so";*/
-    if (0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
+    if (0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
     {
         authenticate_with_digest = rampart_context_get_auth_digest_function(rampart_context,env);
         if(authenticate_with_digest)
@@ -482,7 +482,7 @@ rampart_username_token_validate(
         }
 
         /*Alright NOW we have the password. Is digest needed?*/
-        if (0 == axis2_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
+        if (0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
         {
             AXIS2_LOG_INFO(env->log,  "[rampart][rampart_usernametoken] Generating digest to compare from the password");
             password_to_compare = rampart_crypto_sha1(env, nonce, created, password_from_svr);
@@ -493,7 +493,7 @@ rampart_username_token_validate(
         }
 
         /*The BIG moment. Compare passwords*/
-        if (0 == axis2_strcmp(password_to_compare , password))
+        if (0 == axutil_strcmp(password_to_compare , password))
         {
             AXIS2_LOG_INFO(env->log,  "[rampart][rampart_usernametoken] Password comparison SUCCESS");
             rampart_set_security_processed_result(env, msg_ctx,RAMPART_SPR_UT_CHECKED, RAMPART_YES);

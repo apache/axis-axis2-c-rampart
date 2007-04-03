@@ -250,7 +250,7 @@ get_rampart_context_in_server_side(
         axis2_char_t *file_name = NULL;
         rampart_context_t *rampart_context = NULL;
 
-        if(axis2_strcmp(key,IN_MESSAGE_SECURITY)==0)
+        if(axutil_strcmp(key,IN_MESSAGE_SECURITY)==0)
         {
             file_name =(axis2_char_t *)rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
             if(file_name)
@@ -267,7 +267,7 @@ get_rampart_context_in_server_side(
                 return NULL;
             }
         }
-        else if(axis2_strcmp(key,OUT_MESSAGE_SECURITY)==0)
+        else if(axutil_strcmp(key,OUT_MESSAGE_SECURITY)==0)
         {
             file_name =(axis2_char_t *)rampart_get_rampart_configuration(env,msg_ctx,RAMPART_OUTFLOW_SECURITY_POLICY);
             if(file_name)

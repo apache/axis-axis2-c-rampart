@@ -57,7 +57,7 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     encodedlen = axutil_base64_encode_len(signedlen);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
     ret = axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(signed_result_buf, env), signedlen);
-    status = oxs_buffer_populate(output, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
+    status = oxs_buffer_populate(output, env, (unsigned char*)axutil_strdup(env, encoded_str), encodedlen);
 
     /*Free signed_result_buf*/
 
@@ -79,9 +79,9 @@ oxs_sig_sign(const axutil_env_t *env,
     sign_algo = oxs_sign_ctx_get_sign_mtd_algo(sign_ctx, env);
 
     /*Prepare content and sign*/
-    if(0==(axis2_strcmp(sign_algo, OXS_HREF_RSA_SHA1))){
+    if(0==(axutil_strcmp(sign_algo, OXS_HREF_RSA_SHA1))){
         oxs_sig_sign_rsa_sha1(env, sign_ctx, input, output);
-    }else if(0==(axis2_strcmp(sign_algo, OXS_HREF_DSA_SHA1))){
+    }else if(0==(axutil_strcmp(sign_algo, OXS_HREF_DSA_SHA1))){
         /*Error we do not support*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Cannot support cipher %s", sign_algo);
@@ -128,7 +128,7 @@ oxs_sig_verify(const axutil_env_t *env,
 
     /*Create the input buffer*/
     in_buf = oxs_buffer_create(env);
-    status = oxs_buffer_populate(in_buf, env, (unsigned char*)content, axis2_strlen(content));
+    status = oxs_buffer_populate(in_buf, env, (unsigned char*)content, axutil_strlen(content));
 
     /*Get the public key. See.. this method is trickey. It might take the public key from the certificate, only if
      * the public key is not available directly*/

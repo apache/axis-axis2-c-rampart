@@ -44,7 +44,7 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     int decoded_len = -1;
 
     /*We should remove new lines here.*/
-    buf_to_format = (axis2_char_t*)axis2_strdup(env, b64_encoded_buf);
+    buf_to_format = (axis2_char_t*)axutil_strdup(env, b64_encoded_buf);
     if(buf_to_format)
     {
         formatted_buf = oxs_util_get_newline_removed_string(env,buf_to_format);
@@ -65,7 +65,7 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     decode_len = axutil_base64_decode_len(formatted_buf );
     buff = AXIS2_MALLOC(env->allocator, decode_len);
 
-    ilen = axis2_strlen(formatted_buf);
+    ilen = axutil_strlen(formatted_buf);
 
     decoded_len = axutil_base64_decode_binary(buff,formatted_buf);
     if (decoded_len < 0)
@@ -218,10 +218,10 @@ openssl_x509_get_cert_data(const axutil_env_t *env,
     axis2_char_t *buffer = NULL;
 
     unformatted = openssl_x509_get_info(env, OPENSSL_X509_INFO_DATA_CERT, cert);
-    core_tail = axis2_strstr(unformatted, "\n");
-    res = axis2_strstr(core_tail,"-----END");
+    core_tail = axutil_strstr(unformatted, "\n");
+    res = axutil_strstr(core_tail,"-----END");
     res[0] = '\0';
-    core = (axis2_char_t*)axis2_strdup(env, core_tail);
+    core = (axis2_char_t*)axutil_strdup(env, core_tail);
     if(core)
     {
         buffer = oxs_util_get_newline_removed_string(env,core);
@@ -307,7 +307,7 @@ openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
     EVP_EncodeFinal(&ctx, (unsigned char*)(output+len), &ret);
 
     ret += len;
-    ski = axis2_strdup(env, output);
+    ski = axutil_strdup(env, output);
     return ski;
 }
 
@@ -387,7 +387,7 @@ openssl_x509_get_info(const axutil_env_t *env,
         i2a_ASN1_OBJECT(out, ci->key->algor->algorithm);
     }
     n = BIO_get_mem_data(out, &data);
-    result = axis2_strndup( env, data, n);
+    result = axutil_strndup( env, data, n);
     BIO_free(out);
     out = NULL;
 

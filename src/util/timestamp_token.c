@@ -127,7 +127,7 @@ rampart_timestamp_token_validate(
     /*First child MUST be the Created element*/
     created_node = axiom_node_get_first_element(ts_node, env);
     created_ele = (axiom_element_t*)axiom_node_get_data_element(created_node, env);
-    if (axis2_strcmp(RAMPART_SECURITY_TIMESTAMP_CREATED ,
+    if (axutil_strcmp(RAMPART_SECURITY_TIMESTAMP_CREATED ,
                      axiom_element_get_localname(created_ele, env)) != 0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][ts]Timestamp not valid: Cannot find created  in timestamp element. The first element MUST be CREATED");
@@ -154,7 +154,7 @@ rampart_timestamp_token_validate(
         return AXIS2_SUCCESS;
     }
     expires_ele  = (axiom_element_t*)axiom_node_get_data_element(expires_node, env);
-    if (axis2_strcmp(RAMPART_SECURITY_TIMESTAMP_EXPIRES ,
+    if (axutil_strcmp(RAMPART_SECURITY_TIMESTAMP_EXPIRES ,
                      axiom_element_get_localname(expires_ele, env)) != 0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][ts] Timestamp not valid: The second element of timestamp token (if any) MUST be EXPIRES");

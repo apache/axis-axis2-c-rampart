@@ -392,7 +392,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
             return AXIS2_FAILURE;
         }
-        cert_id_ref = axis2_stracat(env, "#",cert_id);
+        cert_id_ref = axutil_stracat(env, "#",cert_id);
         reference_node = oxs_token_build_reference_element(env,str_node,cert_id_ref,OXS_VALUE_X509V3);
         if(!reference_node)
         {
@@ -407,15 +407,15 @@ rampart_sig_sign_message(const axutil_env_t *env,
         {
             return AXIS2_FAILURE;
         }
-        if(axis2_strcmp(eki,RAMPART_STR_EMBEDDED)==0)
+        if(axutil_strcmp(eki,RAMPART_STR_EMBEDDED)==0)
         {
             status = rampart_token_build_security_token_reference(env,key_info_node,cert,RTBP_EMBEDDED);
         }
-        else if(axis2_strcmp(eki,RAMPART_STR_ISSUER_SERIAL)==0)
+        else if(axutil_strcmp(eki,RAMPART_STR_ISSUER_SERIAL)==0)
         {
             status = rampart_token_build_security_token_reference(env,key_info_node,cert,RTBP_X509DATA_ISSUER_SERIAL);
         }
-        else if(axis2_strcmp(eki,RAMPART_STR_KEY_IDENTIFIER)==0)
+        else if(axutil_strcmp(eki,RAMPART_STR_KEY_IDENTIFIER)==0)
         {
             status = rampart_token_build_security_token_reference(env,key_info_node,cert,RTBP_KEY_IDENTIFIER);
         }

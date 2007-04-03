@@ -102,7 +102,7 @@ oxs_axiom_get_node_by_local_name(const axutil_env_t *env,
     temp_name = axiom_util_get_localname(node, env);
     AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for %s", temp_name, local_name );
 
-    if(0 == axis2_strcmp(temp_name, local_name) ){
+    if(0 == axutil_strcmp(temp_name, local_name) ){
         /*Gottcha.. return this node*/
         return node;
     }else{
@@ -144,7 +144,7 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
     /*AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for the attribute %s with value = %s", localname, attr, val);*/
 
     attribute_value = oxs_axiom_get_attribute_value_of_node_by_name(env, node, attr);
-    if(0 == axis2_strcmp(val, attribute_value) ){
+    if(0 == axutil_strcmp(val, attribute_value) ){
         /*Gottcha.. return this node*/
         return node;
     }else{
@@ -250,7 +250,7 @@ oxs_axiom_deserialize_node(const axutil_env_t *env,  axis2_char_t* buffer)
         return NULL;
     }
     reader = axiom_xml_reader_create_for_memory(env,
-             (void*)buffer, axis2_strlen(buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
+             (void*)buffer, axutil_strlen(buffer), "utf-8", AXIS2_XML_PARSER_TYPE_BUFFER);
 
     if (!reader)
     {
@@ -298,7 +298,7 @@ oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_cha
     qname = axiom_element_get_qname(ele, env, node);
 
     namestr = axutil_qname_get_localpart(qname, env);
-    ret_name =  axis2_strcmp(namestr, name) ;
+    ret_name =  axutil_strcmp(namestr, name) ;
 
 
     if (ret_name < 0) return 0;
@@ -306,7 +306,7 @@ oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_cha
     if (ns)
     {
         ns_str = axutil_qname_get_uri(qname, env);
-        ret_ns =  axis2_strcmp(ns_str, ns) ;
+        ret_ns =  axutil_strcmp(ns_str, ns) ;
         if (ret_ns < 0) return AXIS2_FAILURE;
         else   return AXIS2_SUCCESS;
 

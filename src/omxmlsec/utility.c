@@ -32,9 +32,9 @@ oxs_util_generate_id(const axutil_env_t *env,
     char _id[50];
     axis2_char_t *random ;
 
-    random =  axis2_strndup(env, axutil_uuid_gen(env),18);
+    random =  axutil_strndup(env, axutil_uuid_gen(env),18);
     sprintf(_id, "%s-%s",prefix,random);
-    id = (axis2_char_t*)axis2_strdup(env, _id);
+    id = (axis2_char_t*)axutil_strdup(env, _id);
     return id;
 
 }
@@ -47,7 +47,7 @@ oxs_util_get_format_by_file_extension(const axutil_env_t *env,
     if(!file_name){
         return OXS_ASYM_CTX_FORMAT_UNKNOWN;
     }
-    extension = axis2_rindex(file_name, '.');
+    extension = axutil_rindex(file_name, '.');
     if(!extension){
         /*No extension*/
         /*Its safe to assume that PEM can be without extension*/
@@ -70,7 +70,7 @@ oxs_util_get_newline_removed_string(const axutil_env_t *env,
     axis2_char_t *output = NULL;
     int i = 0;
 
-    output = AXIS2_MALLOC(env->allocator,  axis2_strlen(input)+1);
+    output = AXIS2_MALLOC(env->allocator,  axutil_strlen(input)+1);
 
     while(*input!='\0')
     {

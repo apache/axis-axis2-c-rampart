@@ -134,9 +134,9 @@ rp_https_token_builder_set_req_client_cert(
 
     if(value)
     {   
-        if(axis2_strcmp(value,"true")==0)
+        if(axutil_strcmp(value,"true")==0)
             return rp_https_token_set_require_client_certificate(token,env,AXIS2_TRUE);
-        else if(axis2_strcmp(value,"false")==0)
+        else if(axutil_strcmp(value,"false")==0)
             return rp_https_token_set_require_client_certificate(token,env,AXIS2_FALSE);
         else
             return AXIS2_FAILURE;

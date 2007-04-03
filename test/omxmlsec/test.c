@@ -135,7 +135,7 @@ axis2_status_t sign(axutil_env_t *env,
     signed_result = axiom_node_to_string(tmpl, env) ;
 
     outf = fopen(signed_filename, "wb");
-    fwrite(signed_result, 1, axis2_strlen(signed_result), outf);
+    fwrite(signed_result, 1, axutil_strlen(signed_result), outf);
 
     return AXIS2_SUCCESS;
 
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
          printf("Cannot load certificate");
     }
     
-    if(0 == axis2_strcmp(operation, "S")){
+    if(0 == axutil_strcmp(operation, "S")){
         sign(env, filename, prvkey, cert);
     }else{
         verify(env, filename, prvkey, cert);

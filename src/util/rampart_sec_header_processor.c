@@ -60,25 +60,25 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
     if(!local_name)
         return AXIS2_FALSE;
 
-    if(axis2_strcmp(local_name,RAMPART_SECURITY_TIMESTAMP)==0)
+    if(axutil_strcmp(local_name,RAMPART_SECURITY_TIMESTAMP)==0)
         qname = axutil_qname_create(env,local_name,RAMPART_WSU_XMLNS,RAMPART_WSU);
 
-    else if(axis2_strcmp(local_name,RAMPART_SECURITY_USERNAMETOKEN)==0)
+    else if(axutil_strcmp(local_name,RAMPART_SECURITY_USERNAMETOKEN)==0)
         qname = axutil_qname_create(env,local_name,RAMPART_WSSE_XMLNS,RAMPART_WSSE);
 
-    else if(axis2_strcmp(local_name,OXS_NODE_ENCRYPTED_KEY)==0)
+    else if(axutil_strcmp(local_name,OXS_NODE_ENCRYPTED_KEY)==0)
         qname = axutil_qname_create(env,local_name,OXS_ENC_NS,OXS_XENC);
 
-    else if(axis2_strcmp(local_name,OXS_NODE_ENCRYPTED_DATA)==0)
+    else if(axutil_strcmp(local_name,OXS_NODE_ENCRYPTED_DATA)==0)
         qname = axutil_qname_create(env,local_name,OXS_ENC_NS,OXS_XENC);
 
-    else if(axis2_strcmp(local_name,OXS_NODE_SIGNATURE)==0)
+    else if(axutil_strcmp(local_name,OXS_NODE_SIGNATURE)==0)
         qname = axutil_qname_create(env,local_name,OXS_DSIG_NS,OXS_DS);
 
-    else if(axis2_strcmp(local_name,OXS_NODE_BINARY_SECURITY_TOKEN)==0)
+    else if(axutil_strcmp(local_name,OXS_NODE_BINARY_SECURITY_TOKEN)==0)
         return AXIS2_FALSE;
 
-    else if(axis2_strcmp(local_name,OXS_NODE_REFERENCE_LIST)==0)
+    else if(axutil_strcmp(local_name,OXS_NODE_REFERENCE_LIST)==0)
         return AXIS2_FALSE;
 
     else return AXIS2_FALSE;
@@ -273,7 +273,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     if(!enc_asym_algo_in_pol)
         return AXIS2_FAILURE;
 
-    if(axis2_strcmp(enc_asym_algo_in_pol,enc_asym_algo)!=0)
+    if(axutil_strcmp(enc_asym_algo_in_pol,enc_asym_algo)!=0)
     {
         AXIS2_LOG_INFO(env->log, "The key is encrypted with the wrong algorithm");
         return AXIS2_FAILURE;
@@ -409,7 +409,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         if(!sym_algo)
             return AXIS2_FAILURE;
 
-        if(axis2_strcmp(sym_algo, enc_sym_algo_in_pol)!=0)
+        if(axutil_strcmp(sym_algo, enc_sym_algo_in_pol)!=0)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Sym algorithm is mismathced with policy.");
             return AXIS2_FAILURE;
@@ -500,14 +500,14 @@ rampart_shp_process_signature(const axutil_env_t *env,
     {
         axis2_char_t *localname =  NULL;
         localname  = axiom_util_get_localname(cur_node, env);
-        if(axis2_strcmp(localname, OXS_NODE_SIGNATURE_METHOD)==0)
+        if(axutil_strcmp(localname, OXS_NODE_SIGNATURE_METHOD)==0)
         {
             /*Verify the signature method with policy*/
             axis2_char_t *sig_mtd = NULL;
             sig_mtd = oxs_token_get_signature_method(env, cur_node);
             if(sig_mtd)
             {
-                if(axis2_strcmp(sig_mtd_pol,sig_mtd)!=0)
+                if(axutil_strcmp(sig_mtd_pol,sig_mtd)!=0)
                 {
                     AXIS2_LOG_INFO(env->log,"[rampart][shp] Signature method in the message mismatch with policy.");
                     return AXIS2_FAILURE;
@@ -515,7 +515,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
             }
             else return AXIS2_FAILURE;
         }
-        else if(axis2_strcmp(localname, OXS_NODE_REFERENCE)==0)
+        else if(axutil_strcmp(localname, OXS_NODE_REFERENCE)==0)
         {
             /*Verify each digest method with policy*/
             axiom_node_t *digest_mtd_node = NULL;
@@ -529,7 +529,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
                 digest_mtd = oxs_token_get_digest_method(env, digest_mtd_node);
                 if(digest_mtd)
                 {
-                    if(axis2_strcmp(digest_mtd_pol,digest_mtd)!=0)
+                    if(axutil_strcmp(digest_mtd_pol,digest_mtd)!=0)
                     {
                         AXIS2_LOG_INFO(env->log,"[rampart][shp]Digest method is mismatch with policy.");
                         return AXIS2_FAILURE;
@@ -597,7 +597,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
             {
                 if(is_include_token)
                 {
-                    if(axis2_strcmp(str_child_name,OXS_NODE_REFERENCE)!=0)
+                    if(axutil_strcmp(str_child_name,OXS_NODE_REFERENCE)!=0)
                     {
                         AXIS2_LOG_INFO(env->log,"[Rampart][shp]Token is not included in the message.");
                         return AXIS2_FAILURE;
@@ -607,7 +607,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
                 }
                 else
                 {
-                    if(0 == axis2_strcmp(str_child_name,OXS_NODE_EMBEDDED))
+                    if(0 == axutil_strcmp(str_child_name,OXS_NODE_EMBEDDED))
                     {
                         if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_EMBEDDED,env))
                         {
@@ -617,7 +617,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
                         cert = oxs_x509_cert_create(env);
                         status = rampart_token_process_embedded(env,str_child_node,cert);
                     }
-                    else if(0 == axis2_strcmp(str_child_name,OXS_NODE_KEY_IDENTIFIER))
+                    else if(0 == axutil_strcmp(str_child_name,OXS_NODE_KEY_IDENTIFIER))
                     {
                         if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_KEY_IDENTIFIER,env))
                         {
@@ -627,7 +627,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
                         cert = get_receiver_x509_cert(env,rampart_context);
                         status = AXIS2_SUCCESS;
                     }
-                    else if(0 == axis2_strcmp(str_child_name,OXS_NODE_X509_DATA))
+                    else if(0 == axutil_strcmp(str_child_name,OXS_NODE_X509_DATA))
                     {
                         if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_ISSUER_SERIAL,env))
                         {
@@ -665,7 +665,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
     else
     {
         /*In such case policy support only Isssuer Serial scenario.*/
-        if(axis2_strcmp(eki,RAMPART_STR_ISSUER_SERIAL)==0)
+        if(axutil_strcmp(eki,RAMPART_STR_ISSUER_SERIAL)==0)
         {
             key_info_child_node = axiom_node_get_first_element(key_info_node,env);
             if(key_info_child_node)
@@ -674,7 +674,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
                 key_info_child_name = axiom_util_get_localname(key_info_child_node, env);
                 if(key_info_child_name)
                 {
-                    if(0 == axis2_strcmp(key_info_child_name,OXS_NODE_X509_DATA))
+                    if(0 == axutil_strcmp(key_info_child_name,OXS_NODE_X509_DATA))
                     {
                         status = rampart_token_process_x509_data(env,key_info_child_node,cert);
                         if(status!=AXIS2_SUCCESS || !cert)

@@ -108,8 +108,8 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
         serialized_node = axiom_node_to_string(node, env);
     }
 
-    if(0 == axis2_strcmp( OXS_HREF_SHA1 , digest_mtd)){
-        digest = openssl_sha1(env, serialized_node, axis2_strlen(serialized_node));
+    if(0 == axutil_strcmp( OXS_HREF_SHA1 , digest_mtd)){
+        digest = openssl_sha1(env, serialized_node, axutil_strlen(serialized_node));
     }else{
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported digest method  %s", digest_mtd);
         return NULL;
@@ -140,7 +140,7 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     /*Get the reference ID from the node and hence to the ds:Reference node*/
     id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, "wsu:Id");
 
-    ref_id = axis2_stracat(env, "#", id);/* <ds:Reference URI="#id">*/
+    ref_id = axutil_stracat(env, "#", id);/* <ds:Reference URI="#id">*/
     reference_node = oxs_token_build_ds_reference_element(env, parent ,NULL, ref_id, NULL);
 
     /*Get transforms if any*/
@@ -206,7 +206,7 @@ oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
     input_buf = oxs_buffer_create(env);
     output_buf = oxs_buffer_create(env);
 
-    oxs_buffer_populate(input_buf, env, (unsigned char *)serialized_signed_info, axis2_strlen(serialized_signed_info));
+    oxs_buffer_populate(input_buf, env, (unsigned char *)serialized_signed_info, axutil_strlen(serialized_signed_info));
     /*Then sign... NOTE: The signature process includes making the digest. e.g. rsa-sha1 => RSA(SHA-1(contents))*/
     status = oxs_sig_sign(env, sign_ctx, input_buf, output_buf);
 
@@ -288,7 +288,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     oxs_sign_part_set_id(sign_part, env, ref_id);
 
     /*Remove the # from the id*/
-    ref_id2 =  axutil_string_substring_starting_at(axis2_strdup(env, ref_id), 1);
+    ref_id2 =  axutil_string_substring_starting_at(axutil_strdup(env, ref_id), 1);
 
     /*Find the node refered by this ref_id2 and set to the sign part*/
     reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "wsu:Id", ref_id2 );
@@ -302,7 +302,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     /*First child is optional Transforms element*/
     child_node = axiom_node_get_first_element(ref_node, env);
     child_node_name = axiom_util_get_localname(child_node, env);
-    if(0 == axis2_strcmp(child_node_name, OXS_NODE_TRANSFORMS)){
+    if(0 == axutil_strcmp(child_node_name, OXS_NODE_TRANSFORMS)){
         /*Transforms found*/
         /*TODO*/
         axiom_node_t *tr_node = NULL;
@@ -317,7 +317,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
             axis2_char_t *node_name = NULL;
 
             node_name = axiom_util_get_localname(tr_node, env);
-            if( 0 == axis2_strcmp(OXS_NODE_TRANSFORM, node_name)){
+            if( 0 == axutil_strcmp(OXS_NODE_TRANSFORM, node_name)){
                 axis2_char_t *tr_id = NULL;
                 oxs_transform_t *tr = NULL;
 
@@ -350,7 +350,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
 
     /* Process mandatory ds:DigestMethod*/
     child_node_name = axiom_util_get_localname(child_node, env);
-    if(0 == axis2_strcmp(child_node_name, OXS_NODE_DIGEST_METHOD)){
+    if(0 == axutil_strcmp(child_node_name, OXS_NODE_DIGEST_METHOD)){
         axis2_char_t *digest_mtd = NULL;
         /*ds:DigestMethod found*/
         digest_mtd = oxs_token_get_digest_method(env, child_node);
@@ -365,7 +365,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
 
     /* Process mandatory ds:DigestValue*/
     child_node_name = axiom_util_get_localname(child_node, env);
-    if(0 == axis2_strcmp(child_node_name, OXS_NODE_DIGEST_VALUE)){
+    if(0 == axutil_strcmp(child_node_name, OXS_NODE_DIGEST_VALUE)){
         /*ds:DigestValue found*/
         axis2_char_t *digest_val = NULL;
         digest_val = oxs_token_get_digest_value(env, child_node);
@@ -421,17 +421,17 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
 
         localname  = axiom_util_get_localname(cur_node, env);
 
-        if(0 == axis2_strcmp(localname, OXS_NODE_CANONICALIZATION_METHOD)){
+        if(0 == axutil_strcmp(localname, OXS_NODE_CANONICALIZATION_METHOD)){
             axis2_char_t *c14n_mtd = NULL;
             c14n_mtd = oxs_token_get_c14n_method(env, cur_node);
             oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, c14n_mtd);
 
-        }else if(0 == axis2_strcmp(localname, OXS_NODE_SIGNATURE_METHOD)){
+        }else if(0 == axutil_strcmp(localname, OXS_NODE_SIGNATURE_METHOD)){
             axis2_char_t *sig_mtd = NULL;
             sig_mtd = oxs_token_get_signature_method(env, cur_node);
             oxs_sign_ctx_set_sign_mtd_algo(sign_ctx, env, sig_mtd);
 
-        }else if(0 == axis2_strcmp(localname, OXS_NODE_REFERENCE)){
+        }else if(0 == axutil_strcmp(localname, OXS_NODE_REFERENCE)){
             oxs_sign_part_t *sign_part = NULL;
 
             /* There might be multiple references.
@@ -456,7 +456,7 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
     /*Finished processing SignedInfo. Now we are processing the Signature Value element*/
     /*The very next child of SignedInfo Should be the ds:SignatureValue*/
     sig_val_node = axiom_node_get_next_sibling(signed_info_node, env);
-    if(0 == axis2_strcmp( OXS_NODE_SIGNATURE_VALUE, axiom_util_get_localname(sig_val_node, env))){
+    if(0 == axutil_strcmp( OXS_NODE_SIGNATURE_VALUE, axiom_util_get_localname(sig_val_node, env))){
         axis2_char_t *sig_val = NULL;
         axis2_char_t *newline_removed = NULL;
 
@@ -508,7 +508,7 @@ oxs_xml_sig_verify_sign_part(const axutil_env_t *env,
     new_digest = oxs_xml_sig_transform_n_digest(env, node, transforms, digest_mtd);
 
     /*Compare values*/
-    if(0 == axis2_strcmp(new_digest, digest_val)){
+    if(0 == axutil_strcmp(new_digest, digest_val)){
         AXIS2_LOG_INFO(env->log, "[oxs][xml_sig] Digest verification success for node Id= %s ", id );
         status = AXIS2_SUCCESS;
     }else{

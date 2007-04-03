@@ -54,7 +54,7 @@ rampart_rd_record_set_id(
         AXIS2_FREE(env->allocator, rd_record->id );
         rd_record->id = NULL;
     }
-    rd_record->id = axis2_strdup(env, id);
+    rd_record->id = axutil_strdup(env, id);
     return AXIS2_SUCCESS;
 }
 
@@ -70,7 +70,7 @@ rampart_rd_record_set_timestamp(
         AXIS2_FREE(env->allocator, rd_record->timestamp );
         rd_record->timestamp = NULL;
     }
-    rd_record->timestamp = axis2_strdup(env, timestamp);
+    rd_record->timestamp = axutil_strdup(env, timestamp);
     return AXIS2_SUCCESS;
 }
 

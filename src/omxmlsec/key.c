@@ -91,7 +91,7 @@ oxs_key_set_name(
         AXIS2_FREE(env->allocator, key->name);
         key->name = NULL;
     }
-    key->name = axis2_strdup(env, name);
+    key->name = axutil_strdup(env, name);
     return AXIS2_SUCCESS;
 }
 

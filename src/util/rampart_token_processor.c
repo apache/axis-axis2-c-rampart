@@ -46,13 +46,13 @@ rampart_token_process_security_token_reference(const axutil_env_t *env,
     child_node = axiom_node_get_first_element(st_ref_node, env);
     child_name = axiom_util_get_localname(child_node, env);
 
-    if(0 == axis2_strcmp(child_name, OXS_NODE_REFERENCE)){
+    if(0 == axutil_strcmp(child_name, OXS_NODE_REFERENCE)){
         status = rampart_token_process_direct_ref(env, child_node, scope_node, cert);
-    }else if(0 == axis2_strcmp(child_name, OXS_NODE_EMBEDDED)){
+    }else if(0 == axutil_strcmp(child_name, OXS_NODE_EMBEDDED)){
         status = rampart_token_process_embedded(env, child_node, cert);
-    }else if(0 == axis2_strcmp(child_name, OXS_NODE_KEY_IDENTIFIER)){
+    }else if(0 == axutil_strcmp(child_name, OXS_NODE_KEY_IDENTIFIER)){
         status = rampart_token_process_key_identifier(env, child_node, cert);
-    }else if(0 == axis2_strcmp(child_name, OXS_NODE_X509_DATA)){
+    }else if(0 == axutil_strcmp(child_name, OXS_NODE_X509_DATA)){
         status = rampart_token_process_x509_data(env, child_node, cert);
     }else{
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Unsupported child %s of wsse:SecurityTokenReference ", child_name);
@@ -78,7 +78,7 @@ rampart_token_process_direct_ref(const axutil_env_t *env,
 
     /*Select ref using node*/
     ref = oxs_token_get_reference(env, ref_node);
-    ref_id = axutil_string_substring_starting_at(axis2_strdup(env, ref), 1);
+    ref_id = axutil_string_substring_starting_at(axutil_strdup(env, ref), 1);
 
     /*Find the token with the id=ref_id within the scope of scope_node*/
     bst_node = oxs_axiom_get_node_by_id(env, scope_node,"wsu:Id",ref_id);

@@ -207,16 +207,16 @@ oxs_xml_enc_process_key_info(const axutil_env_t *env,
      */
     cur_node = axiom_node_get_first_element(st_ref_node, env);
     node_name = axiom_util_get_localname(cur_node, env);
-    if(0 == axis2_strcmp(OXS_NODE_REFERENCE, node_name)){
+    if(0 == axutil_strcmp(OXS_NODE_REFERENCE, node_name)){
 
     }
-    else if(0 == axis2_strcmp(OXS_NODE_KEY_IDENTIFIER, node_name)){
+    else if(0 == axutil_strcmp(OXS_NODE_KEY_IDENTIFIER, node_name)){
 
     }
-    else if(0 == axis2_strcmp(OXS_NODE_X509_DATA, node_name)){
+    else if(0 == axutil_strcmp(OXS_NODE_X509_DATA, node_name)){
 
     }
-    else if(0 == axis2_strcmp(OXS_NODE_EMBEDDED, node_name)){
+    else if(0 == axutil_strcmp(OXS_NODE_EMBEDDED, node_name)){
 
     }
     else{
@@ -240,7 +240,7 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     /*Serialize node*/
     serialized_data = axiom_node_to_string(node, env);
     serialized_buf = oxs_buffer_create(env);
-    ret =  oxs_buffer_populate(serialized_buf, env, (unsigned char *)serialized_data, axis2_strlen(serialized_data));
+    ret =  oxs_buffer_populate(serialized_buf, env, (unsigned char *)serialized_data, axutil_strlen(serialized_data));
 
     /*We call encrypt_data*/
     ret = oxs_xml_enc_encrypt_data(env, enc_ctx, serialized_buf, enc_type_node);
@@ -320,7 +320,7 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
                   "Data encryption failed");
         return AXIS2_FAILURE;
     }
-    decrypted_data = axis2_strmemdup(oxs_buffer_get_data(result_buf, env), oxs_buffer_get_size(result_buf, env), env);
+    decrypted_data = axutil_strmemdup(oxs_buffer_get_data(result_buf, env), oxs_buffer_get_size(result_buf, env), env);
     /*De-serialize the decrypted content to build the node*/
     deserialized_node = (axiom_node_t*)oxs_axiom_deserialize_node(env, decrypted_data);
     if(!deserialized_node){
@@ -379,7 +379,7 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
 
     /*Create input buffer with cipher data obtained*/
     input_buf = oxs_buffer_create(env);
-    oxs_buffer_populate(input_buf, env, (unsigned char*)cipher_val, axis2_strlen(cipher_val) );
+    oxs_buffer_populate(input_buf, env, (unsigned char*)cipher_val, axutil_strlen(cipher_val) );
 
     /*Decrypt*/
     oxs_ctx_set_operation(enc_ctx, env, OXS_CTX_OPERATION_DECRYPT);
@@ -443,17 +443,17 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
     stref_node = oxs_token_build_security_token_reference_element(env, key_info_node);
     /*Get the ST REF pattern. If not set the default*/
     st_ref_pattern = oxs_asym_ctx_get_st_ref_pattern(asym_ctx, env);
-    if((!st_ref_pattern) || (0 == axis2_strcmp(st_ref_pattern, ""))){
+    if((!st_ref_pattern) || (0 == axutil_strcmp(st_ref_pattern, ""))){
         st_ref_pattern = OXS_STR_DEFAULT;
     }
 
-    if(0 == axis2_strcmp(st_ref_pattern, OXS_STR_ISSUER_SERIAL)){
+    if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_ISSUER_SERIAL)){
         status = oxs_xml_enc_populate_stref_with_issuer_serial(env, asym_ctx, stref_node);
-    }else if(0 == axis2_strcmp(st_ref_pattern, OXS_STR_EMBEDDED)){
+    }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_EMBEDDED)){
         status = oxs_xml_enc_populate_stref_with_embedded(env, asym_ctx, stref_node);
-    }else if(0 == axis2_strcmp(st_ref_pattern, OXS_STR_DIRECT_REFERENCE)){
+    }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_DIRECT_REFERENCE)){
         status = oxs_xml_enc_populate_stref_with_bst(env, asym_ctx, stref_node, parent);
-    }else if(0 == axis2_strcmp(st_ref_pattern, OXS_STR_KEY_IDENTIFIER)){
+    }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_KEY_IDENTIFIER)){
         status = oxs_xml_enc_populate_stref_with_key_identifier(env, asym_ctx, stref_node);
     }
 
@@ -511,7 +511,7 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     /*Get the pkey used to decrypt the session key. If found set it to the asym_ctx*/
     /*Create the input buffer*/
     input_buf = oxs_buffer_create(env);
-    oxs_buffer_populate(input_buf, env, (unsigned char*)cipher_val, axis2_strlen(cipher_val));
+    oxs_buffer_populate(input_buf, env, (unsigned char*)cipher_val, axutil_strlen(cipher_val));
 
     /*Create a results buffer*/
     result_buf = oxs_buffer_create(env);

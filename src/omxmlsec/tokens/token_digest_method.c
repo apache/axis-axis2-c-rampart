@@ -80,7 +80,7 @@ oxs_token_get_digest_method(const axutil_env_t *env, axiom_node_t *digest_mtd_no
     }
 
     digest_mtd = axiom_element_get_attribute_value_by_name(digest_mtd_ele, env, OXS_ATTR_ALGORITHM);
-    if((!digest_mtd) ||(0 == axis2_strcmp("", digest_mtd))){
+    if((!digest_mtd) ||(0 == axutil_strcmp("", digest_mtd))){
         return NULL;
     }
 

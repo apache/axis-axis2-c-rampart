@@ -60,7 +60,7 @@ oxs_transforms_factory_produce_transform(const axutil_env_t *env,
     oxs_transform_t *tr =  NULL;
 
     /*Inspect the id and produce a transform*/
-    if(0== axis2_strcmp(id, OXS_HREF_TRANSFORM_XML_EXC_C14N)){
+    if(0== axutil_strcmp(id, OXS_HREF_TRANSFORM_XML_EXC_C14N)){
         tr = oxs_transform_create(env);
         oxs_transform_set_id(tr, env, id);
         oxs_transform_set_input_data_type(tr, env, OXS_TRANSFORM_TYPE_NODE);

@@ -83,7 +83,7 @@ oxs_sign_part_set_id(
         AXIS2_FREE(env->allocator, sign_part->id);
         sign_part->id = NULL;
     }
-    sign_part->id = axis2_strdup(env, id);
+    sign_part->id = axutil_strdup(env, id);
     return AXIS2_SUCCESS;
 }
 
@@ -99,7 +99,7 @@ oxs_sign_part_set_digest_mtd(
         AXIS2_FREE(env->allocator, sign_part->digest_mtd);
         sign_part->digest_mtd = NULL;
     }
-    sign_part->digest_mtd = axis2_strdup(env, digest_mtd);
+    sign_part->digest_mtd = axutil_strdup(env, digest_mtd);
     return AXIS2_SUCCESS;
 }
 
@@ -115,7 +115,7 @@ oxs_sign_part_set_digest_val(
         AXIS2_FREE(env->allocator, sign_part->digest_val);
         sign_part->digest_val = NULL;
     }
-    sign_part->digest_val = axis2_strdup(env, digest_val);
+    sign_part->digest_val = axutil_strdup(env, digest_val);
     return AXIS2_SUCCESS;
 }
 

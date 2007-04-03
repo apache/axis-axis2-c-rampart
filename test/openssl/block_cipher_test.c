@@ -119,10 +119,10 @@ int main()
     bc1_ctx = openssl_evp_block_cipher_ctx_create(env);
     if (!bc1_ctx) return(-1);
     /*Set the key*/
-    bc1_ctx->key = key; /*axis2_strdup(key, env);*/
+    bc1_ctx->key = key; /*axutil_strdup(key, env);*/
     bc1_ctx->key_initialized = 1;
     /*Set the IV*/
-    bc1_ctx->iv =  axis2_strdup(env, iv);
+    bc1_ctx->iv =  axutil_strdup(env, iv);
     ret =  openssl_evp_block_cipher_ctx_init(env, bc1_ctx,
             OPENSSL_ENCRYPT, cipher_name);
     if (ret < 0)
@@ -150,10 +150,10 @@ int main()
     bc2_ctx = openssl_evp_block_cipher_ctx_create(env);
     if (!bc2_ctx) return(-1);
     /*Set the key*/
-    bc2_ctx->key = key; /*axis2_strdup(key, env);*/
+    bc2_ctx->key = key; /*axutil_strdup(key, env);*/
     bc2_ctx->key_initialized = 1;
     /*Set the IV*/
-    bc2_ctx->iv =  axis2_strdup(env, iv);
+    bc2_ctx->iv =  axutil_strdup(env, iv);
     ret =  openssl_evp_block_cipher_ctx_init(env, bc2_ctx,
             OPENSSL_DECRYPT, cipher_name);
     if (ret < 0)

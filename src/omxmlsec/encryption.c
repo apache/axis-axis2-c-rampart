@@ -52,7 +52,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
     /*Get the IV*/
-    iv = axis2_strndup(env,
+    iv = axutil_strndup(env,
               (axis2_char_t*)oxs_iv_generate_for_algo(env,
                            oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env)),
                        openssl_cipher_property_get_iv_size(cprop, env));
@@ -117,7 +117,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         }
 
         /*Attach the result to the result buf*/
-        ret = oxs_buffer_populate(result, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
+        ret = oxs_buffer_populate(result, env, (unsigned char*)axutil_strdup(env, encoded_str), encodedlen);
 
         /*Free*/
         oxs_buffer_free(output, env);
@@ -189,14 +189,14 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
 
     algorithm = oxs_asym_ctx_get_algorithm(ctx, env);
     /* We support RSA v1.5 encryption only. If any other algorithm is specified, replace it with the proper one
-    if(0 != (axis2_strcmp(OXS_HREF_RSA_PKCS1, algorithm ))) {
+    if(0 != (axutil_strcmp(OXS_HREF_RSA_PKCS1, algorithm ))) {
         oxs_asym_ctx_set_algorithm(ctx, env, OXS_HREF_RSA_PKCS1);
     }*/
 
     /*Set the proper padding for the algorithm*/
-    if(0 == (axis2_strcmp(OXS_HREF_RSA_OAEP, algorithm))){
+    if(0 == (axutil_strcmp(OXS_HREF_RSA_OAEP, algorithm))){
         padding = OPENSSL_RSA_PKCS1_OAEP_PADDING;
-    }else if(0 == (axis2_strcmp(OXS_HREF_RSA_PKCS1, algorithm))){
+    }else if(0 == (axutil_strcmp(OXS_HREF_RSA_PKCS1, algorithm))){
         padding = OPENSSL_RSA_PKCS1_PADDING;
     }
 
@@ -227,7 +227,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
         encodedlen = axutil_base64_encode_len(enclen);
         encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
         ret = axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(out_buf, env), enclen);
-        status = oxs_buffer_populate(result, env, (unsigned char*)axis2_strdup(env, encoded_str), encodedlen);
+        status = oxs_buffer_populate(result, env, (unsigned char*)axutil_strdup(env, encoded_str), encodedlen);
 
         /*Free*/
         oxs_buffer_free(out_buf, env);

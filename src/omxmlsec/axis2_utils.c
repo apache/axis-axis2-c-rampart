@@ -42,7 +42,7 @@ AXIS2_EXTERN oxs_buffer_t * AXIS2_CALL  oxs_base64_encode(axutil_env_t *env,
 
     int ret;
 
-    encoded_str = AXIS2_MALLOC(env->allocator, (unsigned int)axutil_base64_encode_len(axis2_strlen((char*)(plain_buf->data))));
+    encoded_str = AXIS2_MALLOC(env->allocator, (unsigned int)axutil_base64_encode_len(axutil_strlen((char*)(plain_buf->data))));
 
     ret =  axutil_base64_encode(encoded_str, (char*)(plain_buf->data), plain_buf->size);
     if (ret < 0) return NULL;
