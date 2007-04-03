@@ -63,7 +63,7 @@ oxs_token_get_data_reference(const axutil_env_t *env, axiom_node_t *data_ref_nod
     axis2_char_t *data_ref = NULL;
     axiom_element_t *data_reference_ele = NULL;
 
-    data_reference_ele = AXIOM_NODE_GET_DATA_ELEMENT(data_ref_node, env);
+    data_reference_ele = axiom_node_get_data_element(data_ref_node, env);
     if (!data_reference_ele)
     {
         oxs_error(env, ERROR_LOCATION,

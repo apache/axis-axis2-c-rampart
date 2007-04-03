@@ -95,7 +95,7 @@ decrypt(axutil_env_t *env,  axis2_char_t *filename)
     }else{
         printf("\noxs_xml_enc_decrypt_node FAILURE\n");
     }
-    serialized_data = AXIOM_NODE_TO_STRING(tmpl, env);
+    serialized_data = axiom_node_to_string(tmpl, env);
     outf = fopen("decrypted-result.xml", "wb");
     fwrite(serialized_data, 1, axis2_strlen(serialized_data), outf);
     fclose(outf);
@@ -141,7 +141,7 @@ encrypt(axutil_env_t *env,  axis2_char_t *filename)
         printf("\noxs_enc_encrypt_template FAILURE\n");
     }
 
-    encrypted_result = AXIOM_NODE_TO_STRING(tmpl, env) ;
+    encrypted_result = axiom_node_to_string(tmpl, env) ;
 
     outf = fopen("result.xml", "wb");
     fwrite(encrypted_result, 1, axis2_strlen(encrypted_result), outf);

@@ -71,7 +71,7 @@ oxs_token_get_transform(const axutil_env_t *env, axiom_node_t *transform_node)
         return NULL;
     }
 
-    transform_ele = AXIOM_NODE_GET_DATA_ELEMENT(transform_node, env);
+    transform_ele = axiom_node_get_data_element(transform_node, env);
     if (!transform_ele)
     {
         oxs_error(env, ERROR_LOCATION,

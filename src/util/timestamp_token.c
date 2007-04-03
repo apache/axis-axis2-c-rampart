@@ -126,7 +126,7 @@ rampart_timestamp_token_validate(
 
     /*First child MUST be the Created element*/
     created_node = axiom_node_get_first_element(ts_node, env);
-    created_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(created_node, env);
+    created_ele = (axiom_element_t*)axiom_node_get_data_element(created_node, env);
     if (axis2_strcmp(RAMPART_SECURITY_TIMESTAMP_CREATED ,
                      axiom_element_get_localname(created_ele, env)) != 0)
     {
@@ -153,7 +153,7 @@ rampart_timestamp_token_validate(
         /*If the expire element is not present, it means that the message will not be expired.*/
         return AXIS2_SUCCESS;
     }
-    expires_ele  = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(expires_node, env);
+    expires_ele  = (axiom_element_t*)axiom_node_get_data_element(expires_node, env);
     if (axis2_strcmp(RAMPART_SECURITY_TIMESTAMP_EXPIRES ,
                      axiom_element_get_localname(expires_ele, env)) != 0)
     {

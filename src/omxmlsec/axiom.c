@@ -44,7 +44,7 @@ oxs_axiom_add_attribute(const axutil_env_t *env,
 
     ns =  axiom_namespace_create(env, attribute_ns_uri, attribute_ns);
 
-    ele =  AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    ele =  axiom_node_get_data_element(node, env);
     attr =  axiom_attribute_create(env, attribute , value, ns);
     status = axiom_element_add_attribute(ele, env, attr, node);
 
@@ -66,7 +66,7 @@ oxs_axiom_get_number_of_children_with_qname(const axutil_env_t *env,
     int counter = 0;
 
     qname = axutil_qname_create(env, local_name, ns_uri, prefix);
-    parent_ele = AXIOM_NODE_GET_DATA_ELEMENT(parent, env);
+    parent_ele = axiom_node_get_data_element(parent, env);
     if (!parent_ele)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
@@ -97,7 +97,7 @@ oxs_axiom_get_node_by_local_name(const axutil_env_t *env,
 
     if(!node){return NULL;}
 
-    if(AXIOM_NODE_GET_NODE_TYPE(node, env) != AXIOM_ELEMENT){return NULL;}
+    if(axiom_node_get_node_type(node, env) != AXIOM_ELEMENT){return NULL;}
 
     temp_name = axiom_util_get_localname(node, env);
     AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for %s", temp_name, local_name );
@@ -117,7 +117,7 @@ oxs_axiom_get_node_by_local_name(const axutil_env_t *env,
             if(res_node){
                 return res_node;
             }
-            temp_node = AXIOM_NODE_GET_NEXT_SIBLING(temp_node, env);
+            temp_node = axiom_node_get_next_sibling(temp_node, env);
         }
 
     }
@@ -138,7 +138,7 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
 
     if(!node){return NULL;}
 
-    if(AXIOM_NODE_GET_NODE_TYPE(node, env) != AXIOM_ELEMENT){return NULL;}
+    if(axiom_node_get_node_type(node, env) != AXIOM_ELEMENT){return NULL;}
 
     localname = axiom_util_get_localname(node, env);
     /*AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for the attribute %s with value = %s", localname, attr, val);*/
@@ -159,7 +159,7 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
             if(res_node){
                 return res_node;
             }
-            temp_node = AXIOM_NODE_GET_NEXT_SIBLING(temp_node, env);
+            temp_node = axiom_node_get_next_sibling(temp_node, env);
         }
 
     }
@@ -175,7 +175,7 @@ oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
     axis2_char_t *attribute_value = NULL;
     axiom_element_t *ele = NULL;
 
-    ele = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    ele = axiom_node_get_data_element(node, env);
     attribute_value = axiom_element_get_attribute_value_by_name(ele, env, attribute_name);
 
     return attribute_value;
@@ -195,7 +195,7 @@ oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
     axis2_char_t *parent_name = NULL;
 
     qname = axutil_qname_create(env, local_name, ns_uri, prefix);
-    parent_ele = AXIOM_NODE_GET_DATA_ELEMENT(parent, env);
+    parent_ele = axiom_node_get_data_element(parent, env);
     if (!parent_ele)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
@@ -208,7 +208,7 @@ oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
     axutil_qname_free(qname, env);
     qname = NULL;
 
-    parent_name = AXIOM_NODE_TO_STRING(parent, env);
+    parent_name = axiom_node_to_string(parent, env);
     if (!node)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
@@ -225,7 +225,7 @@ oxs_axiom_get_node_content(const axutil_env_t *env, axiom_node_t* node)
     axiom_element_t *ele = NULL;
     axis2_char_t *content = NULL;
 
-    ele = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    ele = axiom_node_get_data_element(node, env);
     if (!ele) return NULL;
 
     content = axiom_element_get_text(ele, env, node);
@@ -294,7 +294,7 @@ oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_cha
     axis2_char_t* ns_str = NULL;
     axutil_qname_t* qname = NULL;
 
-    ele = AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+    ele = axiom_node_get_data_element(node, env);
     qname = axiom_element_get_qname(ele, env, node);
 
     namestr = axutil_qname_get_localpart(qname, env);

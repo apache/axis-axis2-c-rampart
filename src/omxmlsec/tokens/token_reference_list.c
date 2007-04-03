@@ -88,7 +88,7 @@ oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_lis
                   "reference list node is NULL");
         return NULL;
     }
-    ref_list_ele = AXIOM_NODE_GET_DATA_ELEMENT(ref_list_node, env);
+    ref_list_ele = axiom_node_get_data_element(ref_list_node, env);
 
     /*Get children*/
     qname = axutil_qname_create(env, OXS_NODE_DATA_REFERENCE,OXS_ENC_NS,OXS_ENC_NS);

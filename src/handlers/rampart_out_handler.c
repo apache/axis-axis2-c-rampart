@@ -111,7 +111,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
             /*No SOAP header, so no point of proceeding*/
             return AXIS2_SUCCESS;
         }
-        soap_header_ele = (axiom_element_t *)AXIOM_NODE_GET_DATA_ELEMENT(soap_header_node,env);
+        soap_header_ele = (axiom_element_t *)axiom_node_get_data_element(soap_header_node,env);
 
         /*since rampart out_handler is a global handler we should
         first check whether the rampart module is engaged.If not we

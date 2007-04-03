@@ -134,7 +134,7 @@ rampart_get_security_token(const axutil_env_t *env,
             axutil_hash_this(hash_index, NULL, NULL, &hb);
             header_block = (axiom_soap_header_block_t *)hb;
             header_block_node = axiom_soap_header_block_get_base_node(header_block, env);
-            header_block_ele  = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(header_block_node, env);
+            header_block_ele  = (axiom_element_t*)axiom_node_get_data_element(header_block_node, env);
             ele_localname = axiom_element_get_localname(header_block_ele, env);
 
             if (axis2_strcmp(ele_localname, RAMPART_SECURITY) == 0)

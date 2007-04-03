@@ -55,14 +55,14 @@ oxs_token_build_binary_security_token_element(const axutil_env_t *env,
     }
 
     /*Binary security token must be added as the first child of the paretn*/
-    binary_security_token_node = AXIOM_NODE_DETACH(binary_security_token_node, env);
+    binary_security_token_node = axiom_node_detach(binary_security_token_node, env);
     first_child_of_parent = axiom_node_get_first_element(parent, env);
     if(first_child_of_parent){
         /*If there is a child add bst before it*/
-        AXIOM_NODE_INSERT_SIBLING_BEFORE(first_child_of_parent, env, binary_security_token_node);
+        axiom_node_insert_sibling_before(first_child_of_parent, env, binary_security_token_node);
     }else{
         /*If there are no children just add the bst*/
-        AXIOM_NODE_ADD_CHILD(parent, env, binary_security_token_node);
+        axiom_node_add_child(parent, env, binary_security_token_node);
     }
     if (!id)
     {

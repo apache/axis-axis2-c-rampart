@@ -30,9 +30,9 @@ rp_rampart_config_builder_build(const axutil_env_t *env, axiom_node_t *config)
 
     if(config)
     {
-        if(AXIOM_NODE_GET_NODE_TYPE(config,env) == AXIOM_ELEMENT)
+        if(axiom_node_get_node_type(config,env) == AXIOM_ELEMENT)
         {
-            config_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(config, env);
+            config_ele = (axiom_element_t*)axiom_node_get_data_element(config, env);
 
             rampart_config = rp_rampart_config_create(env);
             if(!rampart_config)
@@ -52,9 +52,9 @@ rp_rampart_config_builder_build(const axutil_env_t *env, axiom_node_t *config)
                         node = axiom_children_iterator_next(children_iter, env);
                         if(node)
                         {
-                            if(AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
+                            if(axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
                             {
-                                ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+                                ele = (axiom_element_t*)axiom_node_get_data_element(node, env);
                                 if(ele)
                                 {
                                     local_name = axiom_element_get_localname(ele,env);

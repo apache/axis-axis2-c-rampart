@@ -71,7 +71,7 @@ oxs_token_get_digest_method(const axutil_env_t *env, axiom_node_t *digest_mtd_no
         return NULL;
     }
 
-    digest_mtd_ele = AXIOM_NODE_GET_DATA_ELEMENT(digest_mtd_node, env);
+    digest_mtd_ele = axiom_node_get_data_element(digest_mtd_node, env);
     if (!digest_mtd_ele)
     {
         oxs_error(env, ERROR_LOCATION,

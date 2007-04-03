@@ -77,7 +77,7 @@ rampart_shb_build_message(const axutil_env_t *env,
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
     soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
     soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
-    soap_header_ele = (axiom_element_t *)AXIOM_NODE_GET_DATA_ELEMENT(
+    soap_header_ele = (axiom_element_t *)axiom_node_get_data_element(
                           soap_header_node, env);
 
 
@@ -98,7 +98,7 @@ rampart_shb_build_message(const axutil_env_t *env,
 
     sec_node = axiom_soap_header_block_get_base_node(sec_header_block, env);
     sec_ele = (axiom_element_t *)
-              AXIOM_NODE_GET_DATA_ELEMENT(sec_node, env);
+              axiom_node_get_data_element(sec_node, env);
 
     /*check the binding*/
     if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_ASYMMETRIC)

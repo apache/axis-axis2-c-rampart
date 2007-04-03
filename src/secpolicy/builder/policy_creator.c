@@ -69,9 +69,9 @@ rp_policy_create_from_om_node(
     rp_secpolicy_t *secpolicy = NULL;
     axis2_char_t *local_name = NULL;
     
-    if(AXIOM_NODE_GET_NODE_TYPE(root, env) == AXIOM_ELEMENT)
+    if(axiom_node_get_node_type(root, env) == AXIOM_ELEMENT)
     {
-        root_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT (root, env);
+        root_ele = (axiom_element_t*)axiom_node_get_data_element (root, env);
         if(root_ele)
         {
             local_name = axiom_element_get_localname(root_ele,env);
@@ -97,9 +97,9 @@ rp_policy_create_from_om_node(
     exat_node = axiom_node_get_first_element(root,env);
     if(exat_node)
     {
-        if(AXIOM_NODE_GET_NODE_TYPE(exat_node, env) == AXIOM_ELEMENT)
+        if(axiom_node_get_node_type(exat_node, env) == AXIOM_ELEMENT)
         {
-            exat_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT (exat_node, env);
+            exat_ele = (axiom_element_t*)axiom_node_get_data_element (exat_node, env);
             if(exat_ele)
             {
                 local_name = axiom_element_get_localname(exat_ele,env);
@@ -128,9 +128,9 @@ rp_policy_create_from_om_node(
     all_node = axiom_node_get_first_element(exat_node,env);
     if(all_node)
     {
-        if(AXIOM_NODE_GET_NODE_TYPE(all_node, env) == AXIOM_ELEMENT)
+        if(axiom_node_get_node_type(all_node, env) == AXIOM_ELEMENT)
         {
-            all_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(all_node, env);
+            all_ele = (axiom_element_t*)axiom_node_get_data_element(all_node, env);
             if(all_ele)
             {
                 local_name = axiom_element_get_localname(all_ele,env);

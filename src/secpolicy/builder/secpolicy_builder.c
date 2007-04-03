@@ -31,9 +31,9 @@ rp_secpolicy_builder_build(const axutil_env_t *env, axiom_node_t *all)
 
     if(all)
     {
-        if(AXIOM_NODE_GET_NODE_TYPE(all, env) == AXIOM_ELEMENT)
+        if(axiom_node_get_node_type(all, env) == AXIOM_ELEMENT)
         {
-            all_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT (all, env);
+            all_ele = (axiom_element_t*)axiom_node_get_data_element (all, env);
             secpolicy = rp_secpolicy_create(env);
             if(!secpolicy)
                 return NULL;                        
@@ -51,9 +51,9 @@ rp_secpolicy_builder_build(const axutil_env_t *env, axiom_node_t *all)
                         node = axiom_children_iterator_next(children_iter, env);
                         if(node)
                         {
-                            if(AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
+                            if(axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
                             {
-                                ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT (node, env);
+                                ele = (axiom_element_t*)axiom_node_get_data_element (node, env);
                                 if(ele)
                                 {
                                     local_name = axiom_element_get_localname(ele, env);

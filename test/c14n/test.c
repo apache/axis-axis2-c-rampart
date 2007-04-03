@@ -103,11 +103,11 @@ int test(int argc, char **argv)
 
     if (!res) return -1; /*error occured!*/
 
-    len = AXIS2_STREAM_BASIC_GET_LEN(stream, env) + 1;
+    len = axutil_stream_get_len(stream, env) + 1;
     c14n_doc = (axis2_char_t*)AXIS2_MALLOC(env->allocator, len);
     
     
-    AXIS2_STREAM_READ(stream, env, c14n_doc, len);
+    axutil_stream_read(stream, env, c14n_doc, len);
     
     printf("%s",c14n_doc);
 
@@ -118,7 +118,7 @@ int test(int argc, char **argv)
     }
     if (stream)
     {
-        AXIS2_STREAM_FREE(stream, env);
+        axutil_stream_free(stream, env);
         stream = NULL;
     }
     if (c14n_doc)

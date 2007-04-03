@@ -35,9 +35,9 @@ rp_asymmetric_binding_builder_build(const axutil_env_t *env, axiom_node_t *asymm
     {
         policy = axiom_node_get_first_element(asymmetric,env);
 
-        if(AXIOM_NODE_GET_NODE_TYPE(policy, env) == AXIOM_ELEMENT)
+        if(axiom_node_get_node_type(policy, env) == AXIOM_ELEMENT)
         {
-            pol_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(policy, env);
+            pol_ele = (axiom_element_t*)axiom_node_get_data_element(policy, env);
 
             asymmetric_binding = rp_asymmetric_binding_create(env);
             if(!asymmetric_binding)
@@ -65,9 +65,9 @@ rp_asymmetric_binding_builder_build(const axutil_env_t *env, axiom_node_t *asymm
                         node = axiom_children_iterator_next(children_iter, env);
                         if(node)
                         {
-                            if(AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
+                            if(axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
                             {
-                                ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+                                ele = (axiom_element_t*)axiom_node_get_data_element(node, env);
                                 if(ele)
                                 {
                                     local_name = axiom_element_get_localname(ele,env);

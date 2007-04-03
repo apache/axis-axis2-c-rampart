@@ -71,7 +71,7 @@ oxs_token_get_c14n_method(const axutil_env_t *env, axiom_node_t *c14n_mtd_node)
         return NULL;
     }
 
-    c14n_mtd_ele = AXIOM_NODE_GET_DATA_ELEMENT(c14n_mtd_node, env);
+    c14n_mtd_ele = axiom_node_get_data_element(c14n_mtd_node, env);
     if (!c14n_mtd_ele)
     {
         oxs_error(env, ERROR_LOCATION,

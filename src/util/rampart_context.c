@@ -884,7 +884,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
             {
                 axiom_element_t *ret_node_ele = NULL;
                 ret_node_ele = (axiom_element_t *)
-                               AXIOM_NODE_GET_DATA_ELEMENT(ret_node, env);
+                               axiom_node_get_data_element(ret_node, env);
                 if(ret_node_ele)
                 {
                     axiom_namespace_t *ns = NULL;
@@ -973,7 +973,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
                 {
                     axiom_element_t *ret_node_ele = NULL;
                     ret_node_ele = (axiom_element_t *)
-                               AXIOM_NODE_GET_DATA_ELEMENT(ret_node, env);
+                               axiom_node_get_data_element(ret_node, env);
                     if(ret_node_ele)
                     {
                         axiom_namespace_t *ns = NULL;

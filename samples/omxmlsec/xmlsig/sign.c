@@ -132,7 +132,7 @@ axis2_status_t sign(axutil_env_t *env,
     }else{
         printf("Sign ctx creation failed");
     }
-    signed_result = AXIOM_NODE_TO_STRING(tmpl, env) ;
+    signed_result = axiom_node_to_string(tmpl, env) ;
 
     outf = fopen(signed_filename, "wb");
     fwrite(signed_result, 1, axis2_strlen(signed_result), outf);

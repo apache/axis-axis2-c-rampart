@@ -40,9 +40,9 @@ rp_layout_builder_build(
             name = axiom_node_get_first_element(policy,env);
             if(name)
             {
-                if(AXIOM_NODE_GET_NODE_TYPE(name,env) == AXIOM_ELEMENT)
+                if(axiom_node_get_node_type(name,env) == AXIOM_ELEMENT)
                 {
-                    name_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(name, env);
+                    name_ele = (axiom_element_t*)axiom_node_get_data_element(name, env);
                     if(name_ele)
                     {
                         value = axiom_element_get_localname(name_ele, env);

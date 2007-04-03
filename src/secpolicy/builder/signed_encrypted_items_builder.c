@@ -40,9 +40,9 @@ rp_signed_encrypted_items_builder_build(
     if(!signed_encrypted_items)
         return NULL;
 
-    if(AXIOM_NODE_GET_NODE_TYPE(items, env) == AXIOM_ELEMENT)
+    if(axiom_node_get_node_type(items, env) == AXIOM_ELEMENT)
     {
-        items_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(items, env);
+        items_ele = (axiom_element_t*)axiom_node_get_data_element(items, env);
         if(items_ele)
         {
             axiom_children_iterator_t *children_iter = NULL;
@@ -57,9 +57,9 @@ rp_signed_encrypted_items_builder_build(
                     node = axiom_children_iterator_next(children_iter, env);
                     if(node)
                     {
-                        if(AXIOM_NODE_GET_NODE_TYPE(node, env) == AXIOM_ELEMENT)
+                        if(axiom_node_get_node_type(node, env) == AXIOM_ELEMENT)
                         {
-                            ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(node, env);
+                            ele = (axiom_element_t*)axiom_node_get_data_element(node, env);
                             if(ele)
                             {
                                 local_name = axiom_element_get_localname(ele,env);

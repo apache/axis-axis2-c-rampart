@@ -98,7 +98,7 @@ oxs_xml_key_process_X509IssuerSerial(const axutil_env_t *env,
         issuer_name = oxs_axiom_get_node_content(env, issuer_name_node);
     }
 
-    serial_num_node = AXIOM_NODE_GET_NEXT_SIBLING(issuer_name_node, env);
+    serial_num_node = axiom_node_get_next_sibling(issuer_name_node, env);
     if(serial_num_node){
         serial_num_str = oxs_axiom_get_node_content(env, serial_num_node);
     }

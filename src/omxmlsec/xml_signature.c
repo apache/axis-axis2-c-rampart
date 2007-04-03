@@ -96,7 +96,7 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
         /*We have applied all our transforms now*/
         /*Serialize node*/
         if(OXS_TRANSFORM_TYPE_NODE == output_dtype ){
-            serialized_node = AXIOM_NODE_TO_STRING((axiom_node_t*)tr_output, env);
+            serialized_node = axiom_node_to_string((axiom_node_t*)tr_output, env);
         }else if(OXS_TRANSFORM_TYPE_CHAR == output_dtype){
             serialized_node = (axis2_char_t*)tr_output;
         }else{
@@ -105,7 +105,7 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
         }
     }else{
         /*No transforms defined. Thus we simply direct the node, to make the digest*/
-        serialized_node = AXIOM_NODE_TO_STRING(node, env);
+        serialized_node = axiom_node_to_string(node, env);
     }
 
     if(0 == axis2_strcmp( OXS_HREF_SHA1 , digest_mtd)){
@@ -200,7 +200,7 @@ oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
     AXIS2_LOG_INFO(env->log, "[oxs][xml_sig] C14N (sig)= %s ", c14nized );
 
     /*Then serialize <SignedInfo>*/
-    serialized_signed_info = c14nized; /*AXIOM_NODE_TO_STRING(signed_info_node, env);*/
+    serialized_signed_info = c14nized; /*axiom_node_to_string(signed_info_node, env);*/
 
     /*Make the input and out put buffers*/
     input_buf = oxs_buffer_create(env);
@@ -337,13 +337,13 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
                 return AXIS2_FAILURE;
             }
             /*Set the next node to be precessed*/
-            tr_node = AXIOM_NODE_GET_NEXT_SIBLING(tr_node, env);
+            tr_node = axiom_node_get_next_sibling(tr_node, env);
         }/*eof while*/
         /*Set transforms for this signature part*/
         oxs_sign_part_set_transforms(sign_part, env, tr_list);
 
         /*At the end, set the next node as the child node*/
-        child_node = AXIOM_NODE_GET_NEXT_SIBLING(child_node, env);
+        child_node = axiom_node_get_next_sibling(child_node, env);
     }else{
         /*There are no transforms for this sign part*/
     }
@@ -357,7 +357,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
         oxs_sign_part_set_digest_mtd(sign_part, env, digest_mtd);
 
         /*At the end, set the next node as the child node*/
-        child_node = AXIOM_NODE_GET_NEXT_SIBLING(child_node, env);
+        child_node = axiom_node_get_next_sibling(child_node, env);
     }else{
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:DigestMethod> " );
         return AXIS2_FAILURE;
@@ -449,13 +449,13 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
         }else{
             /*We do not process*/
         }
-        cur_node = AXIOM_NODE_GET_NEXT_SIBLING(cur_node, env);
+        cur_node = axiom_node_get_next_sibling(cur_node, env);
     }
 
     oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_part_list);
     /*Finished processing SignedInfo. Now we are processing the Signature Value element*/
     /*The very next child of SignedInfo Should be the ds:SignatureValue*/
-    sig_val_node = AXIOM_NODE_GET_NEXT_SIBLING(signed_info_node, env);
+    sig_val_node = axiom_node_get_next_sibling(signed_info_node, env);
     if(0 == axis2_strcmp( OXS_NODE_SIGNATURE_VALUE, axiom_util_get_localname(sig_val_node, env))){
         axis2_char_t *sig_val = NULL;
         axis2_char_t *newline_removed = NULL;

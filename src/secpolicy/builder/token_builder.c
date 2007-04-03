@@ -43,9 +43,9 @@ rp_token_builder_build(
             token_name = axiom_node_get_first_element(policy,env);
             if(token_name)
             {
-                if(AXIOM_NODE_GET_NODE_TYPE(token_name,env) == AXIOM_ELEMENT)
+                if(axiom_node_get_node_type(token_name,env) == AXIOM_ELEMENT)
                 {
-                    token_name_ele = (axiom_element_t*)AXIOM_NODE_GET_DATA_ELEMENT(token_name, env);
+                    token_name_ele = (axiom_element_t*)axiom_node_get_data_element(token_name, env);
                     if(token_name_ele)
                     {
                         token_value = axiom_element_get_localname(token_name_ele, env);

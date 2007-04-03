@@ -71,7 +71,7 @@ oxs_token_get_encryption_method(const axutil_env_t *env, axiom_node_t *enc_mtd_n
         return NULL;
     }
 
-    enc_mtd_ele = AXIOM_NODE_GET_DATA_ELEMENT(enc_mtd_node, env);
+    enc_mtd_ele = axiom_node_get_data_element(enc_mtd_node, env);
     if (!enc_mtd_ele)
     {
         oxs_error(env, ERROR_LOCATION,

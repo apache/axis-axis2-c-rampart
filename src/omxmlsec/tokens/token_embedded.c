@@ -68,7 +68,7 @@ oxs_token_get_embedded_id(const axutil_env_t *env, axiom_node_t *embedded_node)
     axis2_char_t *embedded = NULL;
     axiom_element_t *embedded_ele = NULL;
 
-    embedded_ele = AXIOM_NODE_GET_DATA_ELEMENT(embedded_node, env);
+    embedded_ele = axiom_node_get_data_element(embedded_node, env);
     if (!embedded_ele)
     {
         oxs_error(env, ERROR_LOCATION,

@@ -238,7 +238,7 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     axis2_status_t ret = AXIS2_FAILURE;
 
     /*Serialize node*/
-    serialized_data = AXIOM_NODE_TO_STRING(node, env);
+    serialized_data = axiom_node_to_string(node, env);
     serialized_buf = oxs_buffer_create(env);
     ret =  oxs_buffer_populate(serialized_buf, env, (unsigned char *)serialized_data, axis2_strlen(serialized_data));
 
@@ -247,7 +247,7 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
 
     /*Remove the node from the parent*/
     if(AXIS2_SUCCESS == ret){
-        AXIOM_NODE_DETACH(node, env);
+        axiom_node_detach(node, env);
     }
     /*Free*/
     oxs_buffer_free(serialized_buf, env);
@@ -331,9 +331,9 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
     *decrypted_node = deserialized_node;
 
     /*Replace the encrypted node with the de-serialized node*/
-    parent_of_enc_node = AXIOM_NODE_GET_PARENT(enc_type_node, env);
-    AXIOM_NODE_ADD_CHILD(parent_of_enc_node, env, deserialized_node);
-    AXIOM_NODE_DETACH(enc_type_node, env);
+    parent_of_enc_node = axiom_node_get_parent(enc_type_node, env);
+    axiom_node_add_child(parent_of_enc_node, env, deserialized_node);
+    axiom_node_detach(enc_type_node, env);
 
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;
