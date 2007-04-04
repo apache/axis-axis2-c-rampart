@@ -25,51 +25,6 @@
 #include <axis2_svc_skeleton.h>
 #include <axutil_string.h>
 
-#if 0
-axis2_char_t* AXIS2_CALL
-callback_get_sample_password_from_file(rampart_callback_t *rcb,
-        const axutil_env_t *env,
-        const axis2_char_t *username,
-        void *param)
-{
-    axis2_char_t * password = NULL;
-    FILE *file = NULL;
-    axis2_char_t *filename = "samples/rampart/data/passwords.txt";
-
-    file = fopen ( filename, "r" );
-    if ( file != NULL )
-    {
-       axis2_char_t line [ 128 ];
-       axis2_char_t ch = 0;
-       axis2_char_t *res = NULL;
-       axis2_char_t *un = NULL;
-       axis2_char_t *pw = NULL;
-
-       while ( fgets ( line, sizeof line, file ) != NULL )
-       {
-          res = axutil_strstr(line, ":");
-          ch = res[0];
-          res[0] = '\0';
-          un = (axis2_char_t *) axutil_strdup(env, line);
-          res[0] = ch;
-          if(0 == axutil_strcmp(un, username)){
-             pw = (axis2_char_t *) axutil_strdup(env, &(res[1]));
-             password = axutil_strndup(env, pw, axutil_strlen(pw)-1); /*We need to remove the end of line character*/
-
-             break;
-          }
-       }
-       AXIS2_FREE(env->allocator, un);
-       AXIS2_FREE(env->allocator, pw);
-       fclose ( file );
-    }else{
-       AXIS2_LOG_INFO(env->log, "Cannot load the password file %s ", filename);
-       perror ( filename );
-    }
-    return password;
-}
-
-#endif
 
 axis2_char_t* AXIS2_CALL
 get_sample_password(rampart_callback_t *rcb,

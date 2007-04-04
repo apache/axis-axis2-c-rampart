@@ -1,5 +1,5 @@
 
-                          Apache Axis2/C Rampart samples
+                          Apache Rampart/C samples
 
   Rampart, What is it?
   -----------
@@ -32,20 +32,15 @@
   Contacts
   --------
 
-     o If you want freely available support for using Apache Axis2/C Rampart samples 
-       please join the Apache Axis2/C user community by subscribing to users mailing
-       list, axis-c-user@ws.apache.org' as described at
-       http://ws.apache.org/axis2/c/mail-lists.html
-
      o If you have a bug report for Apache Axis2/C Rampart samples please go log a 
-       Jira issue at http://issues.apache.org/jira/browse/AXIS2C
+       Jira issue at https://issues.apache.org/jira/browse/RAMPARTC-2
 
      o If you want to participate in actively developing Apache Axis2/C Rampart 
-       samples please subscribe to the `axis-c-dev@ws.apache.org' mailing list 
-       as described at http://ws.apache.org/axis2/c/mail-lists.html
+       samples please subscribe to the `rampart-dev@ws.apache.org' mailing list 
+       
 
   Acknowledgments
   ----------------
 
-  Apache Axis2/C Rampart samples relies heavily on the use of autoconf and 
+  Apache Rampart/C samples relies heavily on the use of autoconf and 
   libtool to provide a build environment. 

@@ -4,8 +4,6 @@ deploy.bat(WIN32).
 Simply give the scenario name as an argument to the script
 e.g. %sh deploy.sh scenario1 
 
-Each scenario has a README file describing it's purpose.
-
 Make sure you have run the deploy_client_repo.sh.
 
 These scenarios will only copy the security policy xml files. To run the
