@@ -1,6 +1,6 @@
-AXIS2_INSTALL_DIR = %AXIS2C_HOME%
-OPENSSL_BIN_DIR = %OPENSSL_HOME%
-
+AXIS2_BIN_DIR = d:\dummy\axis2c\build\deploy
+OPENSSL_BIN_DIR = D:\OpenSSL
+DEBUG = 1
 
 
 
