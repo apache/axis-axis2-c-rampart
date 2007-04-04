@@ -61,6 +61,7 @@ rampart_engine_init(const axutil_env_t *env,
         value = rampart_get_rampart_configuration(env,msg_ctx,INFLOW_RAMPART_CONTEXT);
         if(value)
         {
+            /*We need a rampart_context*/
             rampart_context = (rampart_context_t *)value;
             if(!rampart_context)
             {
@@ -68,15 +69,13 @@ rampart_engine_init(const axutil_env_t *env,
                 return NULL;
             }
             return get_rampart_context_with_secpolicy_from_om(rampart_context,env);
-        }
-        else
-        {
+        }else{
             if(axis2_msg_ctx_get_server_side(msg_ctx,env))
             {
+                /*If the server side*/
                 return get_rampart_context_in_server_side(env,msg_ctx,IN_MESSAGE_SECURITY);
-            }
-            else
-            {
+            }else{
+                /*We are in the client/incoming side*/
                 value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
                 if(!value)
                 {
@@ -87,10 +86,8 @@ rampart_engine_init(const axutil_env_t *env,
                 return build_rampart_context_from_file(env,file_name);
             }
         }
-    }
-
-    else
-    {
+    }else{
+        /*Outflow*/
         value = rampart_get_rampart_configuration(env,msg_ctx,OUTFLOW_RAMPART_CONTEXT);
         if(value)
         {
@@ -101,9 +98,7 @@ rampart_engine_init(const axutil_env_t *env,
                 return NULL;
             }
             return get_rampart_context_with_secpolicy_from_om(rampart_context,env);
-        }
-        else
-        {
+        }else{
             if(axis2_msg_ctx_get_server_side(msg_ctx,env))
             {
                 return get_rampart_context_in_server_side(env,msg_ctx,OUT_MESSAGE_SECURITY);

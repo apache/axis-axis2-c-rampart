@@ -50,6 +50,7 @@ rampart_load_module(const axutil_env_t *env,
     axutil_param_t *impl_info_param = NULL;
     void *ptr = NULL;
 
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Trying to load module = %s", module_name);
     dll_desc = axutil_dll_desc_create(env);
     axutil_dll_desc_set_name(dll_desc, env, module_name);
     impl_info_param = axutil_param_create(env, NULL, NULL);
@@ -142,7 +143,7 @@ rampart_load_pwcb_module(const axutil_env_t *env,
                          axis2_char_t *callback_module_name)
 {
     rampart_callback_t *cb = NULL;
-
+    
     cb = (rampart_callback_t*)rampart_load_module(env, callback_module_name);
     if (!cb)
     {
@@ -166,7 +167,7 @@ rampart_callback_password(const axutil_env_t *env,
     /*Get the password thru the callback*/
     password = RAMPART_CALLBACK_CALLBACK_PASSWORD(callback_module, env, username, cb_prop_val);
 
-    AXIS2_LOG_INFO(env->log, "[rampart][rampart_usernametoken] Password taken from the callback module . SUCCESS");
+    AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Password taken from the callback module . SUCCESS");
     return password;
 }
 
@@ -227,90 +228,6 @@ rampart_compare_date_time(const axutil_env_t *env, axis2_char_t *dt1_str, axis2_
     {
         return AXIS2_FAILURE;
     }
-#if 0
-    yyyy1 =  axutil_date_time_get_year(dt1, env);
-    mm1 =  axutil_date_time_get_month(dt1, env);
-    dd1 =  axutil_date_time_get_date(dt1, env);
-    hh1 =   axutil_date_time_get_hour(dt1, env);
-    mi1 =  axutil_date_time_get_minute(dt1, env);
-    ss1 =  axutil_date_time_get_second(dt1, env);
-    ml1 =  axutil_date_time_get_msec(dt1, env);
-
-    yyyy2 =  axutil_date_time_get_year(dt2, env);
-    mm2 =  axutil_date_time_get_month(dt2, env);
-    dd2 =  axutil_date_time_get_date(dt2, env);
-    hh2 =   axutil_date_time_get_hour(dt2, env);
-    mi2 =  axutil_date_time_get_minute(dt2, env);
-    ss2 =  axutil_date_time_get_second(dt2, env);
-    ml2 =  axutil_date_time_get_msec(dt2, env);
-    /**
-    Comparison.
-    We expect dt1_str < dt2_str/ Otherwise FAILURE
-    */
-    if (yyyy1 < yyyy2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (yyyy1 > yyyy2)
-    {
-        return AXIS2_FAILURE;
-    }
-
-    if (mm1 < mm2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (mm1 > mm2)
-    {
-        return AXIS2_FAILURE;
-    }
-
-    if (dd1 < dd2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (dd1 > dd2)
-    {
-        return AXIS2_FAILURE;
-    }
-
-    if (hh1 < hh2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (hh1 > hh2)
-    {
-        return AXIS2_FAILURE;
-    }
-    if (mi1 < mi2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (mi1 > mi2)
-    {
-        return AXIS2_FAILURE;
-    }
-
-    if (ss1 < ss2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (ss1 > ss2)
-    {
-        return AXIS2_FAILURE;
-    }
-
-    if (ml1 < ml2)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else if (ml1 > ml2)
-    {
-        return AXIS2_FAILURE;
-    }
-    return AXIS2_SUCCESS;
-#else
-    /*Moved comparison logic to axutil_date_time */
 
     /*dt1<dt2 for SUCCESS*/
     res = axutil_date_time_compare(dt1, env, dt2);
@@ -320,7 +237,6 @@ rampart_compare_date_time(const axutil_env_t *env, axis2_char_t *dt1_str, axis2_
         return AXIS2_FAILURE;
     }
 
-#endif
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
