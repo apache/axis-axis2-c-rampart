@@ -1,5 +1,5 @@
-AXIS2_BIN_DIR = d:\dummy\axis2c\build\deploy
-OPENSSL_BIN_DIR = D:\OpenSSL
+AXIS2_BIN_DIR = E:\axis2c\build\axis2c-bin-1.0.0-win32
+OPENSSL_BIN_DIR = E:\OpenSSL
 DEBUG = 1
 
 

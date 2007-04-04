@@ -6,6 +6,7 @@ RAMPART = rampart
 RAMPART_SOURCE_DIR = ..\..\
 
 RAMPART_INTDIR = .\int.msvc
+RAMPART_DISTDIR = .\..\rampart
 
 
 #rampart module
@@ -64,63 +65,46 @@ LDFLAGS = $(LDFLAGS)
 #################### hack!
 CFLAGS = $(CFLAGS) /D "_WINSOCKAPI_"
 
-rampart_do_nothing:
 
-RAMPART_BIN_DIR = $(AXIS2_BINDIR)\bin
-RAMPART_SAMPLES_DIR = $(RAMPART_BIN_DIR)\samples\rampart
-RAMPART_SAMPLES_CLIENT_DIR = $(RAMPART_BIN_DIR)\samples\rampart\client
-RAMPART_SAMPLES_SERVER_DIR = $(RAMPART_BIN_DIR)\samples\rampart\server
-RAMPART_SAMPLES_KEYS_DIR = $(RAMPART_BIN_DIR)\samples\rampart\keys
-RAMPART_SAMPLES_SERVICE_DIR = $(AXIS2_BINDIR)\services
-RAMPART_MODULES_DIR = $(AXIS2_BINDIR)\modules\
+distdir:
+	if not exist $(RAMPART_DISTDIR) mkdir $(RAMPART_DISTDIR)
+	mkdir $(RAMPART_DISTDIR)\bin
+	mkdir $(RAMPART_DISTDIR)\bin\clients
+	mkdir $(RAMPART_DISTDIR)\bin\services
+	mkdir $(RAMPART_DISTDIR)\rampart
+	mkdir $(RAMPART_DISTDIR)\samples
+	mkdir $(RAMPART_DISTDIR)\include
 
-skel:
+clean: 
+	if exist $(RAMPART_DISTDIR) rmdir /S /Q $(RAMPART_DISTDIR)
+	if exist $(RAMPART_INTDIR) rmdir /S /Q $(RAMPART_INTDIR)
+
+intdirs:
 	if not exist $(RAMPART_INTDIR) mkdir $(RAMPART_INTDIR)
+	mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
+	mkdir $(RAMPART_INTDIR)\samples\authn_provider
+	mkdir $(RAMPART_INTDIR)\samples\services\echo
 
 mod_rampart:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECPOLICY_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj \
 	      $(LIBS) axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib \
-              /DLL /OUT:$(AXIS2_LIBS)\$(RAMPART).dll /IMPLIB:mod_rampart.lib
-
-copy_module:
-	if not exist $(AXIS2_MODS)\$(RAMPART)\ mkdir $(AXIS2_MODS)\$(RAMPART)
-	copy $(AXIS2_LIBS)\$(RAMPART).dll $(AXIS2_MODS)\$(RAMPART)
-
-install: skel mod_rampart copy_module
-
-clean: 
-	if exist $(RAMPART_INTDIR) rmdir /S /Q $(RAMPART_INTDIR)
+              /DLL /OUT:$(RAMPART_DISTDIR)\rampart\$(RAMPART).dll /IMPLIB:$(RAMPART_DISTDIR)\rampart\mod_rampart.lib
+	
+	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\rampart
 
 
 mod_rampart_pwcb:
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c /Fo$(RAMPART_INTDIR)\ /c
-	$(LD) $(LDFLAGS) $(LIBS) axutil.lib /DLL /OUT:pwcb.dll /IMPLIB:pwcb.lib
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c /Fo$(RAMPART_INTDIR)\samples\callback\pwcb\ /c
+	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\pwcb\*.obj /DLL /OUT:$(RAMPART_DISTDIR)\bin\pwcb.dll \
+	/IMPLIB:$(RAMPART_DISTDIR)\bin\pwcb.lib
 
-#	if not exist $(RAMPART_SAMPLES_DIR)\callback mkdir $(RAMPART_SAMPLES_DIR)\callback
-	
-#	copy pwcb.dll $(RAMPART_SAMPLES_DIR)\callback\pwcb.dll
-#	copy $(RAMPART_SOURCE_DIR)\rampart\samples\callback\pwcb.c $(RAMPART_SAMPLES_DIR)\callback
-#	del pwcb.*
 
 mod_rampart_authn: 
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\rampart\samples\authn_provider\authn_provider.c /c
-	$(LD) $(LDFLAGS) *.obj $(AXIS2_RAMPART).lib $(AXIS2_UTIL).lib /DLL /OUT:authn.dll /IMPLIB:authn.lib
-
-	if not exist $(RAMPART_SAMPLES_DIR)\authn_provider mkdir $(RAMPART_SAMPLES_DIR)\authn_provider
-	
-	copy authn.dll $(RAMPART_SAMPLES_DIR)\authn_provider\authn.dll
-	copy $(RAMPART_SOURCE_DIR)\rampart\samples\authn_provider\authn_provider.c $(RAMPART_SAMPLES_DIR)\authn_provider
-	del authn*.*
-
-mod_rampart_htpwcb: 
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\rampart\samples\callback\htpasswd_callback\htpwcb.c /c
-	$(LD) $(LDFLAGS) *.obj $(AXIS2_UTIL).lib /DLL /OUT:htpwcb.dll /IMPLIB:htpwcb.lib
-
-	if not exist $(RAMPART_SAMPLES_DIR)\callback\htpasswd mkdir $(RAMPART_SAMPLES_DIR)\callback\htpasswd
-	
-	copy htpwcb.dll $(RAMPART_SAMPLES_DIR)\callback\htpasswd\htpwcb.dll
-	del htpwcb.*
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c \
+	/Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\rampart /DLL \
+	/OUT:$(RAMPART_DISTDIR)\bin\authn.dll /IMPLIB:$(RAMPART_DISTDIR)\bin\authn.lib
 
 mod_rampart_services_sec_echo:
 	$(CC) $(CFLAGS) /I$(RAMPART_SOURCE_DIR)\rampart\samples\server\sec_echo \
@@ -168,4 +152,9 @@ mod_rampart_copy_keys:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\rampart\samples\keys\* $(RAMPART_SAMPLES_KEYS_DIR)
 
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
+
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn
+
+
+
 
