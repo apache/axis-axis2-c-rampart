@@ -138,7 +138,7 @@ rp_signed_encrypted_items_builder_build_element(
     if(name)
         rp_element_set_name(element,env,name); 
     
-    rp_header_set_namespace(element,env,namespace);    
+    rp_element_set_namespace(element,env,namespace);    
     
     return element;
 }

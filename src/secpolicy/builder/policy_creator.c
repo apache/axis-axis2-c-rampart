@@ -27,7 +27,7 @@ rp_policy_create_from_file(
     builder = axiom_stax_builder_create(env, reader);
     if(!builder)
     {
-        AXIOM_XML_READER_FREE(reader, env);
+        axiom_xml_reader_free(reader, env);
         reader = NULL;
         return NULL;
     }
