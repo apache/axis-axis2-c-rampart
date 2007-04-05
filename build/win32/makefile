@@ -65,7 +65,6 @@ LDFLAGS = $(LDFLAGS)
 #################### hack!
 CFLAGS = $(CFLAGS) /D "_WINSOCKAPI_"
 
-
 distdir:
 	if not exist $(RAMPART_DISTDIR) mkdir $(RAMPART_DISTDIR)
 	mkdir $(RAMPART_DISTDIR)\bin
@@ -81,15 +80,16 @@ clean:
 
 intdirs:
 	if not exist $(RAMPART_INTDIR) mkdir $(RAMPART_INTDIR)
-	mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
-	mkdir $(RAMPART_INTDIR)\samples\authn_provider
-	mkdir $(RAMPART_INTDIR)\samples\services\echo
+	if not exist $(RAMPART_INTDIR)\samples\callback\pwcb mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
+	if not exist $(RAMPART_INTDIR)\samples\authn_provider mkdir $(RAMPART_INTDIR)\samples\authn_provider
+	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
+	if not exist $(RAMPART_INTDIR)\samples\clients\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\clients\sec_echo
 
 mod_rampart:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECPOLICY_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj \
 	      $(LIBS) axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib \
-              /DLL /OUT:$(RAMPART_DISTDIR)\rampart\$(RAMPART).dll /IMPLIB:$(RAMPART_DISTDIR)\rampart\mod_rampart.lib
+              /DLL /OUT:$(RAMPART_DISTDIR)\rampart\mod_rampart.dll /IMPLIB:$(RAMPART_DISTDIR)\rampart\mod_rampart.lib
 	
 	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\rampart
 
@@ -97,49 +97,32 @@ mod_rampart:
 mod_rampart_pwcb:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c /Fo$(RAMPART_INTDIR)\samples\callback\pwcb\ /c
 	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\pwcb\*.obj /DLL /OUT:$(RAMPART_DISTDIR)\bin\pwcb.dll \
-	/IMPLIB:$(RAMPART_DISTDIR)\bin\pwcb.lib
+	      /IMPLIB:$(RAMPART_DISTDIR)\bin\pwcb.lib
 
 
 mod_rampart_authn: 
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c \
-	/Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
+	      /Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\rampart /DLL \
-	/OUT:$(RAMPART_DISTDIR)\bin\authn.dll /IMPLIB:$(RAMPART_DISTDIR)\bin\authn.lib
+	      /OUT:$(RAMPART_DISTDIR)\bin\authn.dll
 
 mod_rampart_services_sec_echo:
-	$(CC) $(CFLAGS) /I$(RAMPART_SOURCE_DIR)\rampart\samples\server\sec_echo \
-	$(RAMPART_SOURCE_DIR)\rampart\samples\server\sec_echo\*.c /c
-	$(LD) $(LDFLAGS) *.obj $(AXIS2_UTIL).lib $(AXIOM).lib $(AXIS2_PARSER).lib \
-	$(LIBS) $(AXIS2_ENGINE).lib $(AXIS2_TRANSPORT_RECEIVER).lib \
-	$(AXIS2_TRANSPORT_SENDER).lib /DLL /OUT:sec_echo.dll  
-	del *.obj
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
+	      $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c \
+	      /Fo$(RAMPART_INTDIR)\samples\services\sec_echo\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\sec_echo\*.obj \
+	      axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
+	      axis2_http_receiver.lib axis2_http_sender.lib \
+              /DLL /OUT:$(RAMPART_DISTDIR)\bin\sec_echo.dll
 	
-	if not exist $(RAMPART_SAMPLES_SERVICE_DIR)\sec_echo mkdir $(RAMPART_SAMPLES_SERVICE_DIR)\sec_echo
+	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\services.xml $(RAMPART_DISTDIR)\bin
 
-	copy sec_echo.dll $(RAMPART_SAMPLES_SERVICE_DIR)\sec_echo
-
-	del *.dll
-	del *.exp
-	del *.lib
-	
-	copy $(RAMPART_SOURCE_DIR)\rampart\samples\server\sec_echo\*.c $(RAMPART_SAMPLES_SERVICE_DIR)\sec_echo
-	copy $(RAMPART_SOURCE_DIR)\rampart\samples\server\sec_echo\*.h $(RAMPART_SAMPLES_SERVICE_DIR)\sec_echo
-	copy $(RAMPART_SOURCE_DIR)\rampart\samples\server\sec_echo\services.xml $(RAMPART_SAMPLES_SERVICE_DIR)\sec_echo
-	
 mod_rampart_samples_sec_echo:
-	if not exist $(RAMPART_SAMPLES_CLIENT_DIR)\sec_echo mkdir $(RAMPART_SAMPLES_CLIENT_DIR)\sec_echo
-	
-	$(CC) /nologo /D "WIN32" /D "_WINDOWS" /D "_MBCS" $(AXIS2_INCLUDE_PATH) $(MOD_RAMPART_INCLUDE_PATH) \
-	$(RAMPART_SOURCE_DIR)\rampart\samples\client\sec_echo\echo.c /c
-	$(LD) $(LDFLAGS) echo.obj $(AXIS2_UTIL).lib $(AXIOM).lib \
-	$(AXIS2_PARSER).lib $(AXIS2_ENGINE).lib /OUT:echo.exe
-
-	del *.obj
-	copy echo.exe $(RAMPART_SAMPLES_CLIENT_DIR)\sec_echo
-	copy $(RAMPART_SOURCE_DIR)\rampart\samples\client\sec_echo\echo.c $(RAMPART_SAMPLES_CLIENT_DIR)\sec_echo
-	
-	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\rampart\samples\client\sec_echo\data $(RAMPART_SAMPLES_CLIENT_DIR)\sec_echo\data
-	del echo.exe
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
+	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
+	      /Fo$(RAMPART_INTDIR)\samples\clients\sec_echo\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\clients\sec_echo\echo.obj axutil.lib axiom.lib \
+	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\echo.exe
 
 mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
 
@@ -153,7 +136,7 @@ mod_rampart_copy_keys:
 
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo
 
 
 
