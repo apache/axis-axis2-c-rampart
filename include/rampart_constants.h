@@ -113,7 +113,7 @@ extern "C"
 #define RAMPART_STR_EXTERNAL_URI        OXS_STR_EXTERNAL_URI
 #define RAMPART_STR_ENCRYPTED_KEY       OXS_STR_ENCRYPTED_KEY
 
-#define AXIS2_PEM 10
+#define RAMPART_RD_DB_PROP "Rampart_RD_DB_Prop"
 
 #ifdef __cplusplus
 }

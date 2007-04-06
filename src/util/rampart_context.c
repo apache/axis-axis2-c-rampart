@@ -33,6 +33,7 @@ struct rampart_context_t
     axis2_char_t *password;
     axis2_char_t *prv_key_password;
     password_callback_fn pwcb_function;
+    rampart_is_replayed_fn is_replayed_function;
     int ttl;
     axis2_char_t *password_type;
 
@@ -153,6 +154,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->password = NULL;
     rampart_context->prv_key_password = NULL;
     rampart_context->pwcb_function = NULL;
+    rampart_context->is_replayed_function = NULL;
     rampart_context->ttl = 0;
     rampart_context->password_type = NULL;
 
@@ -332,6 +334,18 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
+                                  const axutil_env_t *env,
+                                  rampart_is_replayed_fn is_replayed_function)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, is_replayed_function, AXIS2_FAILURE);
+    rampart_context->is_replayed_function = is_replayed_function;
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_password_type(rampart_context_t *rampart_context,
                                   const axutil_env_t *env,
                                   axis2_char_t *password_type)
@@ -474,6 +488,17 @@ rampart_context_get_pwcb_function(
 
     return rampart_context->pwcb_function;
 }
+
+AXIS2_EXTERN rampart_is_replayed_fn AXIS2_CALL
+rampart_context_get_is_replayed_function(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+
+    return rampart_context->is_replayed_function;
+}
+
 
 AXIS2_EXTERN void* AXIS2_CALL
 rampart_context_get_ctx(

@@ -31,7 +31,7 @@
 #include <rampart_callback.h>
 #include <rampart_authn_provider.h>
 #include <axis2_key_type.h>
-
+#include <axis2_msg_ctx.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -41,6 +41,10 @@ extern "C"
                            password_callback_fn)(const axutil_env_t *env,
                                                  const axis2_char_t *username,
                                                  void *ctx);
+
+    typedef axis2_status_t (AXIS2_CALL*
+                            rampart_is_replayed_fn)(const axutil_env_t *env,
+                                            axis2_msg_ctx_t* msg_ctx);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
             auth_password_func)(const axutil_env_t* env,
@@ -155,6 +159,11 @@ extern "C"
                                       const axutil_env_t *env,
                                       password_callback_fn pwcb_function,
                                       void *ctx);
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
+                                  const axutil_env_t *env,
+                                  rampart_is_replayed_fn is_replayed_function);
+
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_password_type(rampart_context_t *rampart_context,

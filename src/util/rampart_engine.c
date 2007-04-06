@@ -235,13 +235,12 @@ get_rampart_context_in_server_side(
         AXIS2_LOG_INFO(env->log, "[rampart][engine] axis2 context is NULL ");
         return NULL;
     }
+    /*Possible Keys : IN_MESSAGE_SECURITY, OUT_MESSAGE_SECURITY*/
     property = axis2_ctx_get_property(ctx,env,key);
     if(property)
     {
         return (rampart_context_t *)axutil_property_get_value(property,env);
-    }
-    else
-    {
+    }else{
         axis2_char_t *file_name = NULL;
         rampart_context_t *rampart_context = NULL;
 
