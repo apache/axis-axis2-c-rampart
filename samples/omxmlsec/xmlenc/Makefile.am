@@ -12,7 +12,7 @@ enc_LDADD   = ../../../src/util/librampart_util.la \
                     ../../../src/omxmlsec/libomxmlsec.la \
                     ../../../src/omxmlsec/openssl/libomopenssl.la \
                     ../../../src/omxmlsec/tokens/liboxstokens.la \
-                    ../../../../util/src/libaxis2_util.la \
+                    ../../../../util/src/libaxutil.la \
                     ../../../../axiom/src/om/libaxis2_axiom.la \
                     ../../../../axiom/src/parser/libxml2/libaxis2_libxml2.la \
            -lxml2
