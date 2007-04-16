@@ -234,6 +234,11 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN rampart_is_replayed_fn AXIS2_CALL
+    rampart_context_get_replay_detect_function(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+ 
     AXIS2_EXTERN void* AXIS2_CALL
     rampart_context_get_ctx(
         rampart_context_t *rampart_context,

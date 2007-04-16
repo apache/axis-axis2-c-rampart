@@ -80,6 +80,9 @@ extern "C"
     rampart_replay_detector_default(const axutil_env_t *env,
                                 axis2_msg_ctx_t* msg_ctx);
 
+    AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
+    rampart_replay_detector_set_default_db(const axutil_env_t *env,
+            axis2_ctx_t *ctx);
 
     /*************************** Function macros **********************************/
 #define RAMPART_REPLAY_DETECTOR_LOAD(replay_detector, env) \

@@ -21,6 +21,7 @@
 #include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_sec_processed_result.h>
+#include <rampart_util.h>
 /*Private functions*/
 AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
 rampart_replay_detector_get_default_db(const axutil_env_t *env,
@@ -51,8 +52,9 @@ rampart_replay_detector_get_default_db(const axutil_env_t *env,
          hash = (axutil_hash_t*)axutil_property_get_value(property, env);
          return hash;
     }else{
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx", RAMPART_RD_DB_PROP);
-       return NULL;
+         hash = rampart_replay_detector_set_default_db(env, ctx);
+         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new", RAMPART_RD_DB_PROP);
+         return hash;
     }
 }
 
@@ -109,6 +111,27 @@ rampart_replay_detector_is_overdue(const axutil_env_t *env,
 }
 
 /*Public functions*/
+AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
+rampart_replay_detector_set_default_db(const axutil_env_t *env,
+        axis2_ctx_t *ctx)
+{
+    axutil_hash_t *hash_db = NULL;
+    axutil_property_t *hash_db_prop = NULL;
+
+    if(!ctx){
+        return NULL;
+    }
+
+    hash_db = axutil_hash_make(env);
+    hash_db_prop = axutil_property_create(env);
+
+    axutil_property_set_value(hash_db_prop, env, hash_db);
+    axis2_ctx_set_property(ctx, env, RAMPART_RD_DB_PROP, hash_db_prop);
+
+    return hash_db;
+}
+
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_replay_detector_default(const axutil_env_t *env,
                                 axis2_msg_ctx_t* msg_ctx)
@@ -119,6 +142,9 @@ rampart_replay_detector_default(const axutil_env_t *env,
     const axis2_char_t *ts = NULL;
    
     msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
+    if(!msg_id){
+        msg_id = "MSG-ID";/*This has to be changed*/
+    }
     ts = rampart_replay_detector_get_ts( env, msg_ctx); 
     /*Get the DB*/    
     hash = rampart_replay_detector_get_default_db(env, msg_ctx);
@@ -134,6 +160,7 @@ rampart_replay_detector_default(const axutil_env_t *env,
         /*If matches ERROR*/
         for (hi = axutil_hash_first(hash, env); hi; hi = axutil_hash_next(env, hi)) {
             axutil_hash_this(hi, (const void**)&id, NULL, &val);
+            printf("[rampart][rrd] (id, val) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)val);
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] (id, val) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)val);
             /*If replayed, return a FAILRE*/
             if(AXIS2_TRUE == rampart_replay_detector_is_replayed(env, msg_id, ts, id, val)){
@@ -142,12 +169,13 @@ rampart_replay_detector_default(const axutil_env_t *env,
             /*Clean up old records*/
             if(AXIS2_TRUE == rampart_replay_detector_is_overdue(env , ts, val)){
                 /*Remove the record*/
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] removing record (id, val) = (%s , %s)\n", (axis2_char_t*)id, (axis2_char_t*)val);
                 AXIS2_FREE(env->allocator, id);
                 id = NULL;
                 AXIS2_FREE(env->allocator, val);
                 ts = NULL;
             }
-        }   
+        }/*eof for loop*/   
         /*If not replayed then we will insert the new record to the DB*/
         axutil_hash_set(hash, msg_id, AXIS2_HASH_KEY_STRING, ts);
 

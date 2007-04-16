@@ -747,7 +747,7 @@ rampart_shp_process_message(const axutil_env_t *env,
 {
     axiom_node_t *cur_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-
+    axis2_bool_t need_replay_detection = AXIS2_FALSE;
 
     AXIS2_LOG_INFO(env->log, "[rampart][shp] Process security header");
 
@@ -885,14 +885,32 @@ rampart_shp_process_message(const axutil_env_t *env,
         }
         /*Now we can process timestamp*/
         status = rampart_shp_process_timestamptoken(env,msg_ctx,rampart_context,sec_node);
-        if(status!=AXIS2_SUCCESS)
+        if(status!=AXIS2_SUCCESS){
             return status;
+        }
 
         if( axis2_msg_ctx_get_server_side(msg_ctx, env))
         {
             status = rampart_shp_process_usernametoken(env,msg_ctx,rampart_context,sec_node);
             if(status!=AXIS2_SUCCESS)
                 return status;
+        }
+
+        if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/
+            rampart_is_replayed_fn rd_fn = NULL;
+            /*Is replayed*/
+            rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
+            if(rd_fn){
+                status  = (*rd_fn)(env, msg_ctx);
+                if(status != AXIS2_SUCCESS){
+                    /*Scream .. replayed*/
+                    return AXIS2_FAILURE;
+                }else{
+                    AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
+                }
+            }else{
+                AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
+            }
         }
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Security header element processing, DONE ");
         /*Do the action accordingly*/

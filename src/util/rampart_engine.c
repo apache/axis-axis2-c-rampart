@@ -21,7 +21,7 @@
 
 #include <rampart_engine.h>
 #include <axis2_ctx.h>
-
+#include <rampart_replay_detector.h>
 /*This method sets all the configurations
  loads required modules and start rampart.*/
 
@@ -68,24 +68,27 @@ rampart_engine_init(const axutil_env_t *env,
                 AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Type in the parameter is not rampart_context");
                 return NULL;
             }
-            return get_rampart_context_with_secpolicy_from_om(rampart_context,env);
+            /*We will build sec policy from the axiom representation of the policy. Used in PHP ext*/
+            rampart_context = get_rampart_context_with_secpolicy_from_om(rampart_context,env);
+
         }else{
-            if(axis2_msg_ctx_get_server_side(msg_ctx,env))
-            {
+            /*For the performance we will first chk if we have a saved configuration in the conf ctx.[else block]
+             *If not we will extract configurations from the descriptor files*/
+            if(axis2_msg_ctx_get_server_side(msg_ctx,env)) {
                 /*If the server side*/
-                return get_rampart_context_in_server_side(env,msg_ctx,IN_MESSAGE_SECURITY);
+                rampart_context =  get_rampart_context_in_server_side(env,msg_ctx,IN_MESSAGE_SECURITY);
             }else{
-                /*We are in the client/incoming side*/
                 value = rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
-                if(!value)
-                {
+                if(!value){
                     AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Errors in the configurations");
                     return NULL;
                 }
                 file_name = (axis2_char_t *)value;
-                return build_rampart_context_from_file(env,file_name);
+                rampart_context =  build_rampart_context_from_file(env,file_name);
             }
         }
+        /*We set our default impl of replay detection function*/
+        rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_default);
     }else{
         /*Outflow*/
         value = rampart_get_rampart_configuration(env,msg_ctx,OUTFLOW_RAMPART_CONTEXT);
@@ -97,11 +100,11 @@ rampart_engine_init(const axutil_env_t *env,
                 AXIS2_LOG_INFO(env->log,"[rampart][rampart_engine] Type in the parameter is not rampart_context");
                 return NULL;
             }
-            return get_rampart_context_with_secpolicy_from_om(rampart_context,env);
+            rampart_context =  get_rampart_context_with_secpolicy_from_om(rampart_context,env);
         }else{
             if(axis2_msg_ctx_get_server_side(msg_ctx,env))
             {
-                return get_rampart_context_in_server_side(env,msg_ctx,OUT_MESSAGE_SECURITY);
+                rampart_context = get_rampart_context_in_server_side(env,msg_ctx,OUT_MESSAGE_SECURITY);
             }
             else
             {
@@ -112,10 +115,12 @@ rampart_engine_init(const axutil_env_t *env,
                     return NULL;
                 }
                 file_name = (axis2_char_t *)value;
-                return build_rampart_context_from_file(env,file_name);
+                rampart_context =  build_rampart_context_from_file(env,file_name);
             }
         }
     }
+
+    return rampart_context;
 }
 
 rampart_context_t *AXIS2_CALL
