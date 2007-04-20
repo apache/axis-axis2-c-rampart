@@ -260,7 +260,5 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
         /**/
     }
 
-    /*TODO Set certificate information taken from the PEM file */
-
     return AXIS2_SUCCESS;
 }

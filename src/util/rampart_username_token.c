@@ -197,7 +197,7 @@ rampart_username_token_build(
 
             if(nonce_val){
                 /*AXIS2_FREE(env->allocator, nonce_val);
-                nonce_val = NULL;*//*TODO Check*/
+                nonce_val = NULL;*/
             }
             if(created_val){
                 AXIS2_FREE(env->allocator, created_val);

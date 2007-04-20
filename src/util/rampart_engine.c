@@ -166,6 +166,8 @@ build_rampart_context_from_file(
                        "[rampart][rampart_Engine] No Security in the flow. So nothing to do");
         return NULL;
     }
+    AXIS2_LOG_INFO(env->log, "[rampart][rampart_Engine] Trying to build rampart context from file %s ", file_name);
+
     secpolicy = rp_policy_create_from_file(env,file_name);
 
     if(!secpolicy)
@@ -246,18 +248,25 @@ get_rampart_context_in_server_side(
     {
         return (rampart_context_t *)axutil_property_get_value(property,env);
     }else{
+        /*We cannot find the rampart_context as a property in axis2_ctx. Thus we need to create*/
         axis2_char_t *file_name = NULL;
         rampart_context_t *rampart_context = NULL;
 
-        if(axutil_strcmp(key,IN_MESSAGE_SECURITY)==0)
+        if(axutil_strcmp(key, IN_MESSAGE_SECURITY)==0)
         {
             file_name =(axis2_char_t *)rampart_get_rampart_configuration(env,msg_ctx,RAMPART_INFLOW_SECURITY_POLICY);
             if(file_name)
             {
                 rampart_context = build_rampart_context_from_file(env,file_name);
+                /*
                 property = axutil_property_create(env);
                 axutil_property_set_value(property,env,rampart_context);
-                axis2_ctx_set_property(ctx,env,key,property);
+                */
+                
+                property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                            AXIS2_FALSE, (void *)rampart_engine_shutdown, rampart_context );
+                            
+                axis2_ctx_set_property(ctx, env, key, property);
                 return rampart_context;
             }
             else
@@ -272,8 +281,11 @@ get_rampart_context_in_server_side(
             if(file_name)
             {
                 rampart_context = build_rampart_context_from_file(env,file_name);
-                property = axutil_property_create(env);
-                axutil_property_set_value(property,env,rampart_context);
+                /*property = axutil_property_create(env);
+                axutil_property_set_value(property,env,rampart_context);*/
+                
+                property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                                            AXIS2_FALSE, (void *)rampart_engine_shutdown, rampart_context );
                 axis2_ctx_set_property(ctx,env,key,property);
                 return rampart_context;
             }

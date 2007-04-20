@@ -39,7 +39,9 @@ rp_policy_create_from_file(
         return NULL;
     }
 
-    root = axiom_document_get_root_element(document, env);
+    /*root = axiom_document_get_root_element(document, env);*/
+    /*This is to get rid of the BUG in axiom. We can't use axiom_document_get_root_element without calling the build_all*/
+    root = axiom_document_build_all(document, env);
     if(!root)
     {
         axiom_stax_builder_free(builder, env);

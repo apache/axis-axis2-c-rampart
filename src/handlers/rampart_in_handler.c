@@ -95,7 +95,6 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
         return AXIS2_SUCCESS;
     }
  
-    serverside = axis2_msg_ctx_get_server_side(msg_ctx,env);
 
     soap_envelope =  axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if(!soap_envelope)
@@ -145,8 +144,12 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
         return status;
     }        
             
+    serverside = axis2_msg_ctx_get_server_side(msg_ctx,env);
+    /*We do not need rampart context to be freed in the server side*/
+    if(!serverside){
     /*This method will free the rampart_context*/
-    /*status = rampart_engine_shutdown(env,rampart_context);*/
+        status = rampart_engine_shutdown(env, rampart_context);
+    }        
     
     return status;
 }

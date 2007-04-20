@@ -31,6 +31,7 @@
 #include <oxs_x509_cert.h>
 #include <oxs_xml_key_processor.h>
 #include <oxs_tokens.h>
+#include <oxs_utility.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_token_build_security_token_reference(const axutil_env_t *env,
@@ -77,7 +78,7 @@ rampart_token_build_embedded(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
     embedded_node = oxs_token_build_embedded_element(env, parent, "ID");
-    bst_id = "bst-id";/*TODO*/
+    bst_id = oxs_util_generate_id(env, (axis2_char_t*)"BST-");
     bst_node =  oxs_token_build_binary_security_token_element(env, embedded_node, bst_id , OXS_VALUE_X509V3, OXS_ENCODING_BASE64BINARY, data);
     return AXIS2_SUCCESS;
 }

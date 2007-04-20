@@ -2,6 +2,7 @@
 _SCEN="scenario"
 _SMPL_DIR="$PWD"
 _PORT=9090
+_SLEEP=2
 #You may change these to scenarios u need to run
 _LST="1 2 3 4 5 6 7 8"
 
@@ -17,9 +18,12 @@ do
     S_i=$_SCEN$i
     echo "-------------------------------------------------------------------------"
     echo ">Deploying $S_i"
+    echo "-------------------------------------------------------------------------"
     sh deploy.sh $S_i
     echo ">Killing server"
     killall axis2_http_server
+    echo "Sleeping for $_SLEEP seconds"
+    sleep $_SLEEP
     echo ">Go to $AXIS2C_HOME"
     cd $AXIS2C_HOME/bin
     echo ">Start server @ $_PORT"

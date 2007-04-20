@@ -191,7 +191,7 @@ oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
     oxs_buffer_t *output_buf = NULL;
     axis2_status_t status = AXIS2_FAILURE;
 
-    /*TODO : Cannonicalize <SignedInfo>*/
+    /*Cannonicalize <SignedInfo>*/
     c14n_algo = oxs_sign_ctx_get_c14n_mtd(sign_ctx, env);
     doc = axiom_node_get_document(signed_info_node, env);
 
@@ -256,7 +256,7 @@ oxs_xml_sig_sign(const axutil_env_t *env,
     for (i = 0; i < axutil_array_list_size(sign_parts, env); i++){
         oxs_sign_part_t *sign_part =  NULL;
 
-        /*TODO Get ith sign_part*/
+        /*Get ith sign_part*/
         sign_part = (oxs_sign_part_t*)axutil_array_list_get(sign_parts, env, i);
         /*Create <ds:Reference> elements */
         oxs_xml_sig_build_reference(env, signed_info_node, sign_part);
@@ -304,7 +304,6 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     child_node_name = axiom_util_get_localname(child_node, env);
     if(0 == axutil_strcmp(child_node_name, OXS_NODE_TRANSFORMS)){
         /*Transforms found*/
-        /*TODO*/
         axiom_node_t *tr_node = NULL;
         axutil_array_list_t *tr_list = NULL;
 
@@ -568,7 +567,6 @@ oxs_xml_sig_verify(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"<ds:Signature> node processing failed " );
         return AXIS2_FAILURE;
     }
-    /*TODO Process KeyInfo if available*/
 
     /*-----------------------------------------------------------------------------------------*/
     /*At this point we have a ready to process signature context. So start verification process*/

@@ -68,6 +68,15 @@ extern "C"
     {
 
 
+        /**
+         * Check plain text passwords. If the UseranmeToken is in plain text this function will be called.
+         * @param authn_provider the authentication provider struct
+         * @param env pointer to environment struct
+         * @param msg_ctx message context
+         * @username the username
+         * @password the password in plain text
+         * @return the status of the check
+         */
         rampart_authn_provider_status_t (AXIS2_CALL*
                                          rampart_authn_provider_check_password)(
                                              rampart_authn_provider_t *authn_provider,
@@ -77,6 +86,17 @@ extern "C"
                                              const axis2_char_t *password
                                          );
 
+        /**
+         * Check digested passwords. If the UseranmeToken is in password digest form this function will be called.
+         * @param authn_provider the authentication provider struct
+         * @param env pointer to environment struct
+         * @param msg_ctx message context
+         * @username the username
+         * @nonce the noce or the random value of the username token
+         * @created the created value of the username token
+         * @digest the digest value of the SHA-1(password+created+nonce)
+         * @return the status of the check
+         */
         rampart_authn_provider_status_t (AXIS2_CALL*
                                          rampart_authn_provider_check_password_digest)(
                                              rampart_authn_provider_t *authn_provider,
@@ -88,6 +108,12 @@ extern "C"
                                              const char *digest
                                          );
 
+       /**
+        * The free function to free all resources allocated
+        * @param authn_provider the authentication provider struct
+        * @param env pointer to environment struct
+        *
+        */
         axis2_status_t (AXIS2_CALL*
                         free)(rampart_authn_provider_t *authn_provider,
                               const axutil_env_t* env);
