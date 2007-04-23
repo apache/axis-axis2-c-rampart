@@ -887,11 +887,11 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
                 if(node)
                 {
                     axutil_array_list_add(nodes_to_encrypt_or_sign,env,node);
-                    return AXIS2_SUCCESS;
                 }
             }
 
-        }
+        }/*eof for*/
+        return AXIS2_SUCCESS;
     }
     else if(axutil_strcmp(local_name,"Security")==0)
     {
@@ -1511,8 +1511,9 @@ rampart_context_get_nodes_to_protect(
             if(header)
             {
                 status = rampart_context_set_nodes_to_encrypt_or_sign(header,env,soap_envelope,nodes_to_sign_or_encrypt);
-                if(status!=AXIS2_FAILURE)
+                if(status == AXIS2_FAILURE){
                     return AXIS2_FAILURE;
+                }
             }
 
         }

@@ -23,7 +23,7 @@
 					</sp:RecipientToken>
 					<sp:AlgorithmSuite>
 						<wsp:Policy>
-							<sp:Basic256Rsa15/>
+                            <sp:Basic256Rsa15/>
 						</wsp:Policy>
 					</sp:AlgorithmSuite>
 					<sp:Layout>
@@ -35,10 +35,11 @@
             </sp:AsymmetricBinding>
             <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                 <sp:Body/>
+                <sp:Header  Namespace="http://www.w3.org/2005/08/addressing"/>
             </sp:SignedParts>
-            <rampc:SignedItems xmlns:rampc="http://ws.apache.org/rampart/c/policy">
+            <!--rampc:SignedItems xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                 <rampc:Element Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
-            </rampc:SignedItems>                
+            </rampc:SignedItems-->                
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                 <rampc:EncryptionUser>a</rampc:EncryptionUser>
                 <rampc:PasswordCallbackClass>/home/AXIS2_USER/axis2/c/deploy/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>

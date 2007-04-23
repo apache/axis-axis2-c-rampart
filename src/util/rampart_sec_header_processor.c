@@ -770,9 +770,13 @@ rampart_shp_process_message(const axutil_env_t *env,
                     return AXIS2_FAILURE;
                 }
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing Signature element.");
+                
                 status = rampart_shp_process_signature(env,msg_ctx,rampart_context,soap_envelope,sec_node,cur_node);
-                if(status!=AXIS2_SUCCESS)
+                
+                if(status!=AXIS2_SUCCESS){
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx); 
                     return status;
+                }                    
             }
             else
             {
@@ -868,8 +872,10 @@ rampart_shp_process_message(const axutil_env_t *env,
                 }
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing Signature element.");
                 status = rampart_shp_process_signature(env,msg_ctx,rampart_context,soap_envelope,sec_node,cur_node);
-                if(status!=AXIS2_SUCCESS)
+                if(status!=AXIS2_SUCCESS){
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx); 
                     return status;
+                }
             }
             else
             {

@@ -105,12 +105,11 @@ rampart_sig_get_nodes_to_sign(
 
     status2 = rampart_context_get_elements_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);
 
-    if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS)
+    if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS){
         return AXIS2_SUCCESS;
-
-    else
+    }else{
         return AXIS2_FAILURE;
-
+    }
 }
 
 

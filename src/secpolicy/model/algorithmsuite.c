@@ -107,6 +107,26 @@ rp_algorithmsuite_get_algosuite_string(rp_algorithmsuite_t *algorithmsuite,
         return algorithmsuite->algosuite_string;
     
 }
+/* Set different algorithm for enryption and signing etc. depending on the algorithm suite.
+ * The suites are defined in  section 7.1 of WS-Security Policy specification
+ * Algorithm Suite       [Dig]  [Enc]    [Sym KW]    [Asym KW] [Enc KD]   [Sig KD] [Min SKL]
+ * Basic256              Sha1   Aes256    KwAes256   KwRsaOaep PSha1L256 PSha1L192    256
+ * Basic192              Sha1   Aes192    KwAes192   KwRsaOaep PSha1L192 PSha1L192    192
+ * Basic128              Sha1   Aes128    KwAes128   KwRsaOaep PSha1L128 PSha1L128    128
+ * TripleDes             Sha1  TripleDes KwTripleDes KwRsaOaep PSha1L192 PSha1L192    192
+ * Basic256Rsa15         Sha1   Aes256    KwAes256    KwRsa15  PSha1L256 PSha1L192    256
+ * Basic192Rsa15         Sha1   Aes192    KwAes192    KwRsa15  PSha1L192 PSha1L192    192
+ * Basic128Rsa15         Sha1   Aes128    KwAes128    KwRsa15  PSha1L128 PSha1L128    128
+ * TripleDesRsa15        Sha1  TripleDes KwTripleDes  KwRsa15  PSha1L192 PSha1L192    192
+ * Basic256Sha256       Sha256  Aes256    KwAes256   KwRsaOaep PSha1L256 PSha1L192    256
+ * Basic192Sha256       Sha256  Aes192    KwAes192   KwRsaOaep PSha1L192 PSha1L192    192
+ * Basic128Sha256       Sha256  Aes128    KwAes128   KwRsaOaep PSha1L128 PSha1L128    128
+ * TripleDesSha256      Sha256 TripleDes KwTripleDes KwRsaOaep PSha1L192 PSha1L192    192
+ * Basic256Sha256Rsa15  Sha256  Aes256    KwAes256    KwRsa15  PSha1L256 PSha1L192    256
+ * Basic192Sha256Rsa15  Sha256  Aes192    KwAes192    KwRsa15  PSha1L192 PSha1L192    192
+ * Basic128Sha256Rsa15  Sha256  Aes128    KwAes128    KwRsa15  PSha1L128 PSha1L128    128
+ * TripleDesSha256Rsa15 Sha256 TripleDes KwTripleDes  KwRsa15  PSha1L192 PSha1L192    192
+ **/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL 
 rp_algorithmsuite_set_algosuite(rp_algorithmsuite_t *algorithmsuite,
@@ -118,7 +138,7 @@ rp_algorithmsuite_set_algosuite(rp_algorithmsuite_t *algorithmsuite,
  
     algorithmsuite->algosuite_string = algosuite_string;
 
-    if(axutil_strcmp(algosuite_string,RP_ALGO_SUITE_BASIC256)==0)
+    if(axutil_strcmp(algosuite_string, RP_ALGO_SUITE_BASIC256)==0)
     {
         algorithmsuite->digest = RP_SHA1;
         algorithmsuite->encryption = RP_AES256;

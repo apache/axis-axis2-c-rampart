@@ -84,6 +84,7 @@ extern "C"
 #define RAMPART_FAULT_IN_USERNAMETOKEN         "wsse:UsernameToken"
 #define RAMPART_FAULT_IN_ENCRYPTED_KEY         "xenc:EncryptedKey"
 #define RAMPART_FAULT_IN_ENCRYPTED_DATA        "xenc:EncryptedData"
+#define RAMPART_FAULT_IN_SIGNATURE             "ds:Signature"
 
     /*Dynamically set values*/
 #define RAMPART_ACTION_PASSWORD "password"
