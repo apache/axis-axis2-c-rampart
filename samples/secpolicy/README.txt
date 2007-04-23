@@ -25,3 +25,16 @@ before encrypt)
 8.          A complete scenario, where both client and server encrypt/sign,
 add Timestamps, Usernametokens.
 
+
+I am in a HURRY and I need to try a scenario
+--------------------------------------------
+If you in a really hurry and need to try a scenario please use the
+test_scen.sh
+Usage : %sh test_scen.sh scenarioX server-port
+e.g. %s test_scen.sh scenario3 8080
+
+I need to try all the scenarios
+-------------------------------
+In this case please use the script run_all.sh.
+Usage: %sh run_all.sh server-port
+e.g. %sh run_all.sh 8080
