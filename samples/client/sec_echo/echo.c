@@ -141,6 +141,12 @@ int main(int argc, char** argv)
             endpoint_ref = NULL;
         }
     */
+    if (env)
+    {
+        axutil_env_free((axutil_env_t *) env);
+        env = NULL;
+    }
+    
     return 0;
 }
 
@@ -163,8 +169,10 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
     axiom_element_set_text(text_om_ele, env, "echo5\n", text_om_node);
 
     om_str = axiom_node_to_string(echo_om_node, env);
-    if (om_str)
+    if (om_str){
         printf("\nSending OM : %s\n", om_str);
-
+        AXIS2_FREE(env->allocator, om_str);
+        om_str =  NULL;
+    }
     return echo_om_node;
 }
