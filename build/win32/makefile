@@ -68,10 +68,12 @@ CFLAGS = $(CFLAGS) /D "_WINSOCKAPI_"
 distdir:
 	if not exist $(RAMPART_DISTDIR) mkdir $(RAMPART_DISTDIR)
 	mkdir $(RAMPART_DISTDIR)\bin
-	mkdir $(RAMPART_DISTDIR)\bin\clients
-	mkdir $(RAMPART_DISTDIR)\bin\services
+	mkdir $(RAMPART_DISTDIR)\bin\samples\callback
+	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
+	mkdir $(RAMPART_DISTDIR)\bin\samples\services
+	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
+	mkdir $(RAMPART_DISTDIR)\bin\samples\clients\sec_echo
 	mkdir $(RAMPART_DISTDIR)\rampart
-	mkdir $(RAMPART_DISTDIR)\samples
 	mkdir $(RAMPART_DISTDIR)\include
 
 clean: 
@@ -95,16 +97,16 @@ mod_rampart:
 
 
 mod_rampart_pwcb:
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c /Fo$(RAMPART_INTDIR)\samples\callback\pwcb\ /c
-	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\pwcb\*.obj /DLL /OUT:$(RAMPART_DISTDIR)\bin\pwcb.dll \
-	      /IMPLIB:$(RAMPART_DISTDIR)\bin\pwcb.lib
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c /Fo$(RAMPART_INTDIR)\samples\callback\ /c
+	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\*.obj /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll \
+	      /IMPLIB:$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.lib
 
 
 mod_rampart_authn: 
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c \
 	      /Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\rampart /DLL \
-	      /OUT:$(RAMPART_DISTDIR)\bin\authn.dll
+	      /OUT:$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
 
 mod_rampart_services_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
@@ -113,16 +115,16 @@ mod_rampart_services_sec_echo:
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\sec_echo\*.obj \
 	      axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
 	      axis2_http_receiver.lib axis2_http_sender.lib \
-              /DLL /OUT:$(RAMPART_DISTDIR)\bin\sec_echo.dll
+              /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
 	
-	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\services.xml $(RAMPART_DISTDIR)\bin
+	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\services.xml $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\
 
 mod_rampart_samples_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
 	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
 	      /Fo$(RAMPART_INTDIR)\samples\clients\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\clients\sec_echo\echo.obj axutil.lib axiom.lib \
-	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\echo.exe
+	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\clients\sec_echo\echo.exe
 
 mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
 
