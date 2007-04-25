@@ -41,4 +41,10 @@ For this user must provide a function pointer for get_password() operation in ra
 See samples/callback/pwcb.c for clarity
 
 
+Getting Rampart/C binary distribution working on Linux
+============================================
+1. Copy modules/rampart to $AXIS2C_HOME/modules
+2. Copy samples/sec_echo to $AXIS2C_HOME/services/
+3. Go to samples/secpolicy/ and try a scenario
+    %s test_scen.sh scenarioX server-port
 
