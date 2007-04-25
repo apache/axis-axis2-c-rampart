@@ -11,7 +11,7 @@ This can be done using the following command sequence:
         make install
 
 
-Engage rampart with axis2/C
+Engage Rampart/C with axis2/C
 ============================================
 
 -----------------------------------
@@ -48,3 +48,6 @@ Getting Rampart/C binary distribution working on Linux
 3. Go to samples/secpolicy/ and try a scenario
     %s test_scen.sh scenarioX server-port
 
+
+
+Thank you for using Rampart/C

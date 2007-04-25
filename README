@@ -1,10 +1,10 @@
 
-                          Apache Axis2/C Rampart
+                          Apache Rampart/C
 
   What is it?
   -----------
 
-  Apache Rampart is the security module of the Apache Axis2/C. Rampart 
+  Apache Rampart/C is the security module of the Apache Axis2/C. Rampart/C 
   is an effort to implement Axis2 Rampart module in C.
 
   Please have a look at 
@@ -36,21 +36,21 @@
   Contacts
   --------
 
-     o If you want freely available support for using Apache Axis2/C Rampart please
+     o If you want freely available support for using Apache Rampart/C please
        join the Apache Axis2/C user community by subscribing to users mailing
        list, axis-c-user@ws.apache.org' as described at
        http://ws.apache.org/axis2/c/mail-lists.html
 
-     o If you have a bug report for Apache Axis2/C Rampart please go log a Jira issue
-       at http://issues.apache.org/jira/browse/AXIS2C
+     o If you have a bug report for Apache Rampart/C please go log a Jira issue
+       at http://issues.apache.org/jira/browse/RAMPARTC
 
-     o If you want to participate in actively developing Apache Axis2/C Rampart please
+     o If you want to participate in actively developing Apache Rampart/C please
        subscribe to the `axis-c-dev@ws.apache.org' mailing list as described at
        http://ws.apache.org/axis2/c/mail-lists.html
 
   Acknowledgments
   ----------------
 
-  Apache Axis2/C Rampart relies heavily on the use of autoconf and libtool to provide
+  Apache Rampart/C relies heavily on the use of autoconf and libtool to provide
   a build environment. And also it uses openssl.
 
