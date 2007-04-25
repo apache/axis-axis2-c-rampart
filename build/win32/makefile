@@ -72,7 +72,7 @@ distdir:
 	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
-	mkdir $(RAMPART_DISTDIR)\bin\samples\clients\sec_echo
+	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	mkdir $(RAMPART_DISTDIR)\rampart
 	mkdir $(RAMPART_DISTDIR)\include
 
@@ -85,7 +85,7 @@ intdirs:
 	if not exist $(RAMPART_INTDIR)\samples\callback\pwcb mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
 	if not exist $(RAMPART_INTDIR)\samples\authn_provider mkdir $(RAMPART_INTDIR)\samples\authn_provider
 	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
-	if not exist $(RAMPART_INTDIR)\samples\clients\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\clients\sec_echo
+	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
 
 mod_rampart:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECPOLICY_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
@@ -122,9 +122,9 @@ mod_rampart_services_sec_echo:
 mod_rampart_samples_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
 	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
-	      /Fo$(RAMPART_INTDIR)\samples\clients\sec_echo\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\clients\sec_echo\echo.obj axutil.lib axiom.lib \
-	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\clients\sec_echo\echo.exe
+	      /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib \
+	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 
 mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
 
@@ -136,9 +136,12 @@ mod_rampart_copy_keys:
 	if not exist $(RAMPART_SAMPLES_KEYS_DIR) mkdir $(RAMPART_SAMPLES_KEYS_DIR)
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\rampart\samples\keys\* $(RAMPART_SAMPLES_KEYS_DIR)
 
+mod_rampart_copy_deploy:
+	copy deploy_rampart.bat $(RAMPART_DISTDIR)\
+
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_copy_deploy
 
 
 
