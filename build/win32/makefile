@@ -73,19 +73,22 @@ distdir:
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
+	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
 	mkdir $(RAMPART_DISTDIR)\rampart
 	mkdir $(RAMPART_DISTDIR)\include
 
 clean: 
 	if exist $(RAMPART_DISTDIR) rmdir /S /Q $(RAMPART_DISTDIR)
-	if exist $(RAMPART_INTDIR) rmdir /S /Q $(RAMPART_INTDIR)
+	if exist $(RAMPART_INTDIR)  rmdir /S /Q $(RAMPART_INTDIR)
 
 intdirs:
 	if not exist $(RAMPART_INTDIR) mkdir $(RAMPART_INTDIR)
+
 	if not exist $(RAMPART_INTDIR)\samples\callback\pwcb mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
 	if not exist $(RAMPART_INTDIR)\samples\authn_provider mkdir $(RAMPART_INTDIR)\samples\authn_provider
 	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
+	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
 
 mod_rampart:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECPOLICY_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
@@ -126,22 +129,31 @@ mod_rampart_samples_sec_echo:
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib \
 	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 
+mod_rampart_samples_credential_provider:
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
+	      $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c \
+	      /Fo$(RAMPART_INTDIR)\samples\credential_provider\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\credential_provider\cred_provider.obj \
+	      axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
+	      axis2_http_receiver.lib axis2_http_sender.lib \
+              /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll
+
 mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
 
 mod_rampart_copy_include:
-	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\rampart\include $(AXIS2_BINDIR)\rampart\include
-	copy $(RAMPART_SOURCE_DIR)\rampart\README $(AXIS2_BINDIR)\rampart
+	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\include $(RAMPART_DISTDIR)\include
+	copy $(RAMPART_SOURCE_DIR)\README $(RAMPART_DISTDIR)\
 
 mod_rampart_copy_keys:
-	if not exist $(RAMPART_SAMPLES_KEYS_DIR) mkdir $(RAMPART_SAMPLES_KEYS_DIR)
-	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\rampart\samples\keys\* $(RAMPART_SAMPLES_KEYS_DIR)
+	if not exist $(RAMPART_DISTDIR)\bin\samples\keys mkdir $(RAMPART_DISTDIR)\bin\samples\keys
+	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\keys\* $(RAMPART_DISTDIR)\bin\samples\keys
 
 mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)\
 
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_copy_deploy
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include
 
 
 
