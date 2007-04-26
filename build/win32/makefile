@@ -7,7 +7,7 @@ RAMPART_SOURCE_DIR = ..\..\
 
 RAMPART_INTDIR = .\int.msvc
 RAMPART_DISTDIR = .\..\rampart
-
+RAMPART_DIST_NAME = .\..\rampart-$(MAJOR_VER).$(MINOR_VER)
 
 #rampart module
 
@@ -67,14 +67,12 @@ CFLAGS = $(CFLAGS) /D "_WINSOCKAPI_"
 
 distdir:
 	if not exist $(RAMPART_DISTDIR) mkdir $(RAMPART_DISTDIR)
-	mkdir $(RAMPART_DISTDIR)\bin
 	mkdir $(RAMPART_DISTDIR)\bin\samples\callback
 	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
-	mkdir $(RAMPART_DISTDIR)\bin\samples\services
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
-	mkdir $(RAMPART_DISTDIR)\rampart
+	mkdir $(RAMPART_DISTDIR)\modules\rampart
 	mkdir $(RAMPART_DISTDIR)\include
 
 clean: 
@@ -94,9 +92,9 @@ mod_rampart:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECPOLICY_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj \
 	      $(LIBS) axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib \
-              /DLL /OUT:$(RAMPART_DISTDIR)\rampart\mod_rampart.dll /IMPLIB:$(RAMPART_DISTDIR)\rampart\mod_rampart.lib
+              /DLL /OUT:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll /IMPLIB:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.lib
 	
-	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\rampart
+	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\modules\rampart
 
 
 mod_rampart_pwcb:
@@ -108,7 +106,7 @@ mod_rampart_pwcb:
 mod_rampart_authn: 
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c \
 	      /Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\rampart /DLL \
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
 	      /OUT:$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
 
 mod_rampart_services_sec_echo:
@@ -149,11 +147,27 @@ mod_rampart_copy_keys:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\keys\* $(RAMPART_DISTDIR)\bin\samples\keys
 
 mod_rampart_copy_deploy:
-	copy deploy_rampart.bat $(RAMPART_DISTDIR)\
+	copy deploy_rampart.bat $(RAMPART_DISTDIR)
+	copy make_bin_dist.bat $(RAMPART_DISTDIR)
 
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include
+mv_dist:
+	move $(RAMPART_DISTDIR) $(RAMPART_DIST_NAME)
+
+del_am:
+	chdir .\..\rampart
+	del /s *.am
+	chdir .\..\win32
+
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include mod_rampart_copy_keys del_am mv_dist
+
+deploy:
+	chdir $(RAMPART_DIST_NAME)
+	deploy_rampart.bat
+	chdir .\..\win32
+
+install: dist deploy
 
 
 
