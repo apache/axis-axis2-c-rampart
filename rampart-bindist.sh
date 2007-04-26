@@ -1,20 +1,28 @@
 #!/bin/bash
 BIN_DIR=rampartc-bin-0.90-linux
+TAR_GZ=$BIN_DIR.tar.gz
+MD5=$TAR_GZ.md5
 PWDIR=$PWD
 
 echo "Build Rampart"
-#./build.sh 
+./build.sh 
 
 echo "Build samples"
 cd samples
-#./build.sh
+./build.sh
 cd ..
 
+echo "Deleting $BIN_DIR, $TAR_GZ, $MD5 if any"
+rm -rf $BIN_DIR
+rm $TAR_GZ
+rm $MD5
 
 echo "Creating directories in $PWDIR"
 mkdir $BIN_DIR
 mkdir $BIN_DIR/modules
+mkdir $BIN_DIR/modules/rampart
 mkdir $BIN_DIR/samples
+mkdir $BIN_DIR/samples/secpolicy
 
 echo "Copy related files to $BIN_DIR"
 #Copy other related files
@@ -24,15 +32,17 @@ cp INSTALL $BIN_DIR
 cp LICENSE $BIN_DIR
 cp NEWS $BIN_DIR
 cp README $BIN_DIR
+cp NOTICE $BIN_DIR
 
 echo "Copy rampart module"
 #Copy rampart module
-cp $AXIS2C_HOME/modules/rampart/libmod_rampart.so $BIN_DIR/modules
-cp $AXIS2C_HOME/modules/rampart/module.xml $BIN_DIR/modules
+cp $AXIS2C_HOME/modules/rampart/libmod_rampart.so $BIN_DIR/modules/rampart
+cp $AXIS2C_HOME/modules/rampart/module.xml $BIN_DIR/modules/rampart
 
 echo "Copy samples"
 #copy samples
-cp -r samples/secpolicy/* $BIN_DIR/samples
+cp -r samples/secpolicy/* $BIN_DIR/samples/secpolicy/
+cp $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/samples/
 
 echo "Removing garbage"
 cd $BIN_DIR
@@ -48,11 +58,12 @@ done
 
 cd $PWDIR
 echo "Creating tar.gz in $PWDIR"
-tar  -czvf $BIN_DIR.tar.gz $BIN_DIR
+tar  -czvf $TAR_GZ $BIN_DIR
 
 echo "Create MD5"
-openssl md5 < $BIN_DIR.tar.gz > $BIN_DIR.tar.gz.md5
+openssl md5 < $TAR_GZ > $MD5
 
-echo "Sign"
-gpg --armor --output $BIN_DIR.tar.gz.asc --detach-sig $BIN_DIR.tar.gz
-echo "DONE"
+#echo "To sign please enter password for the private key"
+#gpg --armor --output $TAR_GZ.asc --detach-sig $TAR_GZ
+
+echo "DONE" 
