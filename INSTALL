@@ -1,5 +1,5 @@
 Table of contents
-------------------
+============================================
     |_ Getting Rampart/C source working on Linux
     |_ Getting Rampart/C binary distribution working on Linux
     |_ Engage Rampart/C with axis2/C
@@ -17,8 +17,8 @@ This can be done using the following command sequence:
 Getting Rampart/C binary distribution working on Linux
 ============================================
 1. Copy modules/rampart to $AXIS2C_HOME/modules
-2. Copy samples/sec_echo to $AXIS2C_HOME/services/
-3. Engage rampart as described above (section: Engage Rampart/C with axis2/C) 
+2. Copy samples/server/sec_echo to $AXIS2C_HOME/services/
+3. Engage rampart as described in step 3 of section "Engage Rampart/C with axis2/C"
 4. Go to samples/secpolicy/ and try a scenario
     %s test_scen.sh scenarioX server-port
 
@@ -26,15 +26,18 @@ Getting Rampart/C binary distribution working on Linux
 Engage Rampart/C with axis2/C
 ============================================
 Prerequisites:
------------------------------------
 You must have openssl installed in you system.
 
 Configuring:
------------------------------------
-1. Run build.sh in rampart/trunk/c directory
-2. This will install the rampart module under AXIS2C_HOME/deploy/modules
-3. To engage rampart add to axis2.xml
+You can angage Rampart/C in global level or in service level.
+Just add following entry either to axis2.xml(gloabl level) or in services.xml(service level).
     <module ref="rampart"/>
+
+Apart from that you must define security policies for outgoing messages and incoming messages.
+This can be done adding parameters as follows
+    <parameter name="OutflowSecurityPolicy">/your/path/to/outgoing-secpolicy.xml</parameter>
+    <parameter name="InflowSecurityPolicy">/your/path/to/incoming-secpolicy.xml</parameter>
+
 
 NOTE: See the README file in samples/client/sec_echo for more information on configuration setup.
 

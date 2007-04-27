@@ -1,21 +1,29 @@
 #!/bin/bash
+echo "If you do not need to build Rampart/C %sh rampart-bindist nobuild"
 BIN_DIR=rampartc-bin-0.90-linux
 TAR_GZ=$BIN_DIR.tar.gz
 MD5=$TAR_GZ.md5
 PWDIR=$PWD
 
-echo "Build Rampart"
-./build.sh 
+if [ $# -ne 1 ]
+then
+    echo "Build Rampart"
+    ./build.sh 
 
-echo "Build samples"
-cd samples
-./build.sh
+    echo "Build samples"
+    cd samples
+    ./build.sh
 cd ..
+
+fi
 
 echo "Deleting $BIN_DIR, $TAR_GZ, $MD5 if any"
 rm -rf $BIN_DIR
 rm $TAR_GZ
 rm $MD5
+
+ls 
+sleep 1
 
 echo "Creating directories in $PWDIR"
 mkdir $BIN_DIR
@@ -23,6 +31,7 @@ mkdir $BIN_DIR/modules
 mkdir $BIN_DIR/modules/rampart
 mkdir $BIN_DIR/samples
 mkdir $BIN_DIR/samples/secpolicy
+mkdir $BIN_DIR/samples/server
 
 echo "Copy related files to $BIN_DIR"
 #Copy other related files
@@ -42,7 +51,8 @@ cp $AXIS2C_HOME/modules/rampart/module.xml $BIN_DIR/modules/rampart
 echo "Copy samples"
 #copy samples
 cp -r samples/secpolicy/* $BIN_DIR/samples/secpolicy/
-cp $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/samples/
+cp -r $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/samples/
+cp -r $AXIS2C_HOME/services/sec_echo $BIN_DIR/samples/server/
 
 echo "Removing garbage"
 cd $BIN_DIR
@@ -63,7 +73,7 @@ tar  -czvf $TAR_GZ $BIN_DIR
 echo "Create MD5"
 openssl md5 < $TAR_GZ > $MD5
 
-#echo "To sign please enter password for the private key"
-#gpg --armor --output $TAR_GZ.asc --detach-sig $TAR_GZ
+echo "To sign please enter password for the private key"
+gpg --armor --output $TAR_GZ.asc --detach-sig $TAR_GZ
 
 echo "DONE" 
