@@ -15,17 +15,19 @@ This can be done using the following command sequence:
         make install
 
 If you need to try samples, you need to build them.
-    Go to samples and run the script build.sh
-    Then go to  samples/secpolicy and try a scenario
-    %s test_scen.sh scenarioX server-port
+    -Go to samples and run the script build.sh
+    -Then go to  samples/secpolicy and try a scenario
+        %sh test_scen.sh scenarioX server-port
 
 Getting Rampart/C binary distribution working on Linux
 ============================================
 1. Copy modules/rampart to $AXIS2C_HOME/modules
 2. Copy samples/server/sec_echo to $AXIS2C_HOME/services/
 3. Engage rampart as described in section "Engage Rampart/C with axis2/C"
-4. Go to samples/secpolicy/ and try a scenario
-    %s test_scen.sh scenarioX server-port
+4. Go to samples/client/sec_echo/ and deploy the client repo 
+    %sh deploy_client_repo.sh
+5. Go to samples/secpolicy/ and try a scenario
+    %sh test_scen.sh scenarioX server-port
 
 
 Engage Rampart/C with axis2/C
