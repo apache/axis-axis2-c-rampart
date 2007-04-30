@@ -6,8 +6,9 @@ RAMPART = rampart
 RAMPART_SOURCE_DIR = ..\..\
 
 RAMPART_INTDIR = .\int.msvc
-RAMPART_DISTDIR = .\..\rampart
 RAMPART_DIST_NAME = .\..\rampart-$(MAJOR_VER).$(MINOR_VER)
+#RAMPART_DISTDIR = .\..\rampart
+RAMPART_DISTDIR = $(RAMPART_DIST_NAME)
 
 #rampart module
 
@@ -71,6 +72,7 @@ distdir:
 	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
+	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
 	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
 	mkdir $(RAMPART_DISTDIR)\modules\rampart
 	mkdir $(RAMPART_DISTDIR)\include
@@ -126,7 +128,11 @@ mod_rampart_samples_sec_echo:
 	      /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib \
 	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
-
+	
+	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\deploy_client_repo.bat $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\
+	
+	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\data\client.axis2.xml $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data\
+	
 mod_rampart_samples_credential_provider:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
 	      $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c \
@@ -149,6 +155,9 @@ mod_rampart_copy_keys:
 mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
 
+copy_sec_policy:
+	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\secpolicy $(RAMPART_DISTDIR)\bin\samples\sec_policy
+
 #copy make_bin_dist.bat $(RAMPART_DISTDIR)
 
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
@@ -157,14 +166,14 @@ mv_dist:
 	move $(RAMPART_DISTDIR) $(RAMPART_DIST_NAME)
 
 del_am:
-	chdir .\..\rampart
+	chdir $(RAMPART_DISTDIR)
 	del /s *.am
 	chdir .\..\win32
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include mod_rampart_copy_keys del_am mv_dist
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy copy_sec_policy mod_rampart_copy_include mod_rampart_copy_keys del_am
 
 deploy:
-	chdir $(RAMPART_DIST_NAME)
+	chdir $(RAMPART_DISTDIR)
 	deploy_rampart.bat
 	chdir .\..\win32
 
