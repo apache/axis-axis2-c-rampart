@@ -148,7 +148,8 @@ mod_rampart_copy_keys:
 
 mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
-	copy make_bin_dist.bat $(RAMPART_DISTDIR)
+
+#copy make_bin_dist.bat $(RAMPART_DISTDIR)
 
 mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
 

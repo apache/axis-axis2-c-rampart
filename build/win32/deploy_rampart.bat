@@ -18,4 +18,4 @@ md %AXIS2C_HOME%\bin\samples\rampart\callback
 copy bin\samples\callback\pwcb.dll %AXIS2C_HOME%\bin\samples\rampart\callback\
 
 md %AXIS2C_HOME%\bin\samples\rampart\credential_provider
-copy bin\samples\credential_provider\cred_provider.dll %AXIS2C_HOME%\bin\samples\rampart\cred_provider
+copy bin\samples\credential_provider\cred_provider.dll %AXIS2C_HOME%\bin\samples\rampart\cred_provider\
