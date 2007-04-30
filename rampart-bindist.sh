@@ -66,11 +66,16 @@ do
    rm -rf $i
 done
 
+for i in `find . -name "*.so.0*"`
+do
+   rm $i
+done
+
 cd $PWDIR
 echo "Creating tar.gz in $PWDIR"
 tar  -czvf $TAR_GZ $BIN_DIR
 
-echo "Create MD5"
+echo "Creating MD5"
 openssl md5 < $TAR_GZ > $MD5
 
 echo "To sign please enter password for the private key"

@@ -10,9 +10,14 @@ Getting Rampart/C source working on Linux
 Build the source
 
 This can be done using the following command sequence:
-        ./configure
+        ./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.0
         make
         make install
+
+If you need to try samples, you need to build them.
+    Go to samples and run the script build.sh
+    Then go to  samples/secpolicy and try a scenario
+    %s test_scen.sh scenarioX server-port
 
 Getting Rampart/C binary distribution working on Linux
 ============================================
@@ -39,6 +44,20 @@ This can be done adding parameters as follows in the same descriptor file that y
     <parameter name="InflowSecurityPolicy">/your/path/to/incoming-secpolicy.xml</parameter>
     
 NOTE: There are several samples security policy xml files for different scenarios under samples/secpolicy/
+        Please refer the README file for more information
+
+The final configuration setup should be as follows
+CLIENT SIDE:
+axis2.xml
+        |-------------------> <module ref="rampart"/>
+        |-------------------> <parameter name="OutflowSecurityPolicy">/../../outgoing-secpolicy.xml</parameter>
+        |-------------------> <parameter name="InflowSecurityPolicy">/../../incoming-secpolicy.xml</parameter>
+
+SERVER SIDE:
+services.xml(or axis2.xml)
+        |-------------------> <module ref="rampart"/>
+        |-------------------> <parameter name="OutflowSecurityPolicy">/../../outgoing-secpolicy.xml</parameter>
+        |-------------------> <parameter name="InflowSecurityPolicy">/../../incoming-secpolicy.xml</parameter>
 
 
 

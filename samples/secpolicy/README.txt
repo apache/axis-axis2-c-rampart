@@ -47,4 +47,17 @@ http://ws.apache.org/commons/tcpmon/
 Make sure that you give the correct port that you configured in TCPMon
 while running the scripts
 
+* I cannot run samples and the log says "[rampart][rampart_Engine] Cannot get policy"
+----------------------------------------------------------
+Check your descriptor file where you engaged rampart(i.e. services.xml or
+axis2.xml)
+Make sure that you have correct values for 
+    <parameter name="OutflowSecurityPolicy"></parameter>
+    and
+    <parameter name="InflowSecurityPolicy"></parameter>
+
+* I cannot run samples and log says keys cannot be loaded
+--------------------------------------------------------
+Check you rpolicy files. Make sure that you have correct paths specified for
+key/certificate files
 

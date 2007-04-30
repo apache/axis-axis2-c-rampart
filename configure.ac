@@ -65,7 +65,7 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
-AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Sandesha2C)
+AC_MSG_CHECKING(path to use Axis2C . This is a compulsory to build Rampart-C)
 AC_ARG_WITH(axis2,
 [  --with-axis2[=PATH]      use axis2c.],
 [ case "$withval" in
