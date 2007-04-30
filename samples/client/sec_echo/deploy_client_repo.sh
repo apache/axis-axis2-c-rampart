@@ -15,7 +15,7 @@ fi
 
 #copy [client]axis2.xml to CLIENT_REPO
 echo "Copying axis2.xml to $CLIENT_REPO"
-cp data/client.enc.axis2.xml $CLIENT_REPO/axis2.xml
+cp data/client.axis2.xml $CLIENT_REPO/axis2.xml
 
 #copy libs to client_repo
 echo "Copying libraries to $CLIENT_REPO"
