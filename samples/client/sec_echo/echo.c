@@ -102,6 +102,7 @@ int main(int argc, char** argv)
         /*AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
                 " %d :: %s", env->error->error_number,
                 axutil_error_get_message(env->error));*/
+        return -1;
     }
 
     /* Set service client options */
@@ -114,16 +115,13 @@ int main(int argc, char** argv)
     /* Send request */
     ret_node = axis2_svc_client_send_receive(svc_client, env, payload);
 
-    if (ret_node)
-    {
+    if (ret_node){
         axis2_char_t *om_str = NULL;
         om_str = axiom_node_to_string(ret_node, env);
         if (om_str)
             printf("\nReceived OM : %s\n", om_str);
         printf("\necho client invoke SUCCESSFUL!\n");
-    }
-    else
-    {
+    }else{
         /*AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
                 " %d :: %s", env->error->error_number,
                 axutil_error_get_message(env->error));*/
