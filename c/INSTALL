@@ -102,10 +102,12 @@ You can find more about it from the README.TXT file inside samples\secpolicy fol
 	This will create an axis2 client repository for the samples in the AXIS2C_HOME\clientrepo directory.
 
 3. Set the outflow and inflow secpolicy parameters in axis2.xml of the client repo, according to the scenario that you are running.
+    e.g.
 	<parameter name="OutflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\client-outgoing-secpolicy.xml</parameter> 
 	<parameter name="InflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\client-incoming-secpolicy.xml</parameter> 
 
 4. Set the outflow and inflow secpolicy parameters in services.xml of the sec_echo service in the axis2 server repo.
+    e.g.
 	<parameter name="OutflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\service-outgoing-secpolicy.xml</parameter> 
 	<parameter name="InflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\service-incoming-secpolicy.xml</parameter> 
 
