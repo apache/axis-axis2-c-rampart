@@ -32,6 +32,7 @@ mkdir $BIN_DIR/modules/rampart
 mkdir $BIN_DIR/samples
 mkdir $BIN_DIR/samples/secpolicy
 mkdir $BIN_DIR/samples/server
+mkdir $BIN_DIR/include
 
 echo "Copy related files to $BIN_DIR"
 #Copy other related files
@@ -53,6 +54,9 @@ echo "Copy samples"
 cp -r samples/secpolicy/* $BIN_DIR/samples/secpolicy/
 cp -r $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/samples/
 cp -r $AXIS2C_HOME/services/sec_echo $BIN_DIR/samples/server/
+
+echo "Copy headers"
+cp include/*.h $BIN_DIR/include
 
 echo "Removing garbage"
 cd $BIN_DIR
