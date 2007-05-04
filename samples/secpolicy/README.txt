@@ -1,5 +1,4 @@
-The scenarios available here can be deployed using either deploy.sh(UNIX) or
-deploy.bat(WIN32).
+The scenarios available here can be deployed using deploy.sh
 
 Simply give the scenario name as an argument to the script
 e.g. %sh deploy.sh scenario1 
@@ -29,7 +28,7 @@ FAQ:
 ---
 * I am in a HURRY and I need to try a scenario
 --------------------------------------------
-If you are in a really hurry and need to try a scenario please use the
+If you are in a real hurry and need to try a scenario please use the
 test_scen.sh
 Usage : %sh test_scen.sh scenarioX server-port
 e.g. %s test_scen.sh scenario3 8080

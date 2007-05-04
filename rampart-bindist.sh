@@ -54,6 +54,9 @@ echo "Copy samples"
 cp -r samples/secpolicy/* $BIN_DIR/samples/secpolicy/
 cp -r $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/samples/
 cp -r $AXIS2C_HOME/services/sec_echo $BIN_DIR/samples/server/
+cp samples/server/sec_echo/services.xml $BIN_DIR/samples/server/sec_echo/services.xml
+cp samples/secpolicy/scenario7/client-outgoing-secpolicy.xml $BIN_DIR/samples/server/sec_echo/outgoing-secpolicy.xml
+cp samples/secpolicy/scenario7/client-incoming-secpolicy.xml $BIN_DIR/samples/server/sec_echo/incoming-secpolicy.xml
 
 echo "Copy headers"
 cp include/*.h $BIN_DIR/include
