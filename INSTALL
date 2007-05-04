@@ -40,7 +40,11 @@ Getting Rampart/C source working on Win32
 
 2. Extract the source package and build the source.
 	Unzip the source package.
-	Go to the root of the distribution.
+	Go to the "build\win32" directory of the distribution.
+	Set the parameters of the configure.in
+		AXIS2_BIN_DIR = <path/to/where/you/have/installed/axis2>
+		OPENSSL_BIN_DIR = <path/to/where/you/have/installed/openssl>
+		DEBUG = <1 if enabled, 0 otherwise>
 	Run "nmake install"
 
 3. Engage Rampart/C with Axis2/C as described in the "Engaging Rampart/C with axis2/C" section.
