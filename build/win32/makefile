@@ -6,8 +6,8 @@ RAMPART = rampart
 RAMPART_SOURCE_DIR = ..\..\
 
 RAMPART_INTDIR = .\int.msvc
-RAMPART_DIST_NAME = .\..\rampart-$(MAJOR_VER).$(MINOR_VER)
-#RAMPART_DISTDIR = .\..\rampart
+RAMPART_DIST_NAME = .\..\rampartc-$(MAJOR_VER).$(MINOR_VER)
+#RAMPART_DISTDIR = .\..\rampartc
 RAMPART_DISTDIR = $(RAMPART_DIST_NAME)
 
 #rampart module
@@ -146,7 +146,6 @@ mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
 
 mod_rampart_copy_include:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\include $(RAMPART_DISTDIR)\include
-	copy $(RAMPART_SOURCE_DIR)\README $(RAMPART_DISTDIR)\
 
 mod_rampart_copy_keys:
 	if not exist $(RAMPART_DISTDIR)\bin\samples\keys mkdir $(RAMPART_DISTDIR)\bin\samples\keys
@@ -156,11 +155,21 @@ mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
 
 copy_sec_policy:
-	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\secpolicy $(RAMPART_DISTDIR)\bin\samples\sec_policy
+	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\secpolicy $(RAMPART_DISTDIR)\bin\samples\secpolicy
+
+copy_dist_files:
+	copy $(RAMPART_SOURCE_DIR)\README $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\INSTALL $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\AUTHORS $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\COPYING $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\LICENSE $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\NEWS $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\NOTICE $(RAMPART_DISTDIR)
+
 
 #copy make_bin_dist.bat $(RAMPART_DISTDIR)
 
-mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include
+mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include copy_dist_files
 
 mv_dist:
 	move $(RAMPART_DISTDIR) $(RAMPART_DIST_NAME)
@@ -170,7 +179,7 @@ del_am:
 	del /s *.am
 	chdir .\..\win32
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy copy_sec_policy mod_rampart_copy_include mod_rampart_copy_keys del_am
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy copy_sec_policy mod_rampart_copy_include copy_dist_files mod_rampart_copy_keys del_am
 
 deploy:
 	chdir $(RAMPART_DISTDIR)
