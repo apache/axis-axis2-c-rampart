@@ -14,7 +14,7 @@ if exist  "%CLIENT_REPO%" (
 
 
 @echo Copying axis2.xml to client_repo
-copy /Y ".\data\client.enc.axis2.xml" "%CLIENT_REPO%\axis2.xml"
+copy /Y ".\data\client.axis2.xml" "%CLIENT_REPO%\axis2.xml"
 
 @echo Copying libraries to client_repo
 xcopy /S/I/Q/Y "%AXIS2C_HOME%\lib" "%CLIENT_REPO%\lib"
