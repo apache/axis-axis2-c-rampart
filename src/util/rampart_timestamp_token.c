@@ -138,8 +138,8 @@ rampart_timestamp_token_validate(
     rampart_set_security_processed_result(env, msg_ctx,RAMPART_SPR_TS_CREATED, created_val);
     /*Check whether created is less than current time or not*/
     current_val = rampart_generate_time(env, 0);
-    validity = rampart_compare_date_time(env, created_val, current_val);
-    if (validity == AXIS2_FAILURE)
+    validity = rampart_compare_date_time(env, current_val, created_val);
+    if (validity == AXIS2_SUCCESS)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][ts]Timestamp not valid: Created time is not valid");
         return AXIS2_FAILURE;
