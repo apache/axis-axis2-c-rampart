@@ -61,22 +61,14 @@ cp samples/secpolicy/scenario7/client-incoming-secpolicy.xml $BIN_DIR/samples/se
 echo "Copy headers"
 cp include/*.h $BIN_DIR/include
 
-echo "Removing garbage"
+echo "Removing garbage in $BIN_DIR"
 cd $BIN_DIR
-for i in `find . -name "*.la"`
-do
-   rm $i
-done
 
 for i in `find . -name "*.svn"`
 do
    rm -rf $i
 done
 
-for i in `find . -name "*.so.0*"`
-do
-   rm $i
-done
 
 cd $PWDIR
 echo "Creating tar.gz in $PWDIR"
