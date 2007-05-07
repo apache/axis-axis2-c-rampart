@@ -35,13 +35,13 @@ AXIS2_MODS = $(AXIS2_BIN_DIR)\modules
 
 ##################### compiler options
 
-CC = cl.exe 
+CC = @cl.exe 
 CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"  \
 	 /D "AXIS2_SVR_MULTI_THREADED" /w /nologo $(AXIS2_INCLUDE_PATH) 
 
 ################### linker options
 
-LD = link.exe
+LD = @link.exe
 LDFLAGS = /nologo /LIBPATH:$(AXIS2_LIBS) /LIBPATH:$(OPENSSL_BIN_DIR)\lib\VC \
 	  /LIBPATH:$(AXIS2_BIN_DIR)\lib
 
