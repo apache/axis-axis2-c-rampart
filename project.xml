@@ -18,6 +18,7 @@
 -->
 
 <project>
+  
   <name>RampartC</name>
   <pomVersion>3</pomVersion>
 
@@ -88,15 +89,7 @@
       <email>manjula AT wso2.com</email>
       <organization>WSO2</organization>
     </developer>
-  <!--contributors>
-    <contributor>
-      <name>James Clark</name>
-      <email>jjc AT public.jclark.com</email>
-      <roles>
-	    <role>Technical Adviser on Building a Portable/Re-usable C library</role>
-      </roles>
-    </contributor>
-  </contributors-->
+  </developers>
 
   <!-- ################################################################ -->
   <!--        Project dependency section                                -->
