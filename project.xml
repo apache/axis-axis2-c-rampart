@@ -90,7 +90,15 @@
       <organization>WSO2</organization>
     </developer>
   </developers>
-
+  <contributors>
+    <contributor>
+      <name>James Clark</name>
+      <email>jjc AT public.jclark.com</email>
+      <roles>
+    <role>Technical Adviser on Building a Portable/Re-usable C library</role>
+      </roles>
+    </contributor>
+  </contributors>
   <!-- ################################################################ -->
   <!--        Project dependency section                                -->
   <!-- ################################################################ -->

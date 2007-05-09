@@ -19,7 +19,7 @@ both forms.</p>
 <p>Please send your feedback to the developer mailing list: <a
 href="mailto:rampart-c-dev@ws.apache.org">rampart-c-dev@ws.apache.org</a>
 (Subscription details are available on the <a
-href="http://ws.apache.org/rampart/c/mail-lists.html">Rampart site</a>.</p>
+href="http://ws.apache.org/rampart/c/mail-lists.html">Rampart/C site</a>.</p>
 
 <h2>Contents</h2>
 <ul>
@@ -181,14 +181,14 @@ distributions.) </p>
 <p>You can engage Rampart/C in global level or in service level.</p>
 <p>Just add following entry either to axis2.xml(gloabl level) or in services.xml(service level).</p>
 <pre>   
-    &lt;module ref="rampart"/&gt;
+ &lt;module ref="rampart"/&gt;
 </pre>
 
 <p>Apart from that you must define security policies for outgoing messages and incoming messages.
 This can be done adding parameters as follows in the same descriptor file that you engaged rampart.</p>
 <pre>    
-    &lt;parameter name="OutflowSecurityPolicy"&gt;/your/path/to/outgoing-secpolicy.xml&lt;/parameter&gt;
-    &lt;parameter name="InflowSecurityPolicy"&gt;/your/path/to/incoming-secpolicy.xml&lt;/parameter&gt;
+ &lt;parameter name="OutflowSecurityPolicy"&gt;/your/path/to/outgoing-secpolicy.xml&lt;/parameter&gt;
+ &lt;parameter name="InflowSecurityPolicy"&gt;/your/path/to/incoming-secpolicy.xml&lt;/parameter&gt;
 </pre>
 <p>
 <strong>NOTE:</strong> There are several samples security policy xml files for different scenarios under samples/secpolicy/
@@ -197,22 +197,31 @@ This can be done adding parameters as follows in the same descriptor file that y
 <p>
 The final configuration setup should be as follows
 </p>
-<h3>CLIENT SIDE:</h3>
+<strong>CLIENT SIDE:</strong>
 <p>axis2.xml</p>
 <pre>    
-   &lt;module ref="rampart"/&gt;
-   &lt;parameter name="OutflowSecurityPolicy"&gt;/../../outgoing-secpolicy.xml&lt;/parameter&gt;
-   &lt;parameter name="InflowSecurityPolicy"&gt;/../../incoming-secpolicy.xml&lt;/parameter&gt;
+ &lt;module ref="rampart"/&gt;
+ &lt;parameter name="OutflowSecurityPolicy"&gt;/../../outgoing-secpolicy.xml&lt;/parameter&gt;
+ &lt;parameter name="InflowSecurityPolicy"&gt;/../../incoming-secpolicy.xml&lt;/parameter&gt;
 </pre>    
 
-<h3>SERVER SIDE:</h3>
+<strong>SERVER SIDE:</strong>
 <p>services.xml(or axis2.xml)</p>
 <pre>    
-    &lt;module ref="rampart"/&gt;
-    &lt;parameter name="OutflowSecurityPolicy"&gt;/../../outgoing-secpolicy.xml&lt;/parameter&gt;
-    &lt;parameter name="InflowSecurityPolicy"&gt;/../../incoming-secpolicy.xml&gt;/parameter&gt;
+ &lt;module ref="rampart"/&gt;
+ &lt;parameter name="OutflowSecurityPolicy"&gt;/../../outgoing-secpolicy.xml&lt;/parameter&gt;
+ &lt;parameter name="InflowSecurityPolicy"&gt;/../../incoming-secpolicy.xml&gt;/parameter&gt;
 </pre>    
 
 <p><strong>NOTE:</strong> Please find sample security policy files that are located under <a href="http://svn.apache.org/repos/asf/webservices/rampart/trunk/c/samples/secpolicy/">samples/secpolicy</a></p>
+<p>Go to each and every scenario and see how Rampart/C is configured using the policy assertions available in respective policy files.
+<br>For each scenario there are four policy files</p>
+<ol>
+    <li>client-outgoing-secpolicy.xml : Defines how the security configurations for client's out going messages</li>
+    <li>service-incoming-secpolicy.xml : Defines how the security configurations for server's in coming messages</li>
+    <li>service-outgoing-secpolicy.xml : Defines how the security configurations for server's out going messages</li>
+    <li>client-incoming-secpolicy.xml : Defines how the security configurations for client's in coming messages</li>
+</ol>
+<p><strong>NOTE:</strong> If you have changed an outgoing policy file, make sure that you change the corresponding incoming policy file as well, and vise versa </p>
 </body>
 </html>
