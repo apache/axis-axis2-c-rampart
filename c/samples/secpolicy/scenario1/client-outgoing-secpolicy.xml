@@ -25,7 +25,7 @@
 				</wsp:Policy>
             </sp:AsymmetricBinding>
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                <rampc:TimeToLive>360</rampc:TimeToLive>    
+                <rampc:TimeToLive>1201</rampc:TimeToLive>    
             </rampc:RampartConfig>
 		</wsp:All>
 	</wsp:ExactlyOne>
