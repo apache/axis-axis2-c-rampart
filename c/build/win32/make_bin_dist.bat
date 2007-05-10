@@ -16,3 +16,4 @@ xcopy COPYING %BINDIST%
 xcopy LICENCE %BINDIST%
 xcopy NEWS %BINDIST%
 xcopy NOTICE %BINDIST%
+xcopy deploy_rampart.bat %BINDIST%
