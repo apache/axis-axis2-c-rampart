@@ -46,7 +46,7 @@ cp NOTICE $BIN_DIR
 
 echo "Copy rampart module"
 #Copy rampart module
-cp $AXIS2C_HOME/modules/rampart/libmod_rampart.so $BIN_DIR/modules/rampart
+cp $AXIS2C_HOME/modules/rampart/* $BIN_DIR/modules/rampart/
 cp $AXIS2C_HOME/modules/rampart/module.xml $BIN_DIR/modules/rampart
 
 echo "Copy samples"

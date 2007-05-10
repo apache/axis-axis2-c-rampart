@@ -13,7 +13,7 @@ xcopy README %BINDIST%
 xcopy INSTALL %BINDIST%
 xcopy AUTHORS %BINDIST%
 xcopy COPYING %BINDIST%
-xcopy LICENCE %BINDIST%
+xcopy LICENSE %BINDIST%
 xcopy NEWS %BINDIST%
 xcopy NOTICE %BINDIST%
 xcopy deploy_rampart.bat %BINDIST%
