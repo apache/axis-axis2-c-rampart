@@ -52,7 +52,7 @@ sorted_list_insert(
 )
 {
     if(!(*node)) {
-        *node = (c14n_sorted_list_t *) malloc(sizeof(node));
+        *node = (c14n_sorted_list_t *) malloc(sizeof(**node));
         (*node)->left = (*node)->right = NULL;
         (*node)->val = val;
         return;

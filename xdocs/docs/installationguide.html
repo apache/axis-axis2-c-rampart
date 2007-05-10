@@ -12,7 +12,7 @@
 <h1>Apache Rampart/C Installation Guide</h1>
 
 <p>This document guides you on how to install Rampart/C.</p>
-<p>You must have <a href="http://www.openssl.org">OpenSSL</a> installed in you system.</p>
+<p>You must have <a href="http://www.openssl.org">OpenSSL</a> 0.9.8 (or above) installed in you system.</p>
 <p>This release comes in two forms, source and binary. This document covers
 both forms.</p>
 
@@ -152,17 +152,17 @@ distributions.) </p>
   <li>cd C:\rampartc\build\win32</li>
   <li>to access .Net tools, run
     <ul>
-      <li>C:\rampartc\build\win32&lt; vcvars32.bat</li>
+      <li>C:\rampartc\build\win32  &gt; vcvars32.bat</li>
     </ul>
     <p>(<strong>Note</strong>: You may have to set the PATH environment
     variable to vcvars32.bat if MS Windows gives an error indicating that it
-    cannot find this batch file. This file is located in &gt;your MS Visual
-    Studio install Directory&lt;\VC\bin directory.)</p>
+    cannot find this batch file. This file is located in &lt;your MS Visual
+    Studio install Directory&gt;\VC\bin directory.)</p>
   </li>
   <li>To build the system and create the binary files in a directory named
     deploy under the build directory,
     <ul>
-      <li>C:\rampartc\build\win32&lt;nmake install</li>
+      <li>C:\rampartc\build\win32&gt;nmake install</li>
     </ul>
   </li>
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
