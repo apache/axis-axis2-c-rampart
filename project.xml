@@ -36,7 +36,7 @@
   </organization>
 
   <inceptionYear>2005</inceptionYear>
-  <logo>http://ws.apache.org/axis2/images/axis.jpg</logo>
+  <logo>http://ws.apache.org/rampart/c/images/rampartc_logo.jpg</logo>
   <description> 
     Apache Rampart/C is the security module of the Apache Axis2/C
   </description>
