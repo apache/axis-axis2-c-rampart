@@ -35,6 +35,7 @@ struct rampart_context_t
     password_callback_fn pwcb_function;
     rampart_is_replayed_fn is_replayed_function;
     int ttl;
+    axis2_char_t *rd_val;
     axis2_char_t *password_type;
 
     /****************************/
@@ -156,6 +157,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->pwcb_function = NULL;
     rampart_context->is_replayed_function = NULL;
     rampart_context->ttl = 0;
+    rampart_context->rd_val = NULL;
     rampart_context->password_type = NULL;
 
     rampart_context->secpolicy = NULL;
@@ -372,6 +374,19 @@ rampart_context_set_ttl(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_rd_val(rampart_context_t *rampart_context,
+                        const axutil_env_t *env,
+                        axis2_char_t *rd_val)
+{
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, rd_val, AXIS2_FAILURE);
+
+    rampart_context->rd_val = rd_val;
+    return AXIS2_SUCCESS;
+}
+
 /*End of implementation*/
 
 /*Getters of the PHP-RAMPART interface*/
@@ -518,6 +533,16 @@ rampart_context_get_ttl(
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
 
     return rampart_context->ttl;
+}
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+rampart_context_get_rd_val(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
+
+    return rampart_context->rd_val;
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
@@ -1376,6 +1401,26 @@ rampart_context_set_ttl_from_file(
         rampart_context->ttl = 300;
     else
         rampart_context->ttl = axutil_atoi(time_to_live);
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_rd_val_from_file(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_rampart_config_t *config = NULL;
+    axis2_char_t *rd_val = NULL;
+    config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
+    if(!config)
+        return AXIS2_FAILURE;
+
+    rd_val = rp_rampart_config_get_rd_val(config,env);
+    if(!rd_val)
+        rampart_context->rd_val = "6000";
+    else
+        rampart_context->rd_val = rd_val;
 
     return AXIS2_SUCCESS;
 }

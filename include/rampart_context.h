@@ -175,6 +175,11 @@ extern "C"
                             const axutil_env_t *env,
                             int ttl);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_rd_val(rampart_context_t *rampart_context,
+                            const axutil_env_t *env,
+                            axis2_char_t *rd_val);
+
     /**********************************************************8*/
 
     /*Getters of the above set functions*/
@@ -248,7 +253,13 @@ extern "C"
     rampart_context_get_ttl(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+    
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    rampart_context_get_rd_val(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
 
+    
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_password_type(
         rampart_context_t *rampart_context,
@@ -489,6 +500,12 @@ extern "C"
     rampart_context_set_ttl_from_file(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_rd_val_from_file(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
 
 
 #ifdef __cplusplus
