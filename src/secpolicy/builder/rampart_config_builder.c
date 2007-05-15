@@ -192,5 +192,20 @@ rp_rampart_config_builder_populate(
         else
             return AXIS2_FAILURE;
     }
+    else if(axutil_strcmp(local_name, RP_RD) == 0)
+    {
+        if(rp_match_rampart_config_qname(env, RP_RD,node,element))
+        {
+            axis2_char_t *rd_val = NULL;
+            rd_val = axiom_element_get_text(element, env, node);
+            printf("rd_val = %s", rd_val);
+            rp_rampart_config_set_rd_val(rampart_config, env, rd_val);
+            return AXIS2_SUCCESS;
+        }else{
+            return AXIS2_FAILURE;
+        }
+    }
     else return AXIS2_FAILURE;
 }
+
+

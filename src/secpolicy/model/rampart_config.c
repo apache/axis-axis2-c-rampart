@@ -29,6 +29,7 @@ struct rp_rampart_config_t
     axis2_char_t *receiver_certificate_file;
     axis2_char_t *certificate_file;
     axis2_char_t *private_key_file;
+    axis2_char_t *rd_val;
 };
 
 AXIS2_EXTERN rp_rampart_config_t *AXIS2_CALL 
@@ -55,6 +56,7 @@ rp_rampart_config_create(const axutil_env_t *env)
     rampart_config->authenticate_module = NULL;
     rampart_config->password_type = NULL;
     rampart_config->time_to_live = NULL;
+    rampart_config->rd_val = NULL;
     return rampart_config;
 }
 
@@ -273,5 +275,27 @@ rp_rampart_config_set_time_to_live(rp_rampart_config_t *rampart_config,
     AXIS2_PARAM_CHECK(env->error,time_to_live,AXIS2_FAILURE);   
         
     rampart_config->time_to_live = time_to_live;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rp_rampart_config_get_rd_val(
+    rp_rampart_config_t *rampart_config,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    return rampart_config->rd_val;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rp_rampart_config_set_rd_val(rp_rampart_config_t *rampart_config,
+            const axutil_env_t *env,
+            axis2_char_t *rd_val)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, rd_val, AXIS2_FAILURE);   
+        
+    rampart_config->rd_val = rd_val;
     return AXIS2_SUCCESS;
 }
