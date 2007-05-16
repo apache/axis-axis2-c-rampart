@@ -370,7 +370,7 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     /*Populate the context for future use*/
     oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, sym_algo);
     oxs_ctx_set_id(enc_ctx, env, id);
-    oxs_ctx_set_id(enc_ctx, env, type);
+    oxs_ctx_set_type(enc_ctx, env, type);
 
     /*Get the cipher value*/
     cd_node = oxs_axiom_get_first_child_node_by_name(env, enc_type_node, OXS_NODE_CIPHER_DATA,OXS_ENC_NS,OXS_XENC);

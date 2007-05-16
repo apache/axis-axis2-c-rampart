@@ -87,21 +87,25 @@ rampart_replay_detector_is_replayed(const axutil_env_t *env,
     }        
 }
 
+/* ts= the timestamp of the current record
+ * val= the timestamp of the ith record of the database
+ * */
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_replay_detector_is_overdue(const axutil_env_t *env,
-    const axis2_char_t *val,
-    const axis2_char_t *ref)
+    const axis2_char_t *ts,
+    const axis2_char_t *val)
 {
     axutil_date_time_comp_result_t res = AXIS2_DATE_TIME_COMP_RES_UNKNOWN;
     axutil_date_time_t *dt1 = NULL;
     axutil_date_time_t *dt2 = NULL;
 
-    dt1 = axutil_date_time_create(env);
+    /*dt1 = axutil_date_time_create(env);*/
+    dt1 = axutil_date_time_create_with_offset(env, 5*60); /*To delete records that are 5 mins old*/
     dt2 = axutil_date_time_create(env);
 
-    axutil_date_time_deserialize_time(dt1, env, val);
-    axutil_date_time_deserialize_time(dt2, env, ref);
-    /*If dt1(val) < dt2(ref) then its expired*/
+    /*axutil_date_time_deserialize_time(dt1, env, ts);*/
+    axutil_date_time_deserialize_time(dt2, env, val);
+
     res = axutil_date_time_compare(dt2, env, dt1);
     if(AXIS2_DATE_TIME_COMP_RES_EXPIRED == res){
         return AXIS2_TRUE;
@@ -143,7 +147,7 @@ rampart_replay_detector_default(const axutil_env_t *env,
    
     msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
     if(!msg_id){
-        msg_id = "MSG-ID";/*This has to be changed*/
+        msg_id = "MSG-ID";/*This has to be changed to generate the hash*/
     }
     ts = rampart_replay_detector_get_ts( env, msg_ctx); 
     /*Get the DB*/    
@@ -152,8 +156,8 @@ rampart_replay_detector_default(const axutil_env_t *env,
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the default database for replay detection from msg_ctx");
         return AXIS2_FAILURE;
     }else{
-        void *id = NULL; /*Temp record id*/
-        void *val = NULL; /*Temp time stamp*/
+        void *id = NULL; /*Temp record id (of i'th recored)*/
+        void *val = NULL; /*Temp time stamp (of i'th recored))*/
      
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_hash_count(hash));
 

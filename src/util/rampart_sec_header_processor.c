@@ -105,8 +105,8 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
 }
 
 static oxs_x509_cert_t *get_receiver_x509_cert(
-                        const axutil_env_t *env,
-                        rampart_context_t *rampart_context)
+    const axutil_env_t *env,
+    rampart_context_t *rampart_context)
 {
 
     axis2_char_t *file_name = NULL;
@@ -116,15 +116,15 @@ static oxs_x509_cert_t *get_receiver_x509_cert(
     if(pem_buf)
     {
         return oxs_key_mgr_load_x509_cert_from_string(env,pem_buf);
-    }        
+    }
     else
     {
         file_name = rampart_context_get_receiver_certificate_file(rampart_context,env);
         if(!file_name)
             return NULL;
         else
-            return oxs_key_mgr_load_x509_cert_from_pem_file(env,file_name);    
-    }        
+            return oxs_key_mgr_load_x509_cert_from_pem_file(env,file_name);
+    }
 }
 
 
@@ -586,7 +586,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
 
     /*str_node = oxs_axiom_get_first_child_node_by_name(env,key_info_node,
                             OXS_NODE_SECURITY_TOKEN_REFRENCE,NULL,NULL);*/
-   
+
     if(str_node)
     {
         str_child_node = axiom_node_get_first_element(str_node,env);
@@ -770,13 +770,13 @@ rampart_shp_process_message(const axutil_env_t *env,
                     return AXIS2_FAILURE;
                 }
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing Signature element.");
-                
+
                 status = rampart_shp_process_signature(env,msg_ctx,rampart_context,soap_envelope,sec_node,cur_node);
-                
+
                 if(status!=AXIS2_SUCCESS){
-                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx); 
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
                     return status;
-                }                    
+                }
             }
             else
             {
@@ -873,7 +873,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing Signature element.");
                 status = rampart_shp_process_signature(env,msg_ctx,rampart_context,soap_envelope,sec_node,cur_node);
                 if(status!=AXIS2_SUCCESS){
-                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx); 
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
                     return status;
                 }
             }
@@ -901,7 +901,11 @@ rampart_shp_process_message(const axutil_env_t *env,
             if(status!=AXIS2_SUCCESS)
                 return status;
         }
-
+        if(NULL == rampart_context_get_rd_val(rampart_context, env)){
+            need_replay_detection = AXIS2_FALSE;
+        }else{
+            need_replay_detection = AXIS2_TRUE;
+        }
         if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/
             rampart_is_replayed_fn rd_fn = NULL;
             /*Is replayed*/
