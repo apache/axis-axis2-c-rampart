@@ -484,6 +484,7 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     axiom_node_t *cd_node = NULL;
     axis2_char_t *enc_mtd_algo = NULL;
     axis2_char_t *cipher_val = NULL;
+    axis2_char_t *new_cipher_val = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     oxs_buffer_t *input_buf = NULL;
     oxs_buffer_t *result_buf = NULL;
@@ -500,6 +501,8 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     if(!cipher_val){
         return AXIS2_FAILURE;
     }
+    
+    new_cipher_val = oxs_util_get_newline_removed_string(env, cipher_val);
 
     /*Get key used to encrypt*/
     key_info_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_KEY_INFO,OXS_DSIG_NS,OXS_DS);
@@ -511,7 +514,7 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     /*Get the pkey used to decrypt the session key. If found set it to the asym_ctx*/
     /*Create the input buffer*/
     input_buf = oxs_buffer_create(env);
-    oxs_buffer_populate(input_buf, env, (unsigned char*)cipher_val, axutil_strlen(cipher_val));
+    oxs_buffer_populate(input_buf, env, (unsigned char*)new_cipher_val, axutil_strlen(new_cipher_val));
 
     /*Create a results buffer*/
     result_buf = oxs_buffer_create(env);

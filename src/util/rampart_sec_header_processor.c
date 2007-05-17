@@ -902,8 +902,10 @@ rampart_shp_process_message(const axutil_env_t *env,
                 return status;
         }
         if(NULL == rampart_context_get_rd_val(rampart_context, env)){
+            AXIS2_LOG_INFO(env->log, "[rampart][shp] Replay detection is not specified. Nothing to do");
             need_replay_detection = AXIS2_FALSE;
         }else{
+            AXIS2_LOG_INFO(env->log, "[rampart][shp] Checking message for replay.");
             need_replay_detection = AXIS2_TRUE;
         }
         if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/

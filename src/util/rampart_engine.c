@@ -188,32 +188,38 @@ build_rampart_context_from_file(
     rampart_context_set_secpolicy(rampart_context,env,secpolicy);
 
     status = rampart_context_set_user_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(status!=AXIS2_SUCCESS){
         return NULL;
-
+    }
     status = rampart_context_set_ttl_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(status!=AXIS2_SUCCESS){
         return NULL;
-
+    }
     status = rampart_context_set_password_type_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(status!=AXIS2_SUCCESS){
         return NULL;
-
+    }
+    status = rampart_context_set_rd_val_from_file(rampart_context,env);
+    if(status!=AXIS2_SUCCESS){
+            return NULL;
+    }
     pwcb_module_name = rampart_context_get_password_callback_class(rampart_context,env);
 
     if(pwcb_module_name)
     {
         password_callback_module = rampart_load_pwcb_module(env,pwcb_module_name);
-        if(password_callback_module)
+        if(password_callback_module){
             rampart_context_set_password_callback(rampart_context,env,password_callback_module);
+        }            
     }
     authn_provider_name = rampart_context_get_authn_module_name(rampart_context,env);
 
     if(authn_provider_name)
     {
         authn_provider = rampart_load_auth_module(env,authn_provider_name);
-        if(authn_provider)
+        if(authn_provider){
             rampart_context_set_authn_provider(rampart_context,env,authn_provider);
+        }            
     }
     return rampart_context;
 

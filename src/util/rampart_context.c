@@ -1417,10 +1417,7 @@ rampart_context_set_rd_val_from_file(
         return AXIS2_FAILURE;
 
     rd_val = rp_rampart_config_get_rd_val(config,env);
-    if(!rd_val)
-        rampart_context->rd_val = "6000";
-    else
-        rampart_context->rd_val = rd_val;
+    rampart_context->rd_val = rd_val;
 
     return AXIS2_SUCCESS;
 }
