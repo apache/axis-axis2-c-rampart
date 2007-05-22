@@ -43,7 +43,8 @@
             </sp:SignedSupportingTokens>
 			<sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
 				<wsp:Policy>
-                    <sp:MustSupportRefEmbeddedToken/>
+                    <!--sp:MustSupportRefEmbeddedToken/-->
+                    <sp:MustSupportRefIssuerSerial/> 
 				</wsp:Policy>
 			</sp:Wss10>
 			<sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">

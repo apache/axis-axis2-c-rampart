@@ -53,7 +53,7 @@ rampart_replay_detector_get_default_db(const axutil_env_t *env,
          return hash;
     }else{
          hash = rampart_replay_detector_set_default_db(env, ctx);
-         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new", RAMPART_RD_DB_PROP);
+         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
          return hash;
     }
 }
@@ -131,6 +131,7 @@ rampart_replay_detector_set_default_db(const axutil_env_t *env,
 
     axutil_property_set_value(hash_db_prop, env, hash_db);
     axis2_ctx_set_property(ctx, env, RAMPART_RD_DB_PROP, hash_db_prop);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Setting dafult RD DB =%s", RAMPART_RD_DB_PROP);
 
     return hash_db;
 }
@@ -144,8 +145,9 @@ rampart_replay_detector_default(const axutil_env_t *env,
     axutil_hash_index_t *hi = NULL;
     const axis2_char_t *msg_id = NULL;
     const axis2_char_t *ts = NULL;
+    const axis2_char_t *xxx = NULL;
    
-    msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
+    msg_id = /*"ABCD"*/axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
     if(!msg_id){
         msg_id = "MSG-ID";/*This has to be changed to generate the hash*/
     }
@@ -182,7 +184,8 @@ rampart_replay_detector_default(const axutil_env_t *env,
         }/*eof for loop*/   
         /*If not replayed then we will insert the new record to the DB*/
         axutil_hash_set(hash, msg_id, AXIS2_HASH_KEY_STRING, ts);
-
+        xxx = (axis2_char_t*)axutil_hash_get(hash, msg_id, AXIS2_HASH_KEY_STRING);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Adding record key=%s to the DB", msg_id);
         return AXIS2_SUCCESS;
       }
 }

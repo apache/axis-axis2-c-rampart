@@ -41,7 +41,7 @@
                 <rampc:Element Name="To" Namespace="http://www.w3.org/2005/08/addressing"/>
             </rampc:SignedItems>
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                <rampc:ReplayDetection>200</rampc:ReplayDetection>
+                <!--rampc:ReplayDetection>200</rampc:ReplayDetection-->
                 <rampc:EncryptionUser>b</rampc:EncryptionUser>
                 <rampc:PasswordCallbackClass>AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>
                 <rampc:Certificate>AXIS2C_HOME/bin/samples/rampart/keys/bhome/b_cert.cert</rampc:Certificate>
