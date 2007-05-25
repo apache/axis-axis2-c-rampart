@@ -164,7 +164,15 @@ rampart_replay_detector_default(const axutil_env_t *env,
         void *tmp_ts = NULL; /*Temp time stamp (of i'th recored))*/
      
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_hash_count(hash));
-
+        
+        /*Get the valid duration for a record*/
+        if(rampart_context_get_rd_val(rampart_context, env)){
+            valid_duration = axutil_atoi(rampart_context_get_rd_val(rampart_context, env));
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the specified valid duration  %d\n", valid_duration );
+        }else{
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the default valid duration  %d\n", valid_duration );
+        }
+       
         /*If matches ERROR*/
         for (hi = axutil_hash_first(hash, env); hi; hi = axutil_hash_next(env, hi)) {
             axutil_hash_this(hi, (const void**)&id, NULL, &tmp_ts);
@@ -177,12 +185,6 @@ rampart_replay_detector_default(const axutil_env_t *env,
             }
 
             /*Clean up old records*/
-            if(rampart_context_get_rd_val(rampart_context, env)){
-                valid_duration = axutil_atoi(rampart_context_get_rd_val(rampart_context, env));
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the specified valid duration  %s\n", valid_duration );
-            }else{
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the default valid duration  %s\n", valid_duration );
-            }
             if(AXIS2_TRUE == rampart_replay_detector_is_overdue(env , valid_duration, tmp_ts)){
                 /*Remove the record*/
                 AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] removing record (id, tmp_ts) = (%s , %s)\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
