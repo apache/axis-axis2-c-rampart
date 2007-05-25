@@ -37,6 +37,8 @@ extern "C"
 {
 #endif
 
+    typedef struct rampart_context_t rampart_context_t;
+    
     typedef axis2_char_t *(AXIS2_CALL*
                            password_callback_fn)(const axutil_env_t *env,
                                                  const axis2_char_t *username,
@@ -44,7 +46,8 @@ extern "C"
 
     typedef axis2_status_t (AXIS2_CALL*
                             rampart_is_replayed_fn)(const axutil_env_t *env,
-                                            axis2_msg_ctx_t* msg_ctx);
+                                            axis2_msg_ctx_t* msg_ctx,
+                                            rampart_context_t *rampart_context);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
             auth_password_func)(const axutil_env_t* env,
@@ -58,7 +61,6 @@ extern "C"
                               const axis2_char_t *created,
                               const char *digest);
 
-    typedef struct rampart_context_t rampart_context_t;
 
 
     /**

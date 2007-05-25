@@ -913,7 +913,7 @@ rampart_shp_process_message(const axutil_env_t *env,
             /*Is replayed*/
             rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
             if(rd_fn){
-                status  = (*rd_fn)(env, msg_ctx);
+                status  = (*rd_fn)(env, msg_ctx, rampart_context);
                 if(status != AXIS2_SUCCESS){
                     /*Scream .. replayed*/
                     return AXIS2_FAILURE;

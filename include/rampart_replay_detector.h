@@ -26,6 +26,7 @@
 #include <axutil_env.h>
 #include <axis2_msg_ctx.h>
 #include <axis2_conf_ctx.h>
+#include <rampart_context.h>
 #ifdef __cplusplus
 extern "C"
 {
@@ -78,7 +79,8 @@ extern "C"
     /*The default impl for RRD*/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_replay_detector_default(const axutil_env_t *env,
-                                axis2_msg_ctx_t* msg_ctx);
+                                axis2_msg_ctx_t *msg_ctx,
+                                rampart_context_t *rampart_context);
 
     AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
     rampart_replay_detector_set_default_db(const axutil_env_t *env,

@@ -71,7 +71,7 @@ rampart_replay_detector_get_ts(const axutil_env_t *env,
     ts = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
     return ts;
 }
-
+/*
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_replay_detector_is_replayed(const axutil_env_t *env,
     const axis2_char_t *msg_id,
@@ -79,20 +79,20 @@ rampart_replay_detector_is_replayed(const axutil_env_t *env,
     const axis2_char_t *id,
     const axis2_char_t *val)
 {
-    /*If both has the same msg-id and the timestamp its a replay*/
     if((0== axutil_strcmp(msg_id, id)) && (0== axutil_strcmp(ts, val))){
         return AXIS2_SUCCESS;
     }else{
         return AXIS2_FALSE;
     }        
 }
+*/
 
 /* ts= the timestamp of the current record
  * val= the timestamp of the ith record of the database
  * */
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_replay_detector_is_overdue(const axutil_env_t *env,
-    const axis2_char_t *ts,
+    int valid_duration,
     const axis2_char_t *val)
 {
     axutil_date_time_comp_result_t res = AXIS2_DATE_TIME_COMP_RES_UNKNOWN;
@@ -100,7 +100,7 @@ rampart_replay_detector_is_overdue(const axutil_env_t *env,
     axutil_date_time_t *dt2 = NULL;
 
     /*dt1 = axutil_date_time_create(env);*/
-    dt1 = axutil_date_time_create_with_offset(env, 5*60); /*To delete records that are 5 mins old*/
+    dt1 = axutil_date_time_create_with_offset(env, valid_duration); 
     dt2 = axutil_date_time_create(env);
 
     /*axutil_date_time_deserialize_time(dt1, env, ts);*/
@@ -139,14 +139,16 @@ rampart_replay_detector_set_default_db(const axutil_env_t *env,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_replay_detector_default(const axutil_env_t *env,
-                                axis2_msg_ctx_t* msg_ctx)
+                                axis2_msg_ctx_t* msg_ctx,
+                                rampart_context_t *rampart_context)
 {
     axutil_hash_t *hash = NULL;
     axutil_hash_index_t *hi = NULL;
     const axis2_char_t *msg_id = NULL;
     const axis2_char_t *ts = NULL;
     const axis2_char_t *xxx = NULL;
-   
+    int valid_duration = RAMPART_RD_DEF_VALID_DURATION;
+
     msg_id = /*"ABCD"*/axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
     if(!msg_id){
         msg_id = "MSG-ID";/*This has to be changed to generate the hash*/
@@ -159,26 +161,34 @@ rampart_replay_detector_default(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }else{
         void *id = NULL; /*Temp record id (of i'th recored)*/
-        void *val = NULL; /*Temp time stamp (of i'th recored))*/
+        void *tmp_ts = NULL; /*Temp time stamp (of i'th recored))*/
      
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_hash_count(hash));
 
         /*If matches ERROR*/
         for (hi = axutil_hash_first(hash, env); hi; hi = axutil_hash_next(env, hi)) {
-            axutil_hash_this(hi, (const void**)&id, NULL, &val);
-            printf("[rampart][rrd] (id, val) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)val);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] (id, val) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)val);
-            /*If replayed, return a FAILRE*/
-            if(AXIS2_TRUE == rampart_replay_detector_is_replayed(env, msg_id, ts, id, val)){
+            axutil_hash_this(hi, (const void**)&id, NULL, &tmp_ts);
+            printf("[rampart][rrd] (id, tmp_ts) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] (id, tmp_ts) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
+            
+            /*If the table already have the same key it's a replay*/
+            if(AXIS2_TRUE == axutil_hash_contains_key(hash, env, msg_id)){
                 return AXIS2_FAILURE;
             }
+
             /*Clean up old records*/
-            if(AXIS2_TRUE == rampart_replay_detector_is_overdue(env , ts, val)){
+            if(rampart_context_get_rd_val(rampart_context, env)){
+                valid_duration = axutil_atoi(rampart_context_get_rd_val(rampart_context, env));
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the specified valid duration  %s\n", valid_duration );
+            }else{
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the default valid duration  %s\n", valid_duration );
+            }
+            if(AXIS2_TRUE == rampart_replay_detector_is_overdue(env , valid_duration, tmp_ts)){
                 /*Remove the record*/
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] removing record (id, val) = (%s , %s)\n", (axis2_char_t*)id, (axis2_char_t*)val);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] removing record (id, tmp_ts) = (%s , %s)\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
                 AXIS2_FREE(env->allocator, id);
                 id = NULL;
-                AXIS2_FREE(env->allocator, val);
+                AXIS2_FREE(env->allocator, tmp_ts);
                 ts = NULL;
             }
         }/*eof for loop*/   
