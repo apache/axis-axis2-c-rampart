@@ -19,7 +19,7 @@
  *
  */
 
-#include <rampart_engine.h>
+#include <rampart_neethi.h>
 #include <axis2_ctx.h>
 #include <axis2_svc.h>
 #include <axis2_desc.h>
@@ -38,7 +38,7 @@
 
 
 AXIS2_EXTERN rampart_context_t *AXIS2_CALL 
-rampart_engine_build_configuration(
+rampart_neethi_build_configuration(
         const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx,
         axis2_bool_t is_inflow)
@@ -57,29 +57,30 @@ rampart_engine_build_configuration(
     axis2_status_t status = AXIS2_SUCCESS;
     axis2_op_t *op = NULL;
     axis2_msg_t *msg = NULL;
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
+    axis2_conf_t *conf = NULL;
+    struct axis2_conf_ctx *conf_ctx = NULL;
+
 
     conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][engine] Conf context is NULL ");
+        AXIS2_LOG_INFO(env->log, "[rampart][rhu] Conf context is NULL ");
         return NULL;
     }
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-    if(!ctx)
+    conf =  axis2_conf_ctx_get_conf(conf_ctx, env);
+    if(!conf)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][engine] axis2 context is NULL ");
+        AXIS2_LOG_INFO(env->log, "[rampart][rhu] Cannot get the axis2 conf from conf context. ");
         return NULL;
     }
     
     svc =  axis2_msg_ctx_get_svc(msg_ctx,env);
     if(!svc)
     {
-        property = axis2_ctx_get_property(ctx, env, RAMPART_CONTEXT);
-        if(property)
-            return (rampart_context_t *)axutil_property_get_value(property,env);
+        rampart_context = (rampart_context_t *)axis2_conf_get_security_context(conf, env);
+        if(rampart_context)
+            return rampart_context;
+        
         else
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] Service is NULL.");
@@ -90,7 +91,7 @@ rampart_engine_build_configuration(
     op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(!op)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Operation is NULL.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] Operation is NULL.");
         return NULL;
     }        
     
@@ -105,7 +106,7 @@ rampart_engine_build_configuration(
 
     if(!msg)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Message is NULL.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] Message is NULL.");
         return NULL;
     }
     
@@ -113,14 +114,14 @@ rampart_engine_build_configuration(
     desc = axis2_msg_get_base(msg, env);
     if(!desc)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] axis2 description is NULL.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] axis2 description is NULL.");
         return NULL;
     }
     policy_include = axis2_desc_get_policy_include(desc, env);        
     
     if(!policy_include)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Policy include is NULL.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] Policy include is NULL.");
         return NULL;
     }
     /*service_policy = axis2_policy_include_get_policy(policy_include, env);*/
@@ -128,14 +129,14 @@ rampart_engine_build_configuration(
     
     if(!service_policy)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Policy is NULL.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] Policy is NULL.");
         return NULL;
     }    
     secpolicy = rp_secpolicy_builder_build(env, service_policy);
 
-    if(!secpolicy)
+    if(!service_policy)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] security policy is NULL.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_neethi] security policy is NULL.");
         return NULL;
     }
     rampart_context = rampart_context_create(env);
@@ -170,13 +171,12 @@ rampart_engine_build_configuration(
         if(authn_provider)
             rampart_context_set_authn_provider(rampart_context,env,authn_provider);
     }
+    
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
-        property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                                            AXIS2_FALSE, (void *)rampart_context_free, rampart_context);
-        axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
-    }
-    
+        axis2_conf_set_security_context(conf, env, rampart_context);        
+    }        
+
     return rampart_context;
 }
 

@@ -1,1 +1,1 @@
-SUBDIRS = omxmlsec secpolicy handlers util core data 
+SUBDIRS = omxmlsec handlers util core data 

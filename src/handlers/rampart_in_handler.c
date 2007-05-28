@@ -33,11 +33,8 @@
 #include <rampart_util.h>
 #include <rampart_sec_header_processor.h>
 #include <rampart_sec_processed_result.h>
-#include <rp_policy_creator.h>
-#include <rp_secpolicy_builder.h>
 #include <rampart_context.h>
-#include <rampart_engine.h>
-
+#include <rampart_neethi.h>
 /*************************** Function headers *********************************/
 
 axis2_status_t AXIS2_CALL
@@ -112,13 +109,26 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "SOAP header found");
 
-    sec_node = rampart_get_security_token(env, msg_ctx, soap_header);
-    
-    if(!sec_node)
+    rampart_context = rampart_neethi_build_configuration(env, msg_ctx, AXIS2_TRUE);
+
+    if(!rampart_context)
     {
-        AXIS2_LOG_INFO(env->log, 
-		    "[rampart][rampart_in_handler] No security header element.");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_in_handler] ramaprt_context creation failed.");
         return AXIS2_FAILURE;
+    }
+    
+    sec_node = rampart_get_security_token(env, msg_ctx, soap_header);
+
+    if((rampart_context_get_binding_type(rampart_context,env)) != RP_BINDING_TRANSPORT)
+    {
+        /*sec_node = rampart_get_security_token(env, msg_ctx, soap_header);*/
+    
+        if(!sec_node)
+        {
+            AXIS2_LOG_INFO(env->log, 
+		        "[rampart][rampart_in_handler] No security header element.");
+            return AXIS2_FAILURE;
+        }
     }
 
     status = rampart_set_security_processed_results_property(env, msg_ctx);
@@ -128,11 +138,16 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
 				"[rampart][rampart_in_handler] Unable to set the security processed results");
     }
+    /*rampart_context = rampart_neethi_build_configuration(env, msg_ctx, AXIS2_TRUE);*/
 
-    rampart_context = rampart_engine_init(env,msg_ctx,AXIS2_TRUE);
+/*  rampart_context = rampart_engine_init(env,msg_ctx,AXIS2_TRUE);*/
+/*
     if(!rampart_context)
+    {        
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_in_handler] ramaprt_context creation failed.");
         return AXIS2_FAILURE;
-
+    }
+*/
     status = rampart_shp_process_message(env, msg_ctx, rampart_context, 
 						soap_envelope, sec_node);
     
@@ -140,7 +155,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     {
         AXIS2_LOG_INFO(env->log,
             "[rampart][rampart_in_handler] Security Header processing failed.");
-        rampart_engine_shutdown(env,rampart_context);
+  /*    rampart_engine_shutdown(env,rampart_context);*/
         return status;
     }        
             
@@ -148,7 +163,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     /*We do not need rampart context to be freed in the server side*/
     if(!serverside){
     /*This method will free the rampart_context*/
-        status = rampart_engine_shutdown(env, rampart_context);
+/*      status = rampart_engine_shutdown(env, rampart_context);*/
     }        
     
     return status;

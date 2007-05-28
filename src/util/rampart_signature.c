@@ -202,7 +202,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
     }
     /*If the requirement is to include the token we should build the binary security
      * token element here.*/
-    if(rampart_context_is_token_include(rampart_context,token,token_type,server_side,env))
+    if(rampart_context_is_token_include(rampart_context,token,token_type,server_side, AXIS2_FALSE, env))
     {
         axis2_char_t *bst_data = NULL;
 

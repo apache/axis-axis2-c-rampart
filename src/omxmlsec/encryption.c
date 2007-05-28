@@ -130,12 +130,14 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         unsigned char *decoded_data = NULL;/*Can be binary*/
         int decoded_len = -1;
         int enclen = -1;
+        int x=-1;
         oxs_buffer_t *decoded_buf = NULL;
 
         decoded_buf = oxs_buffer_create(env);
 
         /*First we need to base64 decode*/
-        decoded_data = AXIS2_MALLOC(env->allocator, axutil_base64_decode_len((char*)oxs_buffer_get_data(input, env)));
+        x =  axutil_base64_decode_len((const char*)oxs_buffer_get_data(input, env));
+        decoded_data = AXIS2_MALLOC(env->allocator, x);
         decoded_len = axutil_base64_decode_binary(decoded_data, (char*)oxs_buffer_get_data(input, env) );
         if (decoded_len < 0)
         {

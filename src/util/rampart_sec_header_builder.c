@@ -62,7 +62,7 @@ rampart_shb_build_message(const axutil_env_t *env,
                           axiom_soap_envelope_t *soap_envelope)
 {
 
-    axis2_status_t status = AXIS2_FAILURE;
+    axis2_status_t status = AXIS2_SUCCESS;
     axiom_soap_header_t *soap_header = NULL;
     axiom_node_t *soap_header_node = NULL;
     axiom_element_t *soap_header_ele = NULL;
@@ -213,9 +213,51 @@ rampart_shb_build_message(const axutil_env_t *env,
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_TRANSPORT)
     {
-        /*Do Transport Binding specific things */
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Transport Binding. We do not support yet");
-        return AXIS2_FAILURE;
+        /*Timestamp Inclusion*/
+
+        if(rampart_context_is_include_timestamp(rampart_context,env))
+        {
+            int ttl = -1;
+            AXIS2_LOG_INFO(env->log, "[rampart][shb]  building Timestamp Token");
+            AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using default timeToLive value %d",
+                           RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
+            /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
+            ttl = rampart_context_get_ttl(rampart_context,env);
+
+            status = rampart_timestamp_token_build(env,
+                                                   sec_node, sec_ns_obj, ttl);
+            if (status == AXIS2_FAILURE)
+            {
+                AXIS2_LOG_INFO(env->log, "[rampart][shb] Timestamp Token build failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+        }
+
+        /*Check whether we need username token*/
+        /*User name tokens includes in messages sent from client to server*/
+        if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
+        {
+            if(rampart_context_is_include_username_token(rampart_context,env))
+            {
+
+                /*Now we are passing rampart_context here so inside this method
+                relevant parameters are extracted. */
+
+                AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
+                status =rampart_username_token_build(
+                            env,
+                            rampart_context,
+                            sec_node,
+                            sec_ns_obj);
+                if (status == AXIS2_FAILURE)
+                {
+                    AXIS2_LOG_INFO(env->log, "[rampart][shb] UsernmaeToken build failed. ERROR");
+                    return AXIS2_FAILURE;
+                }
+            }
+            return status;
+        }
+        return status;
     }
     else
         return AXIS2_FAILURE;

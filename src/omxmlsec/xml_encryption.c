@@ -351,6 +351,7 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     axiom_node_t *cd_node = NULL;
     axiom_node_t *cv_node = NULL;
     axis2_char_t *cipher_val = NULL;
+    axis2_char_t *new_cipher_val = NULL;
     axis2_char_t *sym_algo = NULL;
     axis2_char_t *type = NULL;
     axis2_char_t *id = NULL;
@@ -377,9 +378,13 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     cv_node = oxs_axiom_get_first_child_node_by_name(env, cd_node, OXS_NODE_CIPHER_VALUE,OXS_ENC_NS,OXS_XENC);
     cipher_val = oxs_token_get_cipher_value(env, cv_node);
 
+    /*NEW CODE*/
+    new_cipher_val = oxs_util_get_newline_removed_string(env, cipher_val);
+
+    /*eof NEW CODE*/
     /*Create input buffer with cipher data obtained*/
     input_buf = oxs_buffer_create(env);
-    oxs_buffer_populate(input_buf, env, (unsigned char*)cipher_val, axutil_strlen(cipher_val) );
+    oxs_buffer_populate(input_buf, env, (unsigned char*)new_cipher_val, axutil_strlen(new_cipher_val) );
 
     /*Decrypt*/
     oxs_ctx_set_operation(enc_ctx, env, OXS_CTX_OPERATION_DECRYPT);

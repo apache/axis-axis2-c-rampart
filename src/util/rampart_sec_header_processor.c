@@ -568,7 +568,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
         AXIS2_LOG_INFO(env->log,"[rampart][shp] We still do not support derived keys");
         return AXIS2_FAILURE;
     }
-    is_include_token = rampart_context_is_token_include(rampart_context,token,token_type,server_side,env);
+    is_include_token = rampart_context_is_token_include(rampart_context,token,token_type,server_side,AXIS2_TRUE,env);
 
     key_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
                     OXS_NODE_KEY_INFO,OXS_DSIG_NS, OXS_DS );
@@ -935,8 +935,40 @@ rampart_shp_process_message(const axutil_env_t *env,
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_TRANSPORT)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] We still not support Transport binding.");
-        return AXIS2_FAILURE;
+        axis2_status_t status = AXIS2_FAILURE;
+        
+        status = rampart_shp_process_timestamptoken(env,msg_ctx,rampart_context,sec_node);
+        if(status!=AXIS2_SUCCESS){
+            return status;
+        }
+
+        if( axis2_msg_ctx_get_server_side(msg_ctx, env))
+        {
+            status = rampart_shp_process_usernametoken(env,msg_ctx,rampart_context,sec_node);
+            if(status!=AXIS2_SUCCESS)
+                return status;
+        }
+
+        if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/
+            rampart_is_replayed_fn rd_fn = NULL;
+            /*Is replayed*/
+            rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
+            if(rd_fn){
+                status  = (*rd_fn)(env, msg_ctx, rampart_context);
+                if(status != AXIS2_SUCCESS){
+                    /*Scream .. replayed*/
+                    return AXIS2_FAILURE;
+                }else{
+                    AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
+                }
+            }else{
+                AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
+            }
+        }
+        AXIS2_LOG_INFO(env->log, "[rampart][shp] Security header element processing, DONE ");
+        /*Do the action accordingly*/
+        return AXIS2_SUCCESS;
+        
     }
     else
     {

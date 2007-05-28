@@ -167,7 +167,7 @@ rampart_enc_encrypt_message(const axutil_env_t *env,
     /*First we should check whether we include the token in the
      *message.*/
 
-    if(rampart_context_is_token_include(rampart_context,token,token_type,server_side,env))
+    if(rampart_context_is_token_include(rampart_context,token,token_type,server_side,AXIS2_FALSE,env))
     {
         eki = RAMPART_STR_DIRECT_REFERENCE;
     }

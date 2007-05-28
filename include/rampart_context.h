@@ -431,6 +431,7 @@ extern "C"
         rp_property_t *token,
         int token_type,
         axis2_bool_t server_side,
+        axis2_bool_t is_inpath,
         const axutil_env_t *env);
     /*
         AXIS2_EXTERN axis2_char_t *AXIS2_CALL

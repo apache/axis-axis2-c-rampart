@@ -64,6 +64,8 @@ extern "C"
 #define INFLOW_RAMPART_CONTEXT                      "InflowRampartContext"
 #define OUTFLOW_RAMPART_CONTEXT                     "OutflowRampartContext"
 
+#define RAMPART_CONTEXT                             "RampartContext"
+
 #define IN_MESSAGE_SECURITY                          "InMessageSecurity"
 #define OUT_MESSAGE_SECURITY                         "OutMessageSEcurity"
 #define RAMPART_PASSWORD_TEXT                       "plainText"

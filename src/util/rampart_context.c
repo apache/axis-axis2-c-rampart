@@ -1949,6 +1949,7 @@ rampart_context_is_token_include(
     rp_property_t *token,
     int token_type,
     axis2_bool_t server_side,
+    axis2_bool_t is_inpath,
     const axutil_env_t *env)
 {
     axis2_char_t *inclusion = NULL;
@@ -1961,13 +1962,27 @@ rampart_context_is_token_include(
         inclusion = rp_x509_token_get_inclusion(x509_token,env);
 
         if(server_side)
-            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0));
-        else
-            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+        {
+            if(is_inpath)
+            {
+                include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
                        (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
                        (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
-
+            }
+            else
+                include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
+        }
+        else
+        {            
+            if(!is_inpath)
+            {    
+                include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
+            }
+            else
+                include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
+        }
         return include;
     }
     else

@@ -21,7 +21,7 @@
 #include <axiom_soap.h>
 #include <axis2_client.h>
 #include <rampart_constants.h>
-
+#include "echo_helper.h"
 
 axiom_node_t *
 build_om_payload_for_echo_svc(const axutil_env_t *env);
@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axiom_node_t *ret_node = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
     /* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
 
@@ -64,8 +65,10 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
+    /*axis2_options_set_action(options, env,
+            "http://ws.apache.org/axis2/c/samples/sec_echo");*/
     axis2_options_set_action(options, env,
-            "http://ws.apache.org/axis2/c/samples/sec_echo");
+            "http://example.com/ws/2004/09/policy/Test/EchoRequest");
 
 
 
@@ -108,6 +111,13 @@ int main(int argc, char** argv)
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);
 
+    status = echo_helper_set_policy(svc_client, client_home, env);
+
+    if(status == AXIS2_FAILURE)
+    {
+        printf("policy setting failed\n");
+        return 0;
+    }
 
     /* Build the SOAP request message payload using OM API.*/
     payload = build_om_payload_for_echo_svc(env);
@@ -159,12 +169,12 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
     axiom_namespace_t *ns1 = NULL;
     axis2_char_t *om_str = NULL;
 
-    ns1 = axiom_namespace_create(env, "http://ws.apache.org/axis2/c/samples", "ns1");
-    echo_om_ele = axiom_element_create(env, NULL, "echoString", ns1, &echo_om_node);
+    ns1 = axiom_namespace_create(env, /*"http://ws.apache.org/axis2/c/samples"*/ "http://example.com/ws/2004/09/policy", "ns1");
+    echo_om_ele = axiom_element_create(env, NULL, /*"echoString"*/"EchoRequest", ns1, &echo_om_node);
     
     
     text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
-    axiom_element_set_text(text_om_ele, env, "echo5\n", text_om_node);
+    axiom_element_set_text(text_om_ele, env, "Hello", text_om_node);
 
     om_str = axiom_node_to_string(echo_om_node, env);
     if (om_str){
