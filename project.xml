@@ -89,13 +89,38 @@
       <email>manjula AT wso2.com</email>
       <organization>WSO2</organization>
     </developer>
+    <developer>
+      <name>Samisa Abeysinghe</name>
+      <id>samisa</id>
+      <email>samisa AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Sanjaya Ratnaweera</name>
+      <id>pini</id>
+      <email>sanjaya AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
+    <developer>
+      <name>Dushshantha Chandradasa</name>
+      <id>dushshantha</id>
+      <email>dushshantha AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>
       <name>James Clark</name>
       <email>jjc AT public.jclark.com</email>
       <roles>
-    <role>Technical Adviser on Building a Portable/Re-usable C library</role>
+    <role>Technical Adviser</role>
+      </roles>
+    </contributor>
+    <contributor>
+      <name>Sanjiva Weerawarne</name>
+      <email>sanjiva AT wso2.com</email>
+      <roles>
+    <role>Technical Adviser</role>
       </roles>
     </contributor>
   </contributors>
