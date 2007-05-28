@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_action(options, env,
-            "http://ws.apache.org/axis2/c/samples/echoString");
+            "http://ws.apache.org/axis2/c/samples/sec_echo");
 
 
 
