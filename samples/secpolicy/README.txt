@@ -15,14 +15,9 @@ Scenario    Summary
 -------------------
 1.          Timestamp
 2.          UsernameToken
-3.          Client Encrypt(DirectReference)        
-4.          Client Encrypt(IssuerSerial/RefKeyIdentifier/Embedded)           
-5.          Client Sign(DirectReference)        
-6.          Client Sign(IssuerSerial/RefKeyIdentifier/Embedded)           
-7.          Timestamp, UsernameToken, Encrypt, Sign (Encrypt before sign/ Sign
-before encrypt)
-8.          A complete scenario, where both client and server encrypt/sign,
-add Timestamps, Usernametokens.
+3.          Encryption        
+4.          Signature           
+5.          A complete scenario to show :Timestamp, UsernameToken, Encrypt, Sign 
 
 FAQ:
 ---
@@ -45,15 +40,6 @@ For that you may use the TCP Monitor utility.
 http://ws.apache.org/commons/tcpmon/
 Make sure that you give the correct port that you configured in TCPMon
 while running the scripts
-
-* I cannot run samples and the log says "[rampart][rampart_Engine] Cannot get policy"
-----------------------------------------------------------
-Check your descriptor file where you engaged rampart(i.e. services.xml or
-axis2.xml)
-Make sure that you have correct values for 
-    <parameter name="OutflowSecurityPolicy"></parameter>
-    and
-    <parameter name="InflowSecurityPolicy"></parameter>
 
 * I cannot run samples and log says keys cannot be loaded
 --------------------------------------------------------

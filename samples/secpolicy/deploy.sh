@@ -14,13 +14,13 @@ SERVICE_HOME="$AXIS2C_HOME/services/sec_echo/"
 echo "Copying client policy files to $CLIENT_REPO"
 cp $1/client-policy.xml $CLIENT_REPO/policy.xml
 
-echo "replacing username in policy files."
+echo "Replacing settings in policy files."
 sed -i 's,AXIS2C_HOME,'$AXIS2C_HOME',g' $CLIENT_REPO/policy.xml
 
 #copy services.xml to SERVICE_HOME
 echo "Copying services.xml to $SERVICE_HOME"
 cp $1/services.xml $SERVICE_HOME/services.xml
 
-echo "replacing username in Configuration files."
+echo "Replacing settings in Configuration files."
 sed -i 's,AXIS2C_HOME,'$AXIS2C_HOME',g' $SERVICE_HOME/services.xml
 

@@ -28,10 +28,10 @@ echo_helper_set_policy(axis2_svc_client_t* svc_client,
     if(client_home)
     {
         file_name = axutil_stracat(env, client_home, "policy.xml" );
-            
     }
-    else
+    else{
         return AXIS2_FAILURE;
+    }
 
     reader = axiom_xml_reader_create_for_file(env, file_name, NULL);
 
@@ -39,7 +39,7 @@ echo_helper_set_policy(axis2_svc_client_t* svc_client,
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_CREATING_XML_STREAM_READER,
                 AXIS2_FAILURE);
-        printf("xml reader creation failed\n");
+        printf("xml reader creation failed for policy file %s\n", file_name);
         return AXIS2_FAILURE;
     }
     

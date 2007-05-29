@@ -30,6 +30,7 @@
 #include <rampart_util.h>
 #include <rampart_constants.h>
 #include <rampart_callback.h>
+#include <rampart_replay_detector.h>
 #include <axis2_msg.h>
 #include <axis2_conf_ctx.h>
 
@@ -181,8 +182,12 @@ rampart_engine_build_configuration(
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
                                             AXIS2_FALSE, (void *)rampart_context_free, rampart_context);
         axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
+    }else{ /*Server side only*/
+         /*We set our default impl of replay detection function*/
+        if(is_inflow){
+            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_default);
+        }
     }
-    
     return rampart_context;
 }
 

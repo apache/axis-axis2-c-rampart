@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 
     if(status == AXIS2_FAILURE)
     {
-        printf("policy setting failed\n");
+        printf("Policy setting failed\n");
         return 0;
     }
 
