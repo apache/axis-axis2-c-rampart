@@ -172,7 +172,7 @@ rampart_context_create(const axutil_env_t *env)
     return rampart_context;
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
+AXIS2_EXTERN void AXIS2_CALL
 rampart_context_free(rampart_context_t *rampart_context,
                      const axutil_env_t *env)
 {
@@ -188,7 +188,7 @@ rampart_context_free(rampart_context_t *rampart_context,
         AXIS2_FREE(env->allocator,rampart_context);
         rampart_context = NULL;
     }
-    return AXIS2_SUCCESS;
+    return;
 }
 
 

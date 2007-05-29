@@ -78,10 +78,9 @@ extern "C"
     * Frees a rampart_context.
     * @rampart_context the rampart_context
     * @env pointer to environment struct
-    * @return AXIS2_SUCCESS on success else AXIS2_FAILURE. 
     */
 
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN void AXIS2_CALL
     rampart_context_free(rampart_context_t *rampart_context,
                          const axutil_env_t *env);
 

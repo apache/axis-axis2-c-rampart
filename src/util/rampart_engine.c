@@ -150,6 +150,10 @@ rampart_engine_build_configuration(
     if(status!=AXIS2_SUCCESS)
         return NULL;
 
+    status = rampart_context_set_rd_val_from_file(rampart_context,env);
+    if(status!=AXIS2_SUCCESS)
+        return NULL;
+
     status = rampart_context_set_password_type_from_file(rampart_context,env);
     if(status!=AXIS2_SUCCESS)
         return NULL;
@@ -170,6 +174,8 @@ rampart_engine_build_configuration(
         if(authn_provider)
             rampart_context_set_authn_provider(rampart_context,env,authn_provider);
     }
+    
+
     if(!axis2_msg_ctx_get_server_side(msg_ctx, env))
     {
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
