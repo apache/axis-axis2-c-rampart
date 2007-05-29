@@ -34,7 +34,7 @@
 #include <rampart_sec_header_processor.h>
 #include <rampart_sec_processed_result.h>
 #include <rampart_context.h>
-#include <rampart_neethi.h>
+#include <rampart_engine.h>
 /*************************** Function headers *********************************/
 
 axis2_status_t AXIS2_CALL
@@ -109,7 +109,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "SOAP header found");
 
-    rampart_context = rampart_neethi_build_configuration(env, msg_ctx, AXIS2_TRUE);
+    rampart_context = rampart_engine_build_configuration(env, msg_ctx, AXIS2_TRUE);
 
     if(!rampart_context)
     {

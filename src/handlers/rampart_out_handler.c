@@ -30,7 +30,7 @@
 #include <rampart_encryption.h>
 #include <rampart_sec_header_builder.h>
 #include <rampart_context.h>
-#include <rampart_neethi.h>
+#include <rampart_engine.h>
 /*********************** Function headers *********************************/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -121,7 +121,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
             return AXIS2_SUCCESS;
         }
 
-        rampart_context = rampart_neethi_build_configuration(env, msg_ctx, AXIS2_FALSE);
+        rampart_context = rampart_engine_build_configuration(env, msg_ctx, AXIS2_FALSE);
 
         if(!rampart_context)
         {

@@ -24,14 +24,7 @@
 
 #include <rp_includes.h>
 #include <rampart_context.h>
-#include <rp_secpolicy.h>
-#include <rampart_authn_provider.h>
-#include <rampart_util.h>
-#include <axutil_property.h>
 #include <rampart_constants.h>
-#include <rampart_callback.h>
-#include <rp_policy_creator.h>
-#include <rampart_handler_util.h>
 #include <axis2_msg_ctx.h>
 
 
@@ -40,25 +33,11 @@ extern "C"
 {
 #endif
 
-    /**
-     * Initializes the rampart engine. This will perform the configuration loading for the rampart module.
-     * @param env pointer to environment struct
-     * @param msg_ctx message context
-     * @param is_inflow if the initialization is in IN-FLOW of the message this should be set to TRUE
-     * @return a rampart context nurished with configurations.
-     */
-    AXIS2_EXTERN rampart_context_t* AXIS2_CALL
-    rampart_engine_init(const axutil_env_t *env,
-                        axis2_msg_ctx_t *msg_ctx,
-                        axis2_bool_t is_inflow);
-    /**
-     * 
-     *
-     */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_engine_shutdown(const axutil_env_t *env,
-                            rampart_context_t *rampart_context);
-
+    AXIS2_EXTERN rampart_context_t *AXIS2_CALL
+    rampart_engine_build_configuration(
+        const axutil_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        axis2_bool_t is_inflow);
 
 #ifdef __cplusplus
 }
