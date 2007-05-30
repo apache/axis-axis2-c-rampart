@@ -6,7 +6,9 @@ noinst_PROGRAMS = test_c14n
 test_c14n_SOURCES =  test.c
 
 INCLUDES = -I$(top_builddir)/include \
-		    @AXIS2INC@
+		    @AXIS2INC@ \
+		    @UTILINC@ \
+		    @AXIOMINC@ 
 
 test_c14n_LDADD  = ${AXIS2C_HOME}/lib/libaxutil.la \
 		    	   ${AXIS2C_HOME}/lib/libaxis2_axiom.la \

@@ -10,6 +10,8 @@ test_SOURCES = test.c
 
 INCLUDES = -I$(top_builddir)/include \
             -I ../../../include \
+	    @UTILINC@ \
+	    @AXIOMINC@ \
 	    @AXIS2INC@
 
 test_LDADD   = $(top_builddir)/src/util/librampart_util.la \

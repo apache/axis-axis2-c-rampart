@@ -7,7 +7,9 @@ test_oxs_SOURCES =  test.c
 
 INCLUDES = -I$(top_builddir)/include \
 		    -I ../../include \
-		    @AXIS2INC@
+		    @AXIS2INC@ \
+		    @UTILINC@ \
+		    @AXIOMINC@ 
 
 test_oxs_LDADD   = $(top_builddir)/src/util/librampart_util.la \
                     $(top_builddir)/src/omxmlsec/libomxmlsec.la \
