@@ -13,4 +13,6 @@ libmod_rampart_la_LIBADD  = ../handlers/librampart_handlers.la \
 INCLUDES = -I$(top_builddir)/include \
 			-I$(AXIS2C_HOME)/include/neethi-0.1 \
 			-I ../../include \
-			@AXIS2INC@
+			@AXIS2INC@ \
+			@UTILINC@ \
+			@AXIOMINC@

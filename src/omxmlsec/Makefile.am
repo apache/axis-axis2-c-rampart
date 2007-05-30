@@ -17,4 +17,6 @@ libomxmlsec_la_LIBADD  = -lssl\
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
+			@UTILINC@ \
+			@AXIOMINC@ \
 			@AXIS2INC@

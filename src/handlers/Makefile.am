@@ -6,4 +6,7 @@ librampart_handlers_la_SOURCES =	rampart_out_handler.c\
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
 			-I $(AXIS2C_HOME)/include/neethi-0.1 \
+			@AXIOMINC@ \
+			@UTILINC@ \
+			@NEETHIINC@ \
 			@AXIS2INC@
