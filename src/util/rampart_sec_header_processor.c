@@ -916,6 +916,8 @@ rampart_shp_process_message(const axutil_env_t *env,
                 status  = (*rd_fn)(env, msg_ctx, rampart_context);
                 if(status != AXIS2_SUCCESS){
                     /*Scream .. replayed*/
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Message can be replayed");
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
                     return AXIS2_FAILURE;
                 }else{
                     AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");

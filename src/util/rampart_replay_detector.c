@@ -87,9 +87,6 @@ rampart_replay_detector_is_replayed(const axutil_env_t *env,
 }
 */
 
-/* ts= the timestamp of the current record
- * val= the timestamp of the ith record of the database
- * */
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_replay_detector_is_overdue(const axutil_env_t *env,
     int valid_duration,
@@ -99,13 +96,13 @@ rampart_replay_detector_is_overdue(const axutil_env_t *env,
     axutil_date_time_t *dt1 = NULL;
     axutil_date_time_t *dt2 = NULL;
 
-    /*dt1 = axutil_date_time_create(env);*/
     dt1 = axutil_date_time_create_with_offset(env, valid_duration); 
     dt2 = axutil_date_time_create(env);
-
-    /*axutil_date_time_deserialize_time(dt1, env, ts);*/
-    axutil_date_time_deserialize_time(dt2, env, val);
-
+    
+    printf("Setting time(cur(-vald), ref) %s[%d] >  %s\n", axutil_date_time_serialize_date_time(dt2, env), valid_duration, axutil_date_time_serialize_date_time(dt1, env));
+    axutil_date_time_deserialize_date_time(dt2, env, val);
+    /*If the dt1(LIMIT) < dt2(TS) this returns expired*/
+    printf("Comparing time(TIME, TS) %s >  %s\n", axutil_date_time_serialize_date_time(dt1, env), axutil_date_time_serialize_date_time(dt2, env));
     res = axutil_date_time_compare(dt2, env, dt1);
     if(AXIS2_DATE_TIME_COMP_RES_EXPIRED == res){
         return AXIS2_TRUE;
@@ -146,12 +143,12 @@ rampart_replay_detector_default(const axutil_env_t *env,
     axutil_hash_index_t *hi = NULL;
     const axis2_char_t *msg_id = NULL;
     const axis2_char_t *ts = NULL;
-    const axis2_char_t *xxx = NULL;
     int valid_duration = RAMPART_RD_DEF_VALID_DURATION;
 
-    msg_id = /*"ABCD"*/axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
+    msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env); 
     if(!msg_id){
         msg_id = "MSG-ID";/*This has to be changed to generate the hash*/
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] NO msg_id specified, using default = %s", msg_id);
     }
     ts = rampart_replay_detector_get_ts( env, msg_ctx); 
     /*Get the DB*/    
@@ -160,9 +157,7 @@ rampart_replay_detector_default(const axutil_env_t *env,
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the default database for replay detection from msg_ctx");
         return AXIS2_FAILURE;
     }else{
-        void *id = NULL; /*Temp record id (of i'th recored)*/
-        void *tmp_ts = NULL; /*Temp time stamp (of i'th recored))*/
-     
+         
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_hash_count(hash));
         
         /*Get the valid duration for a record*/
@@ -173,30 +168,51 @@ rampart_replay_detector_default(const axutil_env_t *env,
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the default valid duration  %d\n", valid_duration );
         }
        
-        /*If matches ERROR*/
+        /*If the table already have the same key it's a replay*/
+        if(AXIS2_TRUE == axutil_hash_contains_key(hash, env, msg_id)){
+           AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] For ID=%s, a replay detected", msg_id);
+           return AXIS2_FAILURE;
+        }
+       
+        /*Iterate thru records*/
+        printf("Iterate--------------------=%d\n", axutil_hash_count(hash));
         for (hi = axutil_hash_first(hash, env); hi; hi = axutil_hash_next(env, hi)) {
-            axutil_hash_this(hi, (const void**)&id, NULL, &tmp_ts);
-            printf("[rampart][rrd] (id, tmp_ts) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] (id, tmp_ts) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
+            axis2_char_t *id = NULL; /*Temp record id (of i'th recored)*/
+            axis2_char_t *tmp_ts = NULL; /*Temp time stamp (of i'th recored))*/
             
-            /*If the table already have the same key it's a replay*/
-            if(AXIS2_TRUE == axutil_hash_contains_key(hash, env, msg_id)){
-                return AXIS2_FAILURE;
+            axutil_hash_this(hi, (void*)&id, NULL, (void*)&tmp_ts);
+            /*tmp_ts = (axis2_char_t*)val;*/
+            if(!id){
+                printf("[rampart][rrd] ID is NULL. Cont loop\n");
+                continue;
             }
+            if(!tmp_ts){
+                printf("[rampart][rrd] TS is NULL\n");
+            }
+            /*printf("[rampart][rrd] (id = tmp_ts) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);*/
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] (id, tmp_ts) %s = %s\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
 
             /*Clean up old records*/
-            if(AXIS2_TRUE == rampart_replay_detector_is_overdue(env , valid_duration, tmp_ts)){
-                /*Remove the record*/
-                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] removing record (id, tmp_ts) = (%s , %s)\n", (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
-                AXIS2_FREE(env->allocator, id);
-                id = NULL;
-                AXIS2_FREE(env->allocator, tmp_ts);
-                ts = NULL;
+           
+           if(AXIS2_TRUE == rampart_replay_detector_is_overdue(env , -valid_duration, tmp_ts)){ /*TODO*/
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] removing record (id, tmp_ts) = (%s , %s)\n", 
+                                                        (axis2_char_t*)id, (axis2_char_t*)tmp_ts);
+                printf("Deleting record... , (id = tmp_ts)  %s = %s\n", id, tmp_ts);
+                axutil_hash_set(hash, id, AXIS2_HASH_KEY_STRING, NULL);
+                if(id){
+                    AXIS2_FREE(env->allocator, id);
+                    id = NULL;
+                }
+                if(tmp_ts){
+                    AXIS2_FREE(env->allocator, tmp_ts);
+                    tmp_ts = NULL;
+                }
             }
         }/*eof for loop*/   
         /*If not replayed then we will insert the new record to the DB*/
-        axutil_hash_set(hash, msg_id, AXIS2_HASH_KEY_STRING, ts);
-        xxx = (axis2_char_t*)axutil_hash_get(hash, msg_id, AXIS2_HASH_KEY_STRING);
+        /*NOTE: We do a strdup here, 'coz we dont need these values to be lost once the msg cycle is over.*/
+        printf("Adding record... , (id = ts)  %s = %s\n", msg_id, ts);
+        axutil_hash_set(hash, axutil_strdup(env, msg_id), AXIS2_HASH_KEY_STRING, axutil_strdup(env, ts));
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Adding record key=%s to the DB", msg_id);
         return AXIS2_SUCCESS;
       }
