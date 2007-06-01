@@ -16,8 +16,8 @@ librampart_util_la_LIBADD  = -lssl \
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
-			-I $(AXIS2C_HOME)/include/neethi-0.1 \
 			@OPENSSLINC@ \
 			@AXIOMINC@ \
 			@UTILINC@ \
+			@NEETHIINC@ \
 			@AXIS2INC@
