@@ -88,11 +88,39 @@ AC_ARG_WITH(axis2,
   AC_MSG_RESULT(no)
 )
 
+AC_MSG_CHECKING(path to use openssl . This is a compulsory to build Rampart-C)
+AC_ARG_WITH(openssl,
+[  --with-openssl[=PATH]      use openssl.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT($withval)
+    dnl Find oprnssl dir in the path
+    if test -d $withval; then
+        opensslinc="-I$withval/include"
+        openssllib="-L$withval/lib"
+    elif test -d '/usr/include/openssl'; then
+        opensslinc="-L/usr/include/openssl"
+        openssllib=""
+    else
+        AC_MSG_ERROR(could not find openssl. stop)
+    fi
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
+
 AXIS2INC=$axis2inc
 AXIOMINC=$axiominc
+OPENSSLINC=$opensslinc
+OPENSSLLIB=$openssllib
 UTILINC=$axis2_utilinc
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIOMINC)
+AC_SUBST(OPENSSLINC)
+AC_SUBST(OPENSSLLIB)
 AC_SUBST(UTILINC)
 AC_SUBST(XMLSCHEMAINC)
 

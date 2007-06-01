@@ -8,7 +8,8 @@ libomxmlsec_la_SOURCES = ctx.c  buffer.c key.c cipher.c error.c axis2_utils.c ax
 						xml_key_info_builder.c
 						
 
-libomxmlsec_la_LIBADD  = -lssl\
+libomxmlsec_la_LIBADD  = @OPENSSLLIB@ \
+			-lssl \
 			${AXIS2C_HOME}/lib \
 			tokens/liboxstokens.la \
 			openssl/libomopenssl.la \
@@ -17,6 +18,7 @@ libomxmlsec_la_LIBADD  = -lssl\
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
+			@OPENSSLINC@ \
 			@UTILINC@ \
 			@AXIOMINC@ \
 			@AXIS2INC@

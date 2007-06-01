@@ -6,6 +6,7 @@ noinst_PROGRAMS = test_c14n
 test_c14n_SOURCES =  test.c
 
 INCLUDES = -I$(top_builddir)/include \
+		   @OPENSSLINC@ \
 		    @AXIS2INC@ \
 		    @UTILINC@ \
 		    @AXIOMINC@ 
@@ -13,4 +14,5 @@ INCLUDES = -I$(top_builddir)/include \
 test_c14n_LDADD  = ${AXIS2C_HOME}/lib/libaxutil.la \
 		    	   ${AXIS2C_HOME}/lib/libaxis2_axiom.la \
 		    	   ${AXIS2C_HOME}/lib/libaxis2_libxml2.la \
-				   $(top_builddir)/src/omxmlsec/c14n/liboxsc14n.la 
+				   $(top_builddir)/src/omxmlsec/c14n/liboxsc14n.la \
+				@OPENSSLLIB@

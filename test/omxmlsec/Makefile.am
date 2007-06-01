@@ -7,6 +7,7 @@ test_oxs_SOURCES =  test.c
 
 INCLUDES = -I$(top_builddir)/include \
 		    -I ../../include \
+		    @OPENSSLINC@ \
 		    @AXIS2INC@ \
 		    @UTILINC@ \
 		    @AXIOMINC@ 
@@ -18,4 +19,5 @@ test_oxs_LDADD   = $(top_builddir)/src/util/librampart_util.la \
 		    ${AXIS2C_HOME}/lib/libaxutil.la \
 		    ${AXIS2C_HOME}/lib/libaxis2_axiom.la \
 		    ${AXIS2C_HOME}/lib/libaxis2_parser.la \
-           -lxml2
+		    @OPENSSLLIB@\
+           	    -lxml2

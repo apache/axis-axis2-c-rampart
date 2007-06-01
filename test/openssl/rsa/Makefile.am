@@ -9,12 +9,14 @@ test_SOURCES = test_rsa.c
 
 INCLUDES = -I$(top_builddir)/include \
 			@UTILINC@ \
-            @AXIOMINC@
+            @AXIOMINC@\
+	    @OPENSSLINC@
 
 test_LDADD   = $(top_builddir)/src/util/librampart_util.la \
                     $(top_builddir)/src/omxmlsec/libomxmlsec.la \
                     $(top_builddir)/src/omxmlsec/openssl/libomopenssl.la \
 		   -laxis2_util \
 		   -laxis2_axiom \
+		   @OPENSSLLIB@\
             -laxis2_libxml2 \
             -lxml2

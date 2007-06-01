@@ -9,6 +9,7 @@ INCLUDES = -I$(top_builddir)/include \
 			-I ../../../../util/include \
 			-I ../../../../include \
 			-I ../../../../axiom/include \
+			@OPENSSLINC@ \
 			@UTILINC@ \
 			@AXIOMINC@ \
 			@AXIS2INC@

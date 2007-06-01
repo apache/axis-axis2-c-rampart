@@ -8,11 +8,15 @@ libmod_rampart_la_SOURCES = mod_rampart.c
 libmod_rampart_la_LIBADD  = ../handlers/librampart_handlers.la \
 			    ../util/librampart_util.la \
 			    ../omxmlsec/libomxmlsec.la \
-				${AXIS2C_HOME}/lib
+				${AXIS2C_HOME}/lib \
+				@OPENSSLLIB@ \
+				-lcrypto
+				
 
 INCLUDES = -I$(top_builddir)/include \
 			-I$(AXIS2C_HOME)/include/neethi-0.1 \
 			-I ../../include \
+			@OPENSSLINC@ \
 			@AXIS2INC@ \
 			@UTILINC@ \
 			@AXIOMINC@

@@ -10,13 +10,14 @@ librampart_util_la_SOURCES = rampart_crypto_util.c \
 
 
 librampart_util_la_LIBADD  = -lssl \
-						-lcrypto \
-						${AXIS2C_HOME}/lib
+			     -lcrypto \
+				${AXIS2C_HOME}/lib\
+				@OPENSSLLIB@
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
 			-I $(AXIS2C_HOME)/include/neethi-0.1 \
+			@OPENSSLINC@ \
 			@AXIOMINC@ \
 			@UTILINC@ \
-			@NEETHIINC@ \
 			@AXIS2INC@

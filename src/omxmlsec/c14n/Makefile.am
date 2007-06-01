@@ -8,6 +8,7 @@ liboxsc14n_la_SOURCES = c14n.c \
 liboxsc14n_la_LIBADD = ${AXIS2C_HOME}/lib
 
 INCLUDES = 	-I ../../../include \
+	    @OPENSSLINC@ \
 		@UTILINC@ \
 		@AXIOMINC@ \
 	    @AXIS2INC@
