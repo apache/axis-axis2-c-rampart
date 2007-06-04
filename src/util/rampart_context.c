@@ -1716,7 +1716,8 @@ rampart_context_get_token(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
     axis2_bool_t for_encryption,
-    axis2_bool_t server_side)
+    axis2_bool_t server_side,
+    axis2_bool_t is_inpath)
 {
     rp_property_t *binding = NULL;
     binding = rp_secpolicy_get_binding(rampart_context->secpolicy,env);
@@ -1729,15 +1730,30 @@ rampart_context_get_token(
         asym_binding = (rp_asymmetric_binding_t *)rp_property_get_value(binding,env);
         if(asym_binding)
         {
-            if((for_encryption && server_side) || (!for_encryption && !server_side))
-            {
-                return rp_asymmetric_binding_get_initiator_token(asym_binding,env);
+            if(is_inpath)
+            {    
+                if((for_encryption && server_side) || (!for_encryption && !server_side))
+                {
+                    return rp_asymmetric_binding_get_recipient_token(asym_binding,env);
+                }
+                else if((for_encryption && !server_side) || (!for_encryption && server_side))
+                {
+                    return rp_asymmetric_binding_get_initiator_token(asym_binding,env);
+                }
+                else return NULL;
             }
-            else if((for_encryption && !server_side) || (!for_encryption && server_side))
+            else
             {
-                return rp_asymmetric_binding_get_recipient_token(asym_binding,env);
-            }
-            else return NULL;
+                if((server_side && for_encryption) || (!for_encryption && !server_side))
+                {
+                    return rp_asymmetric_binding_get_initiator_token(asym_binding,env);
+                }    
+                else if((server_side && !for_encryption)|| (for_encryption && !server_side))
+                {
+                    return rp_asymmetric_binding_get_recipient_token(asym_binding,env);
+                } 
+                else return NULL;
+            }    
         }
         else
             return NULL;
@@ -1953,7 +1969,7 @@ rampart_context_is_token_include(
     const axutil_env_t *env)
 {
     axis2_char_t *inclusion = NULL;
-    axis2_bool_t include = AXIS2_TRUE;
+    axis2_bool_t include = AXIS2_FALSE;
 
     if(token_type == RP_TOKEN_X509)
     {

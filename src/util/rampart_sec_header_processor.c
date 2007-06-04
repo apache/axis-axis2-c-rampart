@@ -549,7 +549,7 @@ rampart_shp_process_signature(const axutil_env_t *env,
     /*Get the key identifiers and build the certificate*/
     /*First we should verify with policy*/
 
-    token = rampart_context_get_token(rampart_context,env,AXIS2_FALSE,server_side);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_FALSE, server_side, AXIS2_TRUE);
 
     if(!token)
     {

@@ -392,7 +392,8 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env,
         axis2_bool_t for_encryption,
-        axis2_bool_t server_side);
+        axis2_bool_t server_side,
+        axis2_bool_t is_inpath);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_check_is_derived_keys(

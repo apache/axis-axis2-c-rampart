@@ -184,7 +184,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
         axutil_array_list_add(nodes_to_sign,env,ut_node);
     }
     /*Now we have to check whether a token is specified.*/
-    token = rampart_context_get_token(rampart_context,env,AXIS2_FALSE,server_side);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_FALSE, server_side, AXIS2_FALSE);
     if(!token)
     {
         AXIS2_LOG_INFO(env->log,"[rampart][rampart_signature] Signature Token is not specified");

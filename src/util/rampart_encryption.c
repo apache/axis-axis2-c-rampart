@@ -97,7 +97,7 @@ rampart_enc_encrypt_message(const axutil_env_t *env,
         return AXIS2_SUCCESS;
     }
     /*Now we have to check whether a token is specified.*/
-    token = rampart_context_get_token(rampart_context,env,AXIS2_TRUE,server_side);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
     if(!token)
     {
         AXIS2_LOG_INFO(env->log,"[rampart][rampart_encryption] Encryption Token is not specified");
