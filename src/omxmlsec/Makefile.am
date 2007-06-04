@@ -10,7 +10,6 @@ libomxmlsec_la_SOURCES = ctx.c  buffer.c key.c cipher.c error.c axis2_utils.c ax
 
 libomxmlsec_la_LIBADD  = @OPENSSLLIB@ \
 			-lssl \
-			${AXIS2C_HOME}/lib \
 			tokens/liboxstokens.la \
 			openssl/libomopenssl.la \
 			c14n/liboxsc14n.la \
