@@ -96,7 +96,10 @@ extern "C"
     AXIS2_EXTERN axutil_linked_list_t *AXIS2_CALL
     rampart_replay_detector_set_ll_db(const axutil_env_t *env,
             axis2_ctx_t *ctx);
-                               
+    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_replay_detector_final_cleanup(const axutil_env_t *env,
+                                    axis2_msg_ctx_t* msg_ctx);
     /*************************** Function macros **********************************/
 #define RAMPART_REPLAY_DETECTOR_LOAD(replay_detector, env) \
       ((replay_detector)->ops->load(replay_detector, env))

@@ -229,6 +229,25 @@ rampart_replay_detector_set_ll_db(const axutil_env_t *env,
     return ll_db;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_replay_detector_final_cleanup(const axutil_env_t *env,
+                                axis2_msg_ctx_t* msg_ctx)
+{
+    axutil_linked_list_t *ll = NULL;
+    int count = 0;
+    int i = 0;
+
+    ll = rampart_replay_detector_get_ll_db(env, msg_ctx);
+    count = axutil_linked_list_size(ll, env);
+    for(i=0; i<count; i++){
+        axis2_char_t *tmp_id = NULL;
+
+        tmp_id = (axis2_char_t*)axutil_linked_list_get(ll, env, i);
+        AXIS2_FREE(env->allocator, tmp_id);
+    }
+    axutil_linked_list_free(ll, env);
+    return AXIS2_SUCCESS;
+}
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_replay_detector_with_linked_list(const axutil_env_t *env,
