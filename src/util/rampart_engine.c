@@ -185,7 +185,7 @@ rampart_engine_build_configuration(
     }else{ /*Server side only*/
          /*We set our default impl of replay detection function*/
         if(is_inflow){
-            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_default);
+            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list/*rampart_replay_detector_default*/);
         }
     }
     return rampart_context;

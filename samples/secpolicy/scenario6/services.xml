@@ -79,7 +79,7 @@
                     <rampc:ReceiverCertificate>AXIS2C_HOME/bin/samples/rampart/keys/bhome/alice_cert.cert</rampc:ReceiverCertificate>
                     <rampc:Certificate>AXIS2C_HOME/bin/samples/rampart/keys/bhome/bob_cert.cert</rampc:Certificate>
                     <rampc:PrivateKey>AXIS2C_HOME/bin/samples/rampart/keys/bhome/bob_key.pem</rampc:PrivateKey>
-                    <rampc:ReplayDetectionTimeFrame>60</rampc:ReplayDetectionTimeFrame>
+                    <rampc:ReplayDetection>3</rampc:ReplayDetection>
                 </rampc:RampartConfig>
             </wsp:All>
         </wsp:ExactlyOne>

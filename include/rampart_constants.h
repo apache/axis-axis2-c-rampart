@@ -119,6 +119,7 @@ extern "C"
 
 #define RAMPART_RD_DB_PROP "Rampart_RD_DB_Prop"
 #define RAMPART_RD_DEF_VALID_DURATION 60
+#define RAMPART_RD_DEF_MAX_RCDS 5
 #ifdef __cplusplus
 }
 #endif

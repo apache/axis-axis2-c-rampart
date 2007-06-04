@@ -86,6 +86,17 @@ extern "C"
     rampart_replay_detector_set_default_db(const axutil_env_t *env,
             axis2_ctx_t *ctx);
 
+    /*A linked list based implementation for RRD
+      This doesnt required addressing headers to be present*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_replay_detector_with_linked_list(const axutil_env_t *env,
+                                    axis2_msg_ctx_t* msg_ctx,
+                                    rampart_context_t *rampart_context);
+
+    AXIS2_EXTERN axutil_linked_list_t *AXIS2_CALL
+    rampart_replay_detector_set_ll_db(const axutil_env_t *env,
+            axis2_ctx_t *ctx);
+                               
     /*************************** Function macros **********************************/
 #define RAMPART_REPLAY_DETECTOR_LOAD(replay_detector, env) \
       ((replay_detector)->ops->load(replay_detector, env))
