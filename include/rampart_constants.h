@@ -70,7 +70,7 @@ extern "C"
 #define OUT_MESSAGE_SECURITY                         "OutMessageSEcurity"
 #define RAMPART_PASSWORD_TEXT                       "plainText"
 #define RAMPART_PASSWORD_DIGEST                     "Digest"
-
+#define RAMPART_CONFIGURATION                       "RampartConfiguration"
 
     /************fault codes***************/
 #define RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN    "wsse:UnsupportedSecurityToken"
