@@ -15,11 +15,6 @@
     <parameter name="seralizeLocation" locked="false">.</parameter>
 
 
-    <!--Rampart configurations START -->
-    <parameter name="OutflowSecurityPolicy">AXIS2C_HOME/client_repo/outgoing-secpolicy.xml</parameter>
-    <parameter name="InflowSecurityPolicy">AXIS2C_HOME/client_repo/incoming-secpolicy.xml</parameter>
-
-    <!--Rampart configurations END -->
 
 
     <!--if you want to extract the service archive file and work with that please uncomment this-->
