@@ -5,7 +5,9 @@ AC_PREREQ(2.59)
 AC_INIT(rampart-samples-src, 0.90)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE([tar-ustar])
+dnl AM_INIT_AUTOMAKE([tar-ustar])
+AM_INIT_AUTOMAKE
+m4_ifdef([_A][M_PROG_TAR],[_A][M_SET_OPTION([tar-ustar])])
 AC_PREFIX_DEFAULT(/usr/local/rampart/samples)
 
 dnl Checks for programs.
@@ -57,7 +59,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([stdio.h stdlib.h string.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
-AC_C_CONST
+dnl AC_C_CONST
 
 dnl Checks for library functions.
 AC_FUNC_MALLOC

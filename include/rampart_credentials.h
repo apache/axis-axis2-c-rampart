@@ -39,7 +39,7 @@ extern "C"
         RAMPART_CREDENTIALS_USER_FOUND,
         RAMPART_CREDENTIALS_USER_NOT_FOUND,
         RAMPART_CREDENTIALS_GENERAL_ERROR
-    } rampart_credentials_status;
+    };
 
     typedef enum rampart_credentials_status rampart_credentials_status_t;
 

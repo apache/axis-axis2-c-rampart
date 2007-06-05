@@ -40,7 +40,7 @@ extern "C"
         RAMPART_AUTHN_PROVIDER_USER_FOUND,
         RAMPART_AUTHN_PROVIDER_USER_NOT_FOUND,
         RAMPART_AUTHN_PROVIDER_GENERAL_ERROR
-    } rampart_authn_provider_status;
+    };
 
     typedef enum rampart_authn_provider_status rampart_authn_provider_status_t;
 
