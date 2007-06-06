@@ -3,19 +3,15 @@ prgbin_PROGRAMS = enc
 
 enc_SOURCES =  enc.c
 
-INCLUDES = -I $(AXIS2C_HOME)/include \
-            -I ../../../include \
-            -I ../../../util/include \
-            -I ../../../axiom/include
+INCLUDES = -I $(AXIS2C_HOME)/include/axis2-1.0 \
+            -I ../../../include 
 
-enc_LDADD   = ../../../src/util/librampart_util.la \
+enc_LDADD   = -laxutil \
+                    -laxis2_axiom \
+                    -lxml2 \
                     ../../../src/omxmlsec/libomxmlsec.la \
                     ../../../src/omxmlsec/openssl/libomopenssl.la \
-                    ../../../src/omxmlsec/tokens/liboxstokens.la \
-                    ../../../../util/src/libaxutil.la \
-                    ../../../../axiom/src/om/libaxis2_axiom.la \
-                    ../../../../axiom/src/parser/libxml2/libaxis2_libxml2.la \
-           -lxml2
+                    ../../../src/omxmlsec/tokens/liboxstokens.la
 
 
 EXTRA_DIST = input.xml		   

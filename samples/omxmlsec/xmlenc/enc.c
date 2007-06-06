@@ -51,6 +51,7 @@ load_sample_xml(const axutil_env_t *env,
     if (!doc) printf("\n doc is NULL");
     tmpl = axiom_document_build_all(doc, env);
 
+    axiom_xml_reader_xml_free(reader, env, NULL);
     /*    tmpl = axiom_document_get_root_element(doc, env);*/
     if (!tmpl) printf("\n tmpl is NULL");
     return tmpl;
@@ -61,7 +62,7 @@ oxs_key_t *create_key(axutil_env_t *env)
 {
     oxs_key_t *key = NULL;
     key = oxs_key_create(env);
-    OXS_KEY_POPULATE(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_DECRYPT);
+    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_DECRYPT);
     return key;
 }
 
@@ -84,7 +85,7 @@ decrypt(axutil_env_t *env,  axis2_char_t *filename)
 
     /*Create ctx*/
     ctx = oxs_ctx_create(env);
-    OXS_CTX_SET_KEY(ctx, env, key);
+    oxs_ctx_set_key(ctx, env, key);
 
     /*Get the EncryptedData node*/
     enc_data_node = axiom_node_get_first_element(tmpl, env);
@@ -121,10 +122,10 @@ encrypt(axutil_env_t *env,  axis2_char_t *filename)
    
     /*Create ctx*/
     ctx = oxs_ctx_create(env);
-    OXS_CTX_SET_KEY(ctx, env, key);
+    oxs_ctx_set_key(ctx, env, key);
 
     /*Set algorithm*/
-    OXS_CTX_SET_ENC_MTD_ALGORITHM(ctx, env, OXS_HREF_DES3_CBC);
+    oxs_ctx_set_enc_mtd_algorithm(ctx, env, OXS_HREF_DES3_CBC);
 
     /*Get the node to be encrypted*/
     enc_node = axiom_node_get_first_element(tmpl, env);
@@ -134,6 +135,8 @@ encrypt(axutil_env_t *env,  axis2_char_t *filename)
     enc_data_node =  oxs_token_build_encrypted_data_element(env, tmpl, OXS_TYPE_ENC_ELEMENT, id); 
 
     temp_status = oxs_xml_enc_encrypt_node(env, ctx,  enc_node, &enc_data_node);
+
+    oxs_ctx_free( ctx, env);
 
     if (temp_status){
         printf("\noxs_enc_encrypt_template SUCCESS\n");
@@ -147,6 +150,7 @@ encrypt(axutil_env_t *env,  axis2_char_t *filename)
     fwrite(encrypted_result, 1, axutil_strlen(encrypted_result), outf);
     fclose(outf);
     printf("Node encrypted successfully. Result is written to result.xml\n");
+    axiom_document_free( axiom_node_get_document(tmpl, env), env);
     return temp_status;
 }
 
