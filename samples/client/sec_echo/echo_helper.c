@@ -9,7 +9,7 @@
 #include <axis2_policy_include.h>
 #include "echo_helper.h"
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 echo_helper_set_policy(axis2_svc_client_t* svc_client,
     const axis2_char_t *client_home,    
     const axutil_env_t *env)

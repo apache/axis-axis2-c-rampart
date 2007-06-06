@@ -17,9 +17,6 @@ OMXMLSEC_SRC = $(RAMPART_SOURCE_DIR)\src\omxmlsec\*.c \
     	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\c14n\*.c \
     	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\openssl\*.c
 
-SECPOLICY_SRC = $(RAMPART_SOURCE_DIR)\src\secpolicy\builder\*.c \
-    	       $(RAMPART_SOURCE_DIR)\src\secpolicy\model\*.c 
-
 MOD_RAMPART_SRC = $(RAMPART_SOURCE_DIR)\src\core\*.c \
 		$(RAMPART_SOURCE_DIR)\src\handlers\*.c \
 		$(RAMPART_SOURCE_DIR)\src\util\*.c
@@ -91,9 +88,9 @@ intdirs:
 	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
 
 mod_rampart:
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECPOLICY_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj \
-	      $(LIBS) axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib \
+	      $(LIBS) axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib neethi.lib\
               /DLL /OUT:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll /IMPLIB:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.lib
 	
 	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\modules\rampart
@@ -124,9 +121,10 @@ mod_rampart_services_sec_echo:
 
 mod_rampart_samples_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
+	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo_helper.c \
 	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
 	      /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib \
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\*.obj axutil.lib axiom.lib neethi.lib \
 	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 	
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\deploy_client_repo.bat $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\
@@ -179,7 +177,7 @@ del_am:
 	del /s *.am
 	chdir .\..\win32
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy copy_sec_policy mod_rampart_copy_include copy_dist_files mod_rampart_copy_keys del_am
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files mod_rampart_copy_keys del_am
 
 deploy:
 	chdir $(RAMPART_DISTDIR)
