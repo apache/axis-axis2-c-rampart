@@ -1,5 +1,8 @@
 @echo off
+::Here we have scenario 5 as the default 
 SET scn=scenario5
+IF NOT "%1" == "" SET scn=%1
+
 echo Deploying %scn%
 echo Copying %scn%\client policy file
 copy  %scn%\client-policy.xml %AXIS2C_HOME%\client_repo\policy.xml
