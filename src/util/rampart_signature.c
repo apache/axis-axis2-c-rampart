@@ -151,7 +151,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
     server_side = axis2_msg_ctx_get_server_side(msg_ctx,env);
     nodes_to_sign = axutil_array_list_create(env,0);
 
-/*  status = rampart_context_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);*/
+    /*  status = rampart_context_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);*/
     status = rampart_sig_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);
 
     if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_sign,env)==0))
@@ -339,10 +339,10 @@ rampart_sig_sign_message(const axutil_env_t *env,
             {
                 AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Cannot load the private key from pfx file.");
                 return AXIS2_FAILURE;
-            }   
-        }            
+            }
+        }
         else if(oxs_util_get_format_by_file_extension(env, prv_key_file)==OXS_ASYM_CTX_FORMAT_PEM)
-        {            
+        {
             prvkey = oxs_key_mgr_load_private_key_from_pem_file(env, prv_key_file,password);
             if(!prvkey)
             {
@@ -354,7 +354,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Unknown Private key format.");
             return AXIS2_FAILURE;
-        }            
+        }
     }
     /*These properties will set for creating signed info element*/
     oxs_sign_ctx_set_private_key(sign_ctx, env, prvkey);

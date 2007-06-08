@@ -41,23 +41,23 @@
 
 neethi_policy_t *AXIS2_CALL
 build_policy(
-        const axutil_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_bool_t is_inflow);
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    axis2_bool_t is_inflow);
 
 
 axis2_status_t AXIS2_CALL
 set_rampart_user_properties(
-        const axutil_env_t *env,
-        rampart_context_t *rampart_context);
+    const axutil_env_t *env,
+    rampart_context_t *rampart_context);
 
 
 
-AXIS2_EXTERN rampart_context_t *AXIS2_CALL 
+AXIS2_EXTERN rampart_context_t *AXIS2_CALL
 rampart_engine_build_configuration(
-        const axutil_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_bool_t is_inflow)
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    axis2_bool_t is_inflow)
 {
 
     rp_secpolicy_t *secpolicy = NULL;
@@ -75,11 +75,11 @@ rampart_engine_build_configuration(
     if(is_server_side || !is_inflow)
     {
         policy = build_policy(env, msg_ctx, is_inflow);
-        if(!policy)   
+        if(!policy)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][engine] Policy Creation failed. ");
             return NULL;
-        } 
+        }
     }
     else
     {
@@ -91,8 +91,8 @@ rampart_engine_build_configuration(
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Cannot get saved rampart_context");
             return NULL;
         }
-    }    
-    
+    }
+
     secpolicy = rp_secpolicy_builder_build(env, policy);
     if(!secpolicy)
     {
@@ -116,9 +116,9 @@ rampart_engine_build_configuration(
         {
             AXIS2_LOG_INFO(env->log, "[rampart][engine] User property creation fails ");
             return NULL;
-        } 
+        }
     }
-    
+
     if(!is_server_side)
     {
         conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
@@ -135,13 +135,13 @@ rampart_engine_build_configuration(
             return NULL;
         }
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                                            AXIS2_FALSE, (void *)rampart_context_free, rampart_context);
+                   AXIS2_FALSE, (void *)rampart_context_free, rampart_context);
         axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
 
     }
     else
     { /*Server side only*/
-      /*We set our default impl of replay detection function*/
+        /*We set our default impl of replay detection function*/
         if(is_inflow)
         {
             rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list/*rampart_replay_detector_default*/);
@@ -151,11 +151,11 @@ rampart_engine_build_configuration(
 }
 
 
-neethi_policy_t *AXIS2_CALL 
+neethi_policy_t *AXIS2_CALL
 build_policy(
-        const axutil_env_t *env,
-        axis2_msg_ctx_t *msg_ctx,
-        axis2_bool_t is_inflow)
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    axis2_bool_t is_inflow)
 {
 
     axis2_svc_t *svc = NULL;
@@ -201,7 +201,7 @@ build_policy(
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] axis2 description is NULL.");
         return NULL;
     }
-    
+
     policy_include = axis2_desc_get_policy_include(desc, env);
     if(!policy_include)
     {
@@ -216,16 +216,16 @@ build_policy(
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Policy is NULL.");
         return NULL;
     }
-    
+
     return service_policy;
 
 }
 
 
-axis2_status_t AXIS2_CALL 
+axis2_status_t AXIS2_CALL
 set_rampart_user_properties(
-        const axutil_env_t *env,
-        rampart_context_t *rampart_context)
+    const axutil_env_t *env,
+    rampart_context_t *rampart_context)
 {
 
     rampart_callback_t* password_callback_module = NULL;
@@ -233,13 +233,13 @@ set_rampart_user_properties(
     axis2_char_t *pwcb_module_name = NULL;
     axis2_char_t *authn_provider_name = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
-    
+
     status = rampart_context_set_user_from_file(rampart_context,env);
     if(status!=AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
-    
+
     status = rampart_context_set_ttl_from_file(rampart_context,env);
     if(status!=AXIS2_SUCCESS)
     {

@@ -143,7 +143,7 @@ rampart_load_pwcb_module(const axutil_env_t *env,
                          axis2_char_t *callback_module_name)
 {
     rampart_callback_t *cb = NULL;
-    
+
     cb = (rampart_callback_t*)rampart_load_module(env, callback_module_name);
     if (!cb)
     {

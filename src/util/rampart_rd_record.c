@@ -96,7 +96,7 @@ rampart_rd_record_create(const axutil_env_t *env)
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_rd_record_free(rampart_rd_record_t *rd_record,
-                  const axutil_env_t *env)
+                       const axutil_env_t *env)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);

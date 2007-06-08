@@ -337,8 +337,8 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
-                                  const axutil_env_t *env,
-                                  rampart_is_replayed_fn is_replayed_function)
+        const axutil_env_t *env,
+        rampart_is_replayed_fn is_replayed_function)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, is_replayed_function, AXIS2_FAILURE);
@@ -376,8 +376,8 @@ rampart_context_set_ttl(rampart_context_t *rampart_context,
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_rd_val(rampart_context_t *rampart_context,
-                        const axutil_env_t *env,
-                        axis2_char_t *rd_val)
+                           const axutil_env_t *env,
+                           axis2_char_t *rd_val)
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -978,34 +978,34 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace elements");
         return AXIS2_FAILURE;
     }
-            
+
     local_name = (axis2_char_t*)rp_element_get_name(element,env);
-/*  if(!local_name)
-    {
-        axutil_array_list_t *soap_header_blocks = NULL;
-        int i = 0;
-        soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header,env,namespace);
-        if(!soap_header_blocks)
-            return AXIS2_FAILURE;
-
-        for(i=0 ; i<axutil_array_list_size(soap_header_blocks,env); i++)
+    /*  if(!local_name)
         {
-            axiom_soap_header_block_t *header_block = NULL;
-            axiom_node_t *node = NULL;
-            header_block = (axiom_soap_header_block_t *)axutil_array_list_get(soap_header_blocks,env,i);
-            if(header_block)
+            axutil_array_list_t *soap_header_blocks = NULL;
+            int i = 0;
+            soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header,env,namespace);
+            if(!soap_header_blocks)
+                return AXIS2_FAILURE;
+     
+            for(i=0 ; i<axutil_array_list_size(soap_header_blocks,env); i++)
             {
-                node = axiom_soap_header_block_get_base_node(header_block,env);
-                if(node)
+                axiom_soap_header_block_t *header_block = NULL;
+                axiom_node_t *node = NULL;
+                header_block = (axiom_soap_header_block_t *)axutil_array_list_get(soap_header_blocks,env,i);
+                if(header_block)
                 {
-                    axutil_array_list_add(nodes_to_encrypt_or_sign,env,node);
-                    return AXIS2_SUCCESS;
+                    node = axiom_soap_header_block_get_base_node(header_block,env);
+                    if(node)
+                    {
+                        axutil_array_list_add(nodes_to_encrypt_or_sign,env,node);
+                        return AXIS2_SUCCESS;
+                    }
                 }
+     
             }
-
         }
-    }
-*/  if(local_name)  
+    */  if(local_name)
     {
         if(axutil_strcmp(local_name,"Security")==0)
         {
@@ -1023,7 +1023,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
                 {
                     axiom_element_t *ret_node_ele = NULL;
                     ret_node_ele = (axiom_element_t *)
-                               axiom_node_get_data_element(ret_node, env);
+                                   axiom_node_get_data_element(ret_node, env);
                     if(ret_node_ele)
                     {
                         axiom_namespace_t *ns = NULL;
@@ -1635,7 +1635,7 @@ rampart_context_check_whether_to_encrypt(
 
     encrypted_parts = rp_secpolicy_get_encrypted_parts(rampart_context->secpolicy,env);
     if(!encrypted_parts)
-    {   
+    {
         encrypted_items = rp_secpolicy_get_encrypted_items(rampart_context->secpolicy,env);
         if(!encrypted_items)
             return AXIS2_FALSE;
@@ -1649,7 +1649,7 @@ rampart_context_check_whether_to_encrypt(
             }
             else
                 return AXIS2_TRUE;
-        }            
+        }
     }
     parts = rp_signed_encrypted_parts_get_headers(encrypted_parts,env);
     if(!parts || (axutil_array_list_size(parts,env)==0))
@@ -1673,12 +1673,12 @@ rampart_context_check_whether_to_sign(
     const axutil_env_t *env)
 {
     rp_signed_encrypted_parts_t *signed_parts = NULL;
-    rp_signed_encrypted_items_t *signed_items = NULL; 
+    rp_signed_encrypted_items_t *signed_items = NULL;
     axutil_array_list_t *parts = NULL;
 
     signed_parts = rp_secpolicy_get_signed_parts(rampart_context->secpolicy,env);
     if(!signed_parts)
-    {        
+    {
         signed_items = rp_secpolicy_get_signed_items(rampart_context->secpolicy,env);
         if(!signed_items)
             return AXIS2_FALSE;
@@ -1692,7 +1692,7 @@ rampart_context_check_whether_to_sign(
             }
             else
                 return AXIS2_TRUE;
-        }            
+        }
     }
     parts = rp_signed_encrypted_parts_get_headers(signed_parts,env);
     if(!parts || (axutil_array_list_size(parts,env)==0))
@@ -1731,7 +1731,7 @@ rampart_context_get_token(
         if(asym_binding)
         {
             if(is_inpath)
-            {    
+            {
                 if((for_encryption && server_side) || (!for_encryption && !server_side))
                 {
                     return rp_asymmetric_binding_get_recipient_token(asym_binding,env);
@@ -1747,13 +1747,13 @@ rampart_context_get_token(
                 if((server_side && for_encryption) || (!for_encryption && !server_side))
                 {
                     return rp_asymmetric_binding_get_initiator_token(asym_binding,env);
-                }    
+                }
                 else if((server_side && !for_encryption)|| (for_encryption && !server_side))
                 {
                     return rp_asymmetric_binding_get_recipient_token(asym_binding,env);
-                } 
+                }
                 else return NULL;
-            }    
+            }
         }
         else
             return NULL;
@@ -1982,19 +1982,19 @@ rampart_context_is_token_include(
             if(is_inpath)
             {
                 include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
+                           (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                           (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
             }
             else
                 include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
         }
         else
-        {            
+        {
             if(!is_inpath)
-            {    
+            {
                 include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
+                           (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                           (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
             }
             else
                 include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
