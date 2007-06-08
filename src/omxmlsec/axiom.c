@@ -281,7 +281,8 @@ oxs_axiom_deserialize_node(const axutil_env_t *env,  axis2_char_t* buffer)
                   "Building node failed");
         return NULL;
     }
-
+    axiom_xml_reader_free(reader, env);
+    reader = NULL;
     return node;
 }
 
