@@ -237,7 +237,6 @@ oxs_axiom_get_node_content(const axutil_env_t *env, axiom_node_t* node)
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 oxs_axiom_deserialize_node(const axutil_env_t *env,  axis2_char_t* buffer)
 {
-
     axiom_document_t *doc = NULL;
     axiom_stax_builder_t *builder = NULL;
     axiom_xml_reader_t *reader = NULL;
@@ -283,6 +282,7 @@ oxs_axiom_deserialize_node(const axutil_env_t *env,  axis2_char_t* buffer)
     }
     axiom_xml_reader_free(reader, env);
     reader = NULL;
+    
     return node;
 }
 

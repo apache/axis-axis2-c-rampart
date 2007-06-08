@@ -60,6 +60,8 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     status = oxs_buffer_populate(output, env, (unsigned char*)axutil_strdup(env, encoded_str), encodedlen);
 
     /*Free signed_result_buf*/
+    oxs_buffer_free(signed_result_buf, env);
+    signed_result_buf = NULL;
 
     return AXIS2_SUCCESS;
 }
@@ -143,10 +145,14 @@ oxs_sig_verify(const axutil_env_t *env,
     if(AXIS2_SUCCESS != status){
         /*Error in signature processing*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature verification FAILED.");
+        oxs_buffer_free(in_buf, env);
+        in_buf = NULL;
         return AXIS2_FAILURE;
     }else{
 
         AXIS2_LOG_INFO(env->log, "[oxs][sig] Signature verification SUCCESS " );
+        oxs_buffer_free(in_buf, env);
+        in_buf = NULL;
         return AXIS2_SUCCESS;
     }
 
