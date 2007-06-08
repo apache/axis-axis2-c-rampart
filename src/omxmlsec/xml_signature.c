@@ -215,6 +215,12 @@ oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
     /*Construct <SignatureValue>*/
     signature_val_node = oxs_token_build_signature_value_element(env, signature_node, signature_val);
 
+    /*Free*/
+    oxs_buffer_free(input_buf, env);
+    input_buf = NULL;
+    oxs_buffer_free(output_buf, env);
+    output_buf = NULL;
+
     return status;
 }
 

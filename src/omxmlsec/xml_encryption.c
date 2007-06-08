@@ -378,7 +378,7 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     cv_node = oxs_axiom_get_first_child_node_by_name(env, cd_node, OXS_NODE_CIPHER_VALUE,OXS_ENC_NS,OXS_XENC);
     cipher_val = oxs_token_get_cipher_value(env, cv_node);
 
-    /*NEW CODE*/
+    /*We need to remove new lines if any*/
     new_cipher_val = oxs_util_get_newline_removed_string(env, cipher_val);
 
     /*eof NEW CODE*/
