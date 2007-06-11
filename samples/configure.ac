@@ -66,12 +66,38 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 #AC_CHECK_FUNCS([memmove])
 
+AC_MSG_CHECKING(To Use Axis2 C . This is a compulsory module to build Axis2 C samples)
+AC_ARG_WITH(axis2,
+[  --with-axis2[=PATH]     Find the AXIS2 header files in 'PATH'.
+    'PATH' should point to AXIS2 include files location.
+    If you omit the '=PATH' part completely, the configure script will search
+    '$(AXIS2C_HOME)/include/axis2-1.1' for AXIS2 headers.],
+[ case "$withval" in
+  no)
+    AC_MSG_RESULT(no)
+    ;;
+  *)
+    AC_MSG_RESULT(yes)
+    dnl Find axiom include dir in the path
+    if test -d $withval; then
+        axis2inc="-I$withval"
+    dnl else find the axiom include dir in $(AXIS2C_HOME)/include
+    elif test -d '$(AXIS2C_HOME)/include'; then
+        axiominc="-I$(AXIS2C_HOME)/include/axis2-1.1"
+    else
+        AC_MSG_ERROR(could not find axis2. stop)
+    fi
+    ;;
+  esac ],
+  AC_MSG_RESULT(no)
+)
 
-AXIOMINC=$axiominc
+
+AXIS2INC=$axis2inc
 UTILINC=$axis2_utilinc
 XMLSCHEMAINC=$axis2_xml_schemainc
 
-AC_SUBST(AXIOMINC)
+AC_SUBST(AXIS2INC)
 AC_SUBST(UTILINC)
 AC_SUBST(XMLSCHEMAINC)
 AC_SUBST(TESTDIR)
@@ -88,9 +114,6 @@ AC_CONFIG_FILES([Makefile \
         client/Makefile
         client/sec_echo/Makefile \
         client/sec_echo/data/Makefile \
-        omxmlsec/Makefile \
-        omxmlsec/xmlsig/Makefile \
-        omxmlsec/xmlenc/Makefile \
         keys/Makefile \
         keys/ahome/Makefile \
         keys/bhome/Makefile \
