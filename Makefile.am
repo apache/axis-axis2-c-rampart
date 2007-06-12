@@ -1,6 +1,6 @@
 SUBDIRS = src 
 include_HEADERS=$(top_builddir)/include/*.h
-EXTRA_DIST = LICENSE NOTICE build.sh autogen.sh samples build
+EXTRA_DIST = LICENSE NOTICE build.sh autogen.sh samples build test
 
 check:	
 	./rampart-tests.sh
