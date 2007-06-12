@@ -4,5 +4,4 @@ libauthn_la_SOURCES = authn_provider.c
 libauthn_la_LIBADD  = ../../src/util/librampart_util.la \
 					  ../../src/omxmlsec/openssl/libomopenssl.la
 INCLUDES = -I ../../include\
-		@AXIS2INC@
-
+			@AXIS2INC@

@@ -3,7 +3,7 @@ prgbin_PROGRAMS = sign
 
 sign_SOURCES =  sign.c
 
-INCLUDES = -I $(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = @AXIS2INC@ \
             -I ../../../include 
 
 sign_LDADD = -laxutil \

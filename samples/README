@@ -20,9 +20,7 @@
   Try samples
   -----------
   Please install the sec_echo service and invoke that service using enc_echo client sample.
-  To get more information read 
-  rampart/samples/server/sec_echo/README
-  rampart/samples/client/enc_echo/README
+  To get more information read ABOUT_SAMPLES 
 
   Licensing
   ---------

@@ -4,4 +4,4 @@ libcredential_la_SOURCES = cred_provider.c
 libcredential_la_LIBADD  = ../../src/util/librampart_util.la \
 					  ../../src/omxmlsec/openssl/libomopenssl.la
 INCLUDES = -I ../../include\
-		@AXIS2INC@
+			@AXIS2INC@

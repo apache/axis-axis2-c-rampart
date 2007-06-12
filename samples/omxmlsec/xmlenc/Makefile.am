@@ -3,7 +3,7 @@ prgbin_PROGRAMS = enc
 
 enc_SOURCES =  enc.c
 
-INCLUDES = -I $(AXIS2C_HOME)/include/axis2-1.0 \
+INCLUDES = @AXIS2INC@ \
             -I ../../../include 
 
 enc_LDADD   = -laxutil \
