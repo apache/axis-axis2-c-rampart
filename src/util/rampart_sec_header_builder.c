@@ -229,7 +229,7 @@ rampart_shb_build_message(
         {
             if(is_encrypt_before_sign)
             {
-                status = rampart_interchange_nodes(env,sig_node,enc_key_node);
+                status = rampart_interchange_nodes(env, sig_node, enc_key_node);
                 if(status!=AXIS2_SUCCESS)
                 {
                     AXIS2_LOG_INFO(env->log,"[rampart][shb]Node interchange failed.");
@@ -238,7 +238,7 @@ rampart_shb_build_message(
             }
             else
             {
-                status = rampart_interchange_nodes(env,enc_key_node,sig_node);
+                status = rampart_interchange_nodes(env, enc_key_node, sig_node);
                 if(status!=AXIS2_SUCCESS)
                 {
                     AXIS2_LOG_INFO(env->log,"[rampart][shb]Node interchange failed.");
@@ -246,6 +246,29 @@ rampart_shb_build_message(
                 }
             }
         }
+        
+        else if(enc_key_node && signature_protection)
+        {
+            if(!is_encrypt_before_sign)
+            {
+                axiom_node_t *enc_data_node = NULL;
+                enc_data_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_DATA);
+                if(!enc_data_node)
+                {
+                    AXIS2_LOG_INFO(env->log,"[rampart][shb]Signature is not encrypted,");
+                    return AXIS2_FAILURE;
+                }
+                else
+                {
+                    status = rampart_interchange_nodes(env, enc_key_node, enc_data_node);
+                    if(status != AXIS2_SUCCESS)
+                    {
+                        return AXIS2_FAILURE;
+                    }    
+                }    
+            }    
+        }    
+
         return AXIS2_SUCCESS;
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_SYMMETRIC)

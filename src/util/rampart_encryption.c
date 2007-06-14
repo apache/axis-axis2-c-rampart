@@ -85,19 +85,42 @@ rampart_enc_encrypt_message(
     void *param = NULL;
     void *key_buf = NULL;
     int i = 0;
+    axis2_bool_t signature_protection = AXIS2_FALSE;
+    axiom_node_t *sig_node = NULL;
+
+
     /*Get nodes to be encrypted*/
+    
     server_side = axis2_msg_ctx_get_server_side(msg_ctx,env);
     nodes_to_encrypt = axutil_array_list_create(env,0);
 
+    signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
+
     /*status = rampart_context_get_nodes_to_encrypt(rampart_context,env,soap_envelope,nodes_to_encrypt);*/
 
-    status = rampart_enc_get_nodes_to_encrypt(rampart_context,env,soap_envelope,nodes_to_encrypt);
+    status = rampart_enc_get_nodes_to_encrypt(rampart_context, env, soap_envelope, nodes_to_encrypt);
 
-    if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_encrypt,env)==0))
+    if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_encrypt, env)==0))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
-        return AXIS2_SUCCESS;
+        if(!signature_protection)
+        {    
+            AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
+            return AXIS2_SUCCESS;
+        }    
     }
+
+    if(signature_protection)
+    {
+        sig_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
+        if(!sig_node)
+        {
+            AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, Sigature Not found");
+            return AXIS2_FAILURE;
+        }
+        axutil_array_list_add(nodes_to_encrypt, env, sig_node);
+    }
+
+
     /*Now we have to check whether a token is specified.*/
     token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
     if(!token)
