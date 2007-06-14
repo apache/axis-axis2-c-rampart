@@ -8,6 +8,4 @@ noinst_HEADERS = echo.h
 SUBDIRS =
 libsec_echo_la_SOURCES = echo.c echo_skeleton.c
 libsec_echo_la_LIBADD  =
-INCLUDES = @AXIS2INC@ \
-			@UTILINC@ \
-			@AXIOMINC@
+INCLUDES = @AXIS2INC@ 
