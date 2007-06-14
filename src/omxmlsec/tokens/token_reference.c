@@ -53,11 +53,12 @@ oxs_token_build_reference_element(const axutil_env_t *env,
     }
 
     ref_attr =  axiom_attribute_create(env, OXS_ATTR_URI , ref, NULL);
-    value_type_attr =  axiom_attribute_create(env, OXS_ATTR_VALUE_TYPE , value_type, NULL);
 
     ret = axiom_element_add_attribute(reference_ele, env, ref_attr, reference_node);
-    ret = axiom_element_add_attribute(reference_ele, env, value_type_attr, reference_node);
-
+    if(value_type){
+        value_type_attr =  axiom_attribute_create(env, OXS_ATTR_VALUE_TYPE , value_type, NULL);
+        ret = axiom_element_add_attribute(reference_ele, env, value_type_attr, reference_node);
+    }
     return reference_node;
 }
 

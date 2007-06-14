@@ -44,9 +44,9 @@ rampart_enc_get_nodes_to_encrypt(
     axis2_status_t status1 = AXIS2_SUCCESS;
     axis2_status_t status2 = AXIS2_SUCCESS;
 
-    status1 = rampart_context_get_nodes_to_encrypt(rampart_context,env,soap_envelope,nodes_to_encrypt);
+    status1 = rampart_context_get_nodes_to_encrypt(rampart_context, env, soap_envelope, nodes_to_encrypt);
 
-    status2 = rampart_context_get_elements_to_encrypt(rampart_context,env,soap_envelope,nodes_to_encrypt);
+    status2 = rampart_context_get_elements_to_encrypt(rampart_context, env, soap_envelope, nodes_to_encrypt);
 
     if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS)
         return AXIS2_SUCCESS;
@@ -58,12 +58,14 @@ rampart_enc_get_nodes_to_encrypt(
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_enc_encrypt_message(const axutil_env_t *env,
-                            axis2_msg_ctx_t *msg_ctx,
-                            rampart_context_t *rampart_context,
-                            axiom_soap_envelope_t *soap_envelope,
-                            axiom_node_t *sec_node)
+rampart_enc_encrypt_message(
+        const axutil_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_soap_envelope_t *soap_envelope,
+        axiom_node_t *sec_node)
 {
+
     axutil_array_list_t *nodes_to_encrypt = NULL;
     axutil_array_list_t *id_list = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -126,6 +128,8 @@ rampart_enc_encrypt_message(const axutil_env_t *env,
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
+
+    rampart_context_set_session_key(rampart_context, env, session_key);
 
     /*Create a list to store EncDataIds. This will be used in building the ReferenceList*/
     id_list = axutil_array_list_create(env, 5);
@@ -247,5 +251,165 @@ rampart_enc_encrypt_message(const axutil_env_t *env,
 }
 
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_enc_add_key_info(
+        const axutil_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_soap_envelope_t *soap_envelope,
+        axiom_node_t *sec_node)
+{
+
+    axis2_char_t *key_id = NULL;
+    axiom_node_t *key_info_node = NULL;
+    axiom_node_t *str_node = NULL;
+    axiom_node_t *reference_node = NULL;
+
+    axiom_node_t *encrypted_data_node = NULL;
+    axiom_node_t *encrypted_key_node = NULL;
+    axiom_node_t *body_node = NULL;
+    axiom_soap_body_t *body = NULL;
+
+    axiom_element_t *body_ele = NULL;
+    axiom_element_t *encrypted_data_ele = NULL;
+
+    encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY); 
+    if(!encrypted_key_node)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
+        return AXIS2_FAILURE;
+    }    
+
+    key_id = oxs_util_generate_id(env,(axis2_char_t*)OXS_ENCKEY_ID);
+    oxs_axiom_add_attribute(env, encrypted_key_node, OXS_WSU, RAMPART_WSU_XMLNS, OXS_ATTR_ID, key_id);
+    
+    body = axiom_soap_envelope_get_body(soap_envelope, env);
+    body_node = axiom_soap_body_get_base_node(body, env);
+
+    body_ele = (axiom_element_t *)
+                            axiom_node_get_data_element(body_node, env);
+
+    encrypted_data_ele = axiom_util_get_first_child_element_with_localname(
+                            body_ele, env, body_node, OXS_NODE_ENCRYPTED_DATA, &encrypted_data_node); 
+
+    if(encrypted_data_ele)
+    {
+        key_info_node = oxs_token_build_key_info_element(env, encrypted_data_node);
+        if(key_info_node)
+        {
+            str_node = oxs_token_build_security_token_reference_element(env, key_info_node);
+            if(str_node)
+            {
+                axis2_char_t *key_id_ref = NULL;
+                key_id_ref = axutil_stracat(env, "#",key_id);
+                reference_node = oxs_token_build_reference_element(env, str_node, key_id_ref, NULL);
+                if(!reference_node)
+                {
+                    AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, Reference Node build failed");
+                    return AXIS2_FAILURE;
+                }
+                else
+                    return AXIS2_SUCCESS;
+            }
+            else
+                return AXIS2_FAILURE;
+        }
+        else
+            return AXIS2_FAILURE;
+    }
+    else 
+        return AXIS2_FAILURE;
+}
 
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_enc_encrypt_signature(
+        const axutil_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_soap_envelope_t *soap_envelope,
+        axiom_node_t *sec_node)
+{
+
+    oxs_key_t *session_key = NULL;
+    axiom_node_t *node_to_enc = NULL;
+    axiom_node_t *enc_data_node = NULL;
+    oxs_ctx_t *enc_ctx = NULL;
+    axis2_char_t *id = NULL;
+    axis2_status_t enc_status = AXIS2_FAILURE;
+    axis2_char_t *enc_sym_algo = NULL;
+    axutil_array_list_t *id_list = NULL;
+    axiom_node_t *encrypted_key_node = NULL;
+    axiom_node_t *temp_node = NULL;
+    axiom_node_t *node_to_move = NULL;
+
+    session_key = rampart_context_get_session_key(rampart_context, env);
+
+    if(!session_key)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] Encrypting Signature.Session key not found");
+        return AXIS2_FAILURE;
+    }
+
+    node_to_enc = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE); 
+
+    if(!node_to_enc)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] Encrypting Signature. Signature node not found");
+        return AXIS2_FAILURE;
+    }   
+
+    encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
+    if(!encrypted_key_node)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
+        return AXIS2_FAILURE;
+    }
+    
+    enc_ctx = oxs_ctx_create(env);
+    oxs_ctx_set_key(enc_ctx, env, session_key);
+
+    enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context,env); 
+
+    oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);
+   
+    id = oxs_util_generate_id(env,(axis2_char_t*)OXS_ENCDATA_ID);
+
+    enc_data_node = oxs_token_build_encrypted_data_element(env, sec_node, OXS_TYPE_ENC_ELEMENT, id );
+    enc_status = oxs_xml_enc_encrypt_node(env, enc_ctx, node_to_enc, &enc_data_node);
+
+    if(enc_status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    node_to_move = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_REFERENCE_LIST);
+
+    if(node_to_move)
+    {
+        temp_node = axiom_node_detach(node_to_move, env);
+        if(temp_node)
+        {
+            enc_status = axiom_node_insert_sibling_after(enc_data_node, env, temp_node);
+            if(enc_status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, Node moving failed.");    
+                return AXIS2_FAILURE;
+            }    
+        }    
+    }    
+
+    id_list = axutil_array_list_create(env, 0);
+
+    axutil_array_list_add(id_list, env, id);
+
+    enc_status = oxs_token_build_data_reference_list(env, encrypted_key_node, id_list);    
+    if(enc_status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
+        return AXIS2_FAILURE;
+    }
+        
+
+    return AXIS2_SUCCESS;
+}

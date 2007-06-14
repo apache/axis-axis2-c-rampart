@@ -101,6 +101,8 @@ echo_helper_set_policy(axis2_svc_client_t* svc_client,
             }
         }
     }
+    AXIS2_FREE(env->allocator ,file_name);
+    file_name = NULL;
     printf("Successful\n");
     return AXIS2_SUCCESS;
 }

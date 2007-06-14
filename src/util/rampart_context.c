@@ -52,7 +52,7 @@ struct rampart_context_t
 
     /*This is used in callback functions.*/
     void *ctx;
-
+    oxs_key_t *session_key;
 
 };
 
@@ -675,6 +675,31 @@ rampart_context_set_authn_provider(rampart_context_t *rampart_context,
     rampart_context->authn_provider = authn_provider;
     return AXIS2_SUCCESS;
 }
+
+
+AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+rampart_context_get_session_key(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    return rampart_context->session_key;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_session_key(rampart_context_t *rampart_context,
+                                   const axutil_env_t *env,
+                                   oxs_key_t *session_key)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, session_key, AXIS2_FAILURE);
+
+    rampart_context->session_key = session_key;
+    return AXIS2_SUCCESS;
+}
+
+
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_get_require_timestamp(
@@ -1443,6 +1468,24 @@ rampart_context_is_encrypt_before_sign(
             return AXIS2_TRUE;
     }
     return AXIS2_FALSE;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_is_encrypt_signature(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+
+    rp_symmetric_asymmetric_binding_commons_t *sym_asym_commons = NULL;
+    sym_asym_commons = rampart_context_get_symmetric_asymmetric_binding_commons(rampart_context, env);
+
+    if(!sym_asym_commons)
+        return AXIS2_FALSE;
+
+    else
+    {
+        return rp_symmetric_asymmetric_binding_commons_get_signature_protection(sym_asym_commons, env);
+    }
 }
 
 /*Following methods will return all the parts in the soap message

@@ -32,6 +32,8 @@
 #include <rampart_authn_provider.h>
 #include <axis2_key_type.h>
 #include <axis2_msg_ctx.h>
+#include <oxs_key.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -359,6 +361,11 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_is_encrypt_signature(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+    
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_get_nodes_to_encrypt(
         rampart_context_t *rampart_context,
@@ -509,6 +516,18 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+    rampart_context_get_session_key(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_session_key(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        oxs_key_t *session_key);
+
+    
 
 
 #ifdef __cplusplus
