@@ -101,9 +101,9 @@ rampart_sig_get_nodes_to_sign(
     axis2_status_t status1 = AXIS2_SUCCESS;
     axis2_status_t status2 = AXIS2_SUCCESS;
 
-    status1 = rampart_context_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);
+    status1 = rampart_context_get_nodes_to_sign(rampart_context, env, soap_envelope, nodes_to_sign);
 
-    status2 = rampart_context_get_elements_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);
+    status2 = rampart_context_get_elements_to_sign(rampart_context, env, soap_envelope, nodes_to_sign);
 
     if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS){
         return AXIS2_SUCCESS;
@@ -260,17 +260,17 @@ rampart_sig_sign_message(const axutil_env_t *env,
         oxs_transform_t *tr = NULL;
         axutil_array_list_t *tr_list = NULL;
 
-        node_to_sign = (axiom_node_t *)axutil_array_list_get(nodes_to_sign,env,i);
+        node_to_sign = (axiom_node_t *)axutil_array_list_get(nodes_to_sign, env, i);
         if(node_to_sign)
         {
             sign_part = oxs_sign_part_create(env);
-            tr_list = axutil_array_list_create(env,0);
+            tr_list = axutil_array_list_create(env, 0);
             id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_ID);
             tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_XML_EXC_C14N);
             axutil_array_list_add(tr_list, env, tr);
             oxs_sign_part_set_transforms(sign_part, env, tr_list);
             oxs_axiom_add_attribute(env, node_to_sign, OXS_WSU,RAMPART_WSU_XMLNS,OXS_ATTR_ID,id);
-            oxs_sign_part_set_node(sign_part, env,node_to_sign);
+            oxs_sign_part_set_node(sign_part, env, node_to_sign);
             oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
             axutil_array_list_add(sign_parts, env, sign_part);
         }

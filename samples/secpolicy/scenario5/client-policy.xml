@@ -32,6 +32,7 @@
                         </wsp:Policy>
                     </sp:Layout>
                     <sp:IncludeTimestamp/>
+                    <sp:EncryptSignature/>
                     <!--sp:EncryptBeforeSigning/-->
                 </wsp:Policy>
             </sp:AsymmetricBinding>

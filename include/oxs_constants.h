@@ -36,7 +36,9 @@ extern "C"
 #define OXS_XENC "xenc"
 #define OXS_DS "ds"
 #define OXS_WSSE "wsse"
-#define OXS_WSSE_XMLNS "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+#define OXS_WSSE_11 "wsse11"
+#define OXS_WSSE_XMLNS      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+#define OXS_WSSE_11_XMLNS   "http://docs.oasis-open.org/wss/2005/xx/oasis-2005xx-wss-wssecurity-secext-1.1.xsd"
 #define OXS_WSU "wsu"
     /****************************************************************
         ID Prefixes
@@ -67,6 +69,7 @@ extern "C"
 #define OXS_NODE_OBJECT             "Object"
 #define OXS_NODE_MANIFEST           "Manifest"
 #define OXS_NODE_SIGNATUREPROPERTIES "SignatureProperties"
+#define OXS_NODE_SIGNATURE_CONFIRMATION "SignatureConfirmation" /*SOAP 11*/
 
     /****************************************************************
        Encryption Nodes 

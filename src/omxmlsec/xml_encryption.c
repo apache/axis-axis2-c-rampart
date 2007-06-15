@@ -187,7 +187,7 @@ oxs_xml_enc_process_key_info(const axutil_env_t *env,
     axiom_node_t *cur_node = NULL;
     axis2_char_t *node_name = NULL;
 
-    st_ref_node =  oxs_axiom_get_first_child_node_by_name(env, key_info_node, OXS_NODE_SECURITY_TOKEN_REFRENCE,OXS_WSSE_XMLNS,OXS_WSSE);
+    st_ref_node =  oxs_axiom_get_first_child_node_by_name(env, key_info_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, OXS_WSSE);
     if(!st_ref_node){
         return AXIS2_FAILURE;
     }
