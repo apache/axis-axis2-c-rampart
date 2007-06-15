@@ -110,14 +110,17 @@ rampart_enc_encrypt_message(
     }
 
     if(signature_protection)
-    {
-        sig_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
-        if(!sig_node)
+    {    
+        if(!(rampart_context_is_encrypt_before_sign(rampart_context, env)))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, Sigature Not found");
-            return AXIS2_FAILURE;
-        }
-        axutil_array_list_add(nodes_to_encrypt, env, sig_node);
+            sig_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
+            if(!sig_node)
+            {
+                AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature, Sigature Not found");
+                return AXIS2_FAILURE;
+            }
+            axutil_array_list_add(nodes_to_encrypt, env, sig_node);
+        }    
     }
 
 
