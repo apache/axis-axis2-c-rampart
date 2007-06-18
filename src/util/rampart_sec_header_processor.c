@@ -483,7 +483,7 @@ rampart_shp_process_reference_list(
 
         id = (axis2_char_t*)axutil_array_list_get(reference_list, env, i);
 
-        id2 = axutil_string_substring_starting_at(id, 1);
+        id2 = axutil_string_substring_starting_at(axutil_strdup(env, id), 1);
         
         envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
@@ -527,21 +527,12 @@ rampart_shp_process_reference_list(
                         encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "wsu:Id", ref_id);
                         if(encrypted_key_node)
                         {
-                            axiom_node_t *child_node = NULL;
                             ref_list_node = axiom_node_detach(ref_list_node, env); 
-                            child_node = axiom_node_get_first_child(encrypted_key_node, env);
+                            axiom_node_add_child(encrypted_key_node, env, ref_list_node);
                             
-                            if(child_node)
-                            {
-                                status = axiom_node_insert_sibling_before(child_node, env, ref_list_node);
-                                if(status != AXIS2_SUCCESS)
-                                {
-                                    return status;
-                                }
-                                status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context, 
-                                                            soap_envelope, sec_node, encrypted_key_node); 
-                                break;
-                            }
+                            status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context,
+                                                            soap_envelope, sec_node, encrypted_key_node);
+                            break;
                         }
                     }
                 }
@@ -557,12 +548,13 @@ rampart_shp_process_reference_list(
 
 
 static axis2_status_t
-rampart_shp_process_signature(const axutil_env_t *env,
-                              axis2_msg_ctx_t *msg_ctx,
-                              rampart_context_t *rampart_context,
-                              axiom_soap_envelope_t *soap_envelope,
-                              axiom_node_t *sec_node,
-                              axiom_node_t *sig_node)
+rampart_shp_process_signature(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node,
+    axiom_node_t *sig_node)
 {
 
     oxs_sign_ctx_t *sign_ctx = NULL;
