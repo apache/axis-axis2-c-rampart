@@ -9,6 +9,7 @@
         <item name="Documentation" href="docs/index.html">
 	        <item name="Installation Guide" href="docs/installationguide.html"/>
 	        <item name="Rampart/C manual" href="docs/rampartc_manual.html"/>
+		<item name="Configurations guide" href="docs/configurations.html"/>
         </item>
         <item name="Get Involved" href="lists_issues.html">
 	        <item name="Mailing Lists &amp; Issue Tracking" href="lists_issues.html"/>
