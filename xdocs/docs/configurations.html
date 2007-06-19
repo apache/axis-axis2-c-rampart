@@ -80,7 +80,7 @@ svc_client = axis2_svc_client_create(env, "/my/path/to/client/repository");
                     &lt;sp:MustSupportRefKeyIdentifier/&gt;
                     &lt;sp:MustSupportRefEmbeddedToken/&gt;
                     &lt;sp:MustSupportRefIssuerSerial/&gt;
- &lt;/wsp:Policy&gt;
+                &lt;/wsp:Policy&gt;
             &lt;/sp:Wss10&gt;
             &lt;sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"&gt;
                 &lt;sp:Body/&gt;
@@ -113,12 +113,12 @@ svc_client = axis2_svc_client_create(env, "/my/path/to/client/repository");
    &lt;description&gt;
         This is a testing service , to test the system is working or not
    &lt;/description&gt;
-    &lt;module ref="rampart"/&gt;
-    &lt;operation name="echoString"&gt;
+   &lt;module ref="rampart"/&gt;
+   &lt;operation name="echoString"&gt;
             &lt;parameter name="wsamapping"&gt;http://example.com/ws/2004/09/policy/Test/EchoRequest&lt;/parameter&gt;
-    &lt;/operation&gt;
+   &lt;/operation&gt;
 
-    	&lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
+    &lt;wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"&gt;
 		&lt;!--Your policies are here--&gt;
 	&lt;/wsp:Policy&gt;
 &lt;/service&gt;
