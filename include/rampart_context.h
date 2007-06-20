@@ -183,6 +183,23 @@ extern "C"
                             const axutil_env_t *env,
                             axis2_char_t *rd_val);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_private_key_file(rampart_context_t *rampart_context,
+                           const axutil_env_t *env,
+                           axis2_char_t *private_key_file);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_certificate_file(rampart_context_t *rampart_context,
+                           const axutil_env_t *env,
+                           axis2_char_t *certificate_file);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_reciever_certificate_file(rampart_context_t *rampart_context,
+                           const axutil_env_t *env,
+                           axis2_char_t *reciever_certificate_file);
+
+
+
     /**********************************************************8*/
 
     /*Getters of the above set functions*/

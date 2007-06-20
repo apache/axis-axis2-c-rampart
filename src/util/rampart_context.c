@@ -37,6 +37,10 @@ struct rampart_context_t
     int ttl;
     axis2_char_t *rd_val;
     axis2_char_t *password_type;
+    axis2_char_t *private_key_file;
+    axis2_char_t *certificate_file;
+    axis2_char_t *reciever_certificate_file;
+
 
     /****************************/
 
@@ -159,6 +163,9 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->ttl = 0;
     rampart_context->rd_val = NULL;
     rampart_context->password_type = NULL;
+    rampart_context->private_key_file = NULL;
+    rampart_context->certificate_file = NULL;
+    rampart_context->reciever_certificate_file = NULL;
 
     rampart_context->secpolicy = NULL;
     rampart_context->password_callback_module = NULL;
@@ -384,6 +391,42 @@ rampart_context_set_rd_val(rampart_context_t *rampart_context,
     AXIS2_PARAM_CHECK(env->error, rd_val, AXIS2_FAILURE);
 
     rampart_context->rd_val = rd_val;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_private_key_file(rampart_context_t *rampart_context,
+                           const axutil_env_t *env,
+                           axis2_char_t *private_key_file)
+{
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    rampart_context->private_key_file = private_key_file;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_certificate_file(rampart_context_t *rampart_context,
+                           const axutil_env_t *env,
+                           axis2_char_t *certificate_file)
+{
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    rampart_context->certificate_file = certificate_file;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_reciever_certificate_file(rampart_context_t *rampart_context,
+                           const axutil_env_t *env,
+                           axis2_char_t *reciever_certificate_file)
+{
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    rampart_context->reciever_certificate_file = reciever_certificate_file;
     return AXIS2_SUCCESS;
 }
 
