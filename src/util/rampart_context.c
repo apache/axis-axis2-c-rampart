@@ -1973,6 +1973,11 @@ rampart_context_get_certificate_file(
 {
     rp_rampart_config_t *rampart_config = NULL;
 
+    if(rampart_context->certificate_file)
+    {
+        return rampart_context->certificate_file;
+    }
+
     rampart_config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
     if(rampart_config)
     {
@@ -1988,6 +1993,11 @@ rampart_context_get_receiver_certificate_file(
     const axutil_env_t *env)
 {
     rp_rampart_config_t *rampart_config = NULL;
+
+    if(rampart_context->reciever_certificate_file)
+    {
+        return rampart_context->reciever_certificate_file;
+    }
 
     rampart_config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
     if(rampart_config)
@@ -2005,6 +2015,11 @@ rampart_context_get_private_key_file(
     const axutil_env_t *env)
 {
     rp_rampart_config_t *rampart_config = NULL;
+
+    if(rampart_context->private_key_file)
+    {
+        return rampart_context->private_key_file;
+    }
 
     rampart_config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
     if(rampart_config)
