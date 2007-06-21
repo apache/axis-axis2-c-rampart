@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = liboxsc14n.la
+noinst_LTLIBRARIES = liboxsc14n.la
 
 noinst_HEADERS = c14n_sorted_list.h
 
