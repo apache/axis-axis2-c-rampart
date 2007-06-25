@@ -56,7 +56,7 @@ get_sample_password(rampart_callback_t *rcb,
     }
     else if (0 == axutil_strcmp(username, "Alice"))
     {
-        pw = "ecilA";
+        pw = "abcd!1234";
     }
     /*These are for sample keystores*/
     else if (0 == axutil_strcmp(username, "a"))

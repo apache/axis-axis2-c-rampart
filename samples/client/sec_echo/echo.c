@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 
     if(!policy)
     {
-        printf("Policy creation failed from the file.\n");
+        printf("\nPolicy creation failed from the file. %s\n", file_name);
         printf("echo client invoke FAILED!\n");
         return 0;
     }
