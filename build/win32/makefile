@@ -121,7 +121,6 @@ mod_rampart_services_sec_echo:
 
 mod_rampart_samples_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
-	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo_helper.c \
 	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
 	      /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\*.obj axutil.lib axiom.lib neethi.lib \
