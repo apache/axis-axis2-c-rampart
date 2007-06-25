@@ -5,7 +5,7 @@ datadir=$(prefix)/bin/samples/rampart/client/sec_echo
 data_DATA= README.txt update_n_run.sh deploy_client_repo.sh
 #samplesdir=$(prefix)/samples/client/echo
 #samples_DATA=echo.c README.txt Makefile.am Makefile.in
-echo_SOURCES = echo.c echo_helper.c
+echo_SOURCES = echo.c 
 
 echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
@@ -21,7 +21,7 @@ echo_LDADD   = $(LDFLAGS) \
                     $(LIBXML2_LIBS)
 
 INCLUDES = @AXIS2INC@ \
-		   -I$(AXIS2C_HOME)/include/neethi-0.1 \
+		   -I$(AXIS2C_HOME)/include \
             -I ../../../include 
 
 EXTRA_DIST = README.txt

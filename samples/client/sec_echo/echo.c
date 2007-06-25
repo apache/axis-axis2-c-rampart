@@ -21,7 +21,8 @@
 #include <axiom_soap.h>
 #include <axis2_client.h>
 #include <rampart_constants.h>
-#include "echo_helper.h"
+#include <neethi_util.h>
+#include <neethi_policy.h>
 
 axiom_node_t *
 build_om_payload_for_echo_svc(const axutil_env_t *env);
@@ -40,6 +41,8 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     /* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
+    neethi_policy_t *policy = NULL;
+    axis2_char_t *file_name = NULL;
 
     /* Set end point reference of echo service */
     address = "http://localhost:9090/axis2/services/echo";
@@ -111,7 +114,30 @@ int main(int argc, char** argv)
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);
 
-    status = echo_helper_set_policy(svc_client, client_home, env);
+    /*status = echo_helper_set_policy(svc_client, client_home, env);*/
+
+    if(client_home)
+    {
+        file_name = axutil_stracat(env, client_home, "policy.xml" );
+    }
+    else
+    {
+        printf("Client Home not Specified\n");
+        printf("echo client invoke FAILED!\n");
+        return 0;
+    }
+       
+
+    policy = neethi_util_create_policy_from_file(env, file_name);
+
+    if(!policy)
+    {
+        printf("Policy creation failed from the file.\n");
+        printf("echo client invoke FAILED!\n");
+        return 0;
+    }
+
+    status = axis2_svc_client_set_policy(svc_client, env, policy);
 
     if(status == AXIS2_FAILURE)
     {
