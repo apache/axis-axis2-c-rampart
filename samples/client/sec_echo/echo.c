@@ -39,10 +39,12 @@ int main(int argc, char** argv)
     axiom_node_t *payload = NULL;
     axiom_node_t *ret_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    /* Set up the environment */
-    env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
     neethi_policy_t *policy = NULL;
     axis2_char_t *file_name = NULL;
+	
+	/* Set up the environment */
+    env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
+
 
     /* Set end point reference of echo service */
     address = "http://localhost:9090/axis2/services/echo";
