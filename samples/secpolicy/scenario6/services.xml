@@ -71,7 +71,7 @@
                     <sp:Body/>
                 </sp:SignedParts>
                 <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                    <rampc:User>Alice</rampc:User>
+                    <rampc:User>Bob</rampc:User>
                     <rampc:TimeToLive>360</rampc:TimeToLive>
                     <rampc:EncryptionUser>b</rampc:EncryptionUser>
                     <rampc:PasswordType>Digest</rampc:PasswordType>

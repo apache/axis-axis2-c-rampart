@@ -57,7 +57,7 @@
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                 <rampc:User>Alice</rampc:User>
                 <rampc:TimeToLive>360</rampc:TimeToLive>
-                <rampc:EncryptionUser>b</rampc:EncryptionUser>
+                <rampc:EncryptionUser>a</rampc:EncryptionUser>
                 <rampc:PasswordType>Digest</rampc:PasswordType>
                 <rampc:PasswordCallbackClass>AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>
                 <rampc:ReceiverCertificate>AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert</rampc:ReceiverCertificate>

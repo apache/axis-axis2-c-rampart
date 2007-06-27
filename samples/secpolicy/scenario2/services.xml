@@ -50,7 +50,7 @@
                 </wsp:Policy>
                 </sp:SignedSupportingTokens>
                 <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                    <rampc:User>Alice</rampc:User>
+                    <rampc:User>Bob</rampc:User>
                     <rampc:PasswordType>Digest</rampc:PasswordType>
                     <rampc:PasswordCallbackClass>AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>
                 </rampc:RampartConfig>
