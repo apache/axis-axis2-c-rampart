@@ -255,7 +255,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     void *key_buf = NULL;
 
     /*Get EncryptedData references */
-    ref_list_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_REFERENCE_LIST,OXS_ENC_NS,OXS_XENC);
+    ref_list_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_REFERENCE_LIST,OXS_ENC_NS,NULL);
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
     /*If there are no references. Nothing to do. Return success*/
     if((!reference_list) || (0 == axutil_array_list_size(reference_list, env))){
@@ -398,7 +398,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
             return AXIS2_FAILURE;
         }
         /*Create an enc_ctx*/
-        mtd_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,OXS_XENC);
+        mtd_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,NULL);
         if(!mtd_node)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Node with ID=%s cannot be found", id);
@@ -499,12 +499,12 @@ rampart_shp_process_reference_list(
         }
         
         key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node,
-                    OXS_NODE_KEY_INFO, OXS_DSIG_NS, OXS_DS );
+                    OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
 
         if(key_info_node)
         {
             str_node = oxs_axiom_get_first_child_node_by_name(env, key_info_node,
-            OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, OXS_WSSE);
+            OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
             
             if(str_node)
             {
@@ -587,7 +587,7 @@ rampart_shp_process_signature(
     }
 
     sign_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
-                     OXS_NODE_SIGNEDINFO, OXS_DSIG_NS, OXS_DS );
+                     OXS_NODE_SIGNEDINFO, OXS_DSIG_NS, NULL);
 
     /*sign_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
                             OXS_NODE_SIGNEDINFO, NULL, NULL);*/
@@ -624,7 +624,7 @@ rampart_shp_process_signature(
             axiom_node_t *digest_mtd_node = NULL;
             axis2_char_t *digest_mtd = NULL;
             digest_mtd_node  = oxs_axiom_get_first_child_node_by_name(env,cur_node,
-                               OXS_NODE_DIGEST_METHOD, OXS_DSIG_NS, OXS_DS);
+                               OXS_NODE_DIGEST_METHOD, OXS_DSIG_NS, NULL);
             /*digest_mtd_node  = oxs_axiom_get_first_child_node_by_name(env,cur_node,
                            OXS_NODE_DIGEST_METHOD, NULL,NULL);*/
             if(digest_mtd_node)
@@ -674,7 +674,7 @@ rampart_shp_process_signature(
     is_include_token = rampart_context_is_token_include(rampart_context,token,token_type,server_side,AXIS2_TRUE,env);
 
     key_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
-                    OXS_NODE_KEY_INFO,OXS_DSIG_NS, OXS_DS );
+                    OXS_NODE_KEY_INFO,OXS_DSIG_NS, NULL );
 
     /*key_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
                            OXS_NODE_KEY_INFO,NULL,NULL);*/
@@ -685,7 +685,7 @@ rampart_shp_process_signature(
         return AXIS2_FAILURE;
     }
     str_node = oxs_axiom_get_first_child_node_by_name(env,key_info_node,
-               OXS_NODE_SECURITY_TOKEN_REFRENCE,OXS_WSSE_XMLNS,OXS_WSSE);
+               OXS_NODE_SECURITY_TOKEN_REFRENCE,OXS_WSSE_XMLNS,NULL);
 
     /*str_node = oxs_axiom_get_first_child_node_by_name(env,key_info_node,
                             OXS_NODE_SECURITY_TOKEN_REFRENCE,NULL,NULL);*/
@@ -885,7 +885,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                 {
                     return status;
                 }
-                ref_list_node = oxs_axiom_get_first_child_node_by_name(env, cur_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, OXS_XENC); 
+                ref_list_node = oxs_axiom_get_first_child_node_by_name(env, cur_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL); 
 
                 axiom_node_detach(ref_list_node, env);
 
