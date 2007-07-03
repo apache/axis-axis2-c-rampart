@@ -181,7 +181,7 @@ del_am:
 	del /s *.am
 	chdir .\..\win32
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files mod_rampart_copy_keys del_am
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am
 
 deploy:
 	chdir $(RAMPART_DISTDIR)
