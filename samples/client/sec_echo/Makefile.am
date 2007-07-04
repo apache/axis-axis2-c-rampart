@@ -24,4 +24,4 @@ INCLUDES = @AXIS2INC@ \
 		   -I$(AXIS2C_HOME)/include \
             -I ../../../include 
 
-EXTRA_DIST = README.txt
+EXTRA_DIST = README.txt deploy_client_repo.sh update_n_run.sh
