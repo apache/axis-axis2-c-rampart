@@ -6,4 +6,6 @@ data_DATA=
 install-data-hook:
 	cp -rf secpolicy/* $(datadir)
 
+EXTRA_DIST=secpolicy omxmlsec
+
 
