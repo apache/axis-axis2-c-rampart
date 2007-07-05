@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axiom_node_t *ret_node = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
+    /*axis2_status_t status = AXIS2_FAILURE;*/
     neethi_policy_t *policy = NULL;
     axis2_char_t *file_name = NULL;
 	
@@ -120,7 +120,8 @@ int main(int argc, char** argv)
 
     if(client_home)
     {
-        file_name = axutil_stracat(env, client_home, "policy.xml" );
+        file_name = axutil_stracat(env, client_home, AXIS2_PATH_SEP_STR);
+        file_name = axutil_stracat(env, file_name, "policy.xml" );
     }
     else
     {
@@ -135,18 +136,18 @@ int main(int argc, char** argv)
     if(!policy)
     {
         printf("\nPolicy creation failed from the file. %s\n", file_name);
-        printf("echo client invoke FAILED!\n");
-        return 0;
+        /*printf("echo client invoke FAILED!\n");
+        return 0;*/
     }
 
-    status = axis2_svc_client_set_policy(svc_client, env, policy);
+    /*status = axis2_svc_client_set_policy(svc_client, env, policy);*/
 
-    if(status == AXIS2_FAILURE)
+    /*if(status == AXIS2_FAILURE)
     {
         printf("Policy setting failed\n");
         return 0;
     }
-
+    */
     /* Build the SOAP request message payload using OM API.*/
     payload = build_om_payload_for_echo_svc(env);
     /*axis2_svc_client_engage_module(svc_client, env, "rampart");*/
@@ -198,7 +199,7 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
     axis2_char_t *om_str = NULL;
 
     ns1 = axiom_namespace_create(env, /*"http://ws.apache.org/axis2/c/samples"*/ "http://example.com/ws/2004/09/policy", "ns1");
-    echo_om_ele = axiom_element_create(env, NULL, /*"echoString"*/"EchoRequest", ns1, &echo_om_node);
+    echo_om_ele = axiom_element_create(env, NULL, /*"echoString"*/"echoIn", ns1, &echo_om_node);
     
     
     text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
