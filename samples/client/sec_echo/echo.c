@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     axis2_svc_client_t* svc_client = NULL;
     axiom_node_t *payload = NULL;
     axiom_node_t *ret_node = NULL;
-    /*axis2_status_t status = AXIS2_FAILURE;*/
+    axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
     axis2_char_t *file_name = NULL;
 	
@@ -140,14 +140,13 @@ int main(int argc, char** argv)
         return 0;*/
     }
 
-    /*status = axis2_svc_client_set_policy(svc_client, env, policy);*/
+    status = axis2_svc_client_set_policy(svc_client, env, policy);
 
-    /*if(status == AXIS2_FAILURE)
+    if(status == AXIS2_FAILURE)
     {
         printf("Policy setting failed\n");
-        return 0;
     }
-    */
+    
     /* Build the SOAP request message payload using OM API.*/
     payload = build_om_payload_for_echo_svc(env);
     /*axis2_svc_client_engage_module(svc_client, env, "rampart");*/
