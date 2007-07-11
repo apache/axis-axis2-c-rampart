@@ -114,10 +114,10 @@ distributions.) </p>
 
 <ol>
   <li>Extract the binary distribution to a folder of your choice. (example:
-    C:\rampartc)</li>
-  <li>Copy modules/rampart to %AXIS2C_HOME%\modules</li>
-  <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
-  <li>Start the server and run the client to consume the secured service
+    C:\rampartc).</li>
+  <li>Copy modules/rampart to %AXIS2C_HOME%\modules.</li>
+  <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>.
+  <li>Start the axis2_http_server and run the echo client in the samples/client/sec_echo to consume the secured service.
 </ol>
 <a id="bin_run"></a>
 
@@ -128,7 +128,7 @@ distributions.) </p>
 <h4>2.2.1. Requirements</h4>
 <ul>
   <li>The makefile shipped with this version needs Microsoft Visual Studio
-    Compiler (cl) and the NMake build tool.</li>
+    Compiler (cl) and the nmake build tool.</li>
 
   <p>(Note: You can <a
   href="http://msdn.microsoft.com/vstudio/express/downloads/">download the
@@ -147,7 +147,7 @@ distributions.) </p>
 <ul>
   <li>Extract the source distribution to a folder of your choice. (Example:
     C:\rampartc)</li>
-  <li>Edit the configure.in file to specify the Axis2/C deploy path and OpenSSL installation path</li>
+  <li>Edit the configure.in file to specify the Axis2/C repository path and the OpenSSL installation path</li>
   <li>Open a DOS shell</li>
   <li>cd C:\rampartc\build\win32</li>
   <li>to access .Net tools, run
@@ -166,39 +166,35 @@ distributions.) </p>
     </ul>
   </li>
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
-  <li>Start the server and run the client to consume the secured service
-    
+  <li>Start the axis2_http_server and run the echo client in the samples/client/sec_echo to consume the secured service
 </ul>
 <a id="src_run"></a>
 
-<h4>2.2.5. Running the Binaries</h4>
+<h4><a id="engage"/></h4>
 
-<ul>
-</ul>
-<a id="engage"/>
 <h2>Engage Rampart/C with axis2/C </h2>
 
 <p>You can engage Rampart/C in global level or in service level.</p>
-<p>Just add following entry either to axis2.xml(gloabl level) or in services.xml(service level).</p>
+<p>Just add the following entry either to axis2.xml(gloabl level) or in services.xml(service level) corresponding to the service you want to secure.</p>
 <pre>   
  &lt;module ref="rampart"/&gt;
 </pre>
 
 <p>Apart from that you must define security policies for outgoing messages and incoming messages.
-This can be done adding parameters as follows in the same descriptor file that you engaged rampart.</p>
+This can be done by adding parameters in the same descriptor file that you engaged rampart as follows.</p>
 <pre>    
  &lt;parameter name="OutflowSecurityPolicy"&gt;/your/path/to/outgoing-secpolicy.xml&lt;/parameter&gt;
  &lt;parameter name="InflowSecurityPolicy"&gt;/your/path/to/incoming-secpolicy.xml&lt;/parameter&gt;
 </pre>
 <p>
-<strong>NOTE:</strong> There are several samples security policy xml files for different scenarios under samples/secpolicy/
-        Please refer the README file for more information
+<strong>NOTE:</strong> There are several sample security policy xml files for different scenarios under samples/secpolicy/. 
+        Please refer to the README file inside this folder for more information.
 </p>
 <p>
-The final configuration setup should be as follows
+The final configuration setup should be as follows:
 </p>
 <strong>CLIENT SIDE:</strong>
-<p>axis2.xml</p>
+<p>In axis2.xml</p>
 <pre>    
  &lt;module ref="rampart"/&gt;
  &lt;parameter name="OutflowSecurityPolicy"&gt;/../../outgoing-secpolicy.xml&lt;/parameter&gt;
@@ -206,7 +202,7 @@ The final configuration setup should be as follows
 </pre>    
 
 <strong>SERVER SIDE:</strong>
-<p>services.xml(or axis2.xml)</p>
+<p>In services.xml(or axis2.xml)</p>
 <pre>    
  &lt;module ref="rampart"/&gt;
  &lt;parameter name="OutflowSecurityPolicy"&gt;/../../outgoing-secpolicy.xml&lt;/parameter&gt;
@@ -214,14 +210,15 @@ The final configuration setup should be as follows
 </pre>    
 
 <p><strong>NOTE:</strong> Please find sample security policy files that are located under <a href="http://svn.apache.org/repos/asf/webservices/rampart/trunk/c/samples/secpolicy/">samples/secpolicy</a></p>
-<p>Go to each and every scenario and see how Rampart/C is configured using the policy assertions available in respective policy files.
-<br>For each scenario there are four policy files</p>
+<p>You may go to each and every scenario and see how Rampart/C is configured using the policy assertions available in respective policy files.
+<br>
+For each scenario there are four policy files:</p>
 <ol>
-    <li>client-outgoing-secpolicy.xml : Defines how the security configurations for client's out going messages</li>
-    <li>service-incoming-secpolicy.xml : Defines how the security configurations for server's in coming messages</li>
-    <li>service-outgoing-secpolicy.xml : Defines how the security configurations for server's out going messages</li>
-    <li>client-incoming-secpolicy.xml : Defines how the security configurations for client's in coming messages</li>
+    <li>client-outgoing-secpolicy.xml : Defines what the security configurations are for  outgoing messages from the client</li>
+  <li>service-incoming-secpolicy.xml : Defines what the security configurations are for incoming messages to the server</li>
+  <li>service-outgoing-secpolicy.xml : Defines what the security configurations are for  outgoing messages from the server</li>
+  <li>client-incoming-secpolicy.xml : Defines what the security configurations are for incoming messages to the client</li>
 </ol>
-<p><strong>NOTE:</strong> If you have changed an outgoing policy file, make sure that you change the corresponding incoming policy file as well, and vise versa </p>
+<p><strong>NOTE:</strong> If you have changed an outgoing policy file, make sure that you change the corresponding incoming policy file as well, and vise versa. </p>
 </body>
 </html>
