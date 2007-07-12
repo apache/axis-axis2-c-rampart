@@ -23,6 +23,7 @@
 #include <openssl/pem.h>
 #include <openssl/bio.h>
 #include <openssl/rand.h>
+#include <openssl/x509v3.h>
 #include <oxs_buffer.h>
 #include <oxs_error.h>
 #include <openssl_pkcs12.h>
