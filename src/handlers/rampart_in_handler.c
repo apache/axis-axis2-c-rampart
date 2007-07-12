@@ -155,15 +155,14 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     {
         AXIS2_LOG_INFO(env->log,
             "[rampart][rampart_in_handler] Security Header processing failed.");
-  /*    rampart_engine_shutdown(env,rampart_context);*/
         return status;
     }        
             
     serverside = axis2_msg_ctx_get_server_side(msg_ctx,env);
-    /*We do not need rampart context to be freed in the server side*/
-    if(!serverside){
-    /*This method will free the rampart_context*/
-/*      status = rampart_engine_shutdown(env, rampart_context);*/
+    if(serverside)
+    {
+        rampart_context_free(rampart_context, env);
+        rampart_context = NULL;
     }        
     
     return status;

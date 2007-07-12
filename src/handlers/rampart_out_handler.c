@@ -129,20 +129,18 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
             return AXIS2_FAILURE;
         }
 
-/*
-        rampart_context = rampart_engine_init(env,msg_ctx,AXIS2_FALSE);
-        if(!rampart_context)
-            return AXIS2_FAILURE;
-*/
         /*We call the security header builder*/
         status = rampart_shb_build_message(env, msg_ctx, rampart_context, soap_envelope);
         if(AXIS2_FAILURE == status){
                 AXIS2_LOG_INFO(env->log,
                     "[rampart][rampart_out_handler] Security header building failed ERROR");
-              /* rampart_engine_shutdown(env,rampart_context);*/
                 return AXIS2_FAILURE;
         }
-        /*status = rampart_engine_shutdown(env,rampart_context);*/
+        if(serverside)
+        {
+            rampart_context_free(rampart_context, env);
+            rampart_context = NULL;
+        }
     }
     return status;
 }

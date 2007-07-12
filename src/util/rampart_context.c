@@ -1616,7 +1616,14 @@ rampart_context_get_nodes_to_protect(
             body = axiom_soap_envelope_get_body(soap_envelope, env);
             body_node = axiom_soap_body_get_base_node(body, env);
             body_child_node = axiom_node_get_first_element(body_node, env);
-            axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
+            if(is_sign)
+            {    
+                axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_node);
+            }
+            else
+            {
+                axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
+            }    
             return AXIS2_SUCCESS;
         }
         else
