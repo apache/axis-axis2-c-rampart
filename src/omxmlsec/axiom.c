@@ -174,7 +174,7 @@ oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
 {
     axis2_char_t *attribute_value = NULL;
     axiom_element_t *ele = NULL;
-    axutil_qname_t *qname = NULL;
+    /*axutil_qname_t *qname = NULL;*/
 
     ele = axiom_node_get_data_element(node, env);
 
