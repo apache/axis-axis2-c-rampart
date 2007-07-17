@@ -188,8 +188,9 @@ rampart_context_free(rampart_context_t *rampart_context,
 
     if(rampart_context)
     {
-        if (--(rampart_context->ref) > 0)
+        if ((rampart_context->ref) > 0)
         {
+            rampart_context->ref--;
             return;
         }
         
