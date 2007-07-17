@@ -2,7 +2,7 @@
 _SCEN="scenario"
 _SMPL_DIR="$PWD"
 _PORT=9090
-_SLEEP=2
+_SLEEP=4
 #You may change these to scenarios u need to run
 _LST="1 2 3 4 5"
 

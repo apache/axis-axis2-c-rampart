@@ -2,7 +2,7 @@
     <parameter name="ServiceClass" locked="xsd:false">sec_echo</parameter>
 
    <description>
-        This is a testing service , to test the system is working or not
+        This is a testing service , to test Rampart/C [Security] functionalities. 
    </description>
     <!--Rampart configurations START -->
     <module ref="rampart"/>

@@ -174,9 +174,13 @@ oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
 {
     axis2_char_t *attribute_value = NULL;
     axiom_element_t *ele = NULL;
+    axutil_qname_t *qname = NULL;
 
     ele = axiom_node_get_data_element(node, env);
-    attribute_value = axiom_element_get_attribute_value_by_name(ele, env, attribute_name);
+
+    attribute_value = axiom_element_get_attribute_value_by_name(ele, env, attribute_name);/*Interop FIX*/
+/*    qname = axutil_qname_create(env, "Id", NULL, NULL);    
+    attribute_value = axiom_element_get_attribute_value(ele ,env, qname);*/
 
     return attribute_value;
 }
