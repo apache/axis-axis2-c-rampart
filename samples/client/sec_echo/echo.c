@@ -163,6 +163,28 @@ int main(int argc, char** argv)
         /*AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:"
                 " %d :: %s", env->error->error_number,
                 axutil_error_get_message(env->error));*/
+
+        if (axis2_svc_client_get_last_response_has_fault(svc_client, env))
+        {
+            axiom_soap_envelope_t *soap_envelope = NULL;
+            axiom_soap_body_t *soap_body = NULL;
+            axiom_soap_fault_t *soap_fault = NULL;
+
+            printf ("\nResponse has a SOAP fault\n");
+            soap_envelope =
+                axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
+            if (soap_envelope)
+                soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
+            if (soap_body)
+                soap_fault = axiom_soap_body_get_fault(soap_body, env);
+            if (soap_fault)
+            {
+                printf("\nReturned SOAP fault: %s\n",
+                    axiom_node_to_string(axiom_soap_fault_get_base_node(soap_fault,env),
+                    env));
+            }
+            return -1;
+        }
         printf("echo client invoke FAILED!\n");
     }
 

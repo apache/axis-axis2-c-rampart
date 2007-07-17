@@ -544,8 +544,11 @@ extern "C"
         const axutil_env_t *env,
         oxs_key_t *session_key);
 
-    
-
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_increment_ref(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+        
 
 #ifdef __cplusplus
 }

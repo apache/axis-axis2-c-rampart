@@ -92,23 +92,39 @@ rampart_engine_build_configuration(
             return NULL;
         }
     }
-
-    secpolicy = rp_secpolicy_builder_build(env, policy);
+    
+    /*secpolicy = rp_secpolicy_builder_build(env, policy);
     if(!secpolicy)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Cannot create security policy from policy.");
         return NULL;
     }
-
+    */
     value = rampart_get_rampart_configuration(env, msg_ctx, RAMPART_CONFIGURATION);
     if(value)
     {
         rampart_context = (rampart_context_t *)value;
-        rampart_context_set_secpolicy(rampart_context, env, secpolicy);
+        rampart_context_increment_ref(rampart_context, env);
+        if(!rampart_context_get_secpolicy(rampart_context, env))
+        {
+            secpolicy = rp_secpolicy_builder_build(env, policy);
+            if(!secpolicy)
+            {
+                AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Cannot create security policy from policy.");
+                return NULL;
+            }
+            rampart_context_set_secpolicy(rampart_context, env, secpolicy);
+        }
     }
     else
     {
         rampart_context = rampart_context_create(env);
+        secpolicy = rp_secpolicy_builder_build(env, policy);
+        if(!secpolicy)
+        {
+            AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Cannot create security policy from policy.");
+            return NULL;
+        }
         rampart_context_set_secpolicy(rampart_context, env, secpolicy);
 
         status = set_rampart_user_properties(env, rampart_context);

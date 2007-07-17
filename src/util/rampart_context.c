@@ -40,7 +40,7 @@ struct rampart_context_t
     axis2_char_t *private_key_file;
     axis2_char_t *certificate_file;
     axis2_char_t *reciever_certificate_file;
-
+    int ref;
 
     /****************************/
 
@@ -175,6 +175,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->require_ut = AXIS2_FALSE;
     rampart_context->require_timestamp = AXIS2_FALSE;
     rampart_context->ctx = NULL;
+    rampart_context->ref = 0;
 
     return rampart_context;
 }
@@ -187,6 +188,11 @@ rampart_context_free(rampart_context_t *rampart_context,
 
     if(rampart_context)
     {
+        if (--(rampart_context->ref) > 0)
+        {
+            return;
+        }
+        
         if(rampart_context->secpolicy)
         {
             rp_secpolicy_free(rampart_context->secpolicy,env);
@@ -2197,3 +2203,13 @@ rampart_context_get_layout(
 
     return rp_layout_get_value(layout,env);
 }
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_increment_ref(rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    rampart_context->ref++;
+    return AXIS2_SUCCESS;
+}
+
