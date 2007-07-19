@@ -37,7 +37,8 @@ extern "C"
         c14n_sorted_list_t **node,
         void *val,
         const void *ctx,
-        int(*compar)(const void *, const void *, const void *)
+        int(*compar)(const void *, const void *, const void *),
+        const axutil_env_t *env
         );
 
 
