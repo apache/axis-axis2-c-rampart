@@ -174,16 +174,79 @@ oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
 {
     axis2_char_t *attribute_value = NULL;
     axiom_element_t *ele = NULL;
-    /*axutil_qname_t *qname = NULL;*/
+    axutil_qname_t *qname = NULL;
 
     ele = axiom_node_get_data_element(node, env);
-
-    attribute_value = axiom_element_get_attribute_value_by_name(ele, env, attribute_name);/*Interop FIX*/
-/*    qname = axutil_qname_create(env, "Id", NULL, NULL);    
-    attribute_value = axiom_element_get_attribute_value(ele ,env, qname);*/
-
+    /*Interop FIX*/
+    /*attribute_value = axiom_element_get_attribute_value_by_name(ele, env, attribute_name);*/
+    qname = axutil_qname_create(env, attribute_name, OXS_WSU_XMLNS, NULL);    
+    /*attribute_value = axiom_element_get_attribute_value(ele ,env, qname);*/
+    attribute_value = oxs_axiom_get_attribute_val_of_node_by_qname(env, node, qname);
+    /*if(!attribute_value){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+                  "Cannot find %s attribute", attribute_name);
+        return NULL;
+        
+    }*/
     return attribute_value;
 }
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
+    axiom_node_t *node,
+    axutil_qname_t *qname)
+{
+    /*Qname might NOT contain the prefix*/
+    axiom_element_t *ele = NULL;
+    axutil_hash_t *attr_list = NULL;
+    axutil_hash_index_t *hi = NULL;
+    axis2_char_t *local_name = NULL;
+    axis2_char_t *ns_uri = NULL;
+
+    ele = axiom_node_get_data_element(node, env);
+    /*Get attribute list of the element*/
+    attr_list = axiom_element_extract_attributes(ele, env, node);
+    if(!attr_list){
+        return NULL;
+    }
+    /*Get localname of the qname*/
+    local_name =  axutil_qname_get_localpart(qname, env); 
+    /*Get nsuri of the qname*/
+    ns_uri = axutil_qname_get_uri(qname, env);
+    if(!ns_uri){
+        ns_uri = "";
+    }
+    /*Traverse thru all the attributes. If both localname and the nsuri matches return the val*/
+    for (hi = axutil_hash_first(attr_list, env); hi; hi = axutil_hash_next(env, hi))
+    {
+        void *attr = NULL;
+        axiom_attribute_t *om_attr = NULL;
+        axutil_hash_this(hi, NULL, NULL, &attr);
+        if (attr)
+        {
+            axis2_char_t *this_attr_name = NULL;
+            axis2_char_t *this_attr_ns_uri = NULL;
+            axiom_namespace_t *attr_ns = NULL;
+ 
+            om_attr = (axiom_attribute_t*)attr;
+            this_attr_name = axiom_attribute_get_localname(om_attr, env);
+            attr_ns = axiom_attribute_get_namespace(om_attr, env);
+            if(attr_ns){
+                this_attr_ns_uri = axiom_namespace_get_uri(attr_ns, env);  
+            }else{
+                this_attr_ns_uri = "";
+            }
+            if(0 == axutil_strcmp(local_name, this_attr_name) && 0 == axutil_strcmp(ns_uri, this_attr_ns_uri)){
+                /*Got it !!!*/
+                return axiom_attribute_get_value(om_attr, env);
+            } 
+        }
+        
+    }
+    
+    return NULL;
+}
+
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,

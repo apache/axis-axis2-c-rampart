@@ -71,6 +71,10 @@ extern "C"
             axiom_node_t *node,
             axis2_char_t *attribute_name);
 
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
+            axiom_node_t *node,
+            axutil_qname_t *qname);
 
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,

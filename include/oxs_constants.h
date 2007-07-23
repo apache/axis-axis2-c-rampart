@@ -40,6 +40,7 @@ extern "C"
 #define OXS_WSSE_XMLNS      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 #define OXS_WSSE_11_XMLNS   "http://docs.oasis-open.org/wss/2005/xx/oasis-2005xx-wss-wssecurity-secext-1.1.xsd"
 #define OXS_WSU "wsu"
+#define OXS_WSU_XMLNS "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
     /****************************************************************
         ID Prefixes
     ****************************************************************/

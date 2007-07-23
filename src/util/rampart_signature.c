@@ -269,7 +269,8 @@ rampart_sig_sign_message(const axutil_env_t *env,
             tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_XML_EXC_C14N);
             axutil_array_list_add(tr_list, env, tr);
             oxs_sign_part_set_transforms(sign_part, env, tr_list);
-            oxs_axiom_add_attribute(env, node_to_sign, OXS_WSU,RAMPART_WSU_XMLNS,OXS_ATTR_ID,id);
+            /*oxs_axiom_add_attribute(env, node_to_sign, OXS_WSU, RAMPART_WSU_XMLNS,OXS_ATTR_ID,id);*/
+            oxs_axiom_add_attribute(env, node_to_sign, "u", RAMPART_WSU_XMLNS,OXS_ATTR_ID, id);
             oxs_sign_part_set_node(sign_part, env, node_to_sign);
             oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
             axutil_array_list_add(sign_parts, env, sign_part);

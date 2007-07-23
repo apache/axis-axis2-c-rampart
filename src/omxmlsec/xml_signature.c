@@ -138,7 +138,7 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     node = oxs_sign_part_get_node(sign_part, env);
 
     /*Get the reference ID from the node and hence to the ds:Reference node*/
-    id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, "wsu:Id");
+    id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, "Id");
 
     ref_id = axutil_stracat(env, "#", id);/* <ds:Reference URI="#id">*/
     reference_node = oxs_token_build_ds_reference_element(env, parent ,NULL, ref_id, NULL);
@@ -297,7 +297,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     ref_id2 =  axutil_string_substring_starting_at(axutil_strdup(env, ref_id), 1);
 
     /*Find the node refered by this ref_id2 and set to the sign part*/
-    reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "wsu:Id", ref_id2 );
+    reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id2 );
     if(reffed_node){
         oxs_sign_part_set_node(sign_part, env, reffed_node);
     }else{
