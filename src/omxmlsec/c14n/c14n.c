@@ -709,8 +709,13 @@ c14n_apply_on_text (
 
     if (text)
     {
-        axis2_char_t *textval = (axis2_char_t*)axiom_text_get_value(text, ctx->env);
-        textval = c14n_normalize_text(textval, ctx);
+        axis2_char_t *textval = (axis2_char_t*)axiom_text_get_text(text, ctx->env);
+        
+        if (textval)
+            textval = c14n_normalize_text(textval, ctx);
+        else /*should never occur*/
+            return AXIS2_FAILURE;
+
         c14n_output(textval, ctx);
         if (textval)
         {
