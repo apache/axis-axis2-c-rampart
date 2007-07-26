@@ -119,7 +119,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     
     sec_node = rampart_get_security_token(env, msg_ctx, soap_header);
 
-    if((rampart_context_get_binding_type(rampart_context,env)) != RP_BINDING_TRANSPORT)
+    if((rampart_context_get_binding_type(rampart_context,env)) != RP_PROPERTY_TRANSPORT_BINDING)
     {
         /*sec_node = rampart_get_security_token(env, msg_ctx, soap_header);*/
     
@@ -138,16 +138,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
 				"[rampart][rampart_in_handler] Unable to set the security processed results");
     }
-    /*rampart_context = rampart_neethi_build_configuration(env, msg_ctx, AXIS2_TRUE);*/
 
-/*  rampart_context = rampart_engine_init(env,msg_ctx,AXIS2_TRUE);*/
-/*
-    if(!rampart_context)
-    {        
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_in_handler] ramaprt_context creation failed.");
-        return AXIS2_FAILURE;
-    }
-*/
     status = rampart_shp_process_message(env, msg_ctx, rampart_context, 
 						soap_envelope, sec_node);
     

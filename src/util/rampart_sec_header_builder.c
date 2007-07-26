@@ -103,7 +103,7 @@ rampart_shb_build_message(
               axiom_node_get_data_element(sec_node, env);
 
     /*check the binding*/
-    if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_ASYMMETRIC)
+    if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
         /*Do Asymmetric Binding specific things*/
 
@@ -271,13 +271,13 @@ rampart_shb_build_message(
 
         return AXIS2_SUCCESS;
     }
-    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_SYMMETRIC)
+    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         /*Do Symmetric_binding specific things*/
         AXIS2_LOG_INFO(env->log, "[rampart][shb] Symmetric Binding. We do not support yet");
         return AXIS2_FAILURE;
     }
-    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_TRANSPORT)
+    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
     {
         /*Timestamp Inclusion*/
 

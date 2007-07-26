@@ -130,7 +130,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
     axis2_char_t *prv_key_file = NULL;
     axis2_char_t *password = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
-    int token_type = 0;
+    rp_property_type_t token_type;
     rp_property_t *token = NULL;
     axis2_char_t *enc_user = NULL;
     openssl_pkey_t *prvkey = NULL;

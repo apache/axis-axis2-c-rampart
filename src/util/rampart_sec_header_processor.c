@@ -566,7 +566,7 @@ rampart_shp_process_signature(
     rp_property_t *token = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
     axis2_char_t *eki = NULL;
-    int token_type = 0;
+    rp_property_type_t token_type;
     axiom_node_t *key_info_node = NULL;
     axiom_node_t *str_node = NULL;
     axiom_node_t *str_child_node = NULL;
@@ -857,7 +857,7 @@ rampart_shp_process_message(const axutil_env_t *env,
 
     
 
-    if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_ASYMMETRIC)
+    if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
 
         signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
@@ -1093,12 +1093,12 @@ rampart_shp_process_message(const axutil_env_t *env,
         /*Do the action accordingly*/
         return AXIS2_SUCCESS;
     }
-    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_SYMMETRIC)
+    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][shp] We still not support Symmetric binding.");
         return AXIS2_FAILURE;
     }
-    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_BINDING_TRANSPORT)
+    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
     {
         axis2_status_t status = AXIS2_FAILURE;
 

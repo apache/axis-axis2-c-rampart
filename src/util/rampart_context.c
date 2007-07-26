@@ -771,7 +771,7 @@ rampart_context_get_require_ut(
     return rampart_context->require_ut;
 }
 
-AXIS2_EXTERN int AXIS2_CALL
+AXIS2_EXTERN rp_property_type_t AXIS2_CALL
 rampart_context_get_binding_type(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
@@ -797,7 +797,7 @@ rp_symmetric_asymmetric_binding_commons_t
     if(!property)
         return NULL;
 
-    if(rp_property_get_type(property,env)==RP_BINDING_ASYMMETRIC)
+    if(rp_property_get_type(property,env) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
         rp_asymmetric_binding_t *asymmetric_binding = NULL;
         asymmetric_binding = (rp_asymmetric_binding_t*)rp_property_get_value(property,env);
@@ -806,7 +806,7 @@ rp_symmetric_asymmetric_binding_commons_t
 
         return rp_asymmetric_binding_get_symmetric_asymmetric_binding_commons(asymmetric_binding,env);
     }
-    else if(rp_property_get_type(property,env)==RP_BINDING_SYMMETRIC)
+    else if(rp_property_get_type(property,env) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         rp_symmetric_binding_t *symmetric_binding = NULL;
         symmetric_binding = (rp_symmetric_binding_t*)rp_property_get_value(property,env);
@@ -829,11 +829,11 @@ rp_binding_commons_t
     if(!property)
         return NULL;
 
-    if(rp_property_get_type(property,env)==RP_BINDING_ASYMMETRIC)
+    if(rp_property_get_type(property,env) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
         rp_asymmetric_binding_t *asymmetric_binding = NULL;
         rp_symmetric_asymmetric_binding_commons_t *sym_asym_commons = NULL;
-        asymmetric_binding = (rp_asymmetric_binding_t*)rp_property_get_value(property,env);
+        asymmetric_binding = (rp_asymmetric_binding_t*)rp_property_get_value(property, env);
         if(!asymmetric_binding)
             return NULL;
 
@@ -843,7 +843,7 @@ rp_binding_commons_t
 
         return rp_symmetric_asymmetric_binding_commons_get_binding_commons(sym_asym_commons,env);
     }
-    else if(rp_property_get_type(property,env)==RP_BINDING_SYMMETRIC)
+    else if(rp_property_get_type(property,env) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         rp_symmetric_binding_t *symmetric_binding = NULL;
         rp_symmetric_asymmetric_binding_commons_t *sym_asym_commons = NULL;
@@ -858,7 +858,7 @@ rp_binding_commons_t
         return rp_symmetric_asymmetric_binding_commons_get_binding_commons(sym_asym_commons,env);
 
     }
-    else if(rp_property_get_type(property,env)==RP_BINDING_TRANSPORT)
+    else if(rp_property_get_type(property,env) == RP_PROPERTY_TRANSPORT_BINDING)
     {
         rp_transport_binding_t *transport_binding = NULL;
         transport_binding = (rp_transport_binding_t*)rp_property_get_value(property,env);
@@ -929,7 +929,7 @@ rampart_context_use_username_token(
                     axutil_array_list_get(array_list,env, i);
             if (token)
             {
-                if(rp_property_get_type(token,env)==RP_TOKEN_USERNAME)
+                if(rp_property_get_type(token,env) == RP_PROPERTY_USERNAME_TOKEN)
                 {
                     rp_username_token_t *username_token =
                         (rp_username_token_t *)rp_property_get_value(token,env);
@@ -1153,7 +1153,7 @@ rampart_context_get_key_identifier_from_wss(
         return identifier;
     }
 
-    if(rp_property_get_type(wss,env)==RP_WSS_WSS10)
+    if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS10)
     {
         rp_wss10_t *wss10 = NULL;
         wss10 = rp_property_get_value(wss,env);
@@ -1173,7 +1173,7 @@ rampart_context_get_key_identifier_from_wss(
 
         return identifier;
     }
-    else if(rp_property_get_type(wss,env)==RP_WSS_WSS11)
+    else if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS11)
     {
         rp_wss11_t *wss11 = NULL;
         wss11 = rp_property_get_value(wss,env);
@@ -1218,16 +1218,16 @@ rampart_context_is_key_identifier_supported(
         return AXIS2_FALSE;
     }
 
-    if(rp_property_get_type(wss,env)==RP_WSS_WSS10)
+    if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS10)
     {
-        wss10 = rp_property_get_value(wss,env);
+        wss10 = (rp_wss10_t *)rp_property_get_value(wss,env);
     }
-    else if(rp_property_get_type(wss,env)==RP_WSS_WSS11)
+    else if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS11)
     {
-        wss11 = rp_property_get_value(wss,env);
+        wss11 = (rp_wss11_t *)rp_property_get_value(wss,env);
     }
 
-    if(rp_property_get_type(token,env)==RP_TOKEN_X509)
+    if(rp_property_get_type(token,env)== RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
@@ -1270,16 +1270,16 @@ rampart_context_is_issuer_serial_supported(
         return AXIS2_FALSE;
     }
 
-    if(rp_property_get_type(wss,env)==RP_WSS_WSS10)
+    if(rp_property_get_type(wss,env)== RP_PROPERTY_WSS10)
     {
-        wss10 = rp_property_get_value(wss,env);
+        wss10 = (rp_wss10_t *)rp_property_get_value(wss,env);
     }
-    else if(rp_property_get_type(wss,env)==RP_WSS_WSS11)
+    else if(rp_property_get_type(wss,env)== RP_PROPERTY_WSS11)
     {
-        wss11 = rp_property_get_value(wss,env);
+        wss11 = (rp_wss11_t *)rp_property_get_value(wss,env);
     }
 
-    if(rp_property_get_type(token,env)==RP_TOKEN_X509)
+    if(rp_property_get_type(token,env) == RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
@@ -1322,16 +1322,16 @@ rampart_context_is_embedded_token_supported(
         return AXIS2_FALSE;
     }
 
-    if(rp_property_get_type(wss,env)==RP_WSS_WSS10)
+    if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS10)
     {
-        wss10 = rp_property_get_value(wss,env);
+        wss10 = (rp_wss10_t *)rp_property_get_value(wss,env);
     }
-    else if(rp_property_get_type(wss,env)==RP_WSS_WSS11)
+    else if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS11)
     {
-        wss11 = rp_property_get_value(wss,env);
+        wss11 = (rp_wss11_t *)rp_property_get_value(wss,env);
     }
 
-    if(rp_property_get_type(token,env)==RP_TOKEN_X509)
+    if(rp_property_get_type(token,env) == RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
@@ -1824,7 +1824,7 @@ rampart_context_get_token(
     if(!binding)
         return NULL;
 
-    if(rp_property_get_type(binding,env)==RP_BINDING_ASYMMETRIC)
+    if(rp_property_get_type(binding,env) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
         rp_asymmetric_binding_t *asym_binding = NULL;
         asym_binding = (rp_asymmetric_binding_t *)rp_property_get_value(binding,env);
@@ -1859,7 +1859,7 @@ rampart_context_get_token(
             return NULL;
     }
     /*In symmetric binding same tokens are used in the client and server sides.*/
-    else if(rp_property_get_type(binding,env)==RP_BINDING_SYMMETRIC)
+    else if(rp_property_get_type(binding,env) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         rp_symmetric_binding_t *sym_binding = NULL;
         rp_property_t *token = NULL;
@@ -1886,7 +1886,7 @@ rampart_context_get_token(
         else
             return NULL;
     }
-    else if(rp_property_get_type(binding,env)==RP_BINDING_TRANSPORT)
+    else if(rp_property_get_type(binding,env) == RP_PROPERTY_TRANSPORT_BINDING)
     {
         rp_transport_binding_t *transport_binding = NULL;
         transport_binding = (rp_transport_binding_t *)rp_property_get_value(binding,env);
@@ -1904,7 +1904,7 @@ rampart_context_check_is_derived_keys(
     const axutil_env_t *env,
     rp_property_t *token)
 {
-    if(rp_property_get_type(token,env)==RP_TOKEN_X509)
+    if(rp_property_get_type(token,env) == RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
@@ -2060,10 +2060,10 @@ rampart_context_get_encryption_user(
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_is_token_type_supported(
-    int token_type,
+    rp_property_type_t token_type,
     const axutil_env_t *env)
 {
-    if(token_type == RP_TOKEN_X509)
+    if(token_type == RP_PROPERTY_X509_TOKEN)
         return AXIS2_TRUE;
     else
     {
@@ -2078,7 +2078,7 @@ AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_is_token_include(
     rampart_context_t *rampart_context,
     rp_property_t *token,
-    int token_type,
+    rp_property_type_t token_type,
     axis2_bool_t server_side,
     axis2_bool_t is_inpath,
     const axutil_env_t *env)
@@ -2086,7 +2086,7 @@ rampart_context_is_token_include(
     axis2_char_t *inclusion = NULL;
     axis2_bool_t include = AXIS2_FALSE;
 
-    if(token_type == RP_TOKEN_X509)
+    if(token_type == RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
@@ -2132,7 +2132,7 @@ rampart_context_get_key_identifier(
 {
     axis2_char_t *identifier = NULL;
 
-    if(rp_property_get_type(token,env)==RP_TOKEN_X509)
+    if(rp_property_get_type(token,env) == RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);

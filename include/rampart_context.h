@@ -348,7 +348,7 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
-    AXIS2_EXTERN int AXIS2_CALL
+    AXIS2_EXTERN rp_property_type_t AXIS2_CALL
     rampart_context_get_binding_type(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
@@ -453,7 +453,7 @@ extern "C"
     rampart_context_is_token_include(
         rampart_context_t *rampart_context,
         rp_property_t *token,
-        int token_type,
+        rp_property_type_t token_type,
         axis2_bool_t server_side,
         axis2_bool_t is_inpath,
         const axutil_env_t *env);
@@ -473,7 +473,7 @@ extern "C"
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_is_token_type_supported(
-        int token_type,
+        rp_property_type_t token_type,
         const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL

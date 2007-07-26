@@ -77,7 +77,7 @@ rampart_enc_encrypt_message(
     oxs_key_t *session_key = NULL;
     oxs_asym_ctx_t *asym_ctx = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
-    int token_type = 0;
+    rp_property_type_t token_type;
     rp_property_t *token = NULL;
     axis2_char_t *enc_user = NULL;
     rampart_callback_t *password_callback = NULL;
