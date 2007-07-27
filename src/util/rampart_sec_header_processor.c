@@ -265,7 +265,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List has %d node reference(s)", axutil_array_list_size(reference_list, env));
 
     /*Get the algorithm to decrypt the sesison key*/
-    enc_mtd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,OXS_XENC);
+    enc_mtd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
     enc_asym_algo = oxs_token_get_encryption_method(env, enc_mtd_node);
     /*If the reference list > 0 then We have nodes to decrypt. Next step is to get the encrypted key*/
     /*Obtain the session key which is encrypted*/
