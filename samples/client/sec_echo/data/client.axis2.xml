@@ -1,4 +1,5 @@
 <axisconfig name="Axis2/C">
+    <!--THIS IS A SAMPLE AXIS2.XML (CLIENT'S) TO TRY RAMPART-C SAMPLES-->
     <!-- ================================================= -->
     <!-- Parameters -->
     <!-- ================================================= -->
@@ -115,6 +116,7 @@
         <!--phase name="userphase1"/-->
         <!--system predefined phase-->
         <phase name="MessageOut"/>
+        <phase name="Security"/>
     </phaseOrder>
     <phaseOrder type="INfaultflow">
         <!-- User defined phases could be added here -->
@@ -126,6 +128,7 @@
         <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
         <phase name="MessageOut"/>
+        <phase name="Security"/>
     </phaseOrder>
 </axisconfig>
 

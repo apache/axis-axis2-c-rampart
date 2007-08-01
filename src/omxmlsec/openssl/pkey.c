@@ -80,10 +80,9 @@ openssl_pkey_get_name(
 )
 {
     AXIS2_ENV_CHECK(env, NULL);
-
     return pkey->name ;
-
 }
+
 int AXIS2_CALL
 openssl_pkey_get_size(
     const openssl_pkey_t *pkey,
@@ -91,9 +90,9 @@ openssl_pkey_get_size(
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return sizeof(pkey->key) ;
 }
+
 int AXIS2_CALL
 openssl_pkey_get_type(
     const openssl_pkey_t *pkey,
@@ -101,7 +100,6 @@ openssl_pkey_get_type(
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return pkey->type ;
 }
 

@@ -7,7 +7,7 @@
 
     <outflow>
         <handler name="RampartOutHandler" class="mod_rampart">
-            <order phase="MessageOut"/>
+            <order phase="Security"/>
         </handler>
     </outflow>
 

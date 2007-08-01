@@ -21,7 +21,7 @@
 #include <oxs_token_encrypted_data.h>
 #include <axiom_attribute.h>
 #include <axiom_element.h>
-
+#include <oxs_utility.h>
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
@@ -65,7 +65,9 @@ oxs_token_build_encrypted_data_element(const axutil_env_t *env,
     else
     {
         /*TODO Get a unique value for this*/
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, "EncDataId-54321", wsu_ns_obj);
+        axis2_char_t *id = NULL;
+        id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
+        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, wsu_ns_obj);
         ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
     }
 

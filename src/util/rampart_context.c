@@ -973,8 +973,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
         axutil_array_list_t *soap_header_blocks = NULL;
         int i = 0;
         soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header,env,namespace);
-        if(!soap_header_blocks)
-        {
+        if(!soap_header_blocks){
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Header cannot find with namespace %s",namespace);
             return AXIS2_SUCCESS;
         }

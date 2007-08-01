@@ -37,6 +37,16 @@ extern "C"
 {
 #endif
 
+    /**
+     * Adds an attribute to a particular node
+     * @param env Environment. MUST NOT be NULL
+     * @param node the node where the attibute will be added
+     * @param attribute_ns the the ns_prefix of the attribute
+     * @param attribute_ns_uri the uri of the attribute
+     * @param attribute the localname  of the attribute
+     * @param value the value of the attribute
+     * @return  AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_axiom_add_attribute(const axutil_env_t *env,
                             axiom_node_t* node,
@@ -44,6 +54,15 @@ extern "C"
                             axis2_char_t* attribute_ns_uri,
                             axis2_char_t* attribute,
                             axis2_char_t* value);
+    /**
+     * Adds an attribute to a particular node
+     * @param env Environment. MUST NOT be NULL,
+     * @param parent the root element defining start of the search
+     * @param localname the local part of the qname
+     * @param ns_uri uri part of the qname
+     * @param prefix the prefix part of the qname
+     * @return the number of children found
+     */
 
     AXIS2_EXTERN int AXIS2_CALL
     oxs_axiom_get_number_of_children_with_qname(const axutil_env_t *env,
@@ -54,11 +73,24 @@ extern "C"
 
     /**
      * Traverse thru the node and its children. Check if the localname is equal to the given name
-     * */
+     * @param env Environment. MUST NOT be NULL,
+     * @param node the node to be searched
+     * @param localname the local name of the node to be searched
+     * @return the node if found, else NULL
+     */
+
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_axiom_get_node_by_local_name(const axutil_env_t *env,
                                      axiom_node_t *node,
                                      axis2_char_t *local_name);
+    /**
+     * Traverse thru the node and its children. Check if the node has a particular id as in @attr
+     * @param env Environment. MUST NOT be NULL,
+     * @param node the node to be searched
+     * @param attr the attribute name of the node
+     * @param val the attribute value of the node
+     * @return the node if found, else NULL
+     */
 
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_axiom_get_node_by_id(const axutil_env_t *env,
@@ -66,6 +98,14 @@ extern "C"
                              axis2_char_t *attr,
                              axis2_char_t *val);
 
+    /**
+     * Traverse thru the node and its children. Check if the node has a particular id as in @attr
+     * @param env Environment. MUST NOT be NULL,
+     * @param node the node to be searched
+     * @param attr the attribute name of the node
+     * @param val the attribute value of the node
+     * @return the node if found, else NULL
+     */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
             axiom_node_t *node,
