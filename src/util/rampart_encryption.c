@@ -96,11 +96,16 @@ rampart_enc_encrypt_message(
 
     signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
 
-    /*status = rampart_context_get_nodes_to_encrypt(rampart_context,env,soap_envelope,nodes_to_encrypt);*/
-
     status = rampart_enc_get_nodes_to_encrypt(rampart_context, env, soap_envelope, nodes_to_encrypt);
 
-    if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_encrypt, env)==0))
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Error occured in Adding Encrypted parts..");
+        axutil_array_list_free(nodes_to_encrypt, env);
+        nodes_to_encrypt = NULL;
+        return AXIS2_FAILURE;
+    }
+    if((axutil_array_list_size(nodes_to_encrypt, env)==0))
     {
         if(!signature_protection)
         {    

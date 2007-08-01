@@ -153,8 +153,15 @@ rampart_sig_sign_message(const axutil_env_t *env,
 
     /*  status = rampart_context_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);*/
     status = rampart_sig_get_nodes_to_sign(rampart_context,env,soap_envelope,nodes_to_sign);
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Error occured in Adding signed parts.");
+        axutil_array_list_free(nodes_to_sign, env);
+        nodes_to_sign = NULL;
+        return AXIS2_FAILURE;
+    }
 
-    if((status!=AXIS2_SUCCESS)||(axutil_array_list_size(nodes_to_sign,env)==0))
+    if((axutil_array_list_size(nodes_to_sign,env)==0))
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] No parts specified or specified parts can't be found for Signature.");
         return AXIS2_SUCCESS;

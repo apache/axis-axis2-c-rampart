@@ -524,7 +524,7 @@ rampart_shp_process_reference_list(
                         ref = oxs_token_get_reference(env, str_child_node);
                         ref_id = axutil_string_substring_starting_at(axutil_strdup(env, ref), 1);
 
-                        encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "wsu:Id", ref_id);
+                        encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id);
                         if(encrypted_key_node)
                         {
                             ref_list_node = axiom_node_detach(ref_list_node, env); 
