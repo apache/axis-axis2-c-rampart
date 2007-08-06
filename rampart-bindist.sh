@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "If you do not need to build Rampart/C %sh rampart-bindist nobuild"
-BIN_DIR=rampartc-bin-0.90-linux
+BIN_DIR=rampartc-bin-1.0.0-linux
+INCL_V_DIR=rampart-1.0.0
 TAR_GZ=$BIN_DIR.tar.gz
 MD5=$TAR_GZ.md5
 PWDIR=$PWD
@@ -33,6 +34,7 @@ mkdir $BIN_DIR/samples
 mkdir $BIN_DIR/samples/secpolicy
 mkdir $BIN_DIR/samples/server
 mkdir $BIN_DIR/include
+mkdir $BIN_DIR/include/$INCL_V_DIR
 
 echo "Copy related files to $BIN_DIR"
 #Copy other related files
@@ -55,11 +57,10 @@ cp -r samples/secpolicy/* $BIN_DIR/samples/secpolicy/
 cp -r $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/samples/
 cp -r $AXIS2C_HOME/services/sec_echo $BIN_DIR/samples/server/
 cp samples/server/sec_echo/services.xml $BIN_DIR/samples/server/sec_echo/services.xml
-cp samples/secpolicy/scenario7/client-outgoing-secpolicy.xml $BIN_DIR/samples/server/sec_echo/outgoing-secpolicy.xml
-cp samples/secpolicy/scenario7/client-incoming-secpolicy.xml $BIN_DIR/samples/server/sec_echo/incoming-secpolicy.xml
+cp samples/server/sec_echo/server_axis2.xml $BIN_DIR/samples/server/sec_echo/server_axis2.xml
 
 echo "Copy headers"
-cp include/*.h $BIN_DIR/include
+cp include/*.h $BIN_DIR/include/$INCL_V_DIR
 
 echo "Removing garbage in $BIN_DIR"
 cd $BIN_DIR

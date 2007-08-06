@@ -128,7 +128,6 @@
         <!--phase name="RMPhase"/-->
         <!--phase name="userphase1"/-->
         <phase name="MessageOut"/>
-        <phase name="Security"/>
     </phaseOrder>
 </axisconfig>
 
