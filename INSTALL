@@ -68,35 +68,24 @@ You must have openssl installed in you system.
 
 Configuring:
 You can engage Rampart/C in global level or in service level.
-Just add following entry either to axis2.xml(gloabl level) or in services.xml(service level).
+Add following entry either to axis2.xml(gloabl level) or in services.xml(service level).
     <module ref="rampart"/>
 
-Apart from that you must define security policies for outgoing messages and incoming messages.
-This can be done adding parameters as follows in the same descriptor file that you engaged rampart. 
-    <parameter name="OutflowSecurityPolicy">/your/path/to/outgoing-secpolicy.xml</parameter>
-    <parameter name="InflowSecurityPolicy">/your/path/to/incoming-secpolicy.xml</parameter>
-    
-NOTE: There are several samples security policy xml files for different scenarios under samples/secpolicy/
-        Please refer the README file for more information
+Then add following Security phase to the phase order in the outflow in the axis2.xml.
+    <phaseOrder type="outflow">
+        <phase name="MessageOut"/>
+        <phase name="Security"/>
+    </phaseOrder>
 
-The final configuration setup should be as follows
-CLIENT SIDE:
-axis2.xml
-        |-------------------> <module ref="rampart"/>
-        |-------------------> <parameter name="OutflowSecurityPolicy">/../../outgoing-secpolicy.xml</parameter>
-        |-------------------> <parameter name="InflowSecurityPolicy">/../../incoming-secpolicy.xml</parameter>
-
-SERVER SIDE:
-services.xml(or axis2.xml)
-        |-------------------> <module ref="rampart"/>
-        |-------------------> <parameter name="OutflowSecurityPolicy">/../../outgoing-secpolicy.xml</parameter>
-        |-------------------> <parameter name="InflowSecurityPolicy">/../../incoming-secpolicy.xml</parameter>
-
+To specify policies in the client side, please drop your policy.xml to the same directory as in axis2.xml
+To specify policies in the server side, please add policy assertions to the services.xml.
+Please find such sample policy files under samples/secpolicy/scenarioX. 
+Note that you must replace both the client and service policies for a particular scenario.
 
 Trying out the samples on Win32
 ===============================
 
-There are 9 scenarios that you can try out with the sec_echo sample of the Rampart/C distribution.
+There are several scenarios that you can try out with the sec_echo sample of the Rampart/C distribution.
 You can find more about it from the README.TXT file inside samples\secpolicy folder.
 
 1. Set the AXIS2C_HOME envirionment variable to direct to your Axis2/C Installation.
@@ -105,16 +94,9 @@ You can find more about it from the README.TXT file inside samples\secpolicy fol
 2. Run the deploy_client_repo.bat file found in the samples\client\sec_echo folder.
 	This will create an axis2 client repository for the samples in the AXIS2C_HOME\clientrepo directory.
 
-3. Set the outflow and inflow secpolicy parameters in axis2.xml of the client repo, according to the scenario that you are running.
-    e.g.
-	<parameter name="OutflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\client-outgoing-secpolicy.xml</parameter> 
-	<parameter name="InflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\client-incoming-secpolicy.xml</parameter> 
+To specify policies in the client side, please drop your policy.xml to the same directory as in axis2.xml
+To specify policies in the server side, please add policy assertions to the services.xml.
+Please find such sample policy files under samples/secpolicy/scenarioX. Note that you must replace both the client and service policies for a particular scenario.
 
-4. Set the outflow and inflow secpolicy parameters in services.xml of the sec_echo service in the axis2 server repo.
-    e.g.
-	<parameter name="OutflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\service-outgoing-secpolicy.xml</parameter> 
-	<parameter name="InflowSecurityPolicy">D:\rampart-bin-0.90-win32\samples\secpolicy\scenario1\service-incoming-secpolicy.xml</parameter> 
-
-NOTE: In steps 3 & 4 you have to use the corresponding scenario files in each parameter. For example if you are running the sample scenario 3, all the files should be from scenario 3.
 
 Thank you for using Rampart/C
