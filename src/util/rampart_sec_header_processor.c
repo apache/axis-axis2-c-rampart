@@ -610,9 +610,9 @@ rampart_shp_process_signature(
             sig_mtd = oxs_token_get_signature_method(env, cur_node);
             if(sig_mtd)
             {
-                if(axutil_strcmp(sig_mtd_pol,sig_mtd)!=0)
+                if(axutil_strcmp(sig_mtd_pol, sig_mtd)!=0)
                 {
-                    AXIS2_LOG_INFO(env->log,"[rampart][shp] Signature method in the message mismatch with policy.");
+                    AXIS2_LOG_INFO(env->log,"[rampart][shp] Signature method mismatch (Policy =%s, Message =%s).", sig_mtd_pol, sig_mtd);
                     return AXIS2_FAILURE;
                 }
             }
@@ -632,9 +632,9 @@ rampart_shp_process_signature(
                 digest_mtd = oxs_token_get_digest_method(env, digest_mtd_node);
                 if(digest_mtd)
                 {
-                    if(axutil_strcmp(digest_mtd_pol,digest_mtd)!=0)
+                    if(axutil_strcmp(digest_mtd_pol, digest_mtd)!=0)
                     {
-                        AXIS2_LOG_INFO(env->log,"[rampart][shp]Digest method is mismatch with policy.");
+                        AXIS2_LOG_INFO(env->log,"[rampart][shp]Digest method mismatch  (Policy =%s, Message =%s).", digest_mtd_pol, digest_mtd);
                         return AXIS2_FAILURE;
                     }
                 }
@@ -714,7 +714,7 @@ rampart_shp_process_signature(
                     {
                         if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_EMBEDDED,env))
                         {
-                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
+                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_EMBEDDED);
                             return AXIS2_FAILURE;
                         }
                         cert = oxs_x509_cert_create(env);
@@ -724,7 +724,7 @@ rampart_shp_process_signature(
                     {
                         if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_KEY_IDENTIFIER,env))
                         {
-                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
+                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference mismatch (%s, %s)", str_child_name, OXS_NODE_KEY_IDENTIFIER);
                             return AXIS2_FAILURE;
                         }
                         cert = get_receiver_x509_cert(env,rampart_context);
@@ -734,7 +734,7 @@ rampart_shp_process_signature(
                     {
                         if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_ISSUER_SERIAL,env))
                         {
-                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
+                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference mismatch (%s, %s)", str_child_name, OXS_NODE_X509_DATA);
                             return AXIS2_FAILURE;
                         }
                         cert = get_receiver_x509_cert(env,rampart_context);
@@ -742,7 +742,7 @@ rampart_shp_process_signature(
                     }
                     else
                     {
-                        AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info is mismatch with policy");
+                        AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference %s not supported ", str_child_name);
                         return AXIS2_FAILURE;
                     }
                 }
