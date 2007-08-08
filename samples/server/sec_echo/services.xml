@@ -65,7 +65,7 @@
                 </sp:Wss10>
                 <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                     <sp:Body/>
-                </sp:EncryptedParts-->
+                </sp:EncryptedParts>
                 <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                     <sp:Body/>
                 </sp:SignedParts>
