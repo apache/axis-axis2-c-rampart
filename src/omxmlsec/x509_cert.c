@@ -97,7 +97,7 @@ oxs_x509_cert_free(oxs_x509_cert_t *x509_cert,
         AXIS2_FREE(env->allocator, x509_cert->data );
         x509_cert->data =NULL;
     }
-
+    /*Free public key???*/
     return AXIS2_SUCCESS;
 }
 

@@ -100,7 +100,7 @@ openssl_pem_read_pkey(const axutil_env_t *env,
     }else{/*Type unknown*/
         /*Try to read the prv key first*/
         *pkey = PEM_read_bio_PrivateKey(bio, NULL, 0 , password);
-        if (!*pkey)
+        if(!*pkey)
         {
             /*If prv key is not found then read the public key*/
             ret  = BIO_reset(bio);

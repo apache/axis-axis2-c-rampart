@@ -34,6 +34,7 @@ int main(int argc, char** argv)
     const axis2_char_t *address = NULL;
     const axis2_char_t *client_home = NULL;
     axis2_char_t *file_name = NULL;
+    axis2_char_t *file_name2 = NULL;
     axis2_endpoint_ref_t* endpoint_ref = NULL;
     axis2_options_t *options = NULL;
     axis2_svc_client_t* svc_client = NULL;
@@ -94,18 +95,23 @@ int main(int argc, char** argv)
     if(client_home)
     {
         file_name = axutil_stracat(env, client_home, AXIS2_PATH_SEP_STR);
-        file_name = axutil_stracat(env, file_name, "policy.xml" );
+        file_name2 = axutil_stracat(env, file_name, "policy.xml" );
+        AXIS2_FREE(env->allocator, file_name);
+        file_name = NULL;        
     }else{
         printf("Client Home not Specified\n");
         printf("echo client invoke FAILED!\n");
         return 0;
     }
     /*Create the policy, from file*/   
-    policy = neethi_util_create_policy_from_file(env, file_name);
-
+    policy = neethi_util_create_policy_from_file(env, file_name2);
+    if(file_name2){
+        AXIS2_FREE(env->allocator, file_name2);
+        file_name2 = NULL;
+    }
     if(!policy)
     {
-        printf("\nPolicy creation failed from the file. %s\n", file_name);
+        printf("\nPolicy creation failed from the file. %s\n", file_name2);
         /*printf("echo client invoke FAILED!\n");
         return 0;*/
     }

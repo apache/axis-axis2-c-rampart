@@ -380,6 +380,8 @@ rampart_sig_sign_message(const axutil_env_t *env,
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Message signing failed.");
         return AXIS2_FAILURE;
     }
+    /*Free sig ctx*/
+    oxs_sign_ctx_free(sign_ctx, env);
     /*Now we must build the Key Info element*/
 
     key_info_node = oxs_token_build_key_info_element(env,sig_node);

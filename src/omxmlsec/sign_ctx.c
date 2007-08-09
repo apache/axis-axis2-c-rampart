@@ -276,10 +276,28 @@ oxs_sign_ctx_free(oxs_sign_ctx_t *sign_ctx,
         sign_ctx->sig_val = NULL;
     }
 
-    sign_ctx->sign_parts = NULL;
-    sign_ctx->certificate = NULL;
-    sign_ctx->prv_key = NULL;
-    sign_ctx->pub_key = NULL;
+    if(sign_ctx->prv_key)
+    {
+        openssl_pkey_free(sign_ctx->prv_key, env);
+        sign_ctx->prv_key = NULL;
+    }
+    
+    if(sign_ctx->pub_key)
+    {
+        openssl_pkey_free(sign_ctx->pub_key, env);
+        sign_ctx->pub_key = NULL;
+    }
+
+    if(sign_ctx->sign_parts)
+    {    
+        axutil_array_list_free(sign_ctx->sign_parts, env);
+        sign_ctx->sign_parts = NULL;
+    }
+    
+    if(sign_ctx->certificate){
+        oxs_x509_cert_free(sign_ctx->certificate, env);
+        sign_ctx->certificate = NULL;
+    }
     sign_ctx->operation = OXS_SIGN_OPERATION_NONE;
 
     AXIS2_FREE(env->allocator,  sign_ctx);

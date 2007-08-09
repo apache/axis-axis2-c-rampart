@@ -278,6 +278,7 @@ rampart_enc_encrypt_message(
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
+    oxs_asym_ctx_free(asym_ctx, env);
     return AXIS2_SUCCESS;
 }
 
@@ -408,7 +409,10 @@ rampart_enc_encrypt_signature(
 
     enc_data_node = oxs_token_build_encrypted_data_element(env, sec_node, OXS_TYPE_ENC_ELEMENT, id );
     enc_status = oxs_xml_enc_encrypt_node(env, enc_ctx, node_to_enc, &enc_data_node);
-
+    
+    /*FREE*/
+    oxs_ctx_free(enc_ctx, env);
+   
     if(enc_status != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
@@ -440,7 +444,9 @@ rampart_enc_encrypt_signature(
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
         return AXIS2_FAILURE;
     }
-        
-
+    
+    axutil_array_list_free(id_list, env);
+    id_list = NULL;
+    
     return AXIS2_SUCCESS;
 }

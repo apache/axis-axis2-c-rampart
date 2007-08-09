@@ -273,6 +273,8 @@ oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
                   "Cannot find child %s of %s", local_name, parent_name);
         return NULL;
     }
+    AXIS2_FREE(env->allocator, parent_name);
+    parent_name = NULL;
     return node;
 }
 
