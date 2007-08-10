@@ -130,9 +130,7 @@ mod_rampart_samples_sec_echo:
 	      /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\*.obj axutil.lib axiom.lib neethi.lib \
 	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
-	
-	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\deploy_client_repo.bat $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\
-	
+		
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\data\client.axis2.xml $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data\
 	
 mod_rampart_samples_credential_provider:
@@ -155,6 +153,7 @@ mod_rampart_copy_keys:
 
 mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
+	copy deploy_client_repo.bat $(RAMPART_DISTDIR)
 
 copy_sec_policy:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\secpolicy $(RAMPART_DISTDIR)\bin\samples\secpolicy
@@ -188,6 +187,7 @@ dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy
 deploy:
 	chdir $(RAMPART_DISTDIR)
 	deploy_rampart.bat
+	deploy_client_repo.bat
 	chdir .\..\win32
 
 install: dist deploy
