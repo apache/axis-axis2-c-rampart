@@ -50,7 +50,8 @@ extern "C" {
      */
     AXIS2_EXTERN void* AXIS2_CALL
     rampart_load_module(const axutil_env_t *env,
-                        axis2_char_t *module_name);
+                        axis2_char_t *module_name,
+                        axutil_param_t **param);
 
     /**
      * Load the credentials module

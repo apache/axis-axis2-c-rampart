@@ -44,7 +44,8 @@
 
 AXIS2_EXTERN void* AXIS2_CALL
 rampart_load_module(const axutil_env_t *env,
-                    axis2_char_t *module_name)
+                    axis2_char_t *module_name,
+                    axutil_param_t **param)
 {
     axutil_dll_desc_t *dll_desc = NULL;
     axutil_param_t *impl_info_param = NULL;
@@ -53,10 +54,13 @@ rampart_load_module(const axutil_env_t *env,
     AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Trying to load module = %s", module_name);
     dll_desc = axutil_dll_desc_create(env);
     axutil_dll_desc_set_name(dll_desc, env, module_name);
-    impl_info_param = axutil_param_create(env, NULL, NULL);
-    axutil_param_set_value(impl_info_param, env, dll_desc);
+    impl_info_param = axutil_param_create(env, NULL, dll_desc);
+    /*axutil_param_set_value(impl_info_param, env, dll_desc);*/
+    axutil_param_set_value_free(impl_info_param, env, axutil_dll_desc_free_void_arg);
     axutil_class_loader_init(env);
     ptr = axutil_class_loader_create_dll(env, impl_info_param);
+    
+    *param = impl_info_param;
 
     if (!ptr)
     {
@@ -85,12 +89,16 @@ rampart_load_credentials_module(const axutil_env_t *env,
                                 axis2_char_t *cred_module_name)
 {
     rampart_credentials_t *cred = NULL;
+    axutil_param_t *param = NULL;
 
-    cred = (rampart_credentials_t*)rampart_load_module(env, cred_module_name);
+    cred = (rampart_credentials_t*)rampart_load_module(env, cred_module_name, &param);
     if (!cred)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the credentials  module %s. ERROR", cred_module_name);
         return AXIS2_FAILURE;
+    }
+    if(param){
+        cred->param = param;
     }
 
     return cred;
@@ -101,15 +109,40 @@ rampart_load_auth_module(const axutil_env_t *env,
                          axis2_char_t *auth_module_name)
 {
     rampart_authn_provider_t *authp = NULL;
+    axutil_param_t *param = NULL;
 
-    authp = (rampart_authn_provider_t*)rampart_load_module(env, auth_module_name);
+    authp = (rampart_authn_provider_t*)rampart_load_module(env, auth_module_name, &param);
     if (!authp)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the authentication module %s. ERROR", auth_module_name);
         return AXIS2_FAILURE;
     }
+    if(param){
+        authp->param = param;
+    }
 
     return authp;
+}
+
+
+AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
+rampart_load_pwcb_module(const axutil_env_t *env,
+                         axis2_char_t *callback_module_name)
+{
+    rampart_callback_t *cb = NULL;
+    axutil_param_t *param = NULL;
+
+    cb = (rampart_callback_t*)rampart_load_module(env, callback_module_name, &param);
+    if (!cb)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the callback module %s. ERROR", callback_module_name);
+        return AXIS2_FAILURE;
+    }
+    if(param){
+        cb->param = param;
+    }
+    return cb;
+
 }
 
 AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
@@ -137,24 +170,6 @@ rampart_authenticate_un_pw(const axutil_env_t *env,
 
     return auth_status;
 }
-
-AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
-rampart_load_pwcb_module(const axutil_env_t *env,
-                         axis2_char_t *callback_module_name)
-{
-    rampart_callback_t *cb = NULL;
-
-    cb = (rampart_callback_t*)rampart_load_module(env, callback_module_name);
-    if (!cb)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the callback module %s. ERROR", callback_module_name);
-        return AXIS2_FAILURE;
-    }
-
-    return cb;
-
-}
-
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_callback_password(const axutil_env_t *env,

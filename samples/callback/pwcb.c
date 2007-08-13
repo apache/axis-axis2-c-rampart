@@ -25,6 +25,12 @@
 #include <axis2_svc_skeleton.h>
 #include <axutil_string.h>
 
+axis2_status_t AXIS2_CALL
+my_free_function(rampart_callback_t *rcb,
+        const axutil_env_t *env)
+{
+    return AXIS2_SUCCESS;
+}
 
 axis2_char_t* AXIS2_CALL
 get_sample_password(rampart_callback_t *rcb,
@@ -83,6 +89,7 @@ get_sample_password(rampart_callback_t *rcb,
     return pw;
 };
 
+
 /**
  * Following block distinguish the exposed part of the dll.
  */
@@ -101,6 +108,7 @@ axis2_get_instance(rampart_callback_t **inst,
     /*assign function pointers*/
 
     rcb->ops->callback_password = get_sample_password;
+    rcb->ops->free = my_free_function;
 
     *inst = rcb;
 

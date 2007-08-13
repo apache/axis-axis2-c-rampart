@@ -14,7 +14,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
+#include <axutil_utils_defines.h>
+#include <axis2_defines.h>
+#include <axutil_param.h>
 #ifndef RAMPART_CALLBACK_H
 #define RAMPART_CALLBACK_H
 
@@ -84,6 +86,7 @@ extern "C"
     struct rampart_callback
     {
         rampart_callback_ops_t *ops;
+        axutil_param_t *param;
     };
 
     /*************************** Function macros **********************************/

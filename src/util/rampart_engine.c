@@ -278,7 +278,7 @@ set_rampart_user_properties(
 
     if(pwcb_module_name)
     {
-        password_callback_module = rampart_load_pwcb_module(env,pwcb_module_name);
+        password_callback_module = rampart_load_pwcb_module(env, pwcb_module_name);
         if(password_callback_module)
             rampart_context_set_password_callback(rampart_context,env,password_callback_module);
     }

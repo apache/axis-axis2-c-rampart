@@ -47,7 +47,7 @@ fi
 dnl Checks for libraries.
 AC_CHECK_LIB(dl, dlopen)
 
-CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE -g"
+CFLAGS="$CFLAGS -D_LARGEFILE64_SOURCE -g3"
 if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS -ansi -Wall -Werror -Wno-implicit-function-declaration"
     #CFLAGS="$CFLAGS -ansi -Wall -Wno-implicit-function-declaration"

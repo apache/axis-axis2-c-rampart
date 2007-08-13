@@ -23,7 +23,7 @@
 #include <axutil_env.h>
 #include <axutil_utils.h>
 #include <axis2_msg_ctx.h>
-
+#include <axutil_param.h>
 /**
   * @file rampart_credentials.h
   * @brief The credentials interface for rampart. To retrieve a username and password pair.
@@ -88,6 +88,7 @@ extern "C"
     struct rampart_credentials
     {
         rampart_credentials_ops_t *ops;
+        axutil_param_t *param;
     };
 
     /*************************** Function macros **********************************/

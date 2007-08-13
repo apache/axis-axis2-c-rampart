@@ -184,6 +184,7 @@ AXIS2_EXTERN void AXIS2_CALL
 rampart_context_free(rampart_context_t *rampart_context,
                      const axutil_env_t *env)
 {
+    axis2_status_t status = AXIS2_FAILURE;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     if(rampart_context)
@@ -199,6 +200,39 @@ rampart_context_free(rampart_context_t *rampart_context,
             rp_secpolicy_free(rampart_context->secpolicy,env);
             rampart_context->secpolicy = NULL;
         }
+    
+        if(rampart_context->password_callback_module)
+        {
+            axutil_param_t *param = NULL;
+            param = rampart_context->password_callback_module->param;
+            if(param){
+                /*We actually free the dll_desc, which is set as the value of the axutil parameter.*/
+                axutil_dll_desc_t *dll_desc_l = NULL;
+                dll_desc_l = axutil_param_get_value(param, env);
+                status = axutil_class_loader_delete_dll(env, dll_desc_l);
+                dll_desc_l = NULL;
+            }
+            /*User specific free logic*/
+            /*RAMPART_CALLBACK_FREE(rampart_context->password_callback_module , env);*/
+            rampart_context->password_callback_module = NULL;
+        }
+        
+        if(rampart_context->authn_provider)
+        {
+            axutil_param_t *param = NULL;
+            param = rampart_context->authn_provider->param;
+            if(param){
+                /*We actually free the dll_desc, which is set as the value of the axutil parameter.*/
+                axutil_dll_desc_t *dll_desc_l = NULL;
+                dll_desc_l = axutil_param_get_value(param, env);
+                status = axutil_class_loader_delete_dll(env, dll_desc_l);
+                dll_desc_l = NULL;
+            }
+            /*User specific free logic*/
+            /*RAMPART_AUTHN_PROVIDER_FREE(rampart_context->authn_provider, env);*/
+            rampart_context->authn_provider = NULL;
+        }
+        
         AXIS2_FREE(env->allocator,rampart_context);
         rampart_context = NULL;
     }

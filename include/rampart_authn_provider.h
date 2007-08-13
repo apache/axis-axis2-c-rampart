@@ -14,6 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+#include <axutil_param.h>
 
 #ifndef RAMPART_AUTHN_PROVIDER_H
 #define RAMPART_AUTHN_PROVIDER_H
@@ -123,6 +124,7 @@ extern "C"
     struct rampart_authn_provider
     {
         rampart_authn_provider_ops_t *ops;
+        axutil_param_t *param;
     };
 
     /*************************** Function macros **********************************/
