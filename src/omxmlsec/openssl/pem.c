@@ -108,6 +108,7 @@ openssl_pem_read_pkey(const axutil_env_t *env,
         }
     }
 
+    /*Reset before FREE*/
     ret = BIO_reset(bio);
     ret = BIO_free(bio);
     bio = NULL;

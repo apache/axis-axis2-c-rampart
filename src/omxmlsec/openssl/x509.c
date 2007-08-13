@@ -92,9 +92,11 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
                            axis2_char_t *filename,
                            X509 **cert)
 {
-    BIO *in;
-
-    if ((in=BIO_new_file(filename,"r")) == NULL)
+    BIO *in = NULL;
+    
+    in = BIO_new_file(filename,"r");
+    
+    if (!in)
     {
         /*oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
                 "Error reading the file %s", filename);*/
