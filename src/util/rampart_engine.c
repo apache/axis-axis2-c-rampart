@@ -150,8 +150,8 @@ rampart_engine_build_configuration(
             AXIS2_LOG_INFO(env->log, "[rampart][engine] axis2 context is NULL ");
             return NULL;
         }
-        property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
-                   AXIS2_FALSE, (void *)rampart_context_free, rampart_context);
+        property = axutil_property_create_with_args(env, /*AXIS2_SCOPE_APPLICATION,*/
+                   AXIS2_SCOPE_REQUEST ,AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
         axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
 
     }
