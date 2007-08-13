@@ -370,7 +370,12 @@ openssl_x509_get_info(const axutil_env_t *env,
     }
     n = BIO_get_mem_data(out, &data);
     result = axutil_strndup( env, data, n);
+    
     BIO_free(out);
+    if(data){
+    /*    AXIS2_FREE(env->allocator, data);
+        data = NULL;*/
+    }
     out = NULL;
 
     return result;

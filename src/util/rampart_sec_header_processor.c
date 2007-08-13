@@ -429,6 +429,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
+        
 
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
     }

@@ -255,7 +255,7 @@ oxs_asym_ctx_set_private_key(
 
     if (asym_ctx->private_key)
     {
-        /*openssl_pkey_free(asym_ctx->private_key, env);*/
+        openssl_pkey_free(asym_ctx->private_key, env);
         asym_ctx->private_key = NULL;
     }
     asym_ctx->private_key = private_key;
@@ -286,6 +286,7 @@ oxs_asym_ctx_create(const axutil_env_t *env)
     asym_ctx->st_ref_pattern = NULL;
     asym_ctx->operation = -1;
     asym_ctx->certificate = NULL;
+    asym_ctx->private_key = NULL;
 
     return asym_ctx;
 }

@@ -57,6 +57,8 @@ load_sample_xml(const axutil_env_t *env,
     if (!doc) printf("\n doc is NULL");
     tmpl = axiom_document_build_all(doc, env);
 
+    axiom_stax_builder_free_self(builder, env);
+    builder = NULL;
     /*    tmpl = axiom_document_get_root_element(doc, env);*/
     if (!tmpl) printf("\n tmpl is NULL");
     return tmpl;
