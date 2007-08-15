@@ -81,30 +81,30 @@
         <!-- End system pre defined phases       -->
         <!-- After PostDispatch phase, module or service author can add any phase as required  -->
         <!-- User defined phases could be added here -->
-        <!--phase name="userphase1"/-->
-        <!--phase name="RMPhase"/-->
-        <!--phase name="SavanPhase"/-->
+        <phase name="userphase1"/>
+        <phase name="RMPhase"/>
+        <phase name="SavanPhase"/>
     </phaseOrder>
     <phaseOrder type="outflow">
         <!-- User defined phases could be added here -->
-        <!--phase name="RMPhase"/-->
-        <!--phase name="SavanPhase"/-->
-        <!--phase name="userphase1"/-->
+        <phase name="RMPhase"/>
+        <phase name="SavanPhase"/>
+        <phase name="userphase1"/>
         <!--system predefined phase-->
         <phase name="MessageOut"/>
         <phase name="Security"/>
     </phaseOrder>
     <phaseOrder type="INfaultflow">
         <!-- User defined phases could be added here -->
-        <!--phase name="userphase1"/-->
-        <!--phase name="RMPhase"/-->
-        <!--phase name="SavanPhase"/-->
+        <phase name="userphase1"/>
+        <phase name="RMPhase"/>
+        <phase name="SavanPhase"/>
     </phaseOrder>
     <phaseOrder type="Outfaultflow">
         <!-- User defined phases could be added here -->
-        <!--phase name="RMPhase"/-->
-        <!--phase name="SavanPhase"/-->
-        <!--phase name="userphase1"/-->
+        <phase name="RMPhase"/>
+        <phase name="SavanPhase"/>
+        <phase name="userphase1"/>
         <phase name="MessageOut"/>
     </phaseOrder>
 </axisconfig>
