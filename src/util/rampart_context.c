@@ -982,46 +982,46 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     axiom_soap_envelope_t *soap_envelope,
     axutil_array_list_t *nodes_to_encrypt_or_sign)
 {
-    axis2_char_t *namespace = NULL;
+    axis2_char_t *nspace = NULL;
     axis2_char_t *local_name = NULL;
     axiom_soap_header_t *soap_header = NULL;
     axiom_node_t *header_node = NULL;
 
-    soap_header = axiom_soap_envelope_get_header(soap_envelope,env);
+    soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
     if(!soap_header)
         return AXIS2_FAILURE;
 
-    namespace = (axis2_char_t *) rp_header_get_namespace(header,env);
-    if(!namespace)
+    nspace = (axis2_char_t *) rp_header_get_namespace(header, env);
+    if(!nspace)
         return AXIS2_FAILURE;
 
-    if(axutil_strcmp(namespace,RP_SECURITY_NS)==0)
+    if(axutil_strcmp(nspace, RP_SECURITY_NS)==0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace headers");
         return AXIS2_FAILURE;
     }
 
-    local_name = (axis2_char_t*) rp_header_get_name(header,env);
+    local_name = (axis2_char_t*) rp_header_get_name(header, env);
     if(!local_name)
     {
         axutil_array_list_t *soap_header_blocks = NULL;
         int i = 0;
-        soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header,env,namespace);
+        soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, nspace);
         if(!soap_header_blocks){
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Header cannot find with namespace %s",namespace);
+            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Header cannot find with namespace %s", nspace);
             return AXIS2_SUCCESS;
         }
-        for(i=0 ; i<axutil_array_list_size(soap_header_blocks,env); i++)
+        for(i=0 ; i<axutil_array_list_size(soap_header_blocks, env); i++)
         {
             axiom_soap_header_block_t *header_block = NULL;
             axiom_node_t *node = NULL;
-            header_block = (axiom_soap_header_block_t *)axutil_array_list_get(soap_header_blocks,env,i);
+            header_block = (axiom_soap_header_block_t *)axutil_array_list_get(soap_header_blocks, env, i);
             if(header_block)
             {
-                node = axiom_soap_header_block_get_base_node(header_block,env);
+                node = axiom_soap_header_block_get_base_node(header_block, env);
                 if(node)
                 {
-                    axutil_array_list_add(nodes_to_encrypt_or_sign,env,node);
+                    axutil_array_list_add(nodes_to_encrypt_or_sign, env, node);
                 }
             }
         }/*eof for*/
@@ -1035,10 +1035,10 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     else
     {
         axiom_node_t *ret_node = NULL;
-        header_node = axiom_soap_header_get_base_node(soap_header,env);
+        header_node = axiom_soap_header_get_base_node(soap_header, env);
         if(header_node)
         {
-            ret_node = oxs_axiom_get_node_by_local_name(env,header_node,local_name);
+            ret_node = oxs_axiom_get_node_by_local_name(env, header_node, local_name);
             if(ret_node)
             {
                 axiom_element_t *ret_node_ele = NULL;
@@ -1048,13 +1048,13 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
                 {
                     axiom_namespace_t *ns = NULL;
                     axis2_char_t *namespace_uri = NULL;
-                    ns = axiom_element_get_namespace(ret_node_ele, env,ret_node);
+                    ns = axiom_element_get_namespace(ret_node_ele, env, ret_node);
                     if(ns)
                     {
                         namespace_uri = axiom_namespace_get_uri(ns, env);
-                        if (axutil_strcmp(namespace_uri,namespace) == 0)
+                        if (axutil_strcmp(namespace_uri, nspace) == 0)
                         {
-                            axutil_array_list_add(nodes_to_encrypt_or_sign,env,ret_node);
+                            axutil_array_list_add(nodes_to_encrypt_or_sign, env, ret_node);
                             return AXIS2_SUCCESS;
                         }
                     }
@@ -1076,15 +1076,15 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
     axiom_soap_envelope_t *soap_envelope,
     axutil_array_list_t *nodes_to_encrypt_or_sign)
 {
-    axis2_char_t *namespace = NULL;
+    axis2_char_t *nspace = NULL;
     axis2_char_t *local_name = NULL;
     axiom_node_t *envelope_node = NULL;
 
-    namespace = (axis2_char_t *) rp_element_get_namespace(element,env);
-    if(!namespace)
+    nspace = (axis2_char_t *) rp_element_get_namespace(element, env);
+    if(!nspace)
         return AXIS2_FAILURE;
 
-    if(axutil_strcmp(namespace,RP_SECURITY_NS)==0)
+    if(axutil_strcmp(nspace, RP_SECURITY_NS)==0)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace elements");
         return AXIS2_FAILURE;
@@ -1126,10 +1126,10 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
         else
         {
             axiom_node_t *ret_node = NULL;
-            envelope_node = axiom_soap_envelope_get_base_node(soap_envelope,env);
+            envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
             if(envelope_node)
             {
-                ret_node = oxs_axiom_get_node_by_local_name(env,envelope_node,local_name);
+                ret_node = oxs_axiom_get_node_by_local_name(env, envelope_node, local_name);
                 if(ret_node)
                 {
                     axiom_element_t *ret_node_ele = NULL;
@@ -1143,9 +1143,9 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
                         if(ns)
                         {
                             namespace_uri = axiom_namespace_get_uri(ns, env);
-                            if (axutil_strcmp(namespace_uri,namespace) == 0)
+                            if (axutil_strcmp(namespace_uri, nspace) == 0)
                             {
-                                axutil_array_list_add(nodes_to_encrypt_or_sign,env,ret_node);
+                                axutil_array_list_add(nodes_to_encrypt_or_sign, env, ret_node);
                                 return AXIS2_SUCCESS;
                             }
                         }
