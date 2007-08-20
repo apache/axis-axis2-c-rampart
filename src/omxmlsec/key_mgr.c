@@ -146,6 +146,10 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
         oxs_x509_cert_set_public_key(oxs_cert, env, open_pubkey);
         /*Set the x509 certificate to the asym ctx*/
         oxs_asym_ctx_set_certificate(ctx, env, oxs_cert);
+
+        X509_free(cert);
+        cert = NULL;
+
     }
     /*If this fails to get anything return failure*/
     if((!cert) && (!pubkey) && (!prvkey)){

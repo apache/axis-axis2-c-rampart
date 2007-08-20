@@ -233,6 +233,8 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
             }
             if(0 == axutil_strcmp(local_name, this_attr_name) && 0 == axutil_strcmp(ns_uri, this_attr_ns_uri)){
                 /*Got it !!!*/
+                axutil_hash_free(attr_list, env);
+                attr_list = NULL;
                 return axiom_attribute_get_value(om_attr, env);
             }
         }
