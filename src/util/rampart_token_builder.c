@@ -58,6 +58,9 @@ rampart_token_build_security_token_reference(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
 
+    oxs_x509_cert_free(cert, env);
+    cert = NULL;
+    
     return status;
 }
 

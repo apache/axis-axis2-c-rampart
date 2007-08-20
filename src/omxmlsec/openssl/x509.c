@@ -208,8 +208,10 @@ openssl_x509_get_cert_data(const axutil_env_t *env,
     core = (axis2_char_t*)axutil_strdup(env, core_tail);
     if(core)
     {
-        buffer = oxs_util_get_newline_removed_string(env,core);
-        AXIS2_FREE(env->allocator,core);
+        buffer = oxs_util_get_newline_removed_string(env, core);
+        AXIS2_FREE(env->allocator, core);
+        AXIS2_FREE(env->allocator, unformatted);
+        unformatted = NULL;
         core = NULL;
         return buffer;
     }
