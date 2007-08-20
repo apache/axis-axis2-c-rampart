@@ -54,7 +54,7 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     }
     else
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED, "New line removed buffer creation failed.");
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "New line removed buffer creation failed.");
         return AXIS2_FAILURE;
     }
 
@@ -64,12 +64,13 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     decoded_len = axutil_base64_decode_binary(buff,formatted_buf);
     if (decoded_len < 0)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED, "axutil_base64_decode_binary failed");
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "axutil_base64_decode_binary failed");
         return AXIS2_FAILURE;
     }
 
     if ((mem = BIO_new_mem_buf(buff, ilen)) == NULL)
     {
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "Cannot create a new memory buffer");
         return AXIS2_FAILURE;
     }
 
@@ -77,6 +78,7 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     /*Free*/
     BIO_free(mem);
     mem = NULL;
+    
     AXIS2_FREE(env->allocator, buff);
     buff = NULL;
 
@@ -104,16 +106,17 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
     }
     /*Read certificate*/
     PEM_read_bio_X509(in, cert,NULL,NULL);
-    if(!*cert)
-    {
-        return AXIS2_FAILURE;
-    }
 
     if (-1 == BIO_reset(in) ){
         return AXIS2_FAILURE;
     }
 
     if (-1 == BIO_free(in)  ){
+        return AXIS2_FAILURE;
+    }
+    
+    if(!*cert)
+    {
         return AXIS2_FAILURE;
     }
     return AXIS2_SUCCESS;

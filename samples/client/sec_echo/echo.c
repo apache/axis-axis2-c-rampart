@@ -132,6 +132,7 @@ int main(int argc, char** argv)
     /* Send request */
     ret_node = axis2_svc_client_send_receive(svc_client, env, payload);
 
+
     if (axis2_svc_client_get_last_response_has_fault(svc_client, env))
     {
         axiom_soap_envelope_t *soap_envelope = NULL;
@@ -164,6 +165,8 @@ int main(int argc, char** argv)
             printf("\nReceived OM : %s\n", om_str);
         }
         printf("\necho client invoke SUCCESSFUL!\n");
+        AXIS2_FREE(env->allocator, om_str);
+        ret_node = NULL;
     }
     else
     {
