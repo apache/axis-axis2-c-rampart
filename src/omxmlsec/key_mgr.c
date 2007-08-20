@@ -235,6 +235,9 @@ oxs_key_mgr_convert_to_x509(const axutil_env_t *env,
         openssl_pkey_populate(open_pubkey, env, pubkey, openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert), OPENSSL_PKEY_TYPE_PUBLIC_KEY);
         /*Set the public key to the x509 certificate*/
         oxs_x509_cert_set_public_key(oxs_cert, env, open_pubkey);
+    
+        X509_free(cert);
+        cert = NULL;
     }
 
     return oxs_cert;

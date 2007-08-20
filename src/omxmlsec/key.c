@@ -188,6 +188,9 @@ oxs_key_read_from_file(oxs_key_t *key,
     status = oxs_key_populate(key, env,
                               oxs_buffer_get_data(buf, env), file_name,
                               oxs_buffer_get_size(buf, env), OXS_KEY_USAGE_NONE);
+    
+    oxs_buffer_free(buf, env);
+    buf = NULL;
 
     return status;
 
@@ -202,8 +205,6 @@ oxs_key_for_algo(oxs_key_t *key,
     openssl_cipher_property_t * cprop = NULL;
     axis2_status_t ret = AXIS2_FAILURE;
     int size;
-    unsigned char *temp_str = NULL;
-    int temp_int = 0;
 
     cprop = (openssl_cipher_property_t *)oxs_get_cipher_property_for_url(env, key_algo);
     if (!cprop)
@@ -225,13 +226,13 @@ oxs_key_for_algo(oxs_key_t *key,
         return AXIS2_FAILURE;
     }
 
-    temp_int = oxs_buffer_get_size(key_buf, env);
-    temp_str = oxs_buffer_get_data(key_buf, env);
 
     ret = oxs_key_populate(key, env,
                            oxs_buffer_get_data(key_buf, env), NULL,
                            oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
 
-    /* Duplicate key data and free key_buf*/
+    oxs_buffer_free(key_buf, env);
+    key_buf = NULL;    
+
     return ret;
 }
