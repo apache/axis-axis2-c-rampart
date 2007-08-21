@@ -227,8 +227,11 @@ rampart_enc_encrypt_message(
             {
                 return AXIS2_FAILURE;
             }
-        }    
-    }
+        }   
+        oxs_ctx_free(enc_ctx, env);
+        enc_ctx = NULL;
+
+    }/*Eof For loop*/
     /*Get the asymmetric key encryption algorithm*/
     enc_asym_algo = rampart_context_get_enc_asym_algo(rampart_context, env);
 

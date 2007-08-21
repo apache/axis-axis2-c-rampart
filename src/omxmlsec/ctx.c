@@ -134,11 +134,6 @@ oxs_ctx_free(oxs_ctx_t *ctx,
         ctx->input_data = NULL;
     }
 
-    /*TODO free nodes and key*/
-    /*if(ctx->key){
-        oxs_key_free(ctx->key, env);
-        ctx->key = NULL;
-    }*/
     AXIS2_FREE(env->allocator,  ctx);
     ctx = NULL;
 
