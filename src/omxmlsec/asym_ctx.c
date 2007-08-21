@@ -335,6 +335,12 @@ oxs_asym_ctx_free(oxs_asym_ctx_t *asym_ctx,
         oxs_x509_cert_free(asym_ctx->certificate, env);
         asym_ctx->certificate = NULL;
     }
+    
+    if (asym_ctx->private_key)
+    {
+        openssl_pkey_free(asym_ctx->private_key, env);
+        asym_ctx->private_key = NULL;
+    }
 
     AXIS2_FREE(env->allocator,  asym_ctx);
     asym_ctx = NULL;

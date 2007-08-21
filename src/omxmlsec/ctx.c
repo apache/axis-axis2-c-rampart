@@ -135,7 +135,10 @@ oxs_ctx_free(oxs_ctx_t *ctx,
     }
 
     /*TODO free nodes and key*/
-
+    /*if(ctx->key){
+        oxs_key_free(ctx->key, env);
+        ctx->key = NULL;
+    }*/
     AXIS2_FREE(env->allocator,  ctx);
     ctx = NULL;
 
@@ -310,11 +313,11 @@ oxs_ctx_set_key(
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-    if (ctx->key)
+ /*   if (ctx->key)
     {
-        AXIS2_FREE(env->allocator, ctx->key);
+        oxs_key_free(ctx->key, env);
         ctx->key = NULL;
-    }
+    }*/
     ctx->key = key;
 
     return AXIS2_SUCCESS;

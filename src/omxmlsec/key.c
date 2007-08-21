@@ -141,7 +141,7 @@ oxs_key_dup(oxs_key_t *key,
                     oxs_key_get_buffer(key, env),
                     axutil_strdup(env, key->name),
                     key->usage);
-    return key;
+    return new_key;
 }
 
 AXIS2_EXTERN oxs_key_t *AXIS2_CALL
@@ -174,7 +174,7 @@ oxs_key_free(oxs_key_t *key,
              const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
+    
     oxs_buffer_free(key->buf, env);
     key->buf = NULL;
     AXIS2_FREE(env->allocator,  key->name);
@@ -278,7 +278,7 @@ oxs_key_for_algo(oxs_key_t *key,
 
 
     ret = oxs_key_populate(key, env,
-                           oxs_buffer_get_data(key_buf, env), NULL,
+                           oxs_buffer_get_data(key_buf, env), "for-algo",
                            oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
 
     oxs_buffer_free(key_buf, env);

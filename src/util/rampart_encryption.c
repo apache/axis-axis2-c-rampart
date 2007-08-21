@@ -182,6 +182,7 @@ rampart_enc_encrypt_message(
         return AXIS2_FAILURE;
     }
 
+    /*Key will be duplicated inside the function. So no worries freeing it here*/
     rampart_context_set_session_key(rampart_context, env, session_key);
 
     /*Create a list to store EncDataIds. This will be used in building the ReferenceList*/
@@ -329,6 +330,9 @@ rampart_enc_encrypt_message(
     }
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
+
+    oxs_key_free(session_key, env);
+    session_key = NULL;
 
     return AXIS2_SUCCESS;
 }
