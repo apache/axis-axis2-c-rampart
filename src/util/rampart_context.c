@@ -176,6 +176,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->require_timestamp = AXIS2_FALSE;
     rampart_context->ctx = NULL;
     rampart_context->ref = 0;
+    rampart_context->session_key = NULL;
 
     return rampart_context;
 }
@@ -232,7 +233,12 @@ rampart_context_free(rampart_context_t *rampart_context,
             /*RAMPART_AUTHN_PROVIDER_FREE(rampart_context->authn_provider, env);*/
             rampart_context->authn_provider = NULL;
         }
-        
+       
+        if(rampart_context->session_key)
+        {
+            oxs_key_free(rampart_context->session_key, env);
+            rampart_context->session_key = NULL;
+        }
         AXIS2_FREE(env->allocator,rampart_context);
         rampart_context = NULL;
     }
@@ -779,7 +785,12 @@ rampart_context_set_session_key(rampart_context_t *rampart_context,
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, session_key, AXIS2_FAILURE);
 
-    rampart_context->session_key = session_key;
+    /*Dup before set*/
+    if(rampart_context->session_key){
+        oxs_key_free(rampart_context->session_key, env);
+        rampart_context->session_key = NULL;
+    }
+    rampart_context->session_key = oxs_key_dup(session_key, env);
     return AXIS2_SUCCESS;
 }
 

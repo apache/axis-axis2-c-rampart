@@ -126,7 +126,8 @@ oxs_key_dup(oxs_key_t *key,
     AXIS2_ENV_CHECK(env, NULL);
     
     AXIS2_PARAM_CHECK(env->error, key, NULL);
-    
+
+    /*Create new key*/
     new_key = oxs_key_create(env);
     if (!new_key)
     {
@@ -134,7 +135,7 @@ oxs_key_dup(oxs_key_t *key,
         return NULL;
     }
    
-       
+    /*Populate with data buf*/   
     oxs_key_populate_with_buf(new_key, 
                     env,
                     oxs_key_get_buffer(key, env),
