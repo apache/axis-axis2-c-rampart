@@ -26,6 +26,7 @@
 
 #include <axis2_defines.h>
 #include <oxs_constants.h>
+#include <oxs_buffer.h>
 #include <axutil_env.h>
 
 #ifdef __cplusplus
@@ -131,6 +132,13 @@ extern "C"
         const axutil_env_t *env
     );
 
+    axis2_status_t AXIS2_CALL
+    oxs_key_populate_with_buf(oxs_key_t *key,
+                 const axutil_env_t *env,
+                 oxs_buffer_t *buffer,
+                 axis2_char_t *name,
+                 int usage);
+
     /**
     * Populate a key.
     * @param key oxs_key ptr to key
@@ -173,6 +181,14 @@ extern "C"
                      const axutil_env_t *env,
                      axis2_char_t *key_algo);
 
+
+    oxs_buffer_t *AXIS2_CALL
+    oxs_key_get_buffer(const oxs_key_t *key,
+        const axutil_env_t *env);
+
+    oxs_key_t *AXIS2_CALL
+    oxs_key_dup(oxs_key_t *key,
+            const axutil_env_t *env);
 
     AXIS2_EXTERN oxs_key_t *AXIS2_CALL
     oxs_key_create(const axutil_env_t *env);

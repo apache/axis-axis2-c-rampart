@@ -213,7 +213,8 @@ extern "C"
         const axutil_env_t *env
     );
 
-
+    oxs_buffer_t *AXIS2_CALL
+    oxs_buffer_dup(oxs_buffer_t *buffer, const axutil_env_t *env);
 
     AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
     oxs_buffer_create(const axutil_env_t *env);

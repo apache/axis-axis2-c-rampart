@@ -68,6 +68,18 @@ oxs_buffer_create(const axutil_env_t *env)
 
 }
 
+oxs_buffer_t *AXIS2_CALL
+oxs_buffer_dup(oxs_buffer_t *buffer, const axutil_env_t *env)
+{
+    oxs_buffer_t *buf = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
+
+    AXIS2_ENV_CHECK(env, NULL);
+    buf =  oxs_buffer_create(env);
+    status = oxs_buffer_populate(buf, env, oxs_buffer_get_data(buffer, env), oxs_buffer_get_size(buffer, env));    
+    return buf;
+}
+
 axis2_status_t AXIS2_CALL
 oxs_buffer_free(
     oxs_buffer_t *buffer,
