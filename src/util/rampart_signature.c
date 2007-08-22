@@ -179,17 +179,22 @@ rampart_sig_sign_message(const axutil_env_t *env,
         }
         axutil_array_list_add(nodes_to_sign,env,ts_node);
     }
-    if(rampart_context_get_require_ut(rampart_context,env))
+
+    if(server_side)
     {
-        axiom_node_t *ut_node = NULL;
-        ut_node = oxs_axiom_get_node_by_local_name(env,sec_node,RAMPART_SECURITY_USERNAMETOKEN);
-        if(!ut_node)
+        if(rampart_context_get_require_ut(rampart_context,env))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Required username token cannot be found.");
-            return AXIS2_FAILURE;
+            axiom_node_t *ut_node = NULL;
+            ut_node = oxs_axiom_get_node_by_local_name(env,sec_node,RAMPART_SECURITY_USERNAMETOKEN);
+            if(!ut_node)
+            {
+                AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Required username token cannot be found.");
+                return AXIS2_FAILURE;
+            }
+            axutil_array_list_add(nodes_to_sign,env,ut_node);
         }
-        axutil_array_list_add(nodes_to_sign,env,ut_node);
     }
+
     /*Now we have to check whether a token is specified.*/
     token = rampart_context_get_token(rampart_context, env, AXIS2_FALSE, server_side, AXIS2_FALSE);
     if(!token)

@@ -238,7 +238,6 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
                 return axiom_attribute_get_value(om_attr, env);
             }
         }
-
     }
 
     return NULL;
