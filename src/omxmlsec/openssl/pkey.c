@@ -185,7 +185,7 @@ openssl_pkey_load(
         if (!pk)
         {
             /*If there is no key by now its an error*/
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
+            oxs_error(env, ERROR_LOCATION, OXS_ERROR_OPENSSL_FUNC_FAILED,
                       "Cannot load key from %s", filename);
 
             return AXIS2_FAILURE;

@@ -34,7 +34,7 @@ oxs_iv_generate_for_algo(const axutil_env_t *env,
     cprop =  oxs_get_cipher_property_for_url(env, key_algo);
     if (!cprop)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "openssl_get_cipher_property failed");
         return NULL;
     }

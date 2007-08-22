@@ -380,8 +380,8 @@ openssl_x509_get_info(const axutil_env_t *env,
     
     BIO_free(out);
     if(data){
-    /*    AXIS2_FREE(env->allocator, data);
-        data = NULL;*/
+        AXIS2_FREE(env->allocator, data);
+        data = NULL;
     }
     out = NULL;
 
