@@ -57,7 +57,7 @@ oxs_iv_generate_for_algo(const axutil_env_t *env,
     }
     else
     {
-        iv = OXS_IV_DEFAULT;/* i.e. OPENSSL_DEFAULT_IV16. Many ciphers have 16... mmm.. need a better way.. a TODO*/
+        iv = OXS_IV_DEFAULT;
     }
 
     return iv;

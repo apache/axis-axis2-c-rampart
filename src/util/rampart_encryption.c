@@ -232,6 +232,11 @@ rampart_enc_encrypt_message(
         enc_ctx = NULL;
 
     }/*Eof For loop*/
+
+    /*TODO free list*/
+    axutil_array_list_free(nodes_to_encrypt, env);
+    nodes_to_encrypt = NULL;
+
     /*Get the asymmetric key encryption algorithm*/
     enc_asym_algo = rampart_context_get_enc_asym_algo(rampart_context, env);
 
@@ -331,6 +336,7 @@ rampart_enc_encrypt_message(
     {
         return AXIS2_FAILURE;
     }
+
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
 

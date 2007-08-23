@@ -217,9 +217,9 @@ openssl_x509_get_cert_data(const axutil_env_t *env,
         unformatted = NULL;
         core = NULL;
         return buffer;
-    }
-    else
+    }else{
         return NULL;
+    }        
 }
 
 
@@ -231,9 +231,15 @@ openssl_x509_get_serial(const axutil_env_t *env,
     int no = 0;
     /*WARN: Do not use the serial number without converting it to the integer.*/
     serial = (axis2_char_t*)i2s_ASN1_INTEGER(NULL, X509_get_serialNumber(cert));
-    no = atoi(serial);
-
-    return no;
+    if(serial){
+        no = atoi(serial);
+    
+        AXIS2_FREE(env->allocator, serial);
+        serial = NULL;
+        return no;
+     }else{
+        return -1;
+     }
 }
 
 AXIS2_EXTERN unsigned long AXIS2_CALL
@@ -379,10 +385,6 @@ openssl_x509_get_info(const axutil_env_t *env,
     result = axutil_strndup( env, data, n);
     
     BIO_free(out);
-    if(data){
-        /*AXIS2_FREE(env->allocator, data);
-        data = NULL;*/
-    }
     out = NULL;
 
     return result;

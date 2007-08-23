@@ -45,17 +45,18 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
     axis2_status_t ret = AXIS2_FAILURE;
 
     /*Get cipher property*/
-    cprop =  oxs_get_cipher_property_for_url(env, oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env));
+    cprop = oxs_get_cipher_property_for_url(env, oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env));
     if(!cprop){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Cipher property is NULL");
         return AXIS2_FAILURE;
     }
     /*Get the IV*/
-    iv = axutil_strndup(env,
-              (axis2_char_t*)oxs_iv_generate_for_algo(env,
-                           oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env)),
-                       openssl_cipher_property_get_iv_size(cprop, env));
+    iv = axutil_strndup(env, 
+                        (axis2_char_t*)oxs_iv_generate_for_algo(env,
+                                   oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env)),
+                         openssl_cipher_property_get_iv_size(cprop, env));
+
 
     /*Create the openssl context*/
     oc_ctx = openssl_cipher_ctx_create(env);
