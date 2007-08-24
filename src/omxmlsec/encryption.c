@@ -183,7 +183,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
 
 AXIS2_EXTERN  axis2_status_t AXIS2_CALL
 oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
-                                oxs_asym_ctx_t *ctx,
+                                oxs_asym_ctx_t *asym_ctx,
                                 oxs_buffer_t *input,
                                 oxs_buffer_t *result)
 {
@@ -194,10 +194,10 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     axis2_char_t *algorithm = NULL;
     axis2_char_t *padding = NULL;
 
-    algorithm = oxs_asym_ctx_get_algorithm(ctx, env);
+    algorithm = oxs_asym_ctx_get_algorithm(asym_ctx, env);
     /* We support RSA v1.5 encryption only. If any other algorithm is specified, replace it with the proper one
     if(0 != (axutil_strcmp(OXS_HREF_RSA_PKCS1, algorithm ))) {
-        oxs_asym_ctx_set_algorithm(ctx, env, OXS_HREF_RSA_PKCS1);
+        oxs_asym_ctx_set_algorithm(asym_ctx, env, OXS_HREF_RSA_PKCS1);
     }*/
 
     /*Set the proper padding for the algorithm*/
@@ -208,14 +208,14 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     }
 
     /*Load the key using key manager*/
-    password = oxs_asym_ctx_get_password(ctx, env);
-    status = oxs_key_mgr_load_key(env, ctx, password);
+    password = oxs_asym_ctx_get_password(asym_ctx, env);
+    status = oxs_key_mgr_load_key(env, asym_ctx, password);
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
 
     /*Check for the operation and call appropriate method*/
-    operation = oxs_asym_ctx_get_operation(ctx, env);
+    operation = oxs_asym_ctx_get_operation(asym_ctx, env);
     if(   OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT == operation ){
         axis2_char_t *encoded_str = NULL;
         oxs_x509_cert_t *x509_cert = NULL;
@@ -225,7 +225,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
         int ret = -1;
 
         /*Operation is PUB ENCRYPT; Get the public key from the context*/
-        x509_cert = oxs_asym_ctx_get_certificate(ctx, env);
+        x509_cert = oxs_asym_ctx_get_certificate(asym_ctx, env);
         pkey = oxs_x509_cert_get_public_key(x509_cert, env);
 
         /*Encrypt using the public key. Then base64 encode and populate the buffer */
@@ -249,7 +249,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
         int  declen = -1;
 
         /*Operation id PRV DECRYPT; Get the private key from the context*/
-        pkey = oxs_asym_ctx_get_private_key(ctx, env);
+        pkey = oxs_asym_ctx_get_private_key(asym_ctx, env);
         /*Base64 decode first. Then do the decryption and populate the buffer*/
         decoded_encrypted_str = AXIS2_MALLOC(env->allocator, axutil_base64_decode_len((char*)oxs_buffer_get_data(input, env)));
         ret = axutil_base64_decode((char*)decoded_encrypted_str, (char*)oxs_buffer_get_data(input, env));

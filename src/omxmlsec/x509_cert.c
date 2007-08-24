@@ -98,6 +98,10 @@ oxs_x509_cert_free(oxs_x509_cert_t *x509_cert,
         x509_cert->data =NULL;
     }
     /*Free public key???*/
+    if(x509_cert->public_key){
+        openssl_pkey_free(x509_cert->public_key, env);
+        x509_cert->public_key = NULL;
+    }
     return AXIS2_SUCCESS;
 }
 

@@ -88,8 +88,6 @@ openssl_sig_verify(const axutil_env_t *env,
     int  ret;
 
     /*Get the publickey*/
-    /*cert = oxs_sign_ctx_get_certificate(sign_ctx, env);
-    open_pubkey = oxs_x509_cert_get_public_key(cert, env);*/
     pkey = openssl_pkey_get_key(pubkey, env);
     if(!pkey){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot load the public key" );

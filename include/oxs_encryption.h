@@ -58,7 +58,7 @@ extern "C"
      * asymmetric key, which can be a publik key extracted from a certificate or a private key. 
      * The resulted data will be placed on the result buffer.
      * Data are not valid only if the method returns 	AXIS2_SUCCESS
-     * @enc_ctx pointer to the OMXMLSec asymmetric encryption context struct
+     * @asym_ctx pointer to the OMXMLSec asymmetric encryption context struct
      * @env pointer to environment struct
      * @input the input buffer	
      * @result the ouput or the ressulted data buffer			
@@ -66,7 +66,7 @@ extern "C"
      */
     AXIS2_EXTERN  axis2_status_t AXIS2_CALL
     oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
-                                    oxs_asym_ctx_t * enc_ctx,
+                                    oxs_asym_ctx_t * asym_ctx,
                                     oxs_buffer_t *input,
                                     oxs_buffer_t *result);
 
