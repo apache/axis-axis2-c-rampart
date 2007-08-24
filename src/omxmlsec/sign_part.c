@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <axis2_util.h>
 #include <oxs_sign_part.h>
+#include <oxs_transform.h>
 #include <oxs_error.h>
 
 struct oxs_sign_part_t
@@ -195,7 +196,23 @@ oxs_sign_part_free(oxs_sign_part_t *sign_part,
     }
 
     sign_part->node = NULL;
-    sign_part->transforms = NULL;
+    
+    if(sign_part->transforms){
+        int size = 0;
+        int j = 0;
+        size = axutil_array_list_size(sign_part->transforms, env);
+        for (j = 0; j < size; j++)
+        {
+            oxs_transform_t *tr = NULL;
+
+            tr = axutil_array_list_get(sign_part->transforms, env, j);
+            oxs_transform_free(tr, env);
+            tr = NULL;
+        }
+        axutil_array_list_free(sign_part->transforms, env);
+        sign_part->transforms = NULL;
+    }
+    
 
     AXIS2_FREE(env->allocator,  sign_part);
     sign_part = NULL;

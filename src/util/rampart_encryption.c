@@ -537,9 +537,23 @@ rampart_enc_encrypt_signature(
             "[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
         return AXIS2_FAILURE;
     }
-    
-    axutil_array_list_free(id_list, env);
-    id_list = NULL;
-    
+  
+    if(id_list){ 
+        /*TODO need to free data of the list*/
+        int size = 0;    
+        int j = 0; 
+        size = axutil_array_list_size(id_list, env);
+        for (j = 0; j < size; j++)
+        {
+            axis2_char_t *id_temp = NULL;
+
+            id_temp = axutil_array_list_get(id_list, env, j);
+            AXIS2_FREE(env->allocator, id_temp);
+            id_temp = NULL;
+        }
+
+        axutil_array_list_free(id_list, env);
+        id_list = NULL;
+    }
     return AXIS2_SUCCESS;
 }

@@ -216,6 +216,8 @@ oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
     signature_val_node = oxs_token_build_signature_value_element(env, signature_node, signature_val);
 
     /*Free*/
+    AXIS2_FREE(env->allocator , c14nized);
+    c14nized = NULL;
     oxs_buffer_free(input_buf, env);
     input_buf = NULL;
     oxs_buffer_free(output_buf, env);

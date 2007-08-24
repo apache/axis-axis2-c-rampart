@@ -253,6 +253,9 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     oxs_buffer_free(serialized_buf, env);
     serialized_buf = NULL;
 
+    AXIS2_FREE(env->allocator, serialized_data);
+    serialized_data = NULL;
+
     /*Return success*/
     return AXIS2_SUCCESS;
 }

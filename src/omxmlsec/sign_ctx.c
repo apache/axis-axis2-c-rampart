@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <axis2_util.h>
 #include <oxs_sign_ctx.h>
+#include <oxs_sign_part.h>
 #include <oxs_error.h>
 
 struct oxs_sign_ctx_t
@@ -290,6 +291,17 @@ oxs_sign_ctx_free(oxs_sign_ctx_t *sign_ctx,
 
     if(sign_ctx->sign_parts)
     {    
+        int size = 0;
+        int j = 0;
+        size = axutil_array_list_size(sign_ctx->sign_parts, env);
+        for (j = 0; j < size; j++)
+        {
+            oxs_sign_part_t *sig_part = NULL;
+
+            sig_part = axutil_array_list_get(sign_ctx->sign_parts, env, j);
+            oxs_sign_part_free(sig_part, env);
+            sig_part = NULL;
+        } 
         axutil_array_list_free(sign_ctx->sign_parts, env);
         sign_ctx->sign_parts = NULL;
     }

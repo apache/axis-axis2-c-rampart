@@ -225,7 +225,7 @@ openssl_cipher_property_free(openssl_cipher_property_t * cprop, const axutil_env
 
     if (cprop->cipher)
     {
-        AXIS2_FREE(env->allocator, cprop->cipher);
+        /*AXIS2_FREE(env->allocator, cprop->cipher);*/
         cprop->cipher = NULL;
     }
 

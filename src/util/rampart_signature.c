@@ -242,6 +242,8 @@ rampart_sig_sign_message(const axutil_env_t *env,
             AXIS2_LOG_INFO(env->log,"[rampart][rampart_signature] Binary Security Token creation failed.");
             return AXIS2_FAILURE;
         }
+        oxs_x509_cert_free(cert, env);
+        cert = NULL;
 
     }
     else
@@ -438,7 +440,13 @@ rampart_sig_sign_message(const axutil_env_t *env,
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Unknown key Identifier type.Token attaching failed");
             status = AXIS2_FAILURE;
         }
+        oxs_x509_cert_free(cert, env);
+        cert = NULL;
     }
+
+
+    AXIS2_FREE(env->allocator, cert_id);
+    cert_id = NULL;
     return status;
 }
 

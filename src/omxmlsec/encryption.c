@@ -82,6 +82,8 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
 
         return AXIS2_FAILURE;
     }
+
+
     ret = openssl_cipher_ctx_set_cipher(oc_ctx,
                                         env,
                                         (EVP_CIPHER*)openssl_get_evp_cipher_by_name(
@@ -168,7 +170,9 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
 
-    /*Free*/
+    /*FREE*/
+    openssl_cipher_property_free(cprop, env);
+    cprop = NULL;
     AXIS2_FREE(env->allocator, iv);
     iv = NULL;
     openssl_cipher_ctx_free(oc_ctx, env);
