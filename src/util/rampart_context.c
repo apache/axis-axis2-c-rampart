@@ -160,7 +160,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->prv_key_password = NULL;
     rampart_context->pwcb_function = NULL;
     rampart_context->is_replayed_function = NULL;
-    rampart_context->ttl = 0;
+    rampart_context->ttl = 300;
     rampart_context->rd_val = NULL;
     rampart_context->password_type = NULL;
     rampart_context->private_key_file = NULL;

@@ -96,8 +96,8 @@ rampart_enc_encrypt_message(
 
     /*Get nodes to be encrypted*/
     
-    server_side = axis2_msg_ctx_get_server_side(msg_ctx,env);
-    nodes_to_encrypt = axutil_array_list_create(env,0);
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    nodes_to_encrypt = axutil_array_list_create(env, 0);
 
     signature_protection = rampart_context_is_encrypt_signature(
             rampart_context, env);
@@ -183,7 +183,11 @@ rampart_enc_encrypt_message(
     }
 
     /*Key will be duplicated inside the function. So no worries freeing it here*/
-    rampart_context_set_session_key(rampart_context, env, session_key);
+    if(rampart_context_is_encrypt_before_sign(rampart_context, env)
+        && signature_protection)
+    {    
+        rampart_context_set_session_key(rampart_context, env, session_key);
+    }
 
     /*Create a list to store EncDataIds. This will be used in building the ReferenceList*/
 
