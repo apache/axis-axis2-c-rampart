@@ -429,8 +429,11 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
-        
-
+       
+        if(decrypted_sym_key){
+            oxs_key_free(decrypted_sym_key, env);
+            decrypted_sym_key = NULL;
+        }
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
     }
 
@@ -834,6 +837,11 @@ rampart_shp_process_signature(
     {
         AXIS2_LOG_INFO(env->log,"[Rampart][shp]Signature Verification failed.");
         return AXIS2_FAILURE;
+    }
+
+    if(sign_ctx){
+        oxs_sign_ctx_free(sign_ctx, env);
+        sign_ctx = NULL;
     }
 
     return status;

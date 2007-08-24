@@ -62,7 +62,11 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     /*Free signed_result_buf*/
     oxs_buffer_free(signed_result_buf, env);
     signed_result_buf = NULL;
-
+    
+    /*Free encoded_str*/
+    AXIS2_FREE(env->allocator, encoded_str);
+    encoded_str = NULL;
+    
     return AXIS2_SUCCESS;
 }
 

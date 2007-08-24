@@ -391,7 +391,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
     oxs_sign_ctx_free(sign_ctx, env);
     /*Now we must build the Key Info element*/
 
-    key_info_node = oxs_token_build_key_info_element(env,sig_node);
+    key_info_node = oxs_token_build_key_info_element(env, sig_node);
     if(!key_info_node)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Key info element build failed.");
@@ -402,14 +402,14 @@ rampart_sig_sign_message(const axutil_env_t *env,
         axiom_node_t *str_node = NULL;
         axiom_node_t *reference_node = NULL;
         axis2_char_t *cert_id_ref = NULL;
-        str_node = oxs_token_build_security_token_reference_element(env,key_info_node);
+        str_node = oxs_token_build_security_token_reference_element(env, key_info_node);
         if(!str_node)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
             return AXIS2_FAILURE;
         }
         cert_id_ref = axutil_stracat(env, "#",cert_id);
-        reference_node = oxs_token_build_reference_element(env,str_node,cert_id_ref,OXS_VALUE_X509V3);
+        reference_node = oxs_token_build_reference_element(env, str_node, cert_id_ref, OXS_VALUE_X509V3);
         if(!reference_node)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
@@ -418,7 +418,7 @@ rampart_sig_sign_message(const axutil_env_t *env,
     }
     else
     {
-        cert = rampart_sig_get_cert(env,rampart_context);
+        cert = rampart_sig_get_cert(env, rampart_context);
         if(!cert)
         {
             return AXIS2_FAILURE;
@@ -444,9 +444,12 @@ rampart_sig_sign_message(const axutil_env_t *env,
         cert = NULL;
     }
 
+    /*FREE*/
+    if(cert_id){
+        AXIS2_FREE(env->allocator, cert_id);
+        cert_id = NULL;
+    }
 
-    AXIS2_FREE(env->allocator, cert_id);
-    cert_id = NULL;
     return status;
 }
 
