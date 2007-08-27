@@ -111,6 +111,7 @@ rampart_username_token_build(
     }
 
     axiom_namespace_increment_ref(sec_ns_obj, env);
+    axiom_namespace_increment_ref(sec_ns_obj, env);
     ut_ele = axiom_element_create(env, sec_node,
                                   RAMPART_SECURITY_USERNAMETOKEN,
                                   sec_ns_obj,
