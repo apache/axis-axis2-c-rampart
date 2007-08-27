@@ -533,6 +533,10 @@ oxs_xml_sig_verify_sign_part(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Digest verification failed for node Id= %s  ", id );
         status =  AXIS2_FAILURE;
     }
+    
+    /*FREE*/
+    AXIS2_FREE(env->allocator, new_digest);
+    new_digest = NULL;
 
     return status;
 }

@@ -265,7 +265,7 @@ openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
                                         X509 *cert)
 {
     X509_EXTENSION *ext;
-    ASN1_OCTET_STRING *keyId = NULL;
+    ASN1_OCTET_STRING *key_id = NULL;
     int index = 0;
     EVP_ENCODE_CTX ctx;
     int len, ret;
@@ -288,19 +288,21 @@ openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
         return NULL;
     }
     /*Subject Key Identifier*/
-    keyId = (ASN1_OCTET_STRING *)X509V3_EXT_d2i(ext);
-    if (keyId == NULL) {
+    key_id = (ASN1_OCTET_STRING *)X509V3_EXT_d2i(ext);
+    if (key_id == NULL) {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "The SubjectKeyIdentifier is NULL");
         return NULL;
     }
-    memcpy(buf, keyId->data, keyId->length);
-    buf[keyId->length] = 0;
+    memcpy(buf, key_id->data, key_id->length);
+    buf[key_id->length] = 0;
 
     EVP_EncodeInit(&ctx);
-    EVP_EncodeUpdate(&ctx, (unsigned char*)output, &len, (unsigned char*)buf, keyId->length);
+    EVP_EncodeUpdate(&ctx, (unsigned char*)output, &len, (unsigned char*)buf, key_id->length);
     EVP_EncodeFinal(&ctx, (unsigned char*)(output+len), &ret);
 
+
+    M_ASN1_OCTET_STRING_free(key_id);
     ret += len;
     ski = axutil_strdup(env, output);
     return ski;
