@@ -71,6 +71,7 @@ openssl_rsa_pub_encrypt(
         return (-1);
     }
     oxs_buffer_populate(out, env, encrypted, ret);
+
     return ret;
 }
 

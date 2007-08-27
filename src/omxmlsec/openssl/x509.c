@@ -301,8 +301,10 @@ openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
     EVP_EncodeUpdate(&ctx, (unsigned char*)output, &len, (unsigned char*)buf, key_id->length);
     EVP_EncodeFinal(&ctx, (unsigned char*)(output+len), &ret);
 
-
+    /*Free key_id*/
     M_ASN1_OCTET_STRING_free(key_id);
+    key_id = NULL;
+    
     ret += len;
     ski = axutil_strdup(env, output);
     return ski;
