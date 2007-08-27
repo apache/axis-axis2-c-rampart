@@ -239,6 +239,15 @@ rampart_context_free(rampart_context_t *rampart_context,
             oxs_key_free(rampart_context->session_key, env);
             rampart_context->session_key = NULL;
         }
+
+        if(rampart_context->certificate){
+            oxs_x509_cert_free(rampart_context->certificate, env);
+            rampart_context->certificate = NULL;
+        }
+        if(rampart_context->receiver_certificate){
+            oxs_x509_cert_free(rampart_context->receiver_certificate, env);
+            rampart_context->receiver_certificate = NULL;
+        }
         AXIS2_FREE(env->allocator,rampart_context);
         rampart_context = NULL;
     }

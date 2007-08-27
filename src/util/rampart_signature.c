@@ -440,8 +440,6 @@ rampart_sig_sign_message(const axutil_env_t *env,
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_signature] Unknown key Identifier type.Token attaching failed");
             status = AXIS2_FAILURE;
         }
-        oxs_x509_cert_free(cert, env);
-        cert = NULL;
     }
 
     /*FREE*/
