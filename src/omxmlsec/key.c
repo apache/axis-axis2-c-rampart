@@ -117,7 +117,7 @@ oxs_key_set_usage(
 
 }
 
-AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+oxs_key_t *AXIS2_CALL
 oxs_key_dup(oxs_key_t *key, 
         const axutil_env_t *env)
 {

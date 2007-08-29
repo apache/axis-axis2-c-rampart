@@ -239,8 +239,11 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
             }
         }
     }
-
-    return NULL;
+    axutil_hash_free(attr_list, env);
+    attr_list = NULL;
+  
+    /*Not found! return NULL*/
+   return NULL;
 }
 
 

@@ -444,8 +444,9 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     /*Free*/
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
-    /*oxs_key_free(decrypted_sym_key, env);
-    decrypted_sym_key = NULL;*/
+
+    /*Free the ref list*/
+    
 
     return AXIS2_SUCCESS;
 }
