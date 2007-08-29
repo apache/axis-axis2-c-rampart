@@ -378,6 +378,7 @@ openssl_x509_get_info(const axutil_env_t *env,
                 DSA_print(out,pkey->pkey.dsa,0);
             }
             EVP_PKEY_free(pkey);
+            pkey = NULL;
         }
     }else if(OPENSSL_X509_INFO_PUBKEY_ALGO == type){
         X509_CINF *ci = NULL;
@@ -387,10 +388,10 @@ openssl_x509_get_info(const axutil_env_t *env,
     }
     n = BIO_get_mem_data(out, &data);
     result = axutil_strndup( env, data, n);
-    
+   
     BIO_free(out);
     out = NULL;
-
+    
     return result;
 }
 

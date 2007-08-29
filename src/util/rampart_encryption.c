@@ -341,6 +341,25 @@ rampart_enc_encrypt_message(
         return AXIS2_FAILURE;
     }
 
+    /*Free id_list*/
+    if(id_list)
+    {
+        int size = 0;
+        int j = 0;
+        size = axutil_array_list_size(id_list, env);
+        for (j = 0; j < size; j++)
+        {
+            axis2_char_t *id = NULL;
+
+            id = axutil_array_list_get(id_list, env, j);
+            AXIS2_FREE(env->allocator, id);
+            id = NULL;
+        }
+        axutil_array_list_free(id_list, env);
+        id_list = NULL;
+    }
+  
+
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
 
