@@ -18,6 +18,7 @@
 #include <rampart_context.h>
 #include <rampart_constants.h>
 #include <oxs_axiom.h>
+#include <oxs_x509_cert.h>
 
 struct rampart_context_t
 {
