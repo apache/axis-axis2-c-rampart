@@ -133,7 +133,8 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_axiom_get_node_by_id(const axutil_env_t *env,
                          axiom_node_t *node,
                          axis2_char_t *attr,
-                         axis2_char_t *val)
+                         axis2_char_t *val,
+                         axis2_char_t *ns)
 {
     axis2_char_t *attribute_value = NULL;
     axis2_char_t *localname = NULL;
@@ -145,7 +146,7 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
     localname = axiom_util_get_localname(node, env);
     /*AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for the attribute %s with value = %s", localname, attr, val);*/
 
-    attribute_value = oxs_axiom_get_attribute_value_of_node_by_name(env, node, attr);
+    attribute_value = oxs_axiom_get_attribute_value_of_node_by_name(env, node, attr, ns);
     if(0 == axutil_strcmp(val, attribute_value) ){
         /*Gottcha.. return this node*/
         return node;
@@ -157,7 +158,7 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
         while (temp_node)
         {
             axiom_node_t *res_node = NULL;
-            res_node = oxs_axiom_get_node_by_id(env, temp_node, attr, val);
+            res_node = oxs_axiom_get_node_by_id(env, temp_node, attr, val, ns);
             if(res_node){
                 return res_node;
             }
@@ -172,14 +173,15 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
         axiom_node_t *node,
-        axis2_char_t *attribute_name)
+        axis2_char_t *attribute_name, 
+        axis2_char_t *ns)
 {
     axis2_char_t *attribute_value = NULL;
     axiom_element_t *ele = NULL;
     axutil_qname_t *qname = NULL;
 
     ele = axiom_node_get_data_element(node, env);
-    qname = axutil_qname_create(env, attribute_name, OXS_WSU_XMLNS, NULL);
+    qname = axutil_qname_create(env, attribute_name, ns /*NULL*//*OXS_WSU_XMLNS*/, NULL);
     attribute_value = oxs_axiom_get_attribute_val_of_node_by_qname(env, node, qname);
     axutil_qname_free(qname, env);
     qname = NULL;

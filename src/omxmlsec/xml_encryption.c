@@ -368,8 +368,8 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
     /*Get ID, Type, MimeType attributes from the EncryptedDataNode*/
-    id = oxs_axiom_get_attribute_value_of_node_by_name(env, enc_type_node, OXS_ATTR_ID);
-    type = oxs_axiom_get_attribute_value_of_node_by_name(env, enc_type_node, OXS_ATTR_TYPE);
+    id = oxs_axiom_get_attribute_value_of_node_by_name(env, enc_type_node, OXS_ATTR_ID, NULL);
+    type = oxs_axiom_get_attribute_value_of_node_by_name(env, enc_type_node, OXS_ATTR_TYPE, NULL);
 
     /*Populate the context for future use*/
     oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, sym_algo);

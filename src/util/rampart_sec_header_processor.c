@@ -389,7 +389,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
         /*Search for the node by its ID*/
-        enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2);
+        enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2, NULL);
         if(!enc_data_node){
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Node with ID=%s cannot be found", id);
             /*continue;*/
@@ -429,13 +429,17 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
-       
+      
+        /*AXIS2_FREE(env->allocator, id);
+        id = NULL;
+        */
+
         if(decrypted_sym_key){
             oxs_key_free(decrypted_sym_key, env);
             decrypted_sym_key = NULL;
         }
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
-    }
+    }/*end of For loop*/
 
 
     /*Set the security processed result*/
@@ -445,9 +449,9 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
 
-    /*Free the ref list*/
-    
-
+    axutil_array_list_free(reference_list, env);
+    reference_list = NULL;
+   
     return AXIS2_SUCCESS;
 }
 
@@ -493,7 +497,7 @@ rampart_shp_process_reference_list(
         envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
         /*Search for the node by its ID*/
-        enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2);
+        enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2, NULL);
         if(!enc_data_node)
         {
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Node with ID=%s cannot be found", id);
@@ -529,7 +533,7 @@ rampart_shp_process_reference_list(
                         ref = oxs_token_get_reference(env, str_child_node);
                         ref_id = axutil_string_substring_starting_at(axutil_strdup(env, ref), 1);
 
-                        encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id);
+                        encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id, NULL);
                         if(encrypted_key_node)
                         {
                             ref_list_node = axiom_node_detach(ref_list_node, env); 

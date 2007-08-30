@@ -58,14 +58,16 @@ oxs_token_build_encrypted_data_element(const axutil_env_t *env,
 
     wsu_ns_obj = axiom_namespace_create(env, OXS_WSU_XMLNS, OXS_WSU);
 
-    /*In the following code we pass NULL to axiom_attribute_create to
-     * make the attributr Id="Something" Instead of wsu:Id="Something"
-     * This is done when interoping with BEA Weblogic.*/
 
-
+        if(!id){
+            id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
+        }
+        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL /*wsu_ns_obj*/);
+        ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
+#if 0    
     if (id)
     {
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, /*NULL*/wsu_ns_obj);
+        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL /*wsu_ns_obj*/);
         ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
     }
     else
@@ -73,9 +75,10 @@ oxs_token_build_encrypted_data_element(const axutil_env_t *env,
         /*TODO Get a unique value for this*/
         axis2_char_t *id = NULL;
         id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, /*NULL*/ wsu_ns_obj);
+        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL/*wsu_ns_obj*/);
         ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
     }
+#endif
 
     return encrypted_data_node;
 

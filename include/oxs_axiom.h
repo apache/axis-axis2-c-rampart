@@ -96,7 +96,8 @@ extern "C"
     oxs_axiom_get_node_by_id(const axutil_env_t *env,
                              axiom_node_t *node,
                              axis2_char_t *attr,
-                             axis2_char_t *val);
+                             axis2_char_t *val,
+                             axis2_char_t *ns);
 
     /**
      * Traverse thru the node and its children. Check if the node has a particular id as in @attr
@@ -109,7 +110,8 @@ extern "C"
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
             axiom_node_t *node,
-            axis2_char_t *attribute_name);
+            axis2_char_t *attribute_name,
+            axis2_char_t *ns);
 
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,

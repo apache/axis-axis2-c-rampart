@@ -144,7 +144,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     
     if(status!=AXIS2_SUCCESS)
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
             "[rampart][rampart_in_handler] Security Header processing failed.");
         return status;
     }        

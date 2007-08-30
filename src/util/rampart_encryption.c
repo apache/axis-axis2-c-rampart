@@ -405,8 +405,8 @@ rampart_enc_add_key_info(
 
     if(key_id)
     {
-        oxs_axiom_add_attribute(env, encrypted_key_node, OXS_WSU, 
-            RAMPART_WSU_XMLNS, OXS_ATTR_ID, key_id);
+        oxs_axiom_add_attribute(env, encrypted_key_node, NULL/*OXS_WSU*/, 
+            NULL/*RAMPART_WSU_XMLNS*/, OXS_ATTR_ID, key_id);
     }
     
     body = axiom_soap_envelope_get_body(soap_envelope, env);
