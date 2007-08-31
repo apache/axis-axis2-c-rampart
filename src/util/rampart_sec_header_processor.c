@@ -434,10 +434,6 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         id = NULL;
         */
 
-        if(decrypted_sym_key){
-            oxs_key_free(decrypted_sym_key, env);
-            decrypted_sym_key = NULL;
-        }
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
     }/*end of For loop*/
 
@@ -448,6 +444,11 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     /*Free*/
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
+
+    if(decrypted_sym_key){
+        oxs_key_free(decrypted_sym_key, env);
+        decrypted_sym_key = NULL;
+    }
 
     axutil_array_list_free(reference_list, env);
     reference_list = NULL;

@@ -181,7 +181,7 @@ oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
     axutil_qname_t *qname = NULL;
 
     ele = axiom_node_get_data_element(node, env);
-    qname = axutil_qname_create(env, attribute_name, ns /*NULL*//*OXS_WSU_XMLNS*/, NULL);
+    qname = axutil_qname_create(env, attribute_name, ns , NULL);
     attribute_value = oxs_axiom_get_attribute_val_of_node_by_qname(env, node, qname);
     axutil_qname_free(qname, env);
     qname = NULL;

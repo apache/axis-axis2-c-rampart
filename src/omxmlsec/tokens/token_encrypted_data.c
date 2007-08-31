@@ -59,26 +59,11 @@ oxs_token_build_encrypted_data_element(const axutil_env_t *env,
     wsu_ns_obj = axiom_namespace_create(env, OXS_WSU_XMLNS, OXS_WSU);
 
 
-        if(!id){
-            id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
-        }
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL /*wsu_ns_obj*/);
-        ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
-#if 0    
-    if (id)
-    {
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL /*wsu_ns_obj*/);
-        ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
-    }
-    else
-    {
-        /*TODO Get a unique value for this*/
-        axis2_char_t *id = NULL;
+    if(!id){
         id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL/*wsu_ns_obj*/);
-        ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
     }
-#endif
+    id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL );
+    ret = axiom_element_add_attribute(encrypted_data_ele, env, id_attr, encrypted_data_node);
 
     return encrypted_data_node;
 
