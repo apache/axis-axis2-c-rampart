@@ -84,6 +84,7 @@ extern "C" {
                                   axis2_char_t *password,
                                   X509 **cert);
 
+    /*Caller MUST free */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     openssl_x509_get_cert_data(const axutil_env_t *env,
                                X509 *cert);

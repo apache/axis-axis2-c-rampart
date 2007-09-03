@@ -61,7 +61,11 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     decode_len = axutil_base64_decode_len(formatted_buf );
     buff = AXIS2_MALLOC(env->allocator, decode_len);
     ilen = axutil_strlen(formatted_buf);
-    decoded_len = axutil_base64_decode_binary(buff,formatted_buf);
+    decoded_len = axutil_base64_decode_binary(buff, formatted_buf);
+
+    AXIS2_FREE(env->allocator, formatted_buf);
+    formatted_buf = NULL;
+
     if (decoded_len < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "axutil_base64_decode_binary failed");

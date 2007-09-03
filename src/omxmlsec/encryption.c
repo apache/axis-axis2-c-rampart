@@ -120,7 +120,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         }
 
         /*Attach the result to the result buf*/
-        ret = oxs_buffer_populate(result, env, (unsigned char*)axutil_strdup(env, encoded_str), encodedlen);
+        ret = oxs_buffer_populate(result, env, (unsigned char*)encoded_str, encodedlen);
 
         /*Free*/
         oxs_buffer_free(output, env);

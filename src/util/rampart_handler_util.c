@@ -106,17 +106,11 @@ rampart_get_security_token(const axutil_env_t *env,
                            axiom_soap_header_t *soap_header
                           )
 {
-    axutil_array_list_t *sec_headers = NULL;
-    axis2_char_t *sec_ns_str = NULL;
     axutil_hash_index_t *hash_index =  NULL;
     axutil_hash_t *header_block_ht = NULL;
     axiom_element_t *header_block_ele = NULL;
     axiom_node_t *header_block_node = NULL;
 
-    sec_headers = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, RAMPART_WSSE_XMLNS);
-    if (sec_headers)
-    {
-        sec_ns_str = axutil_strdup(env, RAMPART_WSSE_XMLNS);
 
         header_block_ht = axiom_soap_header_get_all_header_blocks(soap_header, env);
         if (!header_block_ht)
@@ -145,7 +139,7 @@ rampart_get_security_token(const axutil_env_t *env,
             }
 
         }/*End of for*/
-    }
+
     return header_block_node;
 
 }

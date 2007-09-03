@@ -36,6 +36,7 @@ extern "C"
     /**
      * Generates an id for an element.
      * Specially used in xml encryption and signature references.
+     * Caller must free memory
      * @param env pointer to environment struct
      * @param prefix the prefix of the id. For ex: EncDataID-1u343yrcarwqe
      * @return the generated id
@@ -57,6 +58,7 @@ extern "C"
 
     /**
      * Given string and returns new lined removed string
+     * Caller MUST free memory
      * @param env pointer to environment struct
      * @param input a pointer to the string which has \n s.
      * return the newline removed buffer.

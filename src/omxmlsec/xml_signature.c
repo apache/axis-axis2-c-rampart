@@ -143,6 +143,9 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     ref_id = axutil_stracat(env, "#", id);/* <ds:Reference URI="#id">*/
     reference_node = oxs_token_build_ds_reference_element(env, parent ,NULL, ref_id, NULL);
 
+    AXIS2_FREE(env->allocator, ref_id);
+    ref_id = NULL;
+
     /*Get transforms if any*/
     transforms = oxs_sign_part_get_transforms(sign_part, env);
     /*Get the digest method*/
@@ -170,6 +173,10 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     digest_mtd_node = oxs_token_build_digest_method_element(env, reference_node, digest_mtd);
     digest_value_node = oxs_token_build_digest_value_element(env, reference_node, digest);
 
+    /*Free*/
+    AXIS2_FREE(env->allocator, digest);
+    digest = NULL;
+ 
     return AXIS2_SUCCESS;
 }
 /**
@@ -239,12 +246,17 @@ oxs_xml_sig_sign(const axutil_env_t *env,
     axiom_node_t *c14n_mtd_node = NULL;
     axis2_char_t *sign_algo = NULL;
     axis2_char_t *c14n_algo = NULL;
+    axis2_char_t *sig_id = NULL;
     axutil_array_list_t *sign_parts = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     int i=0;
 
     /*Construct the <Signature> element*/
-    signature_node = oxs_token_build_signature_element(env, parent,  oxs_util_generate_id(env,OXS_SIG_ID));
+    sig_id = oxs_util_generate_id(env, OXS_SIG_ID);
+    signature_node = oxs_token_build_signature_element(env, parent, sig_id);
+
+    AXIS2_FREE(env->allocator, sig_id);
+    sig_id = NULL;
 
     /*Construct the <SignedInfo>  */
     signed_info_node = oxs_token_build_signed_info_element(env, signature_node);
@@ -493,6 +505,9 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
         }
         oxs_sign_ctx_set_sig_val(sign_ctx, env, newline_removed);
 
+        /*We can free newline_removed string as sign_ctx duplicates it*/
+        AXIS2_FREE(env->allocator, newline_removed);
+        newline_removed = NULL;
     }else{
         /*Error the node should be the ds:SignatureValue*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:SignatureValue> " );
@@ -627,6 +642,10 @@ oxs_xml_sig_verify(const axutil_env_t *env,
 
     /*In the final step we Verify*/
     status = oxs_sig_verify(env, sign_ctx, content , signature_val);
+
+    AXIS2_FREE(env->allocator, content);
+    content = NULL;
+
     if(AXIS2_FAILURE == status){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature is not valid " );
         return AXIS2_FAILURE;

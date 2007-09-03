@@ -397,6 +397,9 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     oxs_buffer_free(input_buf, env);
     input_buf = NULL;
 
+    AXIS2_FREE(env->allocator, new_cipher_val);
+    new_cipher_val = NULL;
+    
     return status;
 }
 
@@ -533,6 +536,10 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     oxs_buffer_free(input_buf, env);
     input_buf = NULL;
 
+    AXIS2_FREE(env->allocator, new_cipher_val);
+    new_cipher_val = NULL;
+    
+    
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }

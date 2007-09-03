@@ -36,7 +36,6 @@ oxs_token_build_encrypted_data_element(const axutil_env_t *env,
     axiom_attribute_t *type_attr = NULL;
     axiom_attribute_t *id_attr = NULL;
     axiom_namespace_t *ns_obj = NULL;
-    axiom_namespace_t *wsu_ns_obj = NULL;
     int ret;
 
     ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
@@ -56,7 +55,6 @@ oxs_token_build_encrypted_data_element(const axutil_env_t *env,
         ret = axiom_element_add_attribute(encrypted_data_ele, env, type_attr, encrypted_data_node);
     }
 
-    wsu_ns_obj = axiom_namespace_create(env, OXS_WSU_XMLNS, OXS_WSU);
 
 
     if(!id){

@@ -38,7 +38,8 @@ extern "C" {
 
 
     /**
-    * Calculate the digest of the input
+    * Calculate the digest of the input.
+    * Caller MUST free memory
     * @return calculated digest
     */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL

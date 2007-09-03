@@ -234,11 +234,18 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
                 this_attr_ns_uri = "";
             }
             if(0 == axutil_strcmp(local_name, this_attr_name) && 0 == axutil_strcmp(ns_uri, this_attr_ns_uri)){
+                axis2_char_t *found_val = NULL;
                 /*Got it !!!*/
+                found_val = axiom_attribute_get_value(om_attr, env);
                 axutil_hash_free(attr_list, env);
                 attr_list = NULL;
-                return axiom_attribute_get_value(om_attr, env);
+                axiom_attribute_free(om_attr, env);
+                om_attr = NULL;
+
+                return found_val;
             }
+            axiom_attribute_free(om_attr, env);
+            om_attr = NULL;
         }
     }
     axutil_hash_free(attr_list, env);

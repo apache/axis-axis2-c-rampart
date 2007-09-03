@@ -133,12 +133,15 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
     
     /*If the X509 certificate is available, populate oxs_x509_cert*/
     if(cert){
-
+        axis2_char_t *x509_cert_data = NULL;
+        
+        x509_cert_data = openssl_x509_get_cert_data(env, cert);
+        
         /*Create certificate*/
         oxs_cert = oxs_x509_cert_create(env);
-    
+
         /*And populate it*/
-        oxs_x509_cert_set_data(oxs_cert, env, openssl_x509_get_cert_data(env, cert));
+        oxs_x509_cert_set_data(oxs_cert, env, x509_cert_data);
         oxs_x509_cert_set_date(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_TO ,cert));
         oxs_x509_cert_set_issuer(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_ISSUER ,cert));
         oxs_x509_cert_set_subject(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert));
@@ -156,6 +159,9 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
         /*Set the x509 certificate to the asym ctx*/
         oxs_asym_ctx_set_certificate(ctx, env, oxs_cert);
 
+        AXIS2_FREE(env->allocator, x509_cert_data);
+        x509_cert_data = NULL;
+    
         X509_free(cert);
         cert = NULL;
 
@@ -229,10 +235,13 @@ oxs_key_mgr_convert_to_x509(const axutil_env_t *env,
     if(cert){
         EVP_PKEY *pubkey = NULL;
         openssl_pkey_t *open_pubkey = NULL;
+        axis2_char_t *x509_cert_data = NULL;
+        
+        x509_cert_data = openssl_x509_get_cert_data(env, cert);
 
         /*Create X509 certificate*/
         oxs_cert = oxs_x509_cert_create(env);
-        oxs_x509_cert_set_data(oxs_cert, env, openssl_x509_get_cert_data(env, cert));
+        oxs_x509_cert_set_data(oxs_cert, env, x509_cert_data);
         oxs_x509_cert_set_date(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_TO ,cert));
         oxs_x509_cert_set_issuer(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_ISSUER ,cert));
         oxs_x509_cert_set_subject(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert));
@@ -250,6 +259,9 @@ oxs_key_mgr_convert_to_x509(const axutil_env_t *env,
         /*Set the public key to the x509 certificate*/
         oxs_x509_cert_set_public_key(oxs_cert, env, open_pubkey);
    
+        /*Free*/
+        AXIS2_FREE(env->allocator, x509_cert_data);
+        x509_cert_data = NULL;
         /*Free the certificate*/
         X509_free(cert);
         cert = NULL;
