@@ -124,7 +124,10 @@ extern "C"
                                            axis2_char_t* local_name,
                                            axis2_char_t* ns_uri,
                                            axis2_char_t* prefix);
-
+    /*
+     * Returns content of a node
+     * 
+     */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     oxs_axiom_get_node_content(const axutil_env_t *env, axiom_node_t* node);
 

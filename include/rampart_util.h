@@ -44,6 +44,7 @@ extern "C" {
 
     /**
      * Load a DLL or .SO module
+     * User MUST free memory
      * @param env pointer to environment struct
      * @param module_name name of the module to be loaded
      * @return the loaded module
@@ -55,6 +56,7 @@ extern "C" {
 
     /**
      * Load the credentials module
+     * User MUST free memory
      * @param env pointer to environment struct
      * @param cred_module_name name of the credentails module to be loaded
      * @return the loaded credentails module
@@ -65,6 +67,7 @@ extern "C" {
 
     /**
      * Call credentials module
+     * User MUST free memory
      * @param env pointer to environment struct
      * @param cred_module the credentails module
      * @param ctx the message context
@@ -81,6 +84,7 @@ extern "C" {
 
     /**
      * Load authentication module
+     * User MUST free memory
      * @param env pointer to environment struct
      * @param auth_module_name name of the authentication module
      * @return creatd athenticaiton module
@@ -112,6 +116,7 @@ extern "C" {
 
     /**
      * Load the password callback module
+     * User MUST free memory
      * @param env pointer to environment struct
      * @callback_module_name the name of the callback module
      * @return the loaded callback module
@@ -133,18 +138,20 @@ extern "C" {
                               const axis2_char_t *username);
 
     /**
-      * Generates the nonce. Nonce is a base64 encoded random string.
-      * @param env pointer to environment struct
-      * @return generated nonce
-      */
+     * Generates the nonce. Nonce is a base64 encoded random string.
+     * User MUST free memory
+     * @param env pointer to environment struct
+     * @return generated nonce
+     */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_generate_nonce(const axutil_env_t *env);
 
     /**
-      * Generates the nonce. Nonce is a base64 encoded random string.
-      * @param ttl Time to live. The time difference between created and expired in mili seconds.
-      * @return generated nonce
-      **/
+     * Generates the nonce. Nonce is a base64 encoded random string.
+     * User MUST free memory
+     * @param ttl Time to live. The time difference between created and expired in mili seconds.
+     * @return generated nonce
+     **/
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     rampart_generate_time(const axutil_env_t *env, int ttl);
 

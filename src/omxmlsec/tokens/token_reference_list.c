@@ -92,7 +92,7 @@ oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_lis
     ref_list_ele = axiom_node_get_data_element(ref_list_node, env);
 
     /*Get children*/
-    qname = axutil_qname_create(env, OXS_NODE_DATA_REFERENCE,OXS_ENC_NS,OXS_ENC_NS);
+    qname = axutil_qname_create(env, OXS_NODE_DATA_REFERENCE, OXS_ENC_NS, OXS_ENC_NS);
     iter = axiom_element_get_children_with_qname(ref_list_ele, env, qname, ref_list_node);
     axutil_qname_free(qname, env);
     qname = NULL;

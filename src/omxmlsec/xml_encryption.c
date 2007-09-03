@@ -394,9 +394,13 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     status =  oxs_encryption_symmetric_crypt(env, enc_ctx, input_buf, result_buf);
 
     /*Free*/
+
     oxs_buffer_free(input_buf, env);
     input_buf = NULL;
 
+    AXIS2_FREE(env->allocator, cipher_val);
+    cipher_val = NULL;
+    
     AXIS2_FREE(env->allocator, new_cipher_val);
     new_cipher_val = NULL;
     

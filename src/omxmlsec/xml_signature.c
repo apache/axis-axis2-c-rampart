@@ -114,6 +114,11 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported digest method  %s", digest_mtd);
         return NULL;
     }
+    if(serialized_node){
+        AXIS2_FREE(env->allocator, serialized_node);
+        serialized_node = NULL;
+    }
+
     return digest;
 }
 
