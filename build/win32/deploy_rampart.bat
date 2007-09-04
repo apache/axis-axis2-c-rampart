@@ -21,3 +21,5 @@ md %AXIS2C_HOME%\bin\samples\rampart\credential_provider
 copy bin\samples\credential_provider\cred_provider.dll %AXIS2C_HOME%\bin\samples\rampart\credential_provider\
 
 xcopy bin\samples\keys %AXIS2C_HOME%\bin\samples\rampart\keys\ /E /I /Y /S
+
+copy bin\samples\services\sec_echo\server_axis2.xml %AXIS2C_HOME%\axis2.xml

@@ -124,6 +124,8 @@ mod_rampart_services_sec_echo:
 	
 	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\services.xml $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\
 
+	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\server_axis2.xml $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\
+
 mod_rampart_samples_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
 	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
@@ -153,7 +155,7 @@ mod_rampart_copy_keys:
 
 mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
-	copy deploy_client_repo.bat $(RAMPART_DISTDIR)
+	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\deploy_client_repo.bat $(RAMPART_DISTDIR)
 
 copy_sec_policy:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\secpolicy $(RAMPART_DISTDIR)\bin\samples\secpolicy
