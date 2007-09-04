@@ -104,12 +104,10 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
     
     if (!in)
     {
-        /*oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                "Error reading the file %s", filename);*/
         return AXIS2_FAILURE;
     }
     /*Read certificate*/
-    PEM_read_bio_X509(in, cert,NULL,NULL);
+    PEM_read_bio_X509(in, cert, NULL, NULL);
 
     if (-1 == BIO_reset(in) ){
         return AXIS2_FAILURE;
@@ -123,6 +121,7 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
     {
         return AXIS2_FAILURE;
     }
+
     return AXIS2_SUCCESS;
 }
 

@@ -107,14 +107,17 @@ openssl_sig_verify(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyInit failed" );
         return AXIS2_FAILURE;
     }
-    ret = EVP_VerifyUpdate(&md_ctx,  oxs_buffer_get_data(input_buf, env),  oxs_buffer_get_size(input_buf, env));
+    ret = EVP_VerifyUpdate(&md_ctx,  
+                            oxs_buffer_get_data(input_buf, env),  
+                            oxs_buffer_get_size(input_buf, env));
     if(ret != 1) {
         /*Error*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyUpdate failed" );
         return AXIS2_FAILURE;
     }
 
-    ret = EVP_VerifyFinal(&md_ctx, oxs_buffer_get_data(sig_buf, env),
+    ret = EVP_VerifyFinal(&md_ctx, 
+                          oxs_buffer_get_data(sig_buf, env),
                           oxs_buffer_get_size(sig_buf, env),
                           pkey);
     if(ret == 0){
@@ -126,12 +129,13 @@ openssl_sig_verify(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Error occured while verifying the signature." );
         status = AXIS2_FAILURE;
     }else{
-        /*SUCCESS. Det ar bra :-)*/
+        /*SUCCESS. */
         AXIS2_LOG_INFO(env->log, "[openssl][sig] Signature verification SUCCESS " );
         status = AXIS2_SUCCESS;
     }
 
-    return status;
+    EVP_MD_CTX_cleanup(&md_ctx);
 
+    return status;
 }
 
