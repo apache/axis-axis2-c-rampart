@@ -337,9 +337,13 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
     parent_of_enc_node = axiom_node_get_parent(enc_type_node, env);
     axiom_node_add_child(parent_of_enc_node, env, deserialized_node);
     axiom_node_detach(enc_type_node, env);
-    /*Free result buf*/
+
+    /*Free */
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;
+    
+    AXIS2_FREE(env->allocator, decrypted_data);
+    decrypted_data = NULL;
 
     return AXIS2_SUCCESS;
 }

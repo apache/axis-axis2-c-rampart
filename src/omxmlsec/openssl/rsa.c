@@ -140,6 +140,8 @@ openssl_rsa_prv_decrypt(
     }
 
     decrypted =  AXIS2_MALLOC(env->allocator, RSA_size(key->pkey.rsa));
+
+    /*Here the ret is the length of decrypted data*/
     ret = RSA_private_decrypt(RSA_size(key->pkey.rsa),
                               oxs_buffer_get_data(in, env),
                               decrypted,
@@ -153,6 +155,11 @@ openssl_rsa_prv_decrypt(
         return (-1);
     }
     oxs_buffer_populate(out, env, decrypted, ret);
+    
+    /*Free*/
+    AXIS2_FREE(env->allocator, decrypted);
+    decrypted = NULL;
+
     return ret;
 }
 
