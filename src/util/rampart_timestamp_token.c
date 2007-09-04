@@ -64,9 +64,13 @@ rampart_timestamp_token_build(
         {
             created_val = rampart_generate_time(env, 0);   /*Current time*/
             axiom_element_set_text(created_ele, env, created_val, created_node);
+           
+            AXIS2_FREE(env->allocator, created_val);
+            created_val = NULL;
         }
+
         /*Then we build Expires element*/
-        /*If ttl<0 then we dont build the expires element.*/
+        /*TIP: If ttl<0 then we dont build the expires element.*/
         if(ttl<0){
             AXIS2_LOG_INFO(env->log, " [rampart][ts] ttl is %d which is less then zero. Thus we do not build the expires element. ");
             return AXIS2_SUCCESS;
@@ -78,9 +82,13 @@ rampart_timestamp_token_build(
         {
             expires_val = rampart_generate_time(env, ttl);
             axiom_element_set_text(expires_ele, env, expires_val, expires_node);
+            
+            AXIS2_FREE(env->allocator, expires_val);
+            expires_val = NULL;
 
         }
     }
+    
 
     return AXIS2_SUCCESS;
 }/*rampart_build_timestamp_token*/

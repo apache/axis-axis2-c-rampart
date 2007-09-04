@@ -72,6 +72,9 @@ openssl_rsa_pub_encrypt(
     }
     oxs_buffer_populate(out, env, encrypted, ret);
 
+    AXIS2_FREE(env->allocator, encrypted);
+    encrypted = NULL;
+
     return ret;
 }
 
