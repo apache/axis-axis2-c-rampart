@@ -72,6 +72,8 @@ openssl_sig_sign(const axutil_env_t *env,
     /*Fill the output buffer*/
     oxs_buffer_populate(output_buf, env, sig_buf, sig_len);
 
+    EVP_MD_CTX_cleanup(&md_ctx);
+    
     return sig_len;
 }
 

@@ -114,7 +114,8 @@ openssl_pkey_set_key(
 
     if (pkey->key)
     {
-        AXIS2_FREE(env->allocator, pkey->key);
+       /* AXIS2_FREE(env->allocator, pkey->key);*/
+        EVP_PKEY_free(pkey->key);
         pkey->key = NULL;
     }
 
@@ -232,7 +233,8 @@ openssl_pkey_free(
 
     if (pkey->key)
     {
-        AXIS2_FREE(env->allocator, pkey->key);
+        /*AXIS2_FREE(env->allocator, pkey->key);*/
+         EVP_PKEY_free(pkey->key);
         pkey->key = NULL;
     }
     if (pkey->name)
