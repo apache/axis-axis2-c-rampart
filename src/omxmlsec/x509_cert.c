@@ -292,7 +292,7 @@ oxs_x509_cert_set_public_key(oxs_x509_cert_t *x509_cert,
 {
     if(x509_cert->public_key)
     {
-        AXIS2_FREE(env->allocator, x509_cert->public_key);
+        openssl_pkey_free(x509_cert->public_key, env);
         x509_cert->public_key = NULL;
     }
     x509_cert->public_key = public_key;

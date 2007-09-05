@@ -499,8 +499,8 @@ rampart_enc_encrypt_signature(
 
     if(!session_key)
     {
-        AXIS2_LOG_INFO(env->log, 
-            "[rampart][rampart_encryption]Encrypting Signature.Session key not found");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][rampart_encryption]Encrypting Signature.Session key not found");
         return AXIS2_FAILURE;
     }
 
@@ -509,7 +509,7 @@ rampart_enc_encrypt_signature(
 
     if(!node_to_enc)
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_encryption]Encrypting Signature. Signature node not found");
         return AXIS2_FAILURE;
     }   
@@ -518,7 +518,7 @@ rampart_enc_encrypt_signature(
             env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
     if(!encrypted_key_node)
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
         return AXIS2_FAILURE;
     }
@@ -543,6 +543,8 @@ rampart_enc_encrypt_signature(
    
     if(enc_status != AXIS2_SUCCESS)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_encryption] Encrypting node failed");
         return AXIS2_FAILURE;
     }
 
@@ -558,7 +560,7 @@ rampart_enc_encrypt_signature(
                     enc_data_node, env, temp_node);
             if(enc_status != AXIS2_SUCCESS)
             {
-                AXIS2_LOG_INFO(env->log, 
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                     "[rampart][rampart_encryption]Encrypting signature, Node moving failed.");    
                 return AXIS2_FAILURE;
             }    
@@ -573,7 +575,7 @@ rampart_enc_encrypt_signature(
             env, encrypted_key_node, id_list);    
     if(enc_status != AXIS2_SUCCESS)
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
         return AXIS2_FAILURE;
     }

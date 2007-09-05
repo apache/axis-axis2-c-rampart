@@ -93,10 +93,12 @@ rampart_token_process_direct_ref(const axutil_env_t *env,
     if(_cert){
         status =  AXIS2_SUCCESS;
     }else{
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "Cannot load certificate from string =%s", data);
         status =  AXIS2_FAILURE;
     }
 
     oxs_x509_cert_copy_to(_cert, env, cert);
+
     return status;
 }
 
