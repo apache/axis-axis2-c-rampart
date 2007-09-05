@@ -290,11 +290,12 @@ oxs_x509_cert_set_public_key(oxs_x509_cert_t *x509_cert,
                              const axutil_env_t *env,
                              openssl_pkey_t *public_key)
 {
-    if(x509_cert->public_key)
+    /*if(x509_cert->public_key)
     {
         openssl_pkey_free(x509_cert->public_key, env);
         x509_cert->public_key = NULL;
-    }
+    }*/
+    openssl_pkey_increment_ref(public_key, env);
     x509_cert->public_key = public_key;
     return AXIS2_SUCCESS;
 }

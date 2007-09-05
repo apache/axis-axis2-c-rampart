@@ -99,6 +99,9 @@ rampart_token_process_direct_ref(const axutil_env_t *env,
 
     oxs_x509_cert_copy_to(_cert, env, cert);
 
+    oxs_x509_cert_free(_cert, env);
+    _cert = NULL;
+
     return status;
 }
 
