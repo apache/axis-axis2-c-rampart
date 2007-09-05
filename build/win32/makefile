@@ -190,7 +190,6 @@ dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy
 deploy:
 	chdir $(RAMPART_DISTDIR)
 	deploy_rampart.bat
-	deploy_client_repo.bat
 	chdir .\..\win32
 
 install: dist deploy
