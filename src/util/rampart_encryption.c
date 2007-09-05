@@ -107,7 +107,7 @@ rampart_enc_encrypt_message(
 
     if(status != AXIS2_SUCCESS)
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
             "[rampart][rampart_signature]Error occured in Adding Encrypted parts..");
         axutil_array_list_free(nodes_to_encrypt, env);
         nodes_to_encrypt = NULL;
@@ -131,7 +131,7 @@ rampart_enc_encrypt_message(
             sig_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
             if(!sig_node)
             {
-                AXIS2_LOG_INFO(env->log, 
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                     "[rampart][rampart_encryption]Encrypting signature, Sigature Not found");
                 return AXIS2_FAILURE;
             }
@@ -151,14 +151,14 @@ rampart_enc_encrypt_message(
     token_type = rp_property_get_type(token, env);
 
     if(!rampart_context_is_token_type_supported(token_type, env))
-    {    
-        AXIS2_LOG_INFO(env->log,
+    {   
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
             "[rampart][rampart_encryption]Specified token type not supported.");
         return AXIS2_FAILURE;
     }
     if(rampart_context_check_is_derived_keys(env,token))
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
             "[rampart][rampart_encryption]We still do not support derived keys");
         return AXIS2_FAILURE;
     }
@@ -179,6 +179,8 @@ rampart_enc_encrypt_message(
     status = oxs_key_for_algo(session_key, env, enc_sym_algo);
     if(AXIS2_FAILURE == status)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][rampart_encryption] Cannot generate the key for the algorithm %s, ", enc_sym_algo);
         return AXIS2_FAILURE;
     }
 
@@ -208,6 +210,8 @@ rampart_enc_encrypt_message(
                 (nodes_to_encrypt, env, i);
         if(!node_to_enc)
         {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][rampart_encryption] Cannot get the node from the list to encrypt");
             return AXIS2_FAILURE;
         }
         /*Create the encryption context for OMXMLSEC*/
@@ -229,6 +233,8 @@ rampart_enc_encrypt_message(
             axutil_array_list_add(id_list, env, id);
             if(AXIS2_FAILURE == enc_status)
             {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[rampart][rampart_encryption] Cannot encrypt the node " );
                 return AXIS2_FAILURE;
             }
         }   
@@ -259,8 +265,8 @@ rampart_enc_encrypt_message(
     }
     if(!eki)
     {
-        AXIS2_LOG_INFO(env->log, 
-            "[rampart][rampart_encryption]No mechanism for attaching the token.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][rampart_encryption] No mechanism for attaching the certificate info.");
         return AXIS2_FAILURE;
     }
 
@@ -316,8 +322,8 @@ rampart_enc_encrypt_message(
                         (rampart_context, env);
                     if(!password_callback)
                     {
-                        AXIS2_LOG_INFO(env->log, 
-                            "[rampart][rampart_encryption]Password call back module is not loaded.");
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_encryption] Password call back module is not loaded.");
                         return AXIS2_FAILURE;
                     }
                     password = rampart_callback_password(env, password_callback, enc_user);
@@ -338,6 +344,8 @@ rampart_enc_encrypt_message(
             sec_node, session_key, id_list);
     if(AXIS2_FAILURE == status)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_encryption] Session key encryption failed.");
         return AXIS2_FAILURE;
     }
 
@@ -396,7 +404,7 @@ rampart_enc_add_key_info(
         env, sec_node,  OXS_NODE_ENCRYPTED_KEY); 
     if(!encrypted_key_node)
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
         return AXIS2_FAILURE;
     }    
@@ -437,7 +445,7 @@ rampart_enc_add_key_info(
 
                 if(!reference_node)
                 {
-                    AXIS2_LOG_INFO(env->log, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                         "[rampart][rampart_encryption]Encrypting signature, Reference Node build failed");
                     return AXIS2_FAILURE;
                 }
@@ -446,14 +454,23 @@ rampart_enc_add_key_info(
                     return AXIS2_SUCCESS;
                 }
             }
-            else
-                return AXIS2_FAILURE;
+            else{
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart][rampart_encryption]Encrypting signature, Cannot build the STR node");
+                    return AXIS2_FAILURE;
+                }
         }
-        else
-            return AXIS2_FAILURE;
+        else{
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart][rampart_encryption] Encrypting signature, cannot build the key indfo node");
+                return AXIS2_FAILURE;
+            }
     }
-    else 
+    else{ 
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                  "[rampart][rampart_encryption]Encrypting signature, Cannot get the encryption data element");
         return AXIS2_FAILURE;
+        }
 }
 
 

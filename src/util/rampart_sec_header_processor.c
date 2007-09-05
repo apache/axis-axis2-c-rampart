@@ -144,7 +144,7 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
     {
         if(rampart_context_is_include_timestamp(rampart_context,env))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Timestamp is not in the message");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Timestamp is not in the message");
             return AXIS2_FAILURE;
         }else{
             return AXIS2_SUCCESS;
@@ -152,14 +152,14 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
     }
     else if(!rampart_context_is_include_timestamp(rampart_context,env))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Timestamp should not be in the message.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Timestamp should not be in the message.");
         return AXIS2_FAILURE;
     }
     else
     {
         if(!rampart_shp_validate_qnames(env,ts_node))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Error in the security header");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Error in the security header");
             return AXIS2_FAILURE;
         }
 
@@ -168,7 +168,7 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
 
         if (valid_ts)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][scp] Validating Timestamp is SUCCESS ");
+            AXIS2_LOG_INFO(env->log, "[rampart][scp] Succesfully validated the timestamp ");
             return AXIS2_SUCCESS;
         }
         else
@@ -194,7 +194,7 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
     {
         if(rampart_context_is_include_username_token(rampart_context,env))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Username token is not in the message");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Username token is not in the message");
             return AXIS2_FAILURE;
         }
         else
@@ -202,14 +202,14 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
     }
     else if(!rampart_context_is_include_username_token(rampart_context,env))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Username token should not be in the message.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Username token should not be in the message.");
         return AXIS2_FAILURE;
     }
     else
     {
         if(!rampart_shp_validate_qnames(env,ut_node))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Error in the security header");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Error in validating qnames for the username token");
             return AXIS2_FAILURE;
         }
 
@@ -222,7 +222,7 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Validating UsernameToken SUCCESS");
         return AXIS2_SUCCESS;
     }else{
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Validating UsernameToken FAILED");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Validating UsernameToken FAILED");
         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "UsernameToken is not valid", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
         return AXIS2_FAILURE;
     }

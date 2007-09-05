@@ -121,7 +121,8 @@ rampart_shb_build_message(
                                                    sec_node, sec_ns_obj, ttl);
             if (status == AXIS2_FAILURE)
             {
-                AXIS2_LOG_INFO(env->log, "[rampart][shb] Timestamp Token build failed. ERROR");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[rampart][shb] Timestamp Token build failed. ERROR");
                 return AXIS2_FAILURE;
             }
         }
@@ -144,7 +145,8 @@ rampart_shb_build_message(
                             sec_ns_obj);
                 if (status == AXIS2_FAILURE)
                 {
-                    AXIS2_LOG_INFO(env->log, "[rampart][shb] UsernmaeToken build failed. ERROR");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] UsernmaeToken build failed. ERROR");
                     return AXIS2_FAILURE;
                 }
             }
@@ -164,6 +166,8 @@ rampart_shb_build_message(
                 status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Encryption failed. ERROR");
                     return AXIS2_FAILURE;
                 }    
                 
@@ -172,6 +176,8 @@ rampart_shb_build_message(
                 status = rampart_enc_add_key_info(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Cannot add Key information");
                     return AXIS2_FAILURE;
                 }
                 /*Then Sign the message*/
@@ -179,6 +185,8 @@ rampart_shb_build_message(
                 status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {    
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Signing failed. ERROR");
                     return AXIS2_FAILURE;
                 }
 
@@ -187,6 +195,8 @@ rampart_shb_build_message(
                 status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Encrypt signature failed. ERROR");
                     return AXIS2_FAILURE;
                 }    
             
@@ -194,14 +204,18 @@ rampart_shb_build_message(
             else
             {    
                 status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS)
+                if(status != AXIS2_SUCCESS){
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Encryption failed. ERROR");
                     return AXIS2_FAILURE;
-
+                }
                 /*Then do signature specific things*/
                 status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS)
+                if(status != AXIS2_SUCCESS){
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Signature failed. ERROR");
                     return AXIS2_FAILURE;
-
+                }
             }    
 
             /*Then Handle Supporting token stuff  */
@@ -211,14 +225,19 @@ rampart_shb_build_message(
             is_encrypt_before_sign = AXIS2_FALSE;
             /*First do signature specific stuff*/
             status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-            if(status != AXIS2_SUCCESS)
+            if(status != AXIS2_SUCCESS){
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Signing failed. ERROR");
                 return AXIS2_FAILURE;
-
+            }
             /*Then Handle Encryption stuff*/
 
             status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-            if(status!=AXIS2_SUCCESS )
+            if(status!=AXIS2_SUCCESS ){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shb] Encryption failed. ERROR");
                 return AXIS2_FAILURE;
+            }
         }
 
         /*If both encryption and signature is done we should interchange them.
@@ -255,7 +274,7 @@ rampart_shb_build_message(
                 enc_data_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_DATA);
                 if(!enc_data_node)
                 {
-                    AXIS2_LOG_INFO(env->log,"[rampart][shb]Signature is not encrypted,");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb]Signature is not encrypted,");
                     return AXIS2_FAILURE;
                 }
                 else
@@ -263,6 +282,7 @@ rampart_shb_build_message(
                     status = rampart_interchange_nodes(env, enc_key_node, enc_data_node);
                     if(status != AXIS2_SUCCESS)
                     {
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb]Cannot interchange enc_key and enc_data nodes");
                         return AXIS2_FAILURE;
                     }    
                 }    
@@ -274,7 +294,7 @@ rampart_shb_build_message(
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         /*Do Symmetric_binding specific things*/
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Symmetric Binding. We do not support yet");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. We do not support yet");
         return AXIS2_FAILURE;
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
@@ -294,7 +314,7 @@ rampart_shb_build_message(
                                                    sec_node, sec_ns_obj, ttl);
             if (status == AXIS2_FAILURE)
             {
-                AXIS2_LOG_INFO(env->log, "[rampart][shb] Timestamp Token build failed. ERROR");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Timestamp Token build failed. ERROR");
                 return AXIS2_FAILURE;
             }
         }
@@ -317,7 +337,7 @@ rampart_shb_build_message(
                             sec_ns_obj);
                 if (status == AXIS2_FAILURE)
                 {
-                    AXIS2_LOG_INFO(env->log, "[rampart][shb] UsernmaeToken build failed. ERROR");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] UsernmaeToken build failed. ERROR");
                     return AXIS2_FAILURE;
                 }
             }
@@ -325,6 +345,7 @@ rampart_shb_build_message(
         }
         return status;
     }
-    else
+    else{
         return AXIS2_FAILURE;
+    }        
 }
