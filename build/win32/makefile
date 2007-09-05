@@ -7,9 +7,9 @@ RAMPART_SOURCE_DIR = ..\..\
 
 RAMPART_INTDIR = .\int.msvc
 
-MAJOR_VER = 0
-MINOR_VER = 90
-PATCH_VER =
+MAJOR_VER = 1
+MINOR_VER = 0
+PATCH_VER = 
 
 RAMPART_DIST_NAME = .\..\rampartc-$(MAJOR_VER).$(MINOR_VER)
 #RAMPART_DISTDIR = .\..\rampartc

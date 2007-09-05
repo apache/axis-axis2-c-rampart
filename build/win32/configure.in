@@ -1,4 +1,4 @@
-AXIS2_BIN_DIR = D:\axis2c-bin-1.0.0-win32
+AXIS2_BIN_DIR = D:\axis2c-bin-1.1.0-win32
 OPENSSL_BIN_DIR = D:\OpenSSL
 DEBUG = 1
 
