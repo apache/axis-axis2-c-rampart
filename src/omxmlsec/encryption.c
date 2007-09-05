@@ -211,6 +211,9 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     password = oxs_asym_ctx_get_password(asym_ctx, env);
     status = oxs_key_mgr_load_key(env, asym_ctx, password);
     if(AXIS2_FAILURE == status){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+                  "Key loading failed for Key encryption");
+        
         return AXIS2_FAILURE;
     }
 
