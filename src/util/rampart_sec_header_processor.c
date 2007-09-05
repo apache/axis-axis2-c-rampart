@@ -903,6 +903,8 @@ rampart_shp_process_message(const axutil_env_t *env,
                 ref_list_node = oxs_axiom_get_first_child_node_by_name(env, cur_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL); 
 
                 axiom_node_detach(ref_list_node, env);
+                axiom_node_free_tree(ref_list_node, env);
+                ref_list_node = NULL;
 
             }
             /*First we should verify signature.*/

@@ -338,7 +338,11 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
     axiom_node_add_child(parent_of_enc_node, env, deserialized_node);
     axiom_node_detach(enc_type_node, env);
 
-    /*Free */
+    axiom_node_free_tree(enc_type_node, env);
+    enc_type_node = NULL;
+
+    /*Free result buf*/
+
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;
     
@@ -402,8 +406,8 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
     oxs_buffer_free(input_buf, env);
     input_buf = NULL;
 
-    AXIS2_FREE(env->allocator, cipher_val);
-    cipher_val = NULL;
+    /*AXIS2_FREE(env->allocator, cipher_val);
+    cipher_val = NULL;*/
     
     AXIS2_FREE(env->allocator, new_cipher_val);
     new_cipher_val = NULL;
