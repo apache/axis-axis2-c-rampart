@@ -199,8 +199,10 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
     axutil_hash_index_t *hi = NULL;
     axis2_char_t *local_name = NULL;
     axis2_char_t *ns_uri = NULL;
+    axis2_char_t *found_val = NULL;
 
     ele = axiom_node_get_data_element(node, env);
+
     /*Get attribute list of the element*/
     attr_list = axiom_element_extract_attributes(ele, env, node);
     if(!attr_list){
@@ -233,26 +235,29 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
             }else{
                 this_attr_ns_uri = "";
             }
-            if(0 == axutil_strcmp(local_name, this_attr_name) && 0 == axutil_strcmp(ns_uri, this_attr_ns_uri)){
-                axis2_char_t *found_val = NULL;
+            if(0 == axutil_strcmp(local_name, this_attr_name) && 0 == axutil_strcmp(ns_uri, this_attr_ns_uri))
+            {
                 /*Got it !!!*/
                 found_val = axiom_attribute_get_value(om_attr, env);
-                axutil_hash_free(attr_list, env);
-                attr_list = NULL;
-                axiom_attribute_free(om_attr, env);
-                om_attr = NULL;
-
-                return found_val;
+                break;
             }
-            axiom_attribute_free(om_attr, env);
-            om_attr = NULL;
         }
     }
+
+    for(hi = axutil_hash_first(attr_list, env); hi; hi = axutil_hash_next(env, hi))
+    {
+        void *val = NULL;
+        axutil_hash_this(hi, NULL, NULL, &val);
+        if (val)
+        {
+            axiom_attribute_free((axiom_attribute_t *)val, env);  
+            val = NULL;  
+        }
+    }    
     axutil_hash_free(attr_list, env);
     attr_list = NULL;
   
-    /*Not found! return NULL*/
-   return NULL;
+    return found_val;
 }
 
 
