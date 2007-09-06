@@ -158,7 +158,7 @@ openssl_rsa_prv_decrypt(
         return (-1);
     }
     oxs_buffer_populate(out, env, decrypted, ret);
-    
+
     /*Free*/
     AXIS2_FREE(env->allocator, decrypted);
     decrypted = NULL;

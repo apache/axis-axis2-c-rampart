@@ -115,7 +115,7 @@ openssl_pkey_set_key(
 
     if (pkey->key)
     {
-       /* AXIS2_FREE(env->allocator, pkey->key);*/
+        /* AXIS2_FREE(env->allocator, pkey->key);*/
         EVP_PKEY_free(pkey->key);
         pkey->key = NULL;
     }
@@ -223,7 +223,7 @@ openssl_pkey_populate(
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
+axis2_status_t AXIS2_CALL
 openssl_pkey_increment_ref(
     openssl_pkey_t *pkey,
     const axutil_env_t *env)
@@ -242,11 +242,11 @@ openssl_pkey_free(
 {
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
- 
+
     /*We do not FREE. If somebody still need this*/
     if(--(pkey->ref) > 0){
         return AXIS2_SUCCESS ;
-    }    
+    }
 
     if (pkey->key)
     {

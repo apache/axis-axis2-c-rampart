@@ -73,7 +73,7 @@ openssl_sig_sign(const axutil_env_t *env,
     oxs_buffer_populate(output_buf, env, sig_buf, sig_len);
 
     EVP_MD_CTX_cleanup(&md_ctx);
-    
+
     return sig_len;
 }
 
@@ -107,16 +107,16 @@ openssl_sig_verify(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyInit failed" );
         return AXIS2_FAILURE;
     }
-    ret = EVP_VerifyUpdate(&md_ctx,  
-                            oxs_buffer_get_data(input_buf, env),  
-                            oxs_buffer_get_size(input_buf, env));
+    ret = EVP_VerifyUpdate(&md_ctx,
+                           oxs_buffer_get_data(input_buf, env),
+                           oxs_buffer_get_size(input_buf, env));
     if(ret != 1) {
         /*Error*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyUpdate failed" );
         return AXIS2_FAILURE;
     }
 
-    ret = EVP_VerifyFinal(&md_ctx, 
+    ret = EVP_VerifyFinal(&md_ctx,
                           oxs_buffer_get_data(sig_buf, env),
                           oxs_buffer_get_size(sig_buf, env),
                           pkey);

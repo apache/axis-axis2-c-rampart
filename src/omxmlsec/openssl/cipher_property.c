@@ -218,7 +218,7 @@ openssl_cipher_property_create(const axutil_env_t *env)
 
 axis2_status_t AXIS2_CALL
 openssl_cipher_property_free(
-    openssl_cipher_property_t * cprop, 
+    openssl_cipher_property_t * cprop,
     const axutil_env_t *env)
 {
 

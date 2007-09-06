@@ -82,7 +82,7 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     /*Free*/
     BIO_free(mem);
     mem = NULL;
-    
+
     AXIS2_FREE(env->allocator, buff);
     buff = NULL;
 
@@ -99,9 +99,9 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
                            X509 **cert)
 {
     BIO *in = NULL;
-    
+
     in = BIO_new_file(filename,"r");
-    
+
     if (!in)
     {
         return AXIS2_FAILURE;
@@ -116,7 +116,7 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
     if (-1 == BIO_free(in)  ){
         return AXIS2_FAILURE;
     }
-    
+
     if(!*cert)
     {
         return AXIS2_FAILURE;
@@ -222,7 +222,7 @@ openssl_x509_get_cert_data(const axutil_env_t *env,
         return buffer;
     }else{
         return NULL;
-    }        
+    }
 }
 
 
@@ -236,13 +236,13 @@ openssl_x509_get_serial(const axutil_env_t *env,
     serial = (axis2_char_t*)i2s_ASN1_INTEGER(NULL, X509_get_serialNumber(cert));
     if(serial){
         no = atoi(serial);
-    
+
         AXIS2_FREE(env->allocator, serial);
         serial = NULL;
         return no;
-     }else{
+    }else{
         return -1;
-     }
+    }
 }
 
 AXIS2_EXTERN unsigned long AXIS2_CALL
@@ -307,7 +307,7 @@ openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
     /*Free key_id*/
     M_ASN1_OCTET_STRING_free(key_id);
     key_id = NULL;
-    
+
     ret += len;
     ski = axutil_strdup(env, output);
     return ski;
@@ -391,10 +391,10 @@ openssl_x509_get_info(const axutil_env_t *env,
     }
     n = BIO_get_mem_data(out, &data);
     result = axutil_strndup( env, data, n);
-   
+
     BIO_free(out);
     out = NULL;
-    
+
     return result;
 }
 
