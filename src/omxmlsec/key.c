@@ -56,7 +56,7 @@ oxs_key_get_name(
 
 oxs_buffer_t *AXIS2_CALL
 oxs_key_get_buffer(const oxs_key_t *key,
-    const axutil_env_t *env)
+                   const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
     return key->buf;
@@ -118,13 +118,13 @@ oxs_key_set_usage(
 }
 
 oxs_key_t *AXIS2_CALL
-oxs_key_dup(oxs_key_t *key, 
-        const axutil_env_t *env)
+oxs_key_dup(oxs_key_t *key,
+            const axutil_env_t *env)
 {
     oxs_key_t *new_key = NULL;
 
     AXIS2_ENV_CHECK(env, NULL);
-    
+
     AXIS2_PARAM_CHECK(env->error, key, NULL);
 
     /*Create new key*/
@@ -134,13 +134,13 @@ oxs_key_dup(oxs_key_t *key,
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
-   
-    /*Populate with data buf*/   
-    oxs_key_populate_with_buf(new_key, 
-                    env,
-                    oxs_key_get_buffer(key, env),
-                    axutil_strdup(env, key->name),
-                    key->usage);
+
+    /*Populate with data buf*/
+    oxs_key_populate_with_buf(new_key,
+                              env,
+                              oxs_key_get_buffer(key, env),
+                              axutil_strdup(env, key->name),
+                              key->usage);
     return new_key;
 }
 
@@ -174,7 +174,7 @@ oxs_key_free(oxs_key_t *key,
              const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     oxs_buffer_free(key->buf, env);
     key->buf = NULL;
     AXIS2_FREE(env->allocator,  key->name);
@@ -188,17 +188,17 @@ oxs_key_free(oxs_key_t *key,
 
 axis2_status_t AXIS2_CALL
 oxs_key_populate_with_buf(oxs_key_t *key,
-                 const axutil_env_t *env,
-                 oxs_buffer_t *buffer,
-                 axis2_char_t *name,
-                 int usage)
+                          const axutil_env_t *env,
+                          oxs_buffer_t *buffer,
+                          axis2_char_t *name,
+                          int usage)
 {
-    int ret;   
+    int ret;
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    
+
     ret = oxs_key_set_name(key, env, name);
-    ret = oxs_key_set_usage(key, env, usage); 
-   
+    ret = oxs_key_set_usage(key, env, usage);
+
     ret = oxs_buffer_populate(key->buf, env,  oxs_buffer_get_data(buffer, env), oxs_buffer_get_size(buffer, env));
     return AXIS2_SUCCESS;
 }
@@ -238,7 +238,7 @@ oxs_key_read_from_file(oxs_key_t *key,
     status = oxs_key_populate(key, env,
                               oxs_buffer_get_data(buf, env), file_name,
                               oxs_buffer_get_size(buf, env), OXS_KEY_USAGE_NONE);
-    
+
     oxs_buffer_free(buf, env);
     buf = NULL;
 
@@ -282,7 +282,7 @@ oxs_key_for_algo(oxs_key_t *key,
                            oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
 
     oxs_buffer_free(key_buf, env);
-    key_buf = NULL;    
+    key_buf = NULL;
 
     return ret;
 }

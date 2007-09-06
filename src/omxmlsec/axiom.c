@@ -173,7 +173,7 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_axiom_get_attribute_value_of_node_by_name(const axutil_env_t *env,
         axiom_node_t *node,
-        axis2_char_t *attribute_name, 
+        axis2_char_t *attribute_name,
         axis2_char_t *ns)
 {
     axis2_char_t *attribute_value = NULL;
@@ -250,13 +250,13 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
         axutil_hash_this(hi, NULL, NULL, &val);
         if (val)
         {
-            axiom_attribute_free((axiom_attribute_t *)val, env);  
-            val = NULL;  
+            axiom_attribute_free((axiom_attribute_t *)val, env);
+            val = NULL;
         }
-    }    
+    }
     axutil_hash_free(attr_list, env);
     attr_list = NULL;
-  
+
     return found_val;
 }
 

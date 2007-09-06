@@ -76,7 +76,7 @@ oxs_buffer_dup(oxs_buffer_t *buffer, const axutil_env_t *env)
 
     AXIS2_ENV_CHECK(env, NULL);
     buf =  oxs_buffer_create(env);
-    status = oxs_buffer_populate(buf, env, oxs_buffer_get_data(buffer, env), oxs_buffer_get_size(buffer, env));    
+    status = oxs_buffer_populate(buf, env, oxs_buffer_get_data(buffer, env), oxs_buffer_get_size(buffer, env));
     return buf;
 }
 

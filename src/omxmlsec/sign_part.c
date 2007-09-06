@@ -196,7 +196,7 @@ oxs_sign_part_free(oxs_sign_part_t *sign_part,
     }
 
     sign_part->node = NULL;
-    
+
     if(sign_part->transforms){
         int size = 0;
         int j = 0;
@@ -212,7 +212,7 @@ oxs_sign_part_free(oxs_sign_part_t *sign_part,
         axutil_array_list_free(sign_part->transforms, env);
         sign_part->transforms = NULL;
     }
-    
+
 
     AXIS2_FREE(env->allocator,  sign_part);
     sign_part = NULL;

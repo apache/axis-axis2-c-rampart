@@ -227,6 +227,7 @@ openssl_cipher_property_free(
 
     if (cprop->cipher)
     {
+        /*We should not free the EVP_CIPHER* cipher here*/
         /*AXIS2_FREE(env->allocator, cprop->cipher);*/
         cprop->cipher = NULL;
     }

@@ -42,7 +42,7 @@ oxs_iv_generate_for_algo(const axutil_env_t *env,
 
     openssl_cipher_property_free(cprop, env);
     cprop = NULL;
-    
+
     /*Here we have predefined IVs in the openssl_constants.
       Get the correct one using the size*/
 

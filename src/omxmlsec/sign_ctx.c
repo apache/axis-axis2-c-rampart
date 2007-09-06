@@ -282,7 +282,7 @@ oxs_sign_ctx_free(oxs_sign_ctx_t *sign_ctx,
         openssl_pkey_free(sign_ctx->prv_key, env);
         sign_ctx->prv_key = NULL;
     }
-    
+
     if(sign_ctx->pub_key)
     {
         openssl_pkey_free(sign_ctx->pub_key, env);
@@ -290,7 +290,7 @@ oxs_sign_ctx_free(oxs_sign_ctx_t *sign_ctx,
     }
 
     if(sign_ctx->sign_parts)
-    {    
+    {
         int size = 0;
         int j = 0;
         size = axutil_array_list_size(sign_ctx->sign_parts, env);
@@ -301,11 +301,11 @@ oxs_sign_ctx_free(oxs_sign_ctx_t *sign_ctx,
             sig_part = axutil_array_list_get(sign_ctx->sign_parts, env, j);
             oxs_sign_part_free(sig_part, env);
             sig_part = NULL;
-        } 
+        }
         axutil_array_list_free(sign_ctx->sign_parts, env);
         sign_ctx->sign_parts = NULL;
     }
-    
+
     if(sign_ctx->certificate){
         oxs_x509_cert_free(sign_ctx->certificate, env);
         sign_ctx->certificate = NULL;

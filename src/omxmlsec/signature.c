@@ -62,11 +62,11 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     /*Free signed_result_buf*/
     oxs_buffer_free(signed_result_buf, env);
     signed_result_buf = NULL;
-    
+
     /*Free encoded_str*/
     AXIS2_FREE(env->allocator, encoded_str);
     encoded_str = NULL;
-    
+
     return AXIS2_SUCCESS;
 }
 
@@ -79,7 +79,6 @@ oxs_sig_sign(const axutil_env_t *env,
              oxs_buffer_t *output)
 {
     axis2_char_t *sign_algo = NULL;
-
 
     /*Get algo*/
     sign_algo = oxs_sign_ctx_get_sign_mtd_algo(sign_ctx, env);
@@ -97,7 +96,6 @@ oxs_sig_sign(const axutil_env_t *env,
                   "Cannot support cipher %s", sign_algo);
         return AXIS2_FAILURE;
     }
-
 
     return AXIS2_SUCCESS;
 }
@@ -153,15 +151,16 @@ oxs_sig_verify(const axutil_env_t *env,
         sig_buf = NULL;
         oxs_buffer_free(in_buf, env);
         in_buf = NULL;
+
         return AXIS2_FAILURE;
     }else{
-
+        /*Signature SUCCESS*/
         AXIS2_LOG_INFO(env->log, "[oxs][sig] Signature verification SUCCESS " );
         oxs_buffer_free(sig_buf, env);
         sig_buf = NULL;
         oxs_buffer_free(in_buf, env);
         in_buf = NULL;
+
         return AXIS2_SUCCESS;
     }
-
 }

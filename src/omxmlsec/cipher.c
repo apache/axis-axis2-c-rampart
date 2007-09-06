@@ -48,7 +48,6 @@ oxs_get_cipher_property_for_url(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION,
                   OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
         return NULL;
-
     }
     return cprop;
 }

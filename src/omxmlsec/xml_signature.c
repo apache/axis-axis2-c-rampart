@@ -181,7 +181,7 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     /*Free*/
     AXIS2_FREE(env->allocator, digest);
     digest = NULL;
- 
+
     return AXIS2_SUCCESS;
 }
 /**
@@ -363,7 +363,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
             }
             /*Set the next node to be processed*/
             tr_node = axiom_node_get_next_sibling(tr_node, env);
-            /*axiom_util_get_next_sibling_element(axiom_node_get_data_element(tr_node, env), env, 
+            /*axiom_util_get_next_sibling_element(axiom_node_get_data_element(tr_node, env), env,
                                                             tr_node, &tr_node);*/
         }/*eof while*/
         /*Set transforms for this signature part*/
@@ -372,7 +372,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
         /*At the end, set the next node as the child node*/
         /*child_node = axiom_node_get_next_sibling(child_node, env);*/
         axiom_util_get_next_sibling_element(axiom_node_get_data_element(child_node, env), env,
-                                                                            child_node, &child_node);
+                                            child_node, &child_node);
     }else{
         /*There are no transforms for this sign part*/
     }
@@ -490,7 +490,7 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
     /*The very next child of SignedInfo Should be the ds:SignatureValue*/
     /*sig_val_node = axiom_node_get_next_sibling(signed_info_node, env);*/
     axiom_util_get_next_sibling_element(axiom_node_get_data_element(signed_info_node, env), env,
-                                                                        signed_info_node, &sig_val_node);
+                                        signed_info_node, &sig_val_node);
     if(0 == axutil_strcmp( OXS_NODE_SIGNATURE_VALUE, axiom_util_get_localname(sig_val_node, env))){
         axis2_char_t *sig_val = NULL;
         axis2_char_t *newline_removed = NULL;
@@ -553,7 +553,7 @@ oxs_xml_sig_verify_sign_part(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Digest verification failed for node Id= %s  ", id );
         status =  AXIS2_FAILURE;
     }
-    
+
     /*FREE*/
     AXIS2_FREE(env->allocator, new_digest);
     new_digest = NULL;

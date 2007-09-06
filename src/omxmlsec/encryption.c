@@ -52,10 +52,10 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
     /*Get the IV*/
-    iv = axutil_strndup(env, 
+    iv = axutil_strndup(env,
                         (axis2_char_t*)oxs_iv_generate_for_algo(env,
-                                   oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env)),
-                         openssl_cipher_property_get_iv_size(cprop, env));
+                                                                oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env)),
+                        openssl_cipher_property_get_iv_size(cprop, env));
 
 
     /*Create the openssl context*/
@@ -82,7 +82,6 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
 
         return AXIS2_FAILURE;
     }
-
 
     ret = openssl_cipher_ctx_set_cipher(oc_ctx,
                                         env,
@@ -150,6 +149,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         }
         /*Populate decoded (input to the crypto function) buffer*/
         ret = oxs_buffer_populate(decoded_buf, env, decoded_data, decoded_len);
+        
         /*Then we decrypt*/
         enclen = openssl_bc_crypt(env, oc_ctx, decoded_buf, result, OPENSSL_DECRYPT);
 
@@ -158,6 +158,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
                       "openssl_block_cipher_crypt FAILED");
             return AXIS2_FAILURE;
         }
+    
         /*Free*/
         oxs_buffer_free(decoded_buf, env);
         decoded_buf = NULL;
@@ -173,10 +174,13 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
     /*FREE*/
     openssl_cipher_property_free(cprop, env);
     cprop = NULL;
+    
     AXIS2_FREE(env->allocator, iv);
     iv = NULL;
+    
     openssl_cipher_ctx_free(oc_ctx, env);
     oc_ctx = NULL;
+    
     return AXIS2_SUCCESS;
 }
 
@@ -213,7 +217,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     if(AXIS2_FAILURE == status){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Key loading failed for Key encryption");
-        
+
         return AXIS2_FAILURE;
     }
 

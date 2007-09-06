@@ -308,11 +308,11 @@ oxs_ctx_set_key(
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
- /*   if (ctx->key)
-    {
-        oxs_key_free(ctx->key, env);
-        ctx->key = NULL;
-    }*/
+    /*   if (ctx->key)
+       {
+           oxs_key_free(ctx->key, env);
+           ctx->key = NULL;
+       }*/
     ctx->key = key;
 
     return AXIS2_SUCCESS;

@@ -345,7 +345,7 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
 
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;
-    
+
     AXIS2_FREE(env->allocator, decrypted_data);
     decrypted_data = NULL;
 
@@ -408,10 +408,10 @@ oxs_xml_enc_decrypt_data(const axutil_env_t *env,
 
     /*AXIS2_FREE(env->allocator, cipher_val);
     cipher_val = NULL;*/
-    
+
     AXIS2_FREE(env->allocator, new_cipher_val);
     new_cipher_val = NULL;
-    
+
     return status;
 }
 
@@ -524,7 +524,7 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     if(!cipher_val){
         return AXIS2_FAILURE;
     }
-    
+
     new_cipher_val = oxs_util_get_newline_removed_string(env, cipher_val);
 
     /*Get key used to encrypt*/
@@ -550,8 +550,8 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
 
     AXIS2_FREE(env->allocator, new_cipher_val);
     new_cipher_val = NULL;
-    
-    
+
+
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }

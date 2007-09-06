@@ -74,6 +74,7 @@ oxs_transform_set_id(
         transform->id = NULL;
     }
     transform->id = axutil_strdup(env, id);
+    
     return AXIS2_SUCCESS;
 }
 
@@ -84,6 +85,7 @@ oxs_transform_set_input_data_type(
     oxs_tr_dtype_t input_data_type)
 {
     transform->input_data_type = input_data_type;
+    
     return AXIS2_SUCCESS;
 }
 
@@ -94,6 +96,7 @@ oxs_transform_set_output_data_type(
     oxs_tr_dtype_t output_data_type)
 {
     transform->output_data_type = output_data_type;
+    
     return AXIS2_SUCCESS;
 }
 
@@ -104,6 +107,7 @@ oxs_transform_set_transform_func(
     oxs_transform_tr_func transform_func)
 {
     transform->transform_func = transform_func;
+    
     return AXIS2_SUCCESS;
 }
 
@@ -113,6 +117,7 @@ oxs_transform_create(const axutil_env_t *env)
 {
     oxs_transform_t *transform = NULL;
     AXIS2_ENV_CHECK(env, NULL);
+    
     transform = AXIS2_MALLOC(env->allocator, sizeof(oxs_transform_t));
     if (!transform)
     {
@@ -120,8 +125,9 @@ oxs_transform_create(const axutil_env_t *env)
         return NULL;
     }
 
-    /*TODO Set defaults*/
     transform->id = NULL;
+    transform->input_data_type = OXS_TRANSFORM_TYPE_UNKNOWN;
+    transform->output_data_type = OXS_TRANSFORM_TYPE_UNKNOWN;
 
     return transform;
 }
