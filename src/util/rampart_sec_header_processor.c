@@ -145,6 +145,7 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
         if(rampart_context_is_include_timestamp(rampart_context,env))
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Timestamp is not in the message");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "Timestamp is not in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
             return AXIS2_FAILURE;
         }else{
             return AXIS2_SUCCESS;
@@ -153,6 +154,7 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
     else if(!rampart_context_is_include_timestamp(rampart_context,env))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Timestamp should not be in the message.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "Timestamp should not be in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
         return AXIS2_FAILURE;
     }
     else
