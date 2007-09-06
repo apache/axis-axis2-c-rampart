@@ -71,6 +71,7 @@ oxs_token_build_data_reference_list(const axutil_env_t *env, axiom_node_t *paren
 
         if(!data_ref_node) {return AXIS2_FAILURE;}
 
+
     }
     return AXIS2_SUCCESS;
 }

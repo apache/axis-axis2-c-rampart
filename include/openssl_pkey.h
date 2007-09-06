@@ -118,6 +118,10 @@ extern "C" {
         const axutil_env_t *env
     );
 
+    axis2_status_t AXIS2_CALL
+    openssl_pkey_increment_ref(
+        openssl_pkey_t *pkey,
+        const axutil_env_t *env);
     /*Create function*/
     AXIS2_EXTERN openssl_pkey_t *AXIS2_CALL
     openssl_pkey_create(const axutil_env_t *env);
