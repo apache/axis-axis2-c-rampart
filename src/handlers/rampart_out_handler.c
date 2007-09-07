@@ -35,8 +35,8 @@
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_out_handler_invoke(struct axis2_handler *handler,
-        const axutil_env_t * env,
-        struct axis2_msg_ctx *msg_ctx);
+                           const axutil_env_t * env,
+                           struct axis2_msg_ctx *msg_ctx);
 
 
 
@@ -55,19 +55,15 @@ rampart_out_handler_create(const axutil_env_t *env,  axutil_string_t *name)
         return NULL;
     }
 
-    /* set the base struct's invoke op */
-#if 0
-    if (handler->ops)
-        handler->ops->invoke = rampart_out_handler_invoke;
-#else
+    /*Set the base struct's invoke op */
     axis2_handler_set_invoke(handler, env, rampart_out_handler_invoke);
-#endif
+    
     return handler;
 }
 
 axis2_status_t AXIS2_CALL
 rampart_out_handler_invoke(struct axis2_handler * handler,
-        const axutil_env_t * env, axis2_msg_ctx_t * msg_ctx)
+                           const axutil_env_t * env, axis2_msg_ctx_t * msg_ctx)
 {
     axiom_soap_envelope_t *soap_envelope = NULL;
     axiom_soap_header_t *soap_header = NULL;
@@ -76,7 +72,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
     axis2_status_t status = AXIS2_FAILURE;
     rampart_context_t *rampart_context = NULL;
     axis2_bool_t serverside = AXIS2_FALSE;
-    
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
@@ -84,7 +80,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
     soap_envelope =  axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if (!soap_envelope)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] No SOAP envelope found. ERROR");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_out_handler] No SOAP envelope found. ERROR");
         return AXIS2_FAILURE;
     }
 
@@ -117,7 +113,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
         /*This method is implemented in rampart_handler utils.*/
         if(!rampart_is_rampart_engaged(env,msg_ctx))
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] Not intended for processing in Rampart");            
+            AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] Ramart is not engaged. No security support");
             return AXIS2_SUCCESS;
         }
 
@@ -125,16 +121,16 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
 
         if(!rampart_context)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] ramaprt_context creation failed.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_out_handler] ramaprt_context creation failed.");
             return AXIS2_FAILURE;
         }
 
         /*We call the security header builder*/
         status = rampart_shb_build_message(env, msg_ctx, rampart_context, soap_envelope);
         if(AXIS2_FAILURE == status){
-                AXIS2_LOG_INFO(env->log,
-                    "[rampart][rampart_out_handler] Security header building failed ERROR");
-                return AXIS2_FAILURE;
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                           "[rampart][rampart_out_handler] Security header building failed ERROR");
+            return AXIS2_FAILURE;
         }
         if(serverside)
         {
@@ -142,5 +138,6 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
             rampart_context = NULL;
         }
     }
+
     return status;
 }
