@@ -246,14 +246,16 @@ rampart_username_token_validate(
 
     ut_ele = axiom_node_get_data_element(ut_node, env);
     if(!ut_ele)
+    {    
+             
         return AXIS2_FAILURE;
-
+    }
     /*Check: Any USERNAME_TOKEN MUST NOT have more than one PASSWORD*/
 
     if (1 <  oxs_axiom_get_number_of_children_with_qname(env, ut_node, 
         RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_usernametoken] Username token must not have more than one password");
         return AXIS2_FAILURE;
     }
@@ -263,7 +265,7 @@ rampart_username_token_validate(
     if (1 <  oxs_axiom_get_number_of_children_with_qname(env, 
         ut_node, RAMPART_SECURITY_USERNAMETOKEN_CREATED, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_usernametoken] Username token must not have more than one creted element");
         return AXIS2_FAILURE;
     }
@@ -273,7 +275,7 @@ rampart_username_token_validate(
     if (1 < oxs_axiom_get_number_of_children_with_qname(env, ut_node, 
         RAMPART_SECURITY_USERNAMETOKEN_NONCE, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_usernametoken] Username token must not have more than one nonce element");
         return AXIS2_FAILURE;
     }
@@ -309,7 +311,7 @@ rampart_username_token_validate(
                 {
                     /*R4201 Any PASSWORD MUST specify a Type attribute */
 
-                    AXIS2_LOG_INFO(env->log, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                         "[rampart][rampart_usernametoken] Password Type is not specified in the password element");
                     return AXIS2_FAILURE;
                 }
@@ -324,8 +326,12 @@ rampart_username_token_validate(
                 {
                     if(0 != axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
                     {
-                        AXIS2_LOG_INFO(env->log, 
-                            "[rampart][rampart_usernametoken] Password Type is Wrong");
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shp] Password Type is Wrong ");
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION,
+                            "Password Type is Wrong. Should be Digested.", 
+                            RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+                    
                         return AXIS2_FAILURE;
                     }
                 }
@@ -333,8 +339,12 @@ rampart_username_token_validate(
                 {
                     if(0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
                     {
-                        AXIS2_LOG_INFO(env->log, 
-                            "[rampart][rampart_usernametoken] Password Type is Wrong");
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shp] Password Type is Wrong ");
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION,
+                            "Password Type is Wrong. Should be PlainText.", 
+                            RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+                        
                         return AXIS2_FAILURE;
                     }
                 }
@@ -378,7 +388,7 @@ rampart_username_token_validate(
 
     if (!username)
     {
-        AXIS2_LOG_INFO(env->log, 
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart][rampart_usernametoken] Username is not specified");
         return AXIS2_FAILURE;
     }
@@ -418,13 +428,14 @@ rampart_username_token_validate(
             }
             else
             {
-                AXIS2_LOG_INFO(env->log, 
-                        "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", 
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", 
                         username, auth_status);
                 return AXIS2_FAILURE;
             }
         }
     }
+
     else
     {
         authenticate_with_password = 
@@ -441,8 +452,8 @@ rampart_username_token_validate(
             }
             else
             {
-                AXIS2_LOG_INFO(env->log, 
-                        "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", 
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", 
                         username, auth_status);
                 return AXIS2_FAILURE;
             }
@@ -464,8 +475,8 @@ rampart_username_token_validate(
         }
         else
         {
-            AXIS2_LOG_INFO(env->log, 
-                    "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", 
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart][rampart_usernametoken] Password is not valid for user %s : status %d", 
                     username, auth_status);
             return AXIS2_FAILURE;
         }
@@ -488,7 +499,10 @@ rampart_username_token_validate(
                 param = rampart_context_get_ctx(rampart_context, env);
                 if(!param)
                 {
-                    AXIS2_LOG_INFO(env->log,"[rampart][rampart_usernametoken] Param is NULL");
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                        "Error in the Internal configuration.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_usernametoken] Error in the pwcb function.");
                     return AXIS2_FAILURE;
                 }
                 password_from_svr = (*password_function)(env, username, param);
@@ -496,9 +510,13 @@ rampart_username_token_validate(
             else
             {
                 password_callback = rampart_context_get_password_callback(rampart_context, env);
-                if(!password_callback){
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                if(!password_callback)
+                {
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                        "Error in the Internal configuration.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_usernametoken] Password callback module is not specified");
+                
                     return AXIS2_FAILURE;
                 }
                 AXIS2_LOG_INFO(env->log, 
@@ -544,7 +562,7 @@ rampart_username_token_validate(
         }
         else
         {
-            AXIS2_LOG_INFO(env->log, 
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
                 "[rampart][rampart_usernametoken] Password is not valid for user %s", 
                 username);
             return AXIS2_FAILURE;
