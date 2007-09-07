@@ -1285,24 +1285,46 @@ rampart_shp_process_message(const axutil_env_t *env,
             }
 
             /*After decrypting we may verify signature stuff.*/
-            if(rampart_context_check_whether_to_sign(rampart_context,env))
+            if(rampart_context_check_whether_to_sign(rampart_context, env))
             {
-                cur_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_SIGNATURE);
+                cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
                 if(!cur_node)
                 {
-                    AXIS2_LOG_INFO(env->log, "[rampart][shp] No Signature element");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                         "[rampart][shp] No Signature element");
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                        "Message is not signed ", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+
                     return AXIS2_FAILURE;
                 }
-                if(!rampart_shp_validate_qnames(env,cur_node))
+
+                if(!rampart_shp_validate_qnames(env, cur_node))
                 {
-                    AXIS2_LOG_INFO(env->log, "[rampart][shp] Error in the security header");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shp] Error in the Signature element");
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                        "Error in the Signature element ", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
                     return AXIS2_FAILURE;
                 }
+
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing Signature element.");
-                status = rampart_shp_process_signature(env,msg_ctx,rampart_context,soap_envelope,sec_node,cur_node);
-                if(status!=AXIS2_SUCCESS){
-                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
-                    return status;
+
+                status = rampart_shp_process_signature(env, msg_ctx, 
+                    rampart_context, soap_envelope, sec_node, cur_node);
+                
+                if(status != AXIS2_SUCCESS)
+                {
+                    if(!axis2_msg_ctx_get_fault_soap_envelope(msg_ctx, env))
+                    {
+                        rampart_create_fault_envelope(
+                            env, RAMPART_FAULT_INVALID_SECURITY, "Signature is not valid", 
+                            RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                        return status;
+                    }
+                    else
+                    {
+                        return status;
+                    }
                 }
             }
             else
@@ -1318,17 +1340,26 @@ rampart_shp_process_message(const axutil_env_t *env,
             }
         }
         /*Now we can process timestamp*/
-        status = rampart_shp_process_timestamptoken(env,msg_ctx,rampart_context,sec_node);
-        if(status!=AXIS2_SUCCESS){
+
+        status = rampart_shp_process_timestamptoken(
+            env, msg_ctx, rampart_context, sec_node);
+        
+        if(status != AXIS2_SUCCESS)
+        {
             return status;
         }
 
         if( axis2_msg_ctx_get_server_side(msg_ctx, env))
         {
-            status = rampart_shp_process_usernametoken(env,msg_ctx,rampart_context,sec_node);
+            status = rampart_shp_process_usernametoken(
+                env, msg_ctx, rampart_context, sec_node);
+            
             if(status!=AXIS2_SUCCESS)
+            {
                 return status;
+            }
         }
+
         if(NULL == rampart_context_get_rd_val(rampart_context, env)){
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Replay detection is not specified. Nothing to do");
             need_replay_detection = AXIS2_FALSE;
@@ -1358,25 +1389,39 @@ rampart_shp_process_message(const axutil_env_t *env,
         /*Do the action accordingly*/
         return AXIS2_SUCCESS;
     }
-    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
+    
+    else if((rampart_context_get_binding_type(rampart_context, env)) 
+                == RP_PROPERTY_SYMMETRIC_BINDING)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] We still not support Symmetric binding.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+            "Symmetric binding is not supported.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "Symmetric binding is not supported");
         return AXIS2_FAILURE;
     }
-    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
+    
+    else if((rampart_context_get_binding_type(rampart_context, env)) == 
+            RP_PROPERTY_TRANSPORT_BINDING)
     {
         axis2_status_t status = AXIS2_FAILURE;
 
-        status = rampart_shp_process_timestamptoken(env,msg_ctx,rampart_context,sec_node);
-        if(status!=AXIS2_SUCCESS){
+        status = rampart_shp_process_timestamptoken(
+            env, msg_ctx, rampart_context, sec_node);
+
+        if(status != AXIS2_SUCCESS)
+        {
             return status;
         }
 
         if( axis2_msg_ctx_get_server_side(msg_ctx, env))
         {
-            status = rampart_shp_process_usernametoken(env,msg_ctx,rampart_context,sec_node);
+            status = rampart_shp_process_usernametoken(
+                env, msg_ctx, rampart_context, sec_node);
+            
             if(status!=AXIS2_SUCCESS)
+            {    
                 return status;
+            }    
         }
 
         if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/
@@ -1402,7 +1447,10 @@ rampart_shp_process_message(const axutil_env_t *env,
     }
     else
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Invalid binding type.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+            "Unsupportive binding type.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp] Unsupportive binding type.");
         return AXIS2_FAILURE;
     }
 
