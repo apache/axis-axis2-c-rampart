@@ -83,7 +83,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     should not process the message but return success.*/
 
     /*This method is implemented in rampart_handler utils.*/
-    if(!rampart_is_rampart_engaged(env,msg_ctx))
+    if(!rampart_is_rampart_engaged(env, msg_ctx))
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_in_handler] Rampart is not engaged. No security checks. ");
         return AXIS2_SUCCESS;
@@ -101,7 +101,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     if (!soap_header)
     {
         /*No SOAP header, so no point of proceeding*/
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_in_handler] No SOAP header found. ERROR");
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_in_handler] No SOAP header found.");
         return AXIS2_SUCCESS;
     }
     AXIS2_LOG_TRACE(env->log, AXIS2_LOG_SI, "[rampart][rampart_in_handler] SOAP header found");
@@ -116,12 +116,12 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
 
     sec_node = rampart_get_security_token(env, msg_ctx, soap_header);
 
-    if((rampart_context_get_binding_type(rampart_context,env)) != RP_PROPERTY_TRANSPORT_BINDING)
+    if((rampart_context_get_binding_type(rampart_context, env)) != RP_PROPERTY_TRANSPORT_BINDING)
     {
         if(!sec_node)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                           "[rampart][rampart_in_handler] No security header element.");
+                "[rampart][rampart_in_handler] No security header element.");
             return AXIS2_FAILURE;
         }
     }
@@ -131,7 +131,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     if(AXIS2_FAILURE == status)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_in_handler] Unable to set the security processed results");
+            "[rampart][rampart_in_handler] Unable to set the security processed results");
     }
 
     status = rampart_shp_process_message(env, msg_ctx, rampart_context,

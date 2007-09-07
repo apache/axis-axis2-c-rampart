@@ -60,9 +60,9 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
     if(!local_name){
         return AXIS2_FALSE;
     }
-    if(axutil_strcmp(local_name,RAMPART_SECURITY_TIMESTAMP)==0)
+    if(axutil_strcmp(local_name, RAMPART_SECURITY_TIMESTAMP)==0)
     {
-        qname = axutil_qname_create(env, local_name, RAMPART_WSU_XMLNS,RAMPART_WSU);
+        qname = axutil_qname_create(env, local_name, RAMPART_WSU_XMLNS, RAMPART_WSU);
     }
     else if(axutil_strcmp(local_name,RAMPART_SECURITY_USERNAMETOKEN)==0)
     {
