@@ -60,27 +60,27 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
     if(!local_name){
         return AXIS2_FALSE;
     }
-    if(axutil_strcmp(local_name, RAMPART_SECURITY_TIMESTAMP)==0)
+    if(axutil_strcmp(local_name, RAMPART_SECURITY_TIMESTAMP) == 0)
     {
-        qname = axutil_qname_create(env, local_name, RAMPART_WSU_XMLNS, RAMPART_WSU);
+        qname = axutil_qname_create(env, local_name, RAMPART_WSU_XMLNS, NULL/*RAMPART_WSU*/);
     }
-    else if(axutil_strcmp(local_name,RAMPART_SECURITY_USERNAMETOKEN)==0)
+    else if(axutil_strcmp(local_name, RAMPART_SECURITY_USERNAMETOKEN) ==0)
     {
-        qname = axutil_qname_create(env, local_name, RAMPART_WSSE_XMLNS, RAMPART_WSSE);
+        qname = axutil_qname_create(env, local_name, RAMPART_WSSE_XMLNS, NULL/*RAMPART_WSSE*/);
     }
     else if(axutil_strcmp(local_name,OXS_NODE_ENCRYPTED_KEY)==0)
     {
-        qname = axutil_qname_create(env, local_name, OXS_ENC_NS, OXS_XENC);
+        qname = axutil_qname_create(env, local_name, OXS_ENC_NS, NULL/*OXS_XENC*/);
     }
     else if(axutil_strcmp(local_name, OXS_NODE_ENCRYPTED_DATA)==0)
     {
-        qname = axutil_qname_create(env, local_name, OXS_ENC_NS, OXS_XENC);
+        qname = axutil_qname_create(env, local_name, OXS_ENC_NS, NULL/*OXS_XENC*/);
     }
     else if(axutil_strcmp(local_name, OXS_NODE_SIGNATURE)==0)
     {
-        qname = axutil_qname_create(env, local_name, OXS_DSIG_NS, OXS_DS);
+        qname = axutil_qname_create(env, local_name, OXS_DSIG_NS, NULL/*OXS_DS*/);
     }
-    else if(axutil_strcmp(local_name, OXS_NODE_BINARY_SECURITY_TOKEN)==0)
+    else if(axutil_strcmp(local_name, OXS_NODE_BINARY_SECURITY_TOKEN) == 0)
     {
         return AXIS2_FALSE;
     }
