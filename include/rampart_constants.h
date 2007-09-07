@@ -88,6 +88,7 @@ extern "C"
 #define RAMPART_FAULT_IN_ENCRYPTED_DATA        "xenc:EncryptedData"
 #define RAMPART_FAULT_IN_SIGNATURE             "ds:Signature"
 #define RAMPART_FAULT_MSG_REPLAYED             "rampc:Message-Replayed"
+#define RAMPART_FAULT_IN_POLICY                "rampc:Policy"                      
 
     /*Dynamically set values*/
 #define RAMPART_ACTION_PASSWORD "password"

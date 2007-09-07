@@ -139,29 +139,40 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
     axis2_status_t valid_ts = AXIS2_FAILURE;
     axiom_node_t *ts_node = NULL;
 
-    ts_node = oxs_axiom_get_node_by_local_name(env,sec_node,RAMPART_SECURITY_TIMESTAMP);
+    ts_node = oxs_axiom_get_node_by_local_name(env, 
+            sec_node, RAMPART_SECURITY_TIMESTAMP);
     if(!ts_node)
     {
-        if(rampart_context_is_include_timestamp(rampart_context,env))
+        if(rampart_context_is_include_timestamp(rampart_context, env))
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Timestamp is not in the message");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "Timestamp is not in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[rampart][shp] Timestamp is not in the message");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_SECURITY_TOKEN_UNAVAILABLE,
+                    "Timestamp is not in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
             return AXIS2_FAILURE;
-        }else{
+        }
+
+        else
+        {
             return AXIS2_SUCCESS;
         }
     }
-    else if(!rampart_context_is_include_timestamp(rampart_context,env))
+    else if(!rampart_context_is_include_timestamp(rampart_context, env))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Timestamp should not be in the message.");
-        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "Timestamp should not be in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][shp] Timestamp should not be in the message.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
+                "Timestamp should not be in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
         return AXIS2_FAILURE;
     }
     else
     {
-        if(!rampart_shp_validate_qnames(env,ts_node))
+        if(!rampart_shp_validate_qnames(env, ts_node))
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Error in the security header");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[rampart][shp] Error in the Timestamp element.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+                "Error in the Timestamp Element. ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
             return AXIS2_FAILURE;
         }
 
@@ -175,8 +186,10 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
         }
         else
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][scp] Timestamp is not valid");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "Timestamp is not valid", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart][scp] Timestamp is not valid");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, 
+                "Timestamp is not valid", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
             return AXIS2_FAILURE;
         }
     }
@@ -191,27 +204,41 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
     axis2_status_t valid_user = AXIS2_FAILURE;
     axiom_node_t *ut_node = NULL;
 
-    ut_node = oxs_axiom_get_node_by_local_name(env,sec_node,RAMPART_SECURITY_USERNAMETOKEN);
+    ut_node = oxs_axiom_get_node_by_local_name(
+            env, sec_node, RAMPART_SECURITY_USERNAMETOKEN);
     if(!ut_node)
     {
-        if(rampart_context_is_include_username_token(rampart_context,env))
+        if(rampart_context_is_include_username_token(rampart_context, env))
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Username token is not in the message");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart][shp] Username token is not in the message");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION,
+                "Username Token not found", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
             return AXIS2_FAILURE;
         }
         else
+        {
             return AXIS2_SUCCESS;
+        }
     }
-    else if(!rampart_context_is_include_username_token(rampart_context,env))
+    else if(!rampart_context_is_include_username_token(rampart_context, env))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Username token should not be in the message.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Username token should not be in the message.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
+            "Username Token not expected", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+
         return AXIS2_FAILURE;
     }
     else
     {
-        if(!rampart_shp_validate_qnames(env,ut_node))
+        if(!rampart_shp_validate_qnames(env, ut_node))
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Error in validating qnames for the username token");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart][shp] Error in validating qnames for the username token");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
+                "Error in the Username token.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+
             return AXIS2_FAILURE;
         }
 
@@ -223,9 +250,13 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
     {
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Validating UsernameToken SUCCESS");
         return AXIS2_SUCCESS;
-    }else{
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Validating UsernameToken FAILED");
-        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, "UsernameToken is not valid", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+    }
+    else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Validating UsernameToken FAILED");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, 
+            "UsernameToken validation failed.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
         return AXIS2_FAILURE;
     }
 }
@@ -257,29 +288,46 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     void *key_buf = NULL;
 
     /*Get EncryptedData references */
-    ref_list_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_REFERENCE_LIST,OXS_ENC_NS,NULL);
+    ref_list_node = oxs_axiom_get_first_child_node_by_name(
+        env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
+
     /*If there are no references. Nothing to do. Return success*/
-    if((!reference_list) || (0 == axutil_array_list_size(reference_list, env))){
+    if((!reference_list) || (0 == axutil_array_list_size(reference_list, env)))
+    {
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List is empty");
         return AXIS2_SUCCESS;
     }
-    AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List has %d node reference(s)", axutil_array_list_size(reference_list, env));
+    AXIS2_LOG_INFO(env->log, 
+        "[rampart][shp] Reference List has %d node reference(s)", 
+        axutil_array_list_size(reference_list, env));
 
     /*Get the algorithm to decrypt the sesison key*/
-    enc_mtd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
+
+    enc_mtd_node = oxs_axiom_get_first_child_node_by_name(
+        env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
     enc_asym_algo = oxs_token_get_encryption_method(env, enc_mtd_node);
+
     /*If the reference list > 0 then We have nodes to decrypt. Next step is to get the encrypted key*/
     /*Obtain the session key which is encrypted*/
     /*Create an asym_ctx*/
     /*We should verify the algorithm with policy*/
-    enc_asym_algo_in_pol = rampart_context_get_enc_asym_algo(rampart_context,env);
-    if(!enc_asym_algo_in_pol)
-        return AXIS2_FAILURE;
 
-    if(axutil_strcmp(enc_asym_algo_in_pol,enc_asym_algo)!=0)
+    enc_asym_algo_in_pol = rampart_context_get_enc_asym_algo(rampart_context, env);
+    if(!enc_asym_algo_in_pol)
     {
-        AXIS2_LOG_INFO(env->log, "The key is encrypted with the wrong algorithm");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+            "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp] Assymetric enc algorithm not specified in policy.");        
+        return AXIS2_FAILURE;
+    }
+    if(axutil_strcmp(enc_asym_algo_in_pol, enc_asym_algo) != 0)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "The key is encrypted with the wrong algorithm");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+            "The key is encrypted with the wrong algorithm", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -287,52 +335,64 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
     oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
 
-    key_buf = rampart_context_get_prv_key(rampart_context,env);
+    key_buf = rampart_context_get_prv_key(rampart_context, env);
     if(key_buf)
     {
         axis2_key_type_t type = 0;
-        type = rampart_context_get_prv_key_type(rampart_context,env);
+        type = rampart_context_get_prv_key_type(rampart_context, env);
         if(type == AXIS2_KEY_TYPE_PEM)
         {
             oxs_asym_ctx_set_pem_buf(asym_ctx, env, (axis2_char_t *)key_buf);
-            oxs_asym_ctx_set_format(asym_ctx, env,OXS_ASYM_CTX_FORMAT_PEM);
+            oxs_asym_ctx_set_format(asym_ctx, env, OXS_ASYM_CTX_FORMAT_PEM);
         }
     }
     else
     {
-        prv_key_file = rampart_context_get_private_key_file(rampart_context,env);
+        prv_key_file = rampart_context_get_private_key_file(rampart_context, env);
         if(!prv_key_file)
         {
-            AXIS2_LOG_INFO(env->log, "Private Key is not specified.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][shp] Private Key is not specified.");
             return AXIS2_FAILURE;
         }
         oxs_asym_ctx_set_file_name(asym_ctx, env, prv_key_file);
-        oxs_asym_ctx_set_format(asym_ctx, env, oxs_util_get_format_by_file_extension(env, prv_key_file));
+        oxs_asym_ctx_set_format(asym_ctx, env, 
+            oxs_util_get_format_by_file_extension(env, prv_key_file));
 
         /*Get the password to retrieve the key from key store*/
         /*  password = rampart_callback_encuser_password(env, actions, msg_ctx);*/
 
-        password = rampart_context_get_prv_key_password(rampart_context,env);
+        password = rampart_context_get_prv_key_password(rampart_context, env);
 
         if(!password)
         {
-            enc_user = rampart_context_get_encryption_user(rampart_context,env);
+            enc_user = rampart_context_get_encryption_user(rampart_context, env);
 
             if(!enc_user)
-                enc_user = rampart_context_get_user(rampart_context,env);
+            {
+                enc_user = rampart_context_get_user(rampart_context, env);
+            }
 
             if(enc_user)
             {
-                password_function = rampart_context_get_pwcb_function(rampart_context,env);
+                password_function = rampart_context_get_pwcb_function(rampart_context, env);
                 if(password_function)
-                    password = (*password_function)(env,enc_user,param);
+                {
+                    password = (*password_function)(env, enc_user, param);
+                }
 
                 else
                 {
-                    password_callback = rampart_context_get_password_callback(rampart_context,env);
+                    password_callback = rampart_context_get_password_callback(rampart_context, env);
                     if(!password_callback)
                     {
-                        AXIS2_LOG_INFO(env->log, "[rampart][rampart_encryption] Password call back module is not specified.");
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                            "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shp] Password call back module is not specified.");
+                        
                         return AXIS2_FAILURE;
                     }
                     password = rampart_callback_password(env, password_callback, enc_user);
@@ -346,25 +406,37 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     /*oxs_asym_ctx_set_format(asym_ctx, env, OXS_ASYM_CTX_FORMAT_PKCS12);*/
 
     /*Create an empty key*/
+    
     decrypted_sym_key = oxs_key_create(env);
 
     /*Call decrypt for the EncryptedKey*/
-    status = oxs_xml_enc_decrypt_key(env, asym_ctx, sec_node, encrypted_key_node,  decrypted_sym_key);
-    if(AXIS2_FAILURE == status){
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Cannot decrypt the EncryptedKey");
+    status = oxs_xml_enc_decrypt_key(env, asym_ctx, 
+        sec_node, encrypted_key_node,  decrypted_sym_key);
+
+    if(AXIS2_FAILURE == status)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Cannot decrypt the EncryptedKey");
         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                      "Key decryption failed", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
+            "Key decryption failed", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
         return AXIS2_FAILURE;
     }
+
     /*Alright now we have the key used to encrypt the elements in the reference_list*/
     /*Go thru each and every node in the list and decrypt them*/
 
     /*Before decrypt we should get the symmetric algo from policy.
       So for each encrypted element we can compare the algo. */
 
-    enc_sym_algo_in_pol = rampart_context_get_enc_sym_algo(rampart_context,env);
+    enc_sym_algo_in_pol = rampart_context_get_enc_sym_algo(rampart_context, env);
     if(!enc_sym_algo_in_pol)
+    {
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+            "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp] Symetric enc algorithm not specified in policy.");
         return AXIS2_FAILURE;
+    }
 
     for(i=0 ; i < axutil_array_list_size(reference_list, env); i++ )
     {
@@ -383,51 +455,73 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
 
         /*Get the i-th element and decrypt it */
+
         id = (axis2_char_t*)axutil_array_list_get(reference_list, env, i);
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Decrypting node, ID=%s", id);
 
         /*Need to remove # sign from the ID*/
+
         id2 = axutil_string_substring_starting_at(id, 1);
         envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
         /*Search for the node by its ID*/
+
         enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2, NULL);
-        if(!enc_data_node){
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Node with ID=%s cannot be found", id);
-            /*continue;*/
+        if(!enc_data_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart][shp] Node with ID=%s cannot be found", id);
+            
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+                "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             return AXIS2_FAILURE;
         }
         /*Create an enc_ctx*/
-        mtd_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,NULL);
+        mtd_node = oxs_axiom_get_first_child_node_by_name(
+            env, enc_data_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
+
         if(!mtd_node)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Node with ID=%s cannot be found", id);
-            /*continue;*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "Cannot find EncryptionMethod Element");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+                "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             return AXIS2_FAILURE;
         }
+
         sym_algo = oxs_token_get_encryption_method(env, mtd_node);
         if(!sym_algo)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "Cannot get the Symmetric Algorithm from Soap message.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+
             return AXIS2_FAILURE;
+        }
 
         if(axutil_strcmp(sym_algo, enc_sym_algo_in_pol)!=0)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Sym algorithm is mismathced with policy.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "The content is encrypted with the wrong algorithm");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                "The content is encrypted with the wrong algorithm", 
+                    RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
             return AXIS2_FAILURE;
+
         }
 
         ctx = oxs_ctx_create(env);
         oxs_ctx_set_key(ctx, env, decrypted_sym_key);
 
         status = oxs_xml_enc_decrypt_node(env, ctx, enc_data_node, &decrypted_node);
-        if(AXIS2_FAILURE == status){
+        if(AXIS2_FAILURE == status)
+        {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+                "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             return AXIS2_FAILURE;
         }
+
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
@@ -441,13 +535,15 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
 
     /*Set the security processed result*/
-    rampart_set_security_processed_result(env, msg_ctx,RAMPART_SPR_ENC_CHECKED, RAMPART_YES);
+    rampart_set_security_processed_result(
+        env, msg_ctx, RAMPART_SPR_ENC_CHECKED, RAMPART_YES);
 
     /*Free*/
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
 
-    if(decrypted_sym_key){
+    if(decrypted_sym_key)
+    {
         oxs_key_free(decrypted_sym_key, env);
         decrypted_sym_key = NULL;
     }
@@ -473,11 +569,13 @@ rampart_shp_process_reference_list(
     axis2_status_t status = AXIS2_FAILURE;
     int i = 0;
     
-    reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
+    reference_list = oxs_token_get_reference_list_data(env, 
+            ref_list_node);
 
     if((!reference_list) || (0 == axutil_array_list_size(reference_list, env)))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Nothing Encrypted Outside security header");
+        AXIS2_LOG_INFO(env->log, 
+            "[rampart][shp] Nothing Encrypted Outside security header");
         return AXIS2_SUCCESS;
     }
 
@@ -503,10 +601,10 @@ rampart_shp_process_reference_list(
         enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2, NULL);
         if(!enc_data_node)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Node with ID=%s cannot be found", id);
-            /*continue;*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][shp] Node with ID=%s cannot be found", id2);
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+                "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             return AXIS2_FAILURE;
         }
         
@@ -594,19 +692,22 @@ rampart_shp_process_signature(
 
     if(!sig_mtd_pol || !digest_mtd_pol)
     {
-        AXIS2_LOG_INFO(env->log,"[rampart][shp] Error in policy. Specifying signature algorithms.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+            "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp] Error in policy, Specifying signature algorithms.");
         return AXIS2_FAILURE;
     }
 
     sign_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
                      OXS_NODE_SIGNEDINFO, OXS_DSIG_NS, NULL);
 
-    /*sign_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
-                            OXS_NODE_SIGNEDINFO, NULL, NULL);*/
-
     if(!sign_info_node)
     {
-        AXIS2_LOG_INFO(env->log,"[rampart][shp] Sign info cannot be found.Verifycation failed");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+            "Sign info node not found.", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Sign info cannot be found.Verifycation failed");
         return AXIS2_FAILURE;
     }
 
@@ -624,21 +725,31 @@ rampart_shp_process_signature(
             {
                 if(axutil_strcmp(sig_mtd_pol, sig_mtd)!=0)
                 {
-                    AXIS2_LOG_INFO(env->log,"[rampart][shp] Signature method mismatch (Policy =%s, Message =%s).", sig_mtd_pol, sig_mtd);
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                        "Signed with Invalid algorithm", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shp] Signed with Invalid algorithm");
+                    
                     return AXIS2_FAILURE;
                 }
             }
-            else return AXIS2_FAILURE;
+
+            else 
+            {
+                rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                    "Signature method element not found .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shp] Signature method element not found");
+                return AXIS2_FAILURE;
+            }
         }
         else if(axutil_strcmp(localname, OXS_NODE_REFERENCE)==0)
         {
             /*Verify each digest method with policy*/
             axiom_node_t *digest_mtd_node = NULL;
             axis2_char_t *digest_mtd = NULL;
-            digest_mtd_node  = oxs_axiom_get_first_child_node_by_name(env,cur_node,
-                               OXS_NODE_DIGEST_METHOD, OXS_DSIG_NS, NULL);
-            /*digest_mtd_node  = oxs_axiom_get_first_child_node_by_name(env,cur_node,
-                           OXS_NODE_DIGEST_METHOD, NULL,NULL);*/
+            digest_mtd_node  = oxs_axiom_get_first_child_node_by_name(env, cur_node,
+                OXS_NODE_DIGEST_METHOD, OXS_DSIG_NS, NULL);
             if(digest_mtd_node)
             {
                 digest_mtd = oxs_token_get_digest_method(env, digest_mtd_node);
@@ -646,13 +757,23 @@ rampart_shp_process_signature(
                 {
                     if(axutil_strcmp(digest_mtd_pol, digest_mtd)!=0)
                     {
-                        AXIS2_LOG_INFO(env->log,"[rampart][shp]Digest method mismatch  (Policy =%s, Message =%s).", digest_mtd_pol, digest_mtd);
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                            "Digest created with Invalid algorithm", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shp] Signed with Invalid algorithm");
+
                         return AXIS2_FAILURE;
                     }
                 }
-                else return AXIS2_FAILURE;
+                else 
+                {
+                    return AXIS2_FAILURE;
+                }
             }
-            else return AXIS2_FAILURE;
+            else
+            { 
+                return AXIS2_FAILURE;
+            }
         }
         else
         {
@@ -664,43 +785,52 @@ rampart_shp_process_signature(
     /*Get the key identifiers and build the certificate*/
     /*First we should verify with policy*/
 
-    token = rampart_context_get_token(rampart_context, env, AXIS2_FALSE, server_side, AXIS2_TRUE);
+    token = rampart_context_get_token(rampart_context, env, 
+        AXIS2_FALSE, server_side, AXIS2_TRUE);
 
     if(!token)
     {
-        AXIS2_LOG_INFO(env->log,"[rampart][shp] Signature Token is not specified");
+        AXIS2_LOG_INFO(env->log,
+            "[rampart][shp] Signature Token is not specified");
         return AXIS2_SUCCESS;
     }
-    token_type = rp_property_get_type(token,env);
+    token_type = rp_property_get_type(token, env);
 
-    if(!rampart_context_is_token_type_supported(token_type,env))
+    if(!rampart_context_is_token_type_supported(token_type, env))
     {
+        rampart_create_fault_envelope(env, RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN,
+            "The token type does not supported", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp] The token type does not supported");
+        
         return  AXIS2_FAILURE;
     }
 
-    if(rampart_context_check_is_derived_keys(env,token))
+    if(rampart_context_check_is_derived_keys(env, token))
     {
-        AXIS2_LOG_INFO(env->log,"[rampart][shp] We still do not support derived keys");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN,
+            "Derived Keys are not supported.", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp] Derived Keys are not supported.");
+
         return AXIS2_FAILURE;
     }
-    is_include_token = rampart_context_is_token_include(rampart_context,token,token_type,server_side,AXIS2_TRUE,env);
+    is_include_token = rampart_context_is_token_include(
+        rampart_context, token, token_type, server_side, AXIS2_TRUE, env);
 
     key_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
-                    OXS_NODE_KEY_INFO,OXS_DSIG_NS, NULL );
-
-    /*key_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
-                           OXS_NODE_KEY_INFO,NULL,NULL);*/
+                    OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL );
 
     if(!key_info_node)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp]Verify failed. Key Info node is not in the message.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+            "Key Info node is not in the message .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][shp]Verify failed. Key Info node is not in the message.");
         return AXIS2_FAILURE;
     }
-    str_node = oxs_axiom_get_first_child_node_by_name(env,key_info_node,
-               OXS_NODE_SECURITY_TOKEN_REFRENCE,OXS_WSSE_XMLNS,NULL);
-
-    /*str_node = oxs_axiom_get_first_child_node_by_name(env,key_info_node,
-                            OXS_NODE_SECURITY_TOKEN_REFRENCE,NULL,NULL);*/
+    str_node = oxs_axiom_get_first_child_node_by_name(env, key_info_node,
+               OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
 
     if(str_node)
     {
@@ -712,41 +842,57 @@ rampart_shp_process_signature(
             {
                 if(is_include_token)
                 {
-                    if(axutil_strcmp(str_child_name,OXS_NODE_REFERENCE)!=0)
+                    if(axutil_strcmp(str_child_name, OXS_NODE_REFERENCE)!=0)
                     {
-                        AXIS2_LOG_INFO(env->log,"[Rampart][shp]Token is not included in the message.");
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                            "Token is not in the message .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shp] Token is not included in the message ");
+                       
                         return AXIS2_FAILURE;
                     }
                     cert = oxs_x509_cert_create(env);
-                    status = rampart_token_process_direct_ref(env,str_child_node,sec_node,cert);
+                    status = rampart_token_process_direct_ref(env, str_child_node, sec_node, cert);
                 }
                 else
                 {
-                    if(0 == axutil_strcmp(str_child_name,OXS_NODE_EMBEDDED))
+                    if(0 == axutil_strcmp(str_child_name, OXS_NODE_EMBEDDED))
                     {
-                        if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_EMBEDDED,env))
+                        if(!rampart_context_is_key_identifier_type_supported(
+                            rampart_context, token, RAMPART_STR_EMBEDDED, env))
                         {
-                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_EMBEDDED);
+                            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,     
+                                "Key Reference Type not supported .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_EMBEDDED);
                             return AXIS2_FAILURE;
                         }
                         cert = oxs_x509_cert_create(env);
-                        status = rampart_token_process_embedded(env,str_child_node,cert);
+                        status = rampart_token_process_embedded(env, str_child_node, cert);
                     }
-                    else if(0 == axutil_strcmp(str_child_name,OXS_NODE_KEY_IDENTIFIER))
+                    else if(0 == axutil_strcmp(str_child_name, OXS_NODE_KEY_IDENTIFIER))
                     {
-                        if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_KEY_IDENTIFIER,env))
+                        if(!rampart_context_is_key_identifier_type_supported(
+                                    rampart_context, token, RAMPART_STR_KEY_IDENTIFIER, env))
                         {
-                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference mismatch (%s, %s)", str_child_name, OXS_NODE_KEY_IDENTIFIER);
+                            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                "Key Reference Type not supported .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                                "[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_KEY_IDENTIFIER);
                             return AXIS2_FAILURE;
                         }
-                        cert = get_receiver_x509_cert(env,rampart_context);
+                        cert = get_receiver_x509_cert(env, rampart_context);
                         status = AXIS2_SUCCESS;
                     }
-                    else if(0 == axutil_strcmp(str_child_name,OXS_NODE_X509_DATA))
+                    else if(0 == axutil_strcmp(str_child_name, OXS_NODE_X509_DATA))
                     {
-                        if(!rampart_context_is_key_identifier_type_supported(rampart_context,token,RAMPART_STR_ISSUER_SERIAL,env))
+                        if(!rampart_context_is_key_identifier_type_supported(
+                            rampart_context, token, RAMPART_STR_ISSUER_SERIAL, env))
                         {
-                            AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference mismatch (%s, %s)", str_child_name, OXS_NODE_X509_DATA);
+                            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                "Key Reference Type not supported .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                                "[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_X509_DATA);
                             return AXIS2_FAILURE;
                         }
                         cert = get_receiver_x509_cert(env,rampart_context);
@@ -754,7 +900,10 @@ rampart_shp_process_signature(
                     }
                     else
                     {
-                        AXIS2_LOG_INFO(env->log,"[Rampart][shp]Key Reference %s not supported ", str_child_name);
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                "Key Reference Type not supported .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI ,
+                            "[Rampart][shp]Key Reference %s not supported ", str_child_name);
                         return AXIS2_FAILURE;
                     }
                 }
