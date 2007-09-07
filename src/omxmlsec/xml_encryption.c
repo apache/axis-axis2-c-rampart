@@ -346,9 +346,8 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;
 
-    /*We do not need this now the parser takes the ownership of the buffer.*/
-    /*AXIS2_FREE(env->allocator, decrypted_data);
-    decrypted_data = NULL;*/
+    AXIS2_FREE(env->allocator, decrypted_data);
+    decrypted_data = NULL;
 
     return AXIS2_SUCCESS;
 }
