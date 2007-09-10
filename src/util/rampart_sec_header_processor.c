@@ -1244,7 +1244,11 @@ rampart_shp_process_message(const axutil_env_t *env,
                     if(!cur_node)
                     {
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                            "[rampart][shp] Nothing to encrypt outside Security header");
+                            "[rampart][shp] Protection order is wrong or Signature not encrypted.");
+                        rampart_create_fault_envelope(
+                            env, RAMPART_FAULT_INVALID_SECURITY, "Protection order is wrong or Signature is not encrypted. ",
+                            RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
+
                         return AXIS2_FAILURE;
                     }
                     status = rampart_shp_process_reference_list(env, msg_ctx, 
@@ -1252,8 +1256,12 @@ rampart_shp_process_message(const axutil_env_t *env,
                     
                     if(status != AXIS2_SUCCESS)
                     {
+                        rampart_create_fault_envelope(
+                            env, RAMPART_FAULT_INVALID_SECURITY, "Error in decrypting the signature. ",
+                            RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
+
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][shp] Nothing to encrypt outside Security header");
+                            "[rampart][shp] Error in decrypting the Signature.");
                         return status;
                     }
                 }
