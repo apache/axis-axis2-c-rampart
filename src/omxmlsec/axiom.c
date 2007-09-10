@@ -42,7 +42,10 @@ oxs_axiom_add_attribute(const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     axiom_namespace_t *ns = NULL;
 
-    ns =  axiom_namespace_create(env, attribute_ns_uri, attribute_ns);
+    if(attribute_ns_uri)
+    {    
+        ns =  axiom_namespace_create(env, attribute_ns_uri, attribute_ns);
+    }    
 
     ele =  axiom_node_get_data_element(node, env);
     attr =  axiom_attribute_create(env, attribute , value, ns);
