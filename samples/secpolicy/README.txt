@@ -32,7 +32,7 @@ WIN32 and Mac OS.
 If you are in a real hurry and need to try a scenario please use the
 test_scen.sh
 Usage : %sh test_scen.sh scenarioX server-port
-e.g. %s test_scen.sh scenario3 8080
+e.g. %sh test_scen.sh scenario3 8080
 
 * I need to try all the scenarios
 -------------------------------
