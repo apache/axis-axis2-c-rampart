@@ -59,7 +59,7 @@ rampart_load_module(const axutil_env_t *env,
     axutil_param_set_value_free(impl_info_param, env, axutil_dll_desc_free_void_arg);
     axutil_class_loader_init(env);
     ptr = axutil_class_loader_create_dll(env, impl_info_param);
-    
+
     *param = impl_info_param;
 
     if (!ptr)

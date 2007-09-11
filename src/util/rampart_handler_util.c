@@ -112,33 +112,33 @@ rampart_get_security_token(const axutil_env_t *env,
     axiom_node_t *header_block_node = NULL;
 
 
-        header_block_ht = axiom_soap_header_get_all_header_blocks(soap_header, env);
-        if (!header_block_ht)
-            return AXIS2_FAILURE;
+    header_block_ht = axiom_soap_header_get_all_header_blocks(soap_header, env);
+    if (!header_block_ht)
+        return AXIS2_FAILURE;
 
-        /*BETTER IF : If there are multiple security header elements, get the one with @role=rampart*/
-        for (hash_index = axutil_hash_first(header_block_ht, env); hash_index;
-                hash_index = axutil_hash_next(env, hash_index))
+    /*BETTER IF : If there are multiple security header elements, get the one with @role=rampart*/
+    for (hash_index = axutil_hash_first(header_block_ht, env); hash_index;
+            hash_index = axutil_hash_next(env, hash_index))
+    {
+
+        void *hb = NULL;
+        axiom_soap_header_block_t *header_block =    NULL;
+        axis2_char_t *ele_localname = NULL;
+
+        axutil_hash_this(hash_index, NULL, NULL, &hb);
+        header_block = (axiom_soap_header_block_t *)hb;
+        header_block_node = axiom_soap_header_block_get_base_node(header_block, env);
+        header_block_ele  = (axiom_element_t*)axiom_node_get_data_element(header_block_node, env);
+        ele_localname = axiom_element_get_localname(header_block_ele, env);
+
+        if (axutil_strcmp(ele_localname, RAMPART_SECURITY) == 0)
         {
+            /*Set mustUnderstand = 0*/
+            axiom_soap_header_block_set_must_understand_with_bool(header_block, env, AXIS2_FALSE);
+            return header_block_node;
+        }
 
-            void *hb = NULL;
-            axiom_soap_header_block_t *header_block =    NULL;
-            axis2_char_t *ele_localname = NULL;
-
-            axutil_hash_this(hash_index, NULL, NULL, &hb);
-            header_block = (axiom_soap_header_block_t *)hb;
-            header_block_node = axiom_soap_header_block_get_base_node(header_block, env);
-            header_block_ele  = (axiom_element_t*)axiom_node_get_data_element(header_block_node, env);
-            ele_localname = axiom_element_get_localname(header_block_ele, env);
-
-            if (axutil_strcmp(ele_localname, RAMPART_SECURITY) == 0)
-            {
-                /*Set mustUnderstand = 0*/
-                axiom_soap_header_block_set_must_understand_with_bool(header_block, env, AXIS2_FALSE);
-                return header_block_node;
-            }
-
-        }/*End of for*/
+    }/*End of for*/
 
     return header_block_node;
 

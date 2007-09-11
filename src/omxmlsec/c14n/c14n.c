@@ -710,7 +710,7 @@ c14n_apply_on_text (
     if (text)
     {
         axis2_char_t *textval = (axis2_char_t*)axiom_text_get_text(text, ctx->env);
-        
+
         if (textval)
             textval = c14n_normalize_text(textval, ctx);
         else /*should never occur*/
@@ -1368,11 +1368,11 @@ c14n_apply_on_namespace_axis_exclusive(
     if (ns)
     {
         if (axutil_strlen(axiom_namespace_get_prefix((axiom_namespace_t *)ns,
-                         ctx->env)) == 0)
+                          ctx->env)) == 0)
         {
             axiom_namespace_t *def_ns = c14n_ns_stack_get_default(ctx);
             if (def_ns || axutil_strlen(axiom_namespace_get_uri(
-                                           (axiom_namespace_t *)ns, ctx->env)) != 0)
+                                            (axiom_namespace_t *)ns, ctx->env)) != 0)
             {
                 if (ns_uri_compare(ns, def_ns, ctx) != 0)
                 {
@@ -1479,7 +1479,7 @@ c14n_output(
     if (ctx->use_stream)
     {
         axutil_stream_write(ctx->outstream, ctx->env, str,
-                           axutil_strlen(str)*sizeof(axis2_char_t));
+                            axutil_strlen(str)*sizeof(axis2_char_t));
     }
 #endif
 }
@@ -1533,7 +1533,7 @@ c14n_ns_visibly_utilized(
     else
     {
         axutil_hash_t *attr_ht = axiom_element_get_all_attributes(
-                                    (axiom_element_t *)ele, ctx->env);
+                                     (axiom_element_t *)ele, ctx->env);
         axutil_hash_index_t *hi = NULL;
         if (attr_ht)
         {
