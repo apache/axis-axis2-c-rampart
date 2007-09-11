@@ -39,7 +39,9 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     oxs_buffer_t *signed_result_buf = NULL;
     openssl_pkey_t *prvkey = NULL;
-    int signedlen = -1, encodedlen = -1, ret = -1;
+    int signedlen = -1;
+    int encodedlen = -1;
+    int ret = -1;
 
     /*Create output buffer to store signed data*/
     signed_result_buf = oxs_buffer_create(env);
@@ -47,7 +49,8 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     /*Sign */
     prvkey = oxs_sign_ctx_get_private_key(sign_ctx, env);
     signedlen = openssl_sig_sign(env, prvkey, input, signed_result_buf);
-    if(signedlen < 0){
+    if (signedlen < 0)
+    {
         /*Error*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,
                   "Signature failed. The length of signature is %d", signedlen);
@@ -56,8 +59,10 @@ oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
     /*Base64 encode*/
     encodedlen = axutil_base64_encode_len(signedlen);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
-    ret = axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(signed_result_buf, env), signedlen);
-    status = oxs_buffer_populate(output, env, (unsigned char*)encoded_str, encodedlen);
+    ret = axutil_base64_encode(encoded_str, (const char *)
+            oxs_buffer_get_data(signed_result_buf, env), signedlen);
+    status = oxs_buffer_populate(output, env, (unsigned char*)encoded_str,
+                                 encodedlen);
 
     /*Free signed_result_buf*/
     oxs_buffer_free(signed_result_buf, env);
@@ -84,14 +89,19 @@ oxs_sig_sign(const axutil_env_t *env,
     sign_algo = oxs_sign_ctx_get_sign_mtd_algo(sign_ctx, env);
 
     /*Prepare content and sign*/
-    if(0==(axutil_strcmp(sign_algo, OXS_HREF_RSA_SHA1))){
+    if ((axutil_strcmp(sign_algo, OXS_HREF_RSA_SHA1)) == 0)
+    {
         oxs_sig_sign_rsa_sha1(env, sign_ctx, input, output);
-    }else if(0==(axutil_strcmp(sign_algo, OXS_HREF_DSA_SHA1))){
+    } 
+    else if ((axutil_strcmp(sign_algo, OXS_HREF_DSA_SHA1)) == 0)
+    {
         /*Error we do not support*/
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Cannot support cipher %s", sign_algo);
         return AXIS2_FAILURE;
-    }else{
+    }
+    else
+    {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Cannot support cipher %s", sign_algo);
         return AXIS2_FAILURE;
@@ -117,8 +127,9 @@ oxs_sig_verify(const axutil_env_t *env,
 
     /*Base64 decode the signature value and create the sig buffer*/
     /*Allocate enough space*/
-    decoded_data = AXIS2_MALLOC(env->allocator, axutil_base64_decode_len(signature));
-    decoded_len = axutil_base64_decode_binary(decoded_data, signature );
+    decoded_data = AXIS2_MALLOC(env->allocator,
+                                axutil_base64_decode_len(signature));
+    decoded_len = axutil_base64_decode_binary(decoded_data, signature);
     if (decoded_len < 0)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,
@@ -132,30 +143,39 @@ oxs_sig_verify(const axutil_env_t *env,
 
     /*Create the input buffer*/
     in_buf = oxs_buffer_create(env);
-    status = oxs_buffer_populate(in_buf, env, (unsigned char*)content, axutil_strlen(content));
+    status = oxs_buffer_populate(in_buf, env, (unsigned char*)content,
+                                 axutil_strlen(content));
 
-    /*Get the public key. See.. this method is trickey. It might take the public key from the certificate, only if
-     * the public key is not available directly*/
+    /* Get the public key. See.. this method is trickey. It might take the
+     * public key from the certificate, only if
+     * the public key is not available directly
+     */
     pubkey = oxs_sign_ctx_get_public_key(sign_ctx, env);
-    if(!pubkey){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot obtain the public key.");
+    if (!pubkey)
+    {
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,
+                  "Cannot obtain the public key.");
         return AXIS2_FAILURE;
     }
 
     /*Call OpenSSL function to verify the signature*/
     status = openssl_sig_verify(env, pubkey, in_buf, sig_buf);
-    if(AXIS2_SUCCESS != status){
+    if (status != AXIS2_SUCCESS)
+    {
         /*Error in signature processing*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature verification FAILED.");
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,
+                  "Signature verification FAILED.");
         oxs_buffer_free(sig_buf, env);
         sig_buf = NULL;
         oxs_buffer_free(in_buf, env);
         in_buf = NULL;
 
         return AXIS2_FAILURE;
-    }else{
+    }
+    else
+    {
         /*Signature SUCCESS*/
-        AXIS2_LOG_INFO(env->log, "[oxs][sig] Signature verification SUCCESS " );
+        AXIS2_LOG_INFO(env->log, "[oxs][sig] Signature verification SUCCESS");
         oxs_buffer_free(sig_buf, env);
         sig_buf = NULL;
         oxs_buffer_free(in_buf, env);
