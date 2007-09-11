@@ -92,5 +92,5 @@ oxs_error(const axutil_env_t *env, const char* file, int line, const char* func,
     va_end(ap);
 
     AXIS2_LOG_INFO(env->log, "OXS ERROR [%s:%d in %s] %s , %s", file, line, func, error_msg, value);
-    printf("\nOXS ERROR [%s:%d in %s] %s , %s\n", file, line, func, error_msg, value);
+    /*printf("\nOXS ERROR [%s:%d in %s] %s , %s\n", file, line, func, error_msg, value);*/
 }
