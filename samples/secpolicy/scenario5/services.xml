@@ -4,13 +4,8 @@
    <description>
         This is a testing service , to test the system is working or not
    </description>
-    <!--Rampart configurations START -->
     <module ref="rampart"/>
-
-    <!--Rampart configurations END -->
-
     <operation name="echoString">
-            <!--messageReceiver class="axis2_receivers" /-->
             <parameter name="wsamapping">http://example.com/ws/2004/09/policy/Test/EchoRequest</parameter>
     </operation>
 
