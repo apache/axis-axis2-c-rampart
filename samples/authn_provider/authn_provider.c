@@ -66,54 +66,6 @@ ramaprt_get_sample_password_from_file(const axutil_env_t *env,
     }
     return password; 
 }
-#if 0
-axis2_char_t* AXIS2_CALL
-ramaprt_get_sample_password(const axutil_env_t *env,
-        const axis2_char_t *username)
-{
-    /*First set pf password are for sample usernames*/
-    axis2_char_t * pw = NULL;
-    if (0 == axutil_strcmp(username, "Raigama"))
-    {
-        pw = "RaigamaPW" ;
-    }
-    else if (0 == axutil_strcmp(username, "Gampola"))
-    {
-        pw = "GampolaPW";
-    }
-    else if (0 == axutil_strcmp(username, "alice"))
-    {
-        pw = "password";
-    }
-    else if (0 == axutil_strcmp(username, "bob"))
-    {
-        pw = "bobPW";
-    }
-    /*These are for sample keystores*/
-    else if (0 == axutil_strcmp(username, "a"))
-    {
-        pw = "a12345";
-    }
-    else if (0 == axutil_strcmp(username, "b"))
-    {
-        pw = "b12345";
-    }
-    else if (0 == axutil_strcmp(username, "x"))
-    {
-        pw = "x12345";
-    }
-    else if (0 == axutil_strcmp(username, "y"))
-    {
-        pw = "y12345";
-    }
-    else
-    {
-        /*Append 12345 for any name not specified above*/
-        /*sprintf(pw, "%s%s",  username, "12345");*/
-    }
-    return pw;
-};
-#endif
 
 /*Two sample implementations*/
 rampart_authn_provider_status_t AXIS2_CALL
@@ -125,7 +77,6 @@ rampart_sample_authn_provider_check_password(rampart_authn_provider_t *authn_pro
 {
     axis2_char_t *local_pw = NULL;
 
-    /*local_pw = ramaprt_get_sample_password( env, username);*/
     local_pw = ramaprt_get_sample_password_from_file(env, username);
     if(local_pw){
         /*Compare passwords*/
@@ -151,7 +102,6 @@ rampart_sample_authn_provider_check_password_digest(rampart_authn_provider_t *au
 
     axis2_char_t *local_pw = NULL;
 
-    /*local_pw = ramaprt_get_sample_password( env, username);*/
     local_pw = ramaprt_get_sample_password_from_file(env, username);
     if(local_pw){
         axis2_char_t *local_digest = NULL;

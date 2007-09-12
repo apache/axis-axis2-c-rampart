@@ -1271,7 +1271,8 @@ rampart_context_is_key_identifier_supported(
     wss = rp_secpolicy_get_wss(rampart_context->secpolicy,env);
     if(!wss)
     {
-        AXIS2_LOG_INFO(env->log,"wss properties are not set.." );
+        /*TODO error*/
+        AXIS2_LOG_INFO(env->log,"wss properties are not set" );
         return AXIS2_FALSE;
     }
 
@@ -2208,13 +2209,13 @@ rampart_context_is_key_identifier_type_supported(
     axis2_char_t *identifier,
     const axutil_env_t *env)
 {
-    if(axutil_strcmp(identifier,RAMPART_STR_KEY_IDENTIFIER)==0)
+    if(axutil_strcmp(identifier, RAMPART_STR_KEY_IDENTIFIER)==0)
         return rampart_context_is_key_identifier_supported(token,rampart_context,env);
 
-    else if(axutil_strcmp(identifier,RAMPART_STR_ISSUER_SERIAL)==0)
+    else if(axutil_strcmp(identifier, RAMPART_STR_ISSUER_SERIAL)==0)
         return rampart_context_is_issuer_serial_supported(token,rampart_context,env);
 
-    else if(axutil_strcmp(identifier,RAMPART_STR_EMBEDDED)==0)
+    else if(axutil_strcmp(identifier, RAMPART_STR_EMBEDDED)==0)
         return rampart_context_is_embedded_token_supported(token,rampart_context,env);
 
     else
