@@ -106,6 +106,7 @@ rampart_shb_build_message(
     if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
         /*Do Asymmetric Binding specific things*/
+        AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using asymmetric binding");
 
         /*Timestamp Inclusion*/
         if(rampart_context_is_include_timestamp(rampart_context,env))
@@ -159,10 +160,10 @@ rampart_shb_build_message(
         {
             is_encrypt_before_sign = AXIS2_TRUE;
 
+            /*If signature_protection=> <sp:EncryptSignature/> is ON*/
             if(signature_protection)
             {
                 /*First Encrypt the parts specified in encrypted parts*/
-
                 status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {
@@ -299,6 +300,7 @@ rampart_shb_build_message(
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
     {
+        AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using transport binding");
         /*Timestamp Inclusion*/
 
         if(rampart_context_is_include_timestamp(rampart_context,env))

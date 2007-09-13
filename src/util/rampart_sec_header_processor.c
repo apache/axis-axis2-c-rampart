@@ -335,7 +335,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     if(!enc_asym_algo_in_pol)
     {
         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                      "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                      "Error in the policy. No asym algo", RAMPART_FAULT_IN_POLICY, msg_ctx);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][shp] Assymetric enc algorithm not specified in policy.");
         return AXIS2_FAILURE;
@@ -370,7 +370,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         if(!prv_key_file)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                          "Error in the policy. No private key", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][shp] Private Key is not specified.");
             return AXIS2_FAILURE;
@@ -407,7 +407,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                     if(!password_callback)
                     {
                         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                                      "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                                      "Error in the policy. No password callback", RAMPART_FAULT_IN_POLICY, msg_ctx);
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                         "[rampart][shp] Password call back module is not specified.");
 
@@ -450,7 +450,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     if(!enc_sym_algo_in_pol)
     {
         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                      "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                      "Error in the policy. No summetric algo", RAMPART_FAULT_IN_POLICY, msg_ctx);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][shp] Symetric enc algorithm not specified in policy.");
         return AXIS2_FAILURE;
@@ -711,7 +711,7 @@ rampart_shp_process_signature(
     if(!sig_mtd_pol || !digest_mtd_pol)
     {
         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                      "Error in the policy.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                      "Error in the policy. No signature algo", RAMPART_FAULT_IN_POLICY, msg_ctx);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][shp] Error in policy, Specifying signature algorithms.");
         return AXIS2_FAILURE;

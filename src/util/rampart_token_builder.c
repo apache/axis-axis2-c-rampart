@@ -75,6 +75,7 @@ rampart_token_build_embedded(const axutil_env_t *env,
     /*Get data from the certificate*/
     data = oxs_x509_cert_get_data(cert, env);
     if(!data){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Cannot get data from the x509 certificate");
         return AXIS2_FAILURE;
     }
     embedded_node = oxs_token_build_embedded_element(env, parent, "ID");
@@ -93,6 +94,7 @@ rampart_token_build_key_identifier(const axutil_env_t *env,
 
     ki = oxs_x509_cert_get_key_identifier(cert, env);
     if(!ki){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Cannot get key identifier from the x509 certificate");
         return AXIS2_FAILURE;
     }
     ki_node = oxs_token_build_key_identifier_element(env, parent, OXS_ENCODING_BASE64BINARY,

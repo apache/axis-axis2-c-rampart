@@ -523,6 +523,10 @@ rampart_username_token_validate(
                                "[rampart][rampart_usernametoken] Password authentication using CALLBACK MODULE ");
                 password_from_svr = rampart_callback_password(env, password_callback, username);
             }
+        }else{
+            
+            AXIS2_LOG_INFO(env->log,
+                       "[rampart][rampart_usernametoken] Using the password is in the context");
         }
 
         if (!password_from_svr)
