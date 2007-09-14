@@ -34,9 +34,6 @@
 
 /** public functions*/
 
-
-
-
 axis2_status_t AXIS2_CALL
 rampart_username_token_build(
     const axutil_env_t *env,
@@ -250,8 +247,8 @@ rampart_username_token_validate(
 
         return AXIS2_FAILURE;
     }
+    
     /*Check: Any USERNAME_TOKEN MUST NOT have more than one PASSWORD*/
-
     if (1 <  oxs_axiom_get_number_of_children_with_qname(env, ut_node,
             RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
     {
@@ -261,7 +258,6 @@ rampart_username_token_validate(
     }
 
     /*Check: Any USERNAME_TOKEN MUST NOT have more than one CREATED*/
-
     if (1 <  oxs_axiom_get_number_of_children_with_qname(env,
             ut_node, RAMPART_SECURITY_USERNAMETOKEN_CREATED, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
     {
@@ -271,7 +267,6 @@ rampart_username_token_validate(
     }
 
     /*Check: Any USERNAME_TOKEN MUST NOT have more than one NONCE*/
-
     if (1 < oxs_axiom_get_number_of_children_with_qname(env, ut_node,
             RAMPART_SECURITY_USERNAMETOKEN_NONCE, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
     {
@@ -280,7 +275,7 @@ rampart_username_token_validate(
         return AXIS2_FAILURE;
     }
 
-    /*Get thru children of UsernameToken element*/
+    /*Go thru children of UsernameToken element*/
     children = axiom_element_get_child_elements(ut_ele, env, ut_node);
     if (children)
     {
@@ -309,12 +304,12 @@ rampart_username_token_validate(
 
                 if (!password_type)
                 {
-                    /*R4201 Any PASSWORD MUST specify a Type attribute */
-
+                    /*ERROR: R4201 Any PASSWORD MUST specify a Type attribute */
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                     "[rampart][rampart_usernametoken] Password Type is not specified in the password element");
                     return AXIS2_FAILURE;
                 }
+
                 /*Then we must check the password type with policy*/
                 password_type_pol = rampart_context_get_password_type(rampart_context, env);
                 if(!password_type_pol)
@@ -385,7 +380,6 @@ rampart_username_token_validate(
     }
 
     /*Now we process collected usernametoken parameters*/
-
     if (!username)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -405,11 +399,12 @@ rampart_username_token_validate(
      *
      * If authentication module is defined use it. 
      * Else try the usual approach to get password from the callback and compare
-     * */
+     **/
+    
+    
     /*In both authentication and password callback methods we should first try to
      *use function pointers. */
 
-    /*authn_module_name = "/home/kau/axis2/c/deploy/bin/samples/rampart/authn_provider/libauthn.so";*/
     if (0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
     {
         authenticate_with_digest = rampart_context_get_auth_digest_function(
@@ -459,6 +454,7 @@ rampart_username_token_validate(
             }
         }
     }
+    
     authn_provider = rampart_context_get_authn_provider(rampart_context, env);
     if(authn_provider)
     {
@@ -537,7 +533,6 @@ rampart_username_token_validate(
         }
 
         /*Alright NOW we have the password. Is digest needed?*/
-
         if (0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
         {
             AXIS2_LOG_INFO(env->log,
@@ -555,7 +550,6 @@ rampart_username_token_validate(
         }
 
         /*The BIG moment. Compare passwords*/
-
         if (0 == axutil_strcmp(password_to_compare , password))
         {
             AXIS2_LOG_INFO(env->log,

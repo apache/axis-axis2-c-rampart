@@ -85,9 +85,6 @@ extern "C" {
             axis2_msg_ctx_t *msg_ctx);
 
 
-    AXIS2_EXTERN void AXIS2_CALL
-    rampart_security_processed_results_free(const axutil_env_t *env,
-                    axutil_hash_t* sec_processed_results);
     /* @} */
 #ifdef __cplusplus
 }
