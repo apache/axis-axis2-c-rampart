@@ -105,7 +105,7 @@ oxs_axiom_get_node_by_local_name(const axutil_env_t *env,
     if(axiom_node_get_node_type(node, env) != AXIOM_ELEMENT){return NULL;}
 
     temp_name = axiom_util_get_localname(node, env);
-    AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for %s", temp_name, local_name );
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][axiom] Checking node %s for %s", temp_name, local_name );
 
     if(0 == axutil_strcmp(temp_name, local_name) ){
         /*Gottcha.. return this node*/

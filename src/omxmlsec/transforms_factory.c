@@ -45,8 +45,7 @@ oxs_transforms_exc_c14n(const axutil_env_t *env,
     doc = axiom_node_get_document(input, env);
     algo = OXS_HREF_TRANSFORM_XML_EXC_C14N;
     oxs_c14n_apply_algo(env, doc, &c14nized, NULL, input, algo);
-    /*oxs_c14n_apply(env, doc, AXIS2_FALSE, &c14nized, AXIS2_TRUE, NULL, (axiom_node_t*)input);*/
-    AXIS2_LOG_INFO(env->log, "[rampart][c14n-OutPut] is\n\n%s\n\n",c14nized);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][c14n-OutPut] is\n\n%s\n\n",c14nized);
     *output= c14nized;
     output_dtype = OXS_TRANSFORM_TYPE_CHAR;
     return output_dtype;

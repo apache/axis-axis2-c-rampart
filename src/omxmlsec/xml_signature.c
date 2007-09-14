@@ -209,7 +209,7 @@ oxs_xml_sig_sign_signed_info(const axutil_env_t *env,
 
     /*oxs_c14n_apply(env, doc, AXIS2_FALSE, &c14nized, AXIS2_TRUE, NULL, signed_info_node); */
     oxs_c14n_apply_algo(env, doc,  &c14nized, NULL, signed_info_node, c14n_algo);
-    AXIS2_LOG_INFO(env->log, "[oxs][xml_sig] C14N (sig)= %s ", c14nized );
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[oxs][xml_sig] C14N (sig)= %s ", c14nized );
 
     /*Then serialize <SignedInfo>*/
     serialized_signed_info = c14nized; /*axiom_node_to_string(signed_info_node, env);*/
