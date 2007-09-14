@@ -55,7 +55,7 @@ rampart_load_module(const axutil_env_t *env,
     dll_desc = axutil_dll_desc_create(env);
     axutil_dll_desc_set_name(dll_desc, env, module_name);
     impl_info_param = axutil_param_create(env, NULL, dll_desc);
-    /*axutil_param_set_value(impl_info_param, env, dll_desc);*/
+    /*Set the free function*/
     axutil_param_set_value_free(impl_info_param, env, axutil_dll_desc_free_void_arg);
     axutil_class_loader_init(env);
     ptr = axutil_class_loader_create_dll(env, impl_info_param);
