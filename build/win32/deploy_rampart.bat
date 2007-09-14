@@ -10,6 +10,9 @@ md %AXIS2C_HOME%\bin\samples\rampart\
 md %AXIS2C_HOME%\bin\samples\rampart\authn_provider\
 copy bin\samples\authn_provider\authn.dll %AXIS2C_HOME%\bin\samples\rampart\authn_provider\
 
+md %AXIS2C_HOME%\bin\samples\rampart\data\
+copy bin\samples\data\passwords.txt %AXIS2C_HOME%\bin\samples\rampart\data\
+
 md %AXIS2C_HOME%\bin\samples\rampart\client\
 md %AXIS2C_HOME%\bin\samples\rampart\client\sec_echo\
 copy bin\samples\client\sec_echo\echo.exe %AXIS2C_HOME%\bin\samples\rampart\client\sec_echo\

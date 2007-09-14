@@ -76,6 +76,7 @@ distdir:
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
 	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
+	mkdir $(RAMPART_DISTDIR)\bin\samples\data
 	mkdir $(RAMPART_DISTDIR)\modules\rampart
 	mkdir $(RAMPART_DISTDIR)\include
 
@@ -91,6 +92,9 @@ intdirs:
 	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
+
+mod_rampart_sample_data:
+	copy $(RAMPART_SOURCE_DIR)\samples\data\passwords.txt $(RAMPART_DISTDIR)\bin\samples\data
 
 mod_rampart:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
@@ -183,7 +187,7 @@ del_am:
 	del /s *.am
 	chdir .\..\win32
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
