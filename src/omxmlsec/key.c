@@ -139,7 +139,7 @@ oxs_key_dup(oxs_key_t *key,
     oxs_key_populate_with_buf(new_key,
                               env,
                               oxs_key_get_buffer(key, env),
-                              axutil_strdup(env, key->name),
+                              key->name,
                               key->usage);
     return new_key;
 }
@@ -265,6 +265,8 @@ oxs_key_for_algo(oxs_key_t *key,
     }
 
     size = openssl_cipher_property_get_key_size(cprop, env);
+	openssl_cipher_property_free(cprop, env);
+	cprop = NULL;
 
     key_buf = oxs_buffer_create(env);
     /*The actual key generation happens here*/

@@ -376,6 +376,8 @@ oxs_buffer_set_max_size(
 
         /*Copy to newdata*/
         new_data = memcpy(new_data, buffer->data, buffer->size);
+		AXIS2_FREE(env->allocator, buffer->data);
+		buffer->data = NULL;
 
 #endif
     }

@@ -38,6 +38,8 @@ oxs_get_cipher_property_for_url(const axutil_env_t *env,
     if((!cipher_name) || (0 == axutil_strcmp(cipher_name, ""))){
         oxs_error(env, ERROR_LOCATION,
                   OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
+		openssl_cipher_property_free(cprop, env);
+		cprop = NULL;
         return NULL;
     }
     ret = openssl_cipher_property_set_name(cprop, env , cipher_name);
@@ -47,6 +49,8 @@ oxs_get_cipher_property_for_url(const axutil_env_t *env,
     {
         oxs_error(env, ERROR_LOCATION,
                   OXS_ERROR_INVALID_DATA, "Cannot populate cipher property");
+		openssl_cipher_property_free(cprop, env);
+		cprop = NULL;
         return NULL;
     }
     return cprop;

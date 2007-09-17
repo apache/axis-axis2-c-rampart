@@ -440,8 +440,10 @@ rampart_enc_add_key_info(
                 key_id_ref = axutil_stracat(env, "#",key_id);
                 reference_node = oxs_token_build_reference_element(
                                      env, str_node, key_id_ref, NULL);
-                AXIS2_FREE(env->allocator, key_id);
-                key_id = NULL;
+                AXIS2_FREE(env->allocator, key_id_ref);
+                key_id_ref = NULL;
+				AXIS2_FREE(env->allocator, key_id);
+				key_id = NULL;
 
                 if(!reference_node)
                 {
@@ -457,18 +459,24 @@ rampart_enc_add_key_info(
             else{
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption]Encrypting signature, Cannot build the STR node");
+				AXIS2_FREE(env->allocator, key_id);
+				key_id = NULL;
                 return AXIS2_FAILURE;
             }
         }
         else{
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_encryption] Encrypting signature, cannot build the key indfo node");
+			AXIS2_FREE(env->allocator, key_id);
+			key_id = NULL;
             return AXIS2_FAILURE;
         }
     }
     else{
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption]Encrypting signature, Cannot get the encryption data element");
+		AXIS2_FREE(env->allocator, key_id);
+		key_id = NULL;
         return AXIS2_FAILURE;
     }
 }

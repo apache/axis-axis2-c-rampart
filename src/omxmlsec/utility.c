@@ -31,10 +31,13 @@ oxs_util_generate_id(const axutil_env_t *env,
     axis2_char_t *id = NULL;
     char _id[50];
     axis2_char_t *random ;
+	axis2_char_t *uuid = NULL;
 
-    random =  axutil_strndup(env, axutil_uuid_gen(env),18);
+	uuid = axutil_uuid_gen(env);
+    random =  axutil_strndup(env, uuid,18);
     sprintf(_id, "%s-%s",prefix,random);
     id = (axis2_char_t*)axutil_strdup(env, _id);
+	AXIS2_FREE(env->allocator, uuid);
     AXIS2_FREE(env->allocator, random);
     random = NULL;
     return id;

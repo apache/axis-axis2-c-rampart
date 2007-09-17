@@ -110,10 +110,11 @@ openssl_x509_load_from_pem(const axutil_env_t *env,
     PEM_read_bio_X509(in, cert, NULL, NULL);
 
     if (-1 == BIO_reset(in) ){
+		BIO_free(in);
         return AXIS2_FAILURE;
     }
 
-    if (-1 == BIO_free(in)  ){
+	if (-1 == BIO_free(in)  ){
         return AXIS2_FAILURE;
     }
 
@@ -327,7 +328,7 @@ openssl_x509_get_info(const axutil_env_t *env,
     if(OPENSSL_X509_INFO_SUBJECT==type){
         X509_NAME_print_ex(out, X509_get_subject_name(cert), 0, 0);
     }else if(OPENSSL_X509_INFO_ISSUER == type){
-        X509_NAME_print_ex(out,  X509_get_issuer_name(cert), 0, 0);
+        X509_NAME_print_ex(out, X509_get_issuer_name(cert), 0, 0);
     }else if(OPENSSL_X509_INFO_VALID_FROM == type){
         ASN1_TIME_print(out, X509_get_notBefore(cert));
     }else if(OPENSSL_X509_INFO_VALID_TO == type){

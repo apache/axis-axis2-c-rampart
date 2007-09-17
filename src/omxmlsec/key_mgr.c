@@ -134,25 +134,35 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
     /*If the X509 certificate is available, populate oxs_x509_cert*/
     if(cert){
         axis2_char_t *x509_cert_data = NULL;
+		axis2_char_t *x509_cert_date = NULL;
+		axis2_char_t *x509_cert_issuer = NULL;
+		axis2_char_t *x509_cert_subject = NULL;
+		axis2_char_t *x509_cert_finger = NULL;
+		axis2_char_t *x509_cert_key_id = NULL;
 
         x509_cert_data = openssl_x509_get_cert_data(env, cert);
+		x509_cert_date = openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_TO ,cert);
+		x509_cert_issuer = openssl_x509_get_info(env, OPENSSL_X509_INFO_ISSUER ,cert);
+		x509_cert_subject = openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert);
+		x509_cert_finger = openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert);
+		x509_cert_key_id = openssl_x509_get_subject_key_identifier(env, cert);
 
         /*Create certificate*/
         oxs_cert = oxs_x509_cert_create(env);
 
         /*And populate it*/
         oxs_x509_cert_set_data(oxs_cert, env, x509_cert_data);
-        oxs_x509_cert_set_date(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_TO ,cert));
-        oxs_x509_cert_set_issuer(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_ISSUER ,cert));
-        oxs_x509_cert_set_subject(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert));
-        oxs_x509_cert_set_fingerprint(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert));
+        oxs_x509_cert_set_date(oxs_cert, env, x509_cert_date);
+        oxs_x509_cert_set_issuer(oxs_cert, env, x509_cert_issuer);
+        oxs_x509_cert_set_subject(oxs_cert, env, x509_cert_subject);
+        oxs_x509_cert_set_fingerprint(oxs_cert, env, x509_cert_finger);
         oxs_x509_cert_set_serial_number(oxs_cert, env, openssl_x509_get_serial(env, cert));
-        oxs_x509_cert_set_key_identifier(oxs_cert, env, openssl_x509_get_subject_key_identifier(env, cert));
+        oxs_x509_cert_set_key_identifier(oxs_cert, env, x509_cert_key_id);
 
         /*Additionally we need to set the public key*/
         openssl_x509_get_pubkey(env, cert, &pubkey);
         open_pubkey = openssl_pkey_create(env);
-        openssl_pkey_populate(open_pubkey, env, pubkey, openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert), OPENSSL_PKEY_TYPE_PUBLIC_KEY);
+        openssl_pkey_populate(open_pubkey, env, pubkey, x509_cert_finger, OPENSSL_PKEY_TYPE_PUBLIC_KEY);
         /*Set the public key to the x509 certificate*/
         oxs_x509_cert_set_public_key(oxs_cert, env, open_pubkey);
 
@@ -161,10 +171,19 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
 
         AXIS2_FREE(env->allocator, x509_cert_data);
         x509_cert_data = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_date);
+        x509_cert_date = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_issuer);
+        x509_cert_issuer = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_subject);
+        x509_cert_subject = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_finger);
+        x509_cert_finger = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_key_id);
+        x509_cert_key_id = NULL;
 
-        X509_free(cert);
+		X509_free(cert);
         cert = NULL;
-
     }
 
     /*If this fails to get anything return failure*/
@@ -173,6 +192,7 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
                   "Error reading the key");
         return AXIS2_FAILURE;
     }
+
     return AXIS2_SUCCESS;
 }
 
@@ -236,24 +256,34 @@ oxs_key_mgr_convert_to_x509(const axutil_env_t *env,
         EVP_PKEY *pubkey = NULL;
         openssl_pkey_t *open_pubkey = NULL;
         axis2_char_t *x509_cert_data = NULL;
+		axis2_char_t *x509_cert_date = NULL;
+		axis2_char_t *x509_cert_issuer = NULL;
+		axis2_char_t *x509_cert_subject = NULL;
+		axis2_char_t *x509_cert_fingerprint = NULL;
+		axis2_char_t *x509_cert_key_id = NULL;
 
         x509_cert_data = openssl_x509_get_cert_data(env, cert);
+		x509_cert_date = openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_TO ,cert);
+		x509_cert_issuer = openssl_x509_get_info(env, OPENSSL_X509_INFO_ISSUER ,cert);
+		x509_cert_subject = openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert);
+		x509_cert_fingerprint = openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert);
+		x509_cert_key_id = openssl_x509_get_subject_key_identifier(env, cert);
 
         /*Create X509 certificate*/
         oxs_cert = oxs_x509_cert_create(env);
         oxs_x509_cert_set_data(oxs_cert, env, x509_cert_data);
-        oxs_x509_cert_set_date(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_VALID_TO ,cert));
-        oxs_x509_cert_set_issuer(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_ISSUER ,cert));
-        oxs_x509_cert_set_subject(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert));
-        oxs_x509_cert_set_fingerprint(oxs_cert, env, openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert));
+        oxs_x509_cert_set_date(oxs_cert, env, x509_cert_date);
+        oxs_x509_cert_set_issuer(oxs_cert, env, x509_cert_issuer);
+        oxs_x509_cert_set_subject(oxs_cert, env, x509_cert_subject);
+        oxs_x509_cert_set_fingerprint(oxs_cert, env, x509_cert_fingerprint);
         oxs_x509_cert_set_serial_number(oxs_cert, env, openssl_x509_get_serial(env, cert));
-        oxs_x509_cert_set_key_identifier(oxs_cert, env, openssl_x509_get_subject_key_identifier(env, cert));
+        oxs_x509_cert_set_key_identifier(oxs_cert, env, x509_cert_key_id);
 
         /*Additionally we need to set the public key*/
         openssl_x509_get_pubkey(env, cert, &pubkey);
         open_pubkey = openssl_pkey_create(env);
         openssl_pkey_populate(open_pubkey, env, pubkey,
-                              openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER,cert),
+                              x509_cert_fingerprint,
                               OPENSSL_PKEY_TYPE_PUBLIC_KEY);
 
         /*Set the public key to the x509 certificate*/
@@ -262,6 +292,16 @@ oxs_key_mgr_convert_to_x509(const axutil_env_t *env,
         /*Free*/
         AXIS2_FREE(env->allocator, x509_cert_data);
         x509_cert_data = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_date);
+        x509_cert_date = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_issuer);
+        x509_cert_issuer = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_subject);
+        x509_cert_subject = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_fingerprint);
+        x509_cert_fingerprint = NULL;
+		AXIS2_FREE(env->allocator, x509_cert_key_id);
+        x509_cert_key_id = NULL;
         /*Free the certificate*/
         X509_free(cert);
         cert = NULL;

@@ -270,7 +270,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
                 (const char *)oxs_buffer_get_data(out_buf, env), enclen);
 
         status = oxs_buffer_populate(result, env, 
-                    (unsigned char*)axutil_strdup(env, encoded_str),
+                    (unsigned char*)encoded_str,
                     encodedlen);
 
         /*Free*/

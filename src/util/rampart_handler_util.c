@@ -135,6 +135,8 @@ rampart_get_security_token(const axutil_env_t *env,
         {
             /*Set mustUnderstand = 0*/
             axiom_soap_header_block_set_must_understand_with_bool(header_block, env, AXIS2_FALSE);
+			if (env)
+				AXIS2_FREE(env->allocator, hash_index);
             return header_block_node;
         }
 

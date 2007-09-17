@@ -136,6 +136,11 @@ rampart_load_pwcb_module(const axutil_env_t *env,
     if (!cb)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the callback module %s. ERROR", callback_module_name);
+		if (param)
+		{
+			AXIS2_FREE(env->allocator, param);
+			param = NULL;
+		}
         return AXIS2_FAILURE;
     }
     if(param){
@@ -235,17 +240,23 @@ rampart_compare_date_time(const axutil_env_t *env, axis2_char_t *dt1_str, axis2_
     status =  axutil_date_time_deserialize_date_time(dt1, env, dt1_str);
     if (status == AXIS2_FAILURE)
     {
+		axutil_date_time_free(dt1, env);
+		axutil_date_time_free(dt2, env);
         return AXIS2_FAILURE;
     }
 
     status =  axutil_date_time_deserialize_date_time(dt2, env, dt2_str);
     if (status == AXIS2_FAILURE)
     {
+		axutil_date_time_free(dt1, env);
+		axutil_date_time_free(dt2, env);
         return AXIS2_FAILURE;
     }
 
     /*dt1<dt2 for SUCCESS*/
     res = axutil_date_time_compare(dt1, env, dt2);
+	axutil_date_time_free(dt1, env);
+	axutil_date_time_free(dt2, env);
     if(AXIS2_DATE_TIME_COMP_RES_NOT_EXPIRED == res){
         return AXIS2_SUCCESS;
     }else{

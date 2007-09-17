@@ -242,6 +242,8 @@ oxs_axiom_get_attribute_val_of_node_by_qname(const axutil_env_t *env,
             {
                 /*Got it !!!*/
                 found_val = axiom_attribute_get_value(om_attr, env);
+				if (env)
+					AXIS2_FREE(env->allocator, hi);
                 break;
             }
         }

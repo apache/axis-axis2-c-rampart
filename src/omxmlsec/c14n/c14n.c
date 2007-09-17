@@ -1558,6 +1558,8 @@ c14n_ns_visibly_utilized(
                     if (axutil_strcmp(attr_pfx, pfx) == 0)
                     {
                         vu = AXIS2_TRUE;
+						if (ctx->env)
+							AXIS2_FREE(ctx->env->allocator, hi);
                         break;
                     }
                     /*}*/

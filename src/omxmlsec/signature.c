@@ -146,6 +146,8 @@ oxs_sig_verify(const axutil_env_t *env,
     status = oxs_buffer_populate(in_buf, env, (unsigned char*)content,
                                  axutil_strlen(content));
 
+	AXIS2_FREE(env->allocator, decoded_data);
+
     /* Get the public key. See.. this method is trickey. It might take the
      * public key from the certificate, only if
      * the public key is not available directly

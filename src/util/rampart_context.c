@@ -1046,6 +1046,8 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
                 }
             }
         }/*eof for*/
+		axutil_array_list_free(soap_header_blocks, env);
+		soap_header_blocks = NULL;
         return AXIS2_SUCCESS;
     }
     else if(axutil_strcmp(local_name,"Security")==0)
