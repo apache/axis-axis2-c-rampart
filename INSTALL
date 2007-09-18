@@ -5,7 +5,8 @@ Table of contents
     |_ Getting Rampart/C source working on Win32
     |_ Getting Rampart/C binary working on Win32
     |_ Engage Rampart/C with axis2/C
-    |_ Trying out the samples in Win32
+    |_ Try samples on Linux
+    |_ Try samples on Win32
 
 
 Getting Rampart/C source working on Linux
@@ -82,7 +83,15 @@ To specify policies in the server side, please add policy assertions to the serv
 Please find such sample policy files under samples/secpolicy/scenarioX. 
 Note that you must replace both the client and service policies for a particular scenario.
 
-Trying out the samples on Win32
+Try samples on Linux
+===============================
+There are several scenarios available under samples/secpolicy
+Run a scenario that you'd like to try using the script test_scen.sh
+    Syntax: test_scen.sh scenario server_port
+    E.g. %sh test_scen.sh scenario3 9090
+Note: You may use a TCP Monitor to see the wire content. In that case replace the server_port with the lietening port
+
+Try samples on Win32
 ===============================
 
 There are several scenarios that you can try out with the sec_echo sample of the Rampart/C distribution.
