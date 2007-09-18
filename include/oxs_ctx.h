@@ -35,14 +35,12 @@ extern "C"
 {
 #endif
 
-    /** @defgroup oxs_ctx Message Context
+    /** 
+     * @defgroup oxs_ctx Message Context
      * @ingroup oxs_context
      * @{
      */
 
-    /*TODO We need to change the name oxs_ctx -> oxs_sym_ctx.
-     * The name is sounds too generic as there is another oxs_asym_ctx.
-     * */
 
     typedef enum  {
         OXS_CTX_OPERATION_NONE = 0,
@@ -58,8 +56,6 @@ extern "C"
 
     /** Type name for struct oxs_ctx */
     typedef struct oxs_ctx_t oxs_ctx_t;
-
-
 
     /**
      * Free function of the context

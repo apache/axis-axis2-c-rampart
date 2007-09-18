@@ -25,7 +25,7 @@
 
 /**
  * @file oxs_c14n.h
- * @brief
+ * @brief Cannonicalization algo implementation for OMXMLSecurity
  */
 
 #include <axis2_const.h>

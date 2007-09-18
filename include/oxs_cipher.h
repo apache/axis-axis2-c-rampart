@@ -33,6 +33,13 @@ extern "C"
 {
 #endif
 
+/**
+     * @defgroup oxs_cipher oxs_cipher
+     * @ingroup oxs
+     * @{
+     */
+
+
     /**
      * Get the cipher property  for the given url
      * @env pointer to environment struct

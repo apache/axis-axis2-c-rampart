@@ -37,8 +37,8 @@ extern "C"
 {
 #endif
 
-    /** @defgroup
-     * @ingroup 
+    /** @defgroup oxs oxs_buffer
+     * @ingroup oxs
      * @{
      */
 

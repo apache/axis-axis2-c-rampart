@@ -31,6 +31,23 @@ extern "C"
 {
 #endif
 
+/** \mainpage Rampart/C API Documentation
+  *
+  * \section intro_sec Introduction
+  *
+  * This is the API documetation of Apache Rampart/C, which is the
+  * security module for Apache Axis2/C.
+  * It features in many ways to protect SOAP messages exchanged.
+  * This includes SOAP message encryption and signature as specified in WS-Security Specification. 
+  * In addition Apache Rampart/C configurations are based on security policy assertions as per WS-Security Policy specification
+  * <p>We welcome your feedback on this implementation and documentation.
+  * Please send your feedback to <a href="mailto:rampart-c-dev@ws.apache.org">
+  * rampart-c-dev@ws.apache.org</a> 
+  *
+  */
+
+
+
     /*Default values*/
 #define RAMPART_DEFAULT_KT_ALGO OXS_DEFAULT_KT_ALGO_HREF
 #define RAMPART_STR_DEFAULT OXS_STR_DEFAULT

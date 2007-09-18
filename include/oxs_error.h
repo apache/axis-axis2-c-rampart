@@ -20,6 +20,8 @@
 
 
 /**
+  * @defgroup oxs_error oxs_error
+  * @ingroup oxs
   * @file oxs_error.h
   * @brief Represents an Error occured during the OMXMLSecurity execution 
   */

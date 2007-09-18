@@ -61,7 +61,7 @@ extern "C"
         axis2_msg_ctx_t *msg_ctx,
         axiom_node_t *ts_node );
 
-
+ /* @} */
 #ifdef __cplusplus
 }
 #endif

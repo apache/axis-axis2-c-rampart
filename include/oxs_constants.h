@@ -22,6 +22,17 @@
 extern "C"
 {
 #endif
+    /** @defgroup oxs OMXMLSecurity
+      * @ingroup oxs
+      * @{
+      * @}
+      */
+
+    /**
+     * @defgroup oxs_constants
+     * @ingroup oxs
+     * @{
+     */
 
     /*Default values*/
     /*Key transfer algo*/
@@ -347,7 +358,7 @@ extern "C"
     /*************************************************************************/
 
 
-
+/** @} */
 #ifdef __cplusplus
 }
 #endif

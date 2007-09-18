@@ -20,6 +20,7 @@
 
 
 /**
+ *  @defgroup oxs oxs_key
   * @file oxs_key.h
   * @brief represents a Key in OMXMLSecurity 
   */

@@ -36,6 +36,11 @@
 extern "C"
 {
 #endif
+    /** @defgroup oxs oxs_axiom
+      * @ingroup oxs
+      * @{
+      * @}
+      */
 
     /**
      * Adds an attribute to a particular node

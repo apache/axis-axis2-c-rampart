@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_binary_security_token.h
-  * @brief 
+  * @brief <wsse:BinarySecurityToken> related functions
   */
 #include <axis2_util.h>
 #include <axis2_defines.h>
@@ -36,6 +36,7 @@ extern "C"
 
     /**
     * BinarySecurityToken
+    * \brief Create element <wsse:BinarySecurityToken>
     */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_token_build_binary_security_token_element(const axutil_env_t *env,

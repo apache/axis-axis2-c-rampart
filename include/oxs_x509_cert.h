@@ -34,8 +34,9 @@ extern "C"
 {
 #endif
 
-    /** @defgroup oxs_x509_cert
-     * @ingroup 
+    /** 
+     * @defgroup oxs_x509_cert
+     * @ingroup oxs 
      * @{
      */
 

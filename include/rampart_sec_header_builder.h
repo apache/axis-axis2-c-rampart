@@ -24,7 +24,7 @@
 #include <oxs_xml_encryption.h>
 /**
   * @file rampart_sec_header_builder.h
-  * @brief 
+  * @brief Build the Security related SOAP headers
   */
 #ifndef RAMPART_SEC_HEADER_BUILDER_H
 #define RAMPART_SEC_HEADER_BUILDER_H
