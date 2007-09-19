@@ -2,7 +2,7 @@
 
 
 this_dir=$PWD
-src_dist=rampartc-src-1.0.0
+src_dist=rampartc-src-1.0.0 #Make sure you set the correct directory name
 src_dist_tar_gz=$src_dist.tar.gz
 src_dist_tar_gz_md5=$src_dist_tar_gz.md5
 src_dist_tar_gz_asc=$src_dist_tar_gz.asc
@@ -23,45 +23,46 @@ rm $src_dist_tar_gz
 
 ls
 
-cd $src_dist
+#cd $src_dist
+
 
 echo "Removing makefiles in $src_dist"
-for i in `find . -name "Makefile"`
+for i in `find $src_dist -name "Makefile"`
 do
     echo "Deleting $i"
     rm  $i
 done
 
 echo "Removing .svn entries in $src_dist"
-for i in `find . -name ".svn"`
+for i in `find $src_dist -name ".svn"`
 do
     echo "Deleting $i"
     rm  -rf $i
 done
 
 echo "Removing .la entries in $src_dist"
-for i in `find . -name "*.la"`
+for i in `find $src_dist -name "*.la"`
 do
     echo "Deleting $i"
     rm  $i
 done
 
 echo "Removing .lo entries in $src_dist"
-for i in `find . -name "*.lo"`
+for i in `find $src_dist -name "*.lo"`
 do
     echo "Deleting $i"
     rm  $i
 done
 
 echo "Removing .libs entries in $src_dist"
-for i in `find . -name ".libs"`
+for i in `find $src_dist -name ".libs"`
 do
     echo "Deleting $i"
     rm  -rf $i
 done
 
 echo "Removing .deps entries in $src_dist"
-for i in `find . -name ".deps"`
+for i in `find $src_dist -name ".deps"`
 do
     echo "Deleting $i"
     rm  -rf $i

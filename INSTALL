@@ -4,7 +4,7 @@ Table of contents
     |_ Getting Rampart/C binary distribution working on Linux
     |_ Getting Rampart/C source working on Win32
     |_ Getting Rampart/C binary working on Win32
-    |_ Engage Rampart/C with axis2/C
+    |_ Engaging Rampart/C with axis2/C
     |_ Try samples on Linux
     |_ Try samples on Win32
 
@@ -28,7 +28,7 @@ Getting Rampart/C binary distribution working on Linux
 ======================================================
 1. Copy modules/rampart to $AXIS2C_HOME/modules
 2. Copy samples/server/sec_echo to $AXIS2C_HOME/services/
-3. Engage rampart as described in section "Engage Rampart/C with axis2/C"
+3. Engage rampart as described in section "Engaging Rampart/C with axis2/C"
 4. Go to samples/client/sec_echo/ and deploy the client repo 
     %sh deploy_client_repo.sh
 5. Go to samples/secpolicy/ and try a scenario
@@ -90,7 +90,7 @@ There are several scenarios available under samples/secpolicy
 Run a scenario that you'd like to try using the script test_scen.sh
     Syntax: test_scen.sh scenario server_port
     E.g. %sh test_scen.sh scenario3 9090
-Note: You may use a TCP Monitor to see the wire content. In that case replace the server_port with the lietening port.
+Note: You may use a TCP Monitor to see the wire content. In that case replace the server_port with the target port.
 
 Try samples on Win32
 ===============================
