@@ -18,9 +18,10 @@ This can be done using the following command sequence:
         make
         make install
 
-If you need to try samples, you need to build them.
-    -Go to samples and run the script build.sh
-    -Then go to  samples/secpolicy and try a scenario
+If you need to try samples,first you need to build them.
+Go to samples and run the script build.sh.
+        %sh build.sh
+Then go to  samples/secpolicy and try a scenario
         %sh test_scen.sh scenarioX server-port
 
 Getting Rampart/C binary distribution working on Linux
@@ -78,7 +79,7 @@ Then add following Security phase to the phase order in the outflow in the axis2
         <phase name="Security"/>
     </phaseOrder>
 
-To specify policies in the client side, please drop your policy.xml to the same directory as in axis2.xml
+To specify policies in the client side, please drop your policy.xml to the same directory where the axis2.xml is in.
 To specify policies in the server side, please add policy assertions to the services.xml.
 Please find such sample policy files under samples/secpolicy/scenarioX. 
 Note that you must replace both the client and service policies for a particular scenario.
@@ -89,7 +90,7 @@ There are several scenarios available under samples/secpolicy
 Run a scenario that you'd like to try using the script test_scen.sh
     Syntax: test_scen.sh scenario server_port
     E.g. %sh test_scen.sh scenario3 9090
-Note: You may use a TCP Monitor to see the wire content. In that case replace the server_port with the lietening port
+Note: You may use a TCP Monitor to see the wire content. In that case replace the server_port with the lietening port.
 
 Try samples on Win32
 ===============================

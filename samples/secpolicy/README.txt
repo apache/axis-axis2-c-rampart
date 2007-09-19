@@ -31,18 +31,16 @@ WIN32 and Mac OS.
 * I am in a HURRY and I need to try a scenario
 --------------------------------------------
 If you are in a real hurry and need to try a scenario please use "test_scen.sh".
-
 Usage : %sh test_scen.sh scenarioX server-port
 E.g. %sh test_scen.sh scenario3 8080
 
 * I need to try all the scenarios
 -------------------------------
 In this case please use the script run_all.sh.
-
 Usage: %sh run_all.sh server-port
 E.g. %sh run_all.sh 8080
 
-* I need to see the messages exchanged
+* I need to see messages exchanged
 --------------------------------------
 You may use the TCP Monitor utility: http://ws.apache.org/commons/tcpmon/
 
@@ -51,6 +49,22 @@ while running the scripts.
 
 * I cannot run samples and log says keys cannot be loaded
 ---------------------------------------------------------
-Check you rpolicy files. Make sure that you have correct paths specified for
+Check your policy files. Make sure that you have correct paths specified for
 key/certificate files.
+
+* My client sends a secured SOAP request. But the server throws me SOAP faults.
+------------------------------------------------------------------------------
+Well. You are on it. Check whether the server's policy configurations are
+satisfied by the client's policies. There is a <Reason> element carrying the
+information you need in the SOAP fault. Misconfigurations in the server also can be resulted
+in a SOAP fault. 
+
+*Hmm... I'm still in a trouble. Can I contact you guys?
+-------------------------------------------------------
+Indeed you can. Please check here.
+http://ws.apache.org/rampart/c/lists_issues.html
+Err... if you can attach log files under AXIS2C_HOME/logs, a trace of SOAP
+message, plus anything that you think relavent, that'll help the troubleshooting process. 
+
+
 
