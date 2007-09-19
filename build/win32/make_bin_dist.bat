@@ -1,4 +1,4 @@
-set BINDIST=..\rampartc-bin-0.90-win32
+set BINDIST=..\rampartc-bin-1.0.0-win32
 if exist %BINDIST% rd /s /q %BINDIST%
 mkdir %BINDIST%
 mkdir %BINDIST%\samples
