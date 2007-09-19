@@ -8,6 +8,6 @@ install-data-hook:
 	cp -rf README $(datadir)/../
 	cp -rf ABOUT_SAMPLES $(datadir)/../
 
-EXTRA_DIST=secpolicy omxmlsec data
+EXTRA_DIST=secpolicy omxmlsec data ABOUT_SAMPLES
 
 
