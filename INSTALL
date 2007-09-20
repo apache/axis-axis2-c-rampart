@@ -14,7 +14,7 @@ Getting Rampart/C source working on Linux
 Build the source
 
 This can be done using the following command sequence:
-        ./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.0
+        ./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.1
         make
         make install
 
@@ -102,7 +102,7 @@ You can find more about it from the README.TXT file inside samples\secpolicy fol
 	SET AXIS2C_HOME=[your-path-to-axis2c]
 
 2. Run the deploy_client_repo.bat file found in the samples\client\sec_echo folder.
-	This will create an axis2 client repository for the samples in the AXIS2C_HOME\clientrepo directory.
+	This will create an axis2 client repository for the samples in the AXIS2C_HOME\client_repo directory.
 
 To specify policies in the client side, please drop your policy.xml to the same directory as in axis2.xml
 To specify policies in the server side, please add policy assertions to the services.xml.
