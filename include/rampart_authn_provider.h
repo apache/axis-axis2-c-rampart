@@ -77,8 +77,8 @@ extern "C"
          * @param authn_provider the authentication provider struct
          * @param env pointer to environment struct
          * @param msg_ctx message context
-         * @username the username
-         * @password the password in plain text
+         * @param username the username
+         * @param password the password in plain text
          * @return the status of the check
          */
         rampart_authn_provider_status_t (AXIS2_CALL*
@@ -95,10 +95,10 @@ extern "C"
          * @param authn_provider the authentication provider struct
          * @param env pointer to environment struct
          * @param msg_ctx message context
-         * @username the username
-         * @nonce the noce or the random value of the username token
-         * @created the created value of the username token
-         * @digest the digest value of the SHA-1(password+created+nonce)
+         * @param username the username
+         * @param nonce the noce or the random value of the username token
+         * @param created the created value of the username token
+         * @param digest the digest value of the SHA-1(password+created+nonce)
          * @return the status of the check
          */
         rampart_authn_provider_status_t (AXIS2_CALL*

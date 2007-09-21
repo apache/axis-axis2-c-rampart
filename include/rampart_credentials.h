@@ -69,7 +69,12 @@ extern "C"
 
         /**
          * Implementation must provide both username and the password.
-         *
+         * @param credentials pointer to the credentials struct
+         * @param env pointer to the environment struct
+         * @param msg_ctx Message context
+         * @param username Reference to the username
+         * @param password Reference to the password
+         * @return The status of extracting credentials 
          */
         rampart_credentials_status_t (AXIS2_CALL*
                                       rampart_credentials_username_get)(
@@ -79,7 +84,12 @@ extern "C"
                                           axis2_char_t **username,
                                           axis2_char_t **password
                                       );
-
+        /**
+         * The free function for the credentials
+         * @param credentials pointer to the credentials struct
+         * @param env pointer to the environment struct
+         * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+         */
         axis2_status_t (AXIS2_CALL*
                         free)(rampart_credentials_t *credentials,
                               const axutil_env_t* env);

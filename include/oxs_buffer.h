@@ -60,8 +60,8 @@ extern "C"
 
     /**
     *Free function of the buffer
-    *@buffer pointer to the OMXMLSec buffer struct
-    *@env pointer to environment struct
+    *@param buffer pointer to the OMXMLSec buffer struct
+    *@param env pointer to environment struct
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
     axis2_status_t AXIS2_CALL
@@ -71,9 +71,9 @@ extern "C"
     );
     /**
     *Removes the first (size) charcters from the buffer
-    *@buffer pointer to the OMXMLSec buffer struct
-    *@env pointer to environment struct
-    *@size number of characters to be removed
+    *@param buffer pointer to the OMXMLSec buffer struct
+    *@param env pointer to environment struct
+    *@param size number of characters to be removed
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
     axis2_status_t AXIS2_CALL
@@ -84,9 +84,9 @@ extern "C"
     );
     /**
     *Removes the last (size) charcters from the buffer
-    *@buffer pointer to the OMXMLSec buffer struct
-    *@env pointer to environment struct
-    *@size number of characters to be removed		
+    *@param buffer pointer to the OMXMLSec buffer struct
+    *@param env pointer to environment struct
+    *@param size number of characters to be removed		
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
     axis2_status_t AXIS2_CALL
