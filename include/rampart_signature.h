@@ -24,6 +24,13 @@
   * @file rampart_signature.h
   * @brief sign a SOAP message 
   */
+
+/**
+* @defgroup rampart_signature Signature
+* @ingroup rampart_utils
+* @{
+*/
+
 #ifndef RAMPART_SIGNATURE_H
 #define RAMPART_SIGNATURE_H
 

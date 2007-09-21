@@ -23,7 +23,11 @@
   * @file oxs_xml_signature.h
   * @brief Does the XML Signature for OMXMLSecurity  
   */
-
+/**
+* @defgroup  oxs_xml_signature XML Signature
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <axutil_env.h>

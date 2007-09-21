@@ -33,11 +33,11 @@ extern "C"
 {
 #endif
 
-/**
-     * @defgroup oxs_cipher oxs_cipher
-     * @ingroup oxs
-     * @{
-     */
+    /**
+         * @defgroup oxs_cipher Cipher
+         * @ingroup oxs
+         * @{
+         */
 
 
     /**

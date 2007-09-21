@@ -24,6 +24,11 @@
   * @brief The utility module for OMXMLSecurity 
   */
 
+/**
+* @defgroup oxs_utility Utility
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <oxs_asym_ctx.h>

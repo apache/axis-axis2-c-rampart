@@ -35,9 +35,9 @@ extern "C"
 {
 #endif
 
-    /** 
-     * @defgroup oxs_ctx Message Context
-     * @ingroup oxs_context
+    /**
+     * @defgroup oxs_ctx OXS Context
+     * @ingroup oxs
      * @{
      */
 

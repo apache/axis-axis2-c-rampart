@@ -23,6 +23,10 @@
  * @brief Axis2 rampart module interface
  */
 
+/**
+* @defgroup rampart_mod Rampart Module 
+* @{
+*/
 #include <axis2_handler.h>
 
 #ifdef __cplusplus

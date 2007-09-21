@@ -24,6 +24,11 @@
   * @brief Initial Vector related functionalities 
   */
 
+/**
+* @defgroup oxs_iv Initial Vector
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <oxs_constants.h>
 #include <openssl_constants.h>

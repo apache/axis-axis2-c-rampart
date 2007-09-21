@@ -30,6 +30,13 @@
   * @file rampart_token_builder.h
   * @brief Reference Token builfing/of rampart
   */
+
+/**
+* @defgroup rampart_token_builder Token Builder 
+* @ingroup rampart_utils
+* @{
+*/
+
 #ifndef RAMPART_TOKEN_BUILDER_H
 #define RAMPART_TOKEN_BUILDER_H
 

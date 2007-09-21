@@ -39,6 +39,11 @@
   * @brief Utilities related to handlers 
   */
 
+/**
+* @defgroup rampart_handler_util Handler Utilities
+* @ingroup rampart_utils
+* @{
+*/
 #ifdef __cplusplus
 extern "C"
 {

@@ -26,6 +26,13 @@
   * @file rampart_sec_header_builder.h
   * @brief Build the Security related SOAP headers
   */
+
+/**
+* @defgroup rampart_sec_header_builder Security Header Builder
+* @ingroup rampart_utils
+* @{
+*/
+
 #ifndef RAMPART_SEC_HEADER_BUILDER_H
 #define RAMPART_SEC_HEADER_BUILDER_H
 

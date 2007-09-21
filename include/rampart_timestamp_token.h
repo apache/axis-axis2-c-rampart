@@ -22,6 +22,13 @@
   * @file rampart_timestamp_token.h
   * @brief Timestamp token related functions. 
   */
+
+/**
+* @defgroup rampart_timestamp_token Timestamp Token
+* @ingroup rampart_utils
+* @{
+*/
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -61,7 +68,7 @@ extern "C"
         axis2_msg_ctx_t *msg_ctx,
         axiom_node_t *ts_node );
 
- /* @} */
+    /* @} */
 #ifdef __cplusplus
 }
 #endif

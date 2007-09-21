@@ -24,6 +24,10 @@
   * @brief Holds constants for rampart
   */
 
+/**
+* @defgroup rampart_utils Rampart Utilities
+* @{
+*/
 #include <oxs_constants.h>
 
 #ifdef __cplusplus
@@ -31,20 +35,20 @@ extern "C"
 {
 #endif
 
-/** \mainpage Rampart/C API Documentation
-  *
-  * \section intro_sec Introduction
-  *
-  * This is the API documetation of Apache Rampart/C, which is the
-  * security module for Apache Axis2/C.
-  * It features in many ways to protect SOAP messages exchanged.
-  * This includes SOAP message encryption and signature as specified in WS-Security Specification. 
-  * In addition Apache Rampart/C configurations are based on security policy assertions as per WS-Security Policy specification
-  * <p>We welcome your feedback on this implementation and documentation.
-  * Please send your feedback to <a href="mailto:rampart-c-dev@ws.apache.org">
-  * rampart-c-dev@ws.apache.org</a> 
-  *
-  */
+    /** \mainpage Rampart/C API Documentation
+      *
+      * \section intro_sec Introduction
+      *
+      * This is the API documetation of Apache Rampart/C, which is the
+      * security module for Apache Axis2/C.
+      * It features in many ways to protect SOAP messages exchanged.
+      * This includes SOAP message encryption and signature as specified in WS-Security Specification. 
+      * In addition Apache Rampart/C configurations are based on security policy assertions as per WS-Security Policy specification
+      * <p>We welcome your feedback on this implementation and documentation.
+      * Please send your feedback to <a href="mailto:rampart-c-dev@ws.apache.org">
+      * rampart-c-dev@ws.apache.org</a> 
+      *
+      */
 
 
 
@@ -105,7 +109,7 @@ extern "C"
 #define RAMPART_FAULT_IN_ENCRYPTED_DATA        "xenc:EncryptedData"
 #define RAMPART_FAULT_IN_SIGNATURE             "ds:Signature"
 #define RAMPART_FAULT_MSG_REPLAYED             "rampc:Message-Replayed"
-#define RAMPART_FAULT_IN_POLICY                "rampc:Policy"                      
+#define RAMPART_FAULT_IN_POLICY                "rampc:Policy"
 
     /*Dynamically set values*/
 #define RAMPART_ACTION_PASSWORD "password"
@@ -142,4 +146,5 @@ extern "C"
 }
 #endif
 
+/** @} */
 #endif /* RAMPART_CONSTANTS_H*/

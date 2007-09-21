@@ -24,6 +24,11 @@
   * @brief the Key Manager responsible for loading keys for OMXMLSecurity
   */
 
+/**
+* @defgroup oxs_key_mgr Key Manager
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <oxs_asym_ctx.h>

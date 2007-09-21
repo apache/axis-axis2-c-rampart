@@ -29,6 +29,13 @@
   * @file rampart_token_processor.h
   * @brief Token processing of rampart
   */
+
+/**
+* @defgroup Token Processor
+* @ingroup rampart_utils
+* @{
+*/
+
 #ifndef RAMPART_TOKEN_PROCESSOR_H
 #define RAMPART_TOKEN_PROCESSOR_H
 

@@ -24,6 +24,12 @@
   * @brief Process elements available under ds:KeyInfo  
   */
 
+/**
+* @defgroup oxs_xml_key_processor XML Key Processor
+* @ingroup oxs
+* @{
+*/
+
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <axutil_env.h>

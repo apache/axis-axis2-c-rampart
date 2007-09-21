@@ -33,8 +33,7 @@ extern "C"
 
     /**
      * Struct to get password using callbacks
-     * @defgroup rampart_callback rampart callback
-     * @ingroup rampart_util
+     * @defgroup rampart_callback Rampart Callback Module
      * @{
      */
 

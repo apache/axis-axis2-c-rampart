@@ -17,8 +17,8 @@
 #ifndef OXS_C14N_H
 #define OXS_C14N_H
 
-/** @defgroup oxs_c14n c14n
- * @ingroup oxs_c14n
+/** @defgroup oxs_c14n C14N
+ * @ingroup oxs
  * XML Canonicalization (XML-C14N).
  * @{
  */

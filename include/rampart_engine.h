@@ -23,11 +23,12 @@
   * Also loads modules and initialize Rampart
   */
 
-/** @defgroup rampart_engine
- * @ingroup rampart_engine
- * @{
- */
 
+/**
+* @defgroup rampart_engine Engine
+* @ingroup rampart_utils
+* @{
+*/
 #include <rp_includes.h>
 #include <rampart_context.h>
 #include <rampart_constants.h>

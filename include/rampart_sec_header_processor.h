@@ -26,6 +26,13 @@
   * @file rampart_sec_header_processor.h
   * @brief Processes a message depending on it's security related claims 
   */
+
+/**
+* @defgroup sec_header_processor Security Header Processor
+* @ingroup rampart_utils
+* @{
+*/
+
 #ifndef RAMPART_SEC_HEADER_PROCESSOR_H
 #define RAMPART_SEC_HEADER_PROCESSOR_H
 

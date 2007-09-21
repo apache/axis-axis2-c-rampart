@@ -24,6 +24,11 @@
   * @brief The authentication interface of rampart. Validates a username and password pair.
   */
 
+/**
+* @defgroup rampart_authn_provider Authentication Provider 
+* @{
+*/
+
 #include <axis2_defines.h>
 #include <axutil_error.h>
 #include <axutil_env.h>
@@ -47,8 +52,6 @@ extern "C"
 
     /**
      * Struct to authenticate username/password pair
-     * @defgroup rampart_authn_provider rampart authn_provider
-     * @ingroup rampart_util
      * @{
      */
 
@@ -109,12 +112,12 @@ extern "C"
                                              const char *digest
                                          );
 
-       /**
-        * The free function to free all resources allocated
-        * @param authn_provider the authentication provider struct
-        * @param env pointer to environment struct
-        *
-        */
+        /**
+         * The free function to free all resources allocated
+         * @param authn_provider the authentication provider struct
+         * @param env pointer to environment struct
+         *
+         */
         axis2_status_t (AXIS2_CALL*
                         free)(rampart_authn_provider_t *authn_provider,
                               const axutil_env_t* env);

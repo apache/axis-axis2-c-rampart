@@ -117,7 +117,7 @@ extern "C" {
     AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
     openssl_cipher_property_create(const axutil_env_t *env);
 
-/** @} */
+    /** @} */
 
 #ifdef __cplusplus
 }

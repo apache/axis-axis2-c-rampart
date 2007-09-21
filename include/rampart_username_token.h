@@ -23,6 +23,11 @@
   * @brief The Usernametoken
   */
 
+/**
+* @defgroup rampart_username_token Username Token
+* @ingroup rampart_utils
+* @{
+*/
 #ifdef __cplusplus
 extern "C"
 {

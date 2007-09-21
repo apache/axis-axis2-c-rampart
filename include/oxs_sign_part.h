@@ -24,6 +24,11 @@
   * @brief Keeps information relavent for a single node of signing. 
   */
 
+/**
+* @defgroup oxs_sign_part Signature Part
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

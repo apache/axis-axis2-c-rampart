@@ -35,8 +35,8 @@ extern "C"
 {
 #endif
 
-    /** @defgroup oxs oxs_asym_ctx
-     * @ingroup 
+    /** @defgroup oxs_asym_ctx Asymmetric Context
+     * @ingroup oxs 
      * @{
      */
 

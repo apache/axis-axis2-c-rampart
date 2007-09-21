@@ -53,7 +53,7 @@ extern "C" {
 #define OPENSSL_DEFAULT_IV16         "0123456701234567"
 #define OPENSSL_DEFAULT_IV24         "012345670123456701234567"
 
-/** @} */
+    /** @} */
 
 #ifdef __cplusplus
 }

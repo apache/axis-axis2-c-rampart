@@ -28,6 +28,10 @@
   * @file rampart_credentials.h
   * @brief The credentials interface for rampart. To retrieve a username and password pair.
   */
+/**
+* @defgroup rampart_credentials Credentials Provider 
+* @{
+*/
 
 #ifdef __cplusplus
 extern "C"
@@ -45,9 +49,6 @@ extern "C"
 
     /**
      * Struct to get username/password pair
-     * @defgroup rampart_credentials rampart credentials
-     * @ingroup rampart_util
-     * @{
      */
 
     /**

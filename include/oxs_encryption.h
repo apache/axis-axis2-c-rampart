@@ -24,6 +24,11 @@
   * @brief Provides data encryption and decryption functionalities of the OMXMLSec. 
   */
 
+/**
+ * @defgroup oxs_encryption Encryption
+ * @ingroup oxs
+ * @{
+ */
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <oxs_asym_ctx.h>

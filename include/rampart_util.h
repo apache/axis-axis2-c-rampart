@@ -29,6 +29,12 @@
   * @file rampart_util.h
   * @brief Utilities of rampart
   */
+
+/**
+* @defgroup rampart_util Utils
+* @ingroup rampart_utils
+* @{
+*/
 #ifndef RAMPART_UTIL_H
 #define RAMPART_UTIL_H
 
@@ -36,10 +42,6 @@
 extern "C" {
 #endif
 
-    /**
-      * @defgroup Rampart_Util
-      * @ingroup Rampart_Util
-      */
 
 
     /**

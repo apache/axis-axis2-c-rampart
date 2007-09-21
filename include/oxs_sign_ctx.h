@@ -23,6 +23,11 @@
   * @file oxs_sign_ctx.h
   * @brief Keeps information relavent for a single node of signing. 
   */
+/**
+* @defgroup oxs_sign_ctx Signature Context
+* @ingroup oxs
+* @{
+*/
 
 #include <axis2_defines.h>
 #include <axutil_env.h>

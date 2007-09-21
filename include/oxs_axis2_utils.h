@@ -28,8 +28,8 @@
 extern "C" {
 #endif
 
-    /** @defgroup
-     * @ingroup
+    /** @defgroup oxs_axis2_utils Axis2 Utils
+     * @ingroup oxs
      * @{
      */
 #if 0

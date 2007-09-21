@@ -22,9 +22,9 @@
   * @brief The Rampart Context, in which configurations are stored
   */
 
-/** 
- * @defgroup rampart_context
- * @ingroup rampart_context
+/**
+ * @defgroup rampart_context Rampart Context
+ * @ingroup rampart_utils
  * @{
  */
 
@@ -46,7 +46,7 @@ extern "C"
 #endif
 
     typedef struct rampart_context_t rampart_context_t;
-    
+
     typedef axis2_char_t *(AXIS2_CALL*
                            password_callback_fn)(const axutil_env_t *env,
                                                  const axis2_char_t *username,
@@ -54,8 +54,8 @@ extern "C"
 
     typedef axis2_status_t (AXIS2_CALL*
                             rampart_is_replayed_fn)(const axutil_env_t *env,
-                                            axis2_msg_ctx_t* msg_ctx,
-                                            rampart_context_t *rampart_context);
+                                                    axis2_msg_ctx_t* msg_ctx,
+                                                    rampart_context_t *rampart_context);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
             auth_password_func)(const axutil_env_t* env,
@@ -170,8 +170,8 @@ extern "C"
                                       void *ctx);
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
-                                  const axutil_env_t *env,
-                                  rampart_is_replayed_fn is_replayed_function);
+            const axutil_env_t *env,
+            rampart_is_replayed_fn is_replayed_function);
 
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -186,23 +186,23 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_rd_val(rampart_context_t *rampart_context,
-                            const axutil_env_t *env,
-                            axis2_char_t *rd_val);
+                               const axutil_env_t *env,
+                               axis2_char_t *rd_val);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_private_key_file(rampart_context_t *rampart_context,
-                           const axutil_env_t *env,
-                           axis2_char_t *private_key_file);
+                                         const axutil_env_t *env,
+                                         axis2_char_t *private_key_file);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_certificate_file(rampart_context_t *rampart_context,
-                           const axutil_env_t *env,
-                           axis2_char_t *certificate_file);
+                                         const axutil_env_t *env,
+                                         axis2_char_t *certificate_file);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_reciever_certificate_file(rampart_context_t *rampart_context,
-                           const axutil_env_t *env,
-                           axis2_char_t *reciever_certificate_file);
+            const axutil_env_t *env,
+            axis2_char_t *reciever_certificate_file);
 
 
 
@@ -269,7 +269,7 @@ extern "C"
     rampart_context_get_replay_detect_function(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
- 
+
     AXIS2_EXTERN void* AXIS2_CALL
     rampart_context_get_ctx(
         rampart_context_t *rampart_context,
@@ -279,13 +279,13 @@ extern "C"
     rampart_context_get_ttl(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
-    
+
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     rampart_context_get_rd_val(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
-    
+
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_password_type(
         rampart_context_t *rampart_context,
@@ -388,7 +388,7 @@ extern "C"
     rampart_context_is_encrypt_signature(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
-    
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_get_nodes_to_encrypt(
         rampart_context_t *rampart_context,
@@ -554,7 +554,7 @@ extern "C"
     rampart_context_increment_ref(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
-        
+
 
 #ifdef __cplusplus
 }

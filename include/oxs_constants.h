@@ -27,13 +27,12 @@ extern "C"
 {
 #endif
     /** @defgroup oxs OMXMLSecurity
-      * @ingroup oxs
       * @{
       * @}
       */
 
     /**
-     * @defgroup oxs_constants
+     * @defgroup oxs_constants OXS Constants
      * @ingroup oxs
      * @{
      */
@@ -362,7 +361,7 @@ extern "C"
     /*************************************************************************/
 
 
-/** @} */
+    /** @} */
 #ifdef __cplusplus
 }
 #endif

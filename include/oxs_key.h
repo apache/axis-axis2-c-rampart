@@ -20,11 +20,15 @@
 
 
 /**
- *  @defgroup oxs oxs_key
   * @file oxs_key.h
   * @brief represents a Key in OMXMLSecurity 
   */
 
+/**
+* @defgroup oxs_key Key
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <oxs_constants.h>
 #include <oxs_buffer.h>
@@ -135,10 +139,10 @@ extern "C"
 
     axis2_status_t AXIS2_CALL
     oxs_key_populate_with_buf(oxs_key_t *key,
-                 const axutil_env_t *env,
-                 oxs_buffer_t *buffer,
-                 axis2_char_t *name,
-                 int usage);
+                              const axutil_env_t *env,
+                              oxs_buffer_t *buffer,
+                              axis2_char_t *name,
+                              int usage);
 
     /**
     * Populate a key.
@@ -185,11 +189,11 @@ extern "C"
 
     oxs_buffer_t *AXIS2_CALL
     oxs_key_get_buffer(const oxs_key_t *key,
-        const axutil_env_t *env);
+                       const axutil_env_t *env);
 
     oxs_key_t *AXIS2_CALL
     oxs_key_dup(oxs_key_t *key,
-            const axutil_env_t *env);
+                const axutil_env_t *env);
 
     AXIS2_EXTERN oxs_key_t *AXIS2_CALL
     oxs_key_create(const axutil_env_t *env);

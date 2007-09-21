@@ -23,7 +23,11 @@
   * @file oxs_xml_key_info_builder.h
   * @brief Process elements available under ds:KeyInfo  
   */
-
+/**
+* @defgroup oxs_xml_key_info_builder XML Eky Information Builder
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <axutil_env.h>

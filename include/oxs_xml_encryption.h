@@ -24,6 +24,11 @@
   * @brief Does the XML encryption for OMXMLSecurity  
   */
 
+/**
+* @defgroup oxs_xml_encryption XML Encryption
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <oxs_ctx.h>
 #include <axutil_env.h>

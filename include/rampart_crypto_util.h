@@ -31,8 +31,8 @@ extern "C" {
 #endif
 
     /**
-      * @defgroup Rampart_Crypto_Util
-      * @ingroup Rampart_Util
+      * @defgroup rampart_crypto_util Rampart Crypto Util
+      * @ingroup rampart_utils
       */
 
 

@@ -34,12 +34,12 @@ extern "C"
 {
 #endif
 
-   /**
-    * @defgroup oxs_token_binary_security_token OMXMLSecurity BinarySecurityToken
-    * @ingroup oxs_token
-    * @{
-    */
-    
+    /**
+     * @defgroup oxs_token_binary_security_token OMXMLSecurity BinarySecurityToken
+     * @ingroup oxs_token
+     * @{
+     */
+
     /**
     * BinarySecurityToken
     * \brief Create element <wsse:BinarySecurityToken>

@@ -32,8 +32,8 @@ extern "C"
 {
 #endif
 
-    /** @defgroup key_file_type
-     * @ingroup 
+    /** @defgroup key_file_type Key File Type
+     * @ingroup rampart_utils 
      * @{
      */
 

@@ -20,12 +20,14 @@
 
 
 /**
-  * @defgroup oxs_error oxs_error
-  * @ingroup oxs
   * @file oxs_error.h
   * @brief Represents an Error occured during the OMXMLSecurity execution 
   */
-
+/**
+* @defgroup oxs_error Error
+* @ingroup oxs
+* @{
+*/
 #include <axis2_defines.h>
 #include <axutil_env.h>
 
@@ -93,8 +95,8 @@ extern "C"
 
     /**
     * Given position @pos get the error code from the table
-    * @param pos  Position of the table
-    * @return error code
+    *@param pos  Position of the table
+    *@return error code
     */
     AXIS2_EXTERN int AXIS2_CALL
     oxs_errors_get_code(unsigned int pos);

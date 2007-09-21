@@ -36,10 +36,9 @@
 extern "C"
 {
 #endif
-    /** @defgroup oxs oxs_axiom
+    /** @defgroup oxs_axiom OXS Axiom
       * @ingroup oxs
       * @{
-      * @}
       */
 
     /**

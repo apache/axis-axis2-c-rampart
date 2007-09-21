@@ -28,11 +28,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
- /**
- * @defgroup openssl_util OpenSSL Utility
- * @ingroup openssl
- * @{
- */ 
+    /**
+    * @defgroup openssl_util OpenSSL Utility
+    * @ingroup openssl
+    * @{
+    */
 
     /*Generate a random sgtring.*/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
