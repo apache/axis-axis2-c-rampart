@@ -24,6 +24,12 @@
   * @brief Represents <X509IssuerName> element
   */
 
+/**
+    * @defgroup oxs_token_x509_issuer_name OMXMLSecurity X509 Issuer Name Token
+    * @ingroup oxs_token
+    * @{
+    */
+
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

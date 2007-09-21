@@ -34,6 +34,11 @@ extern "C"
 {
 #endif
 
+/**
+    * @defgroup oxs_token_c14n_method OMXMLSecurity C14N Token
+    * @ingroup oxs_token
+    * @{
+    */
 
     /**
     * C14N Method element

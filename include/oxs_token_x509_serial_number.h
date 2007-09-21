@@ -24,6 +24,11 @@
   * @brief Represents <X509SerialNumber> element
   */
 
+    /**
+    * @defgroup oxs_token_x509_serial_number  OMXMLSecurity X509 Serial Number Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

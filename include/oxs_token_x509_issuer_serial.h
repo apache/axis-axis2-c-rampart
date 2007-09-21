@@ -23,7 +23,11 @@
   * @file oxs_token_x509_issuer_serial.h 
   * @brief Represents <X509IssuerSerial> element
   */
-
+/**
+    * @defgroup oxs_token_x509_issuer_serial OMXMLSecurity X509 Issuer Serial Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

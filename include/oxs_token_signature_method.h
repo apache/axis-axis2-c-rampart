@@ -24,6 +24,11 @@
   * @brief Represents <SignatureMethod> element 
   */
 
+/**
+    * @defgroup oxs_token_signature_method OMXMLSecurity Signature Method Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

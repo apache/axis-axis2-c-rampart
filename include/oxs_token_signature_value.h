@@ -23,6 +23,11 @@
   * @file oxs_token_signature_value.h
   * @brief Represents <SignatureValue> element 
   */
+/**
+    * @defgroup oxs_token_signature_value OMXMLSecurity Signature Value Token
+    * @ingroup oxs_token
+    * @{
+    */
 
 #include <axis2_defines.h>
 #include <axutil_env.h>

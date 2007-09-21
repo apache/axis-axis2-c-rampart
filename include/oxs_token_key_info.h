@@ -23,7 +23,11 @@
   * @file oxs_token_key_info.h
   * @brief Represents <KeyInfo>  element
   */
-
+/**
+    * @defgroup oxs_token_key_info OMXMLSecurity Key Info Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

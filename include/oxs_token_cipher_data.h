@@ -24,6 +24,11 @@
   * @brief Represents <CipherData> element
   */
 
+/**
+    * @defgroup oxs_token_cipher_data OMXMLSecurity Cipher Data Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

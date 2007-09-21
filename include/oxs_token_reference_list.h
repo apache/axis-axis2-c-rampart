@@ -24,6 +24,12 @@
   * @brief <ReferenceList> element 
   */
 
+/**
+    * @defgroup oxs_token_reference_list OMXMLSecurity Reference List Token
+    * @ingroup oxs_token
+    * @{
+    */
+
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

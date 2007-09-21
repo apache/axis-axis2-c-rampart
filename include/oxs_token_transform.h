@@ -23,7 +23,11 @@
   * @file oxs_token_transform.h
   * @brief  Represents <Transform> element 
   */
-
+/**
+    * @defgroup oxs_token_transform OMXMLSecurity Transform Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

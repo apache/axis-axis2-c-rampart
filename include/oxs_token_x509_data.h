@@ -23,7 +23,11 @@
   * @file  oxs_token_x509_data.h
   * @brief Represents <X509Data>  element
   */
-
+/**
+    * @defgroup oxs_token_x509_data OMXMLSecurity X509 Data Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

@@ -24,6 +24,11 @@
   * @brief Represents <DigestMethod>  element
   */
 
+/**
+    * @defgroup oxs_token_digest_method OMXMLSecurity Digest Method Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

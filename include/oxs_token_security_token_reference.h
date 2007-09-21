@@ -23,7 +23,11 @@
   * @file  oxs_token_security_token_reference.h
   * @brief Represents <SecurityTokenReference> element
   */
-
+/**
+    * @defgroup oxs_token_security_token_reference OMXMLSecurity Security Token Reference Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

@@ -24,6 +24,11 @@
   * @brief Represents <DigestValue> element
   */
 
+/**
+    * @defgroup oxs_token_digest_value OMXMLSecurity Digest Value Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

@@ -61,7 +61,7 @@ extern "C"
 {
 #endif
     /**
-     * @defgroup oxs_token
+     * @defgroup oxs_token OMXMLSecurity Tokens
      * @{
      */
 

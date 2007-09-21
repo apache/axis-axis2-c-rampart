@@ -24,6 +24,11 @@
   * @brief Represents <Embedded> element 
   */
 
+/**
+    * @defgroup oxs_token_embedded OMXMLSecurity Embedded Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

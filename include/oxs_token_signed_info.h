@@ -23,7 +23,11 @@
   * @file oxs_token_signed_info.h
   * @brief Represents <SignedInfo> element 
   */
-
+/**
+    * @defgroup oxs_token_signed_info OMXMLSecurity Signed Info Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

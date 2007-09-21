@@ -23,7 +23,11 @@
   * @file oxs_token_encryption_method.h
   * @brief Represents <EncryptionMethod> element
   */
-
+/**
+    * @defgroup oxs_token_encryption_method OMXMLSecurity Encryption Method Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>

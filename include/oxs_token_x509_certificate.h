@@ -23,7 +23,11 @@
   * @file oxs_token_x509_certificate.h
   * @brief  Represents <X509Certificate> element 
   */
-
+/**
+    * @defgroup oxs_token_x509_certificate  OMXMLSecurity X509 Certificate Token
+    * @ingroup oxs_token
+    * @{
+    */
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>
