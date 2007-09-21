@@ -20,8 +20,8 @@
 
 
 /**
-  * @file oxs_token_cipher_data.h
-  * @brief 
+  * @file oxs_token_encrypted_key.h
+  * @brief Represents <EncryptedKey> element 
   */
 
 #include <axis2_defines.h>

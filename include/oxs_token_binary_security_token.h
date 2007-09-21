@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_binary_security_token.h
-  * @brief <wsse:BinarySecurityToken> related functions
+  * @brief Represents <wsse:BinarySecurityToken> element
   */
 #include <axis2_util.h>
 #include <axis2_defines.h>

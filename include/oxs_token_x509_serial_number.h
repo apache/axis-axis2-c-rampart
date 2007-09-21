@@ -20,8 +20,8 @@
 
 
 /**
-  * @file 
-  * @brief 
+  * @file oxs_token_x509_serial_number.h 
+  * @brief Represents <X509SerialNumber> element
   */
 
 #include <axis2_defines.h>

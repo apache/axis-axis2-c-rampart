@@ -21,7 +21,8 @@
 
 /**
   * @file oxs_transform.h
-  * @brief The class representing a single step of transformation. 
+  * @brief The class representing a single step of transformation. For example a Cannonicalization
+  *
   */
 
 #include <axis2_defines.h>

@@ -17,6 +17,12 @@
 #ifndef RAMPART_RD_RECORD_H
 #define RAMPART_RD_RECORD_H
 
+
+/**
+  * @file rampart_rd_record.h
+  * @brief A record that can be used in the Replay Detection mechanism. Represents a SOAP message instance
+  */
+
 /** @defgroup 
  * @ingroup 
  * @{

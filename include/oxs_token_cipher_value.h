@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_cipher_value.h
-  * @brief 
+  * @brief Represents <CipherValue> element
   */
 
 #include <axis2_defines.h>

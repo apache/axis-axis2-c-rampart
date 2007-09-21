@@ -20,8 +20,8 @@
 #include <axis2_util.h>
 
 /**
-  * @file 
-  * @brief 
+  * @file openssl_crypt.h 
+  * @brief The encryption/decryption methods for OMXMLSecurity
   */
 #ifndef OPENSSL_CRYPT_H
 #define OPENSSL_CRYPT_H
@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-    /** @defgroup
+    /** @defgroup 
      * @ingroup
      * @{
      */

@@ -22,7 +22,7 @@
 
 /**
   * @file openssl_sign.h 
-  * @brief 
+  * @brief The signature functions in openssl wrapper 
   */
 #ifndef OPENSSL_SIGN_H
 #define OPENSSL_SIGN_H

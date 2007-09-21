@@ -23,7 +23,7 @@
 #include <axis2_util.h>
 
 /**
-  * @file openssl_pkey 
+  * @file openssl_pkey.h 
   * @brief holds either a public key or a private key. 
   * The type is determined by the type attribute
   */

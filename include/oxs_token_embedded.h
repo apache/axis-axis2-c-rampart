@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_embedded.h
-  * @brief 
+  * @brief Represents <Embedded> element 
   */
 
 #include <axis2_defines.h>

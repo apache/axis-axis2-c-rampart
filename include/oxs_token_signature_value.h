@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_signature_value.h
-  * @brief 
+  * @brief Represents <SignatureValue> element 
   */
 
 #include <axis2_defines.h>

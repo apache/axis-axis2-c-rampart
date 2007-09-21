@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_c14n_method.h
-  * @brief 
+  * @brief Represents <ds:CanonicalizationMethod> element
   */
 
 #include <axis2_defines.h>

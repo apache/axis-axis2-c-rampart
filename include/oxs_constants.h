@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/**
+  * @file oxs_constants.h
+  * @brief Constants for OMXMLSecurity
+  */
 
 #ifndef OXS_CONSTANTS_H
 #define OXS_CONSTANTS_H

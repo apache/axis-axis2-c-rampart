@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_ds_reference.h
-  * @brief 
+  * @brief Represents <ds:Reference> element 
   */
 
 #include <axis2_defines.h>

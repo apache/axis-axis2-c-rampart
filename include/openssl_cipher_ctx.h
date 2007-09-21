@@ -19,7 +19,7 @@
 #include <oxs_key.h>
 /**
   * @file openssl_cipher_ctx.h
-  * @brief The cipher context in which the data to be hidden
+  * @brief The cipher context in which the information regarding a cipher cycle is stored
   */
 #ifndef OPENSSL_CIPHER_CTX_H
 #define OPENSSL_CIPHER_CTX_H

@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_encrypted_data.h
-  * @brief 
+  * @brief Represents <EncryptedData> element 
   */
 
 #include <axis2_defines.h>

@@ -17,7 +17,13 @@
 #ifndef RAMPART_CONTEXT_H
 #define RAMPART_CONTEXT_H
 
-/** @defgroup rampart_context
+/**
+  * @file rampart_context.h
+  * @brief The Rampart Context, in which configurations are stored
+  */
+
+/** 
+ * @defgroup rampart_context
  * @ingroup rampart_context
  * @{
  */

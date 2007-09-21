@@ -20,8 +20,8 @@
 
 
 /**
-  * @file oxs_token_binary_security_token.h
-  * @brief 
+  * @file oxs_token_key_identifier.h
+  * @brief Represents <KeyIdentifier> element
   */
 
 #include <axis2_defines.h>

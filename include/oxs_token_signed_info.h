@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_signed_info.h
-  * @brief 
+  * @brief Represents <SignedInfo> element 
   */
 
 #include <axis2_defines.h>

@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_digest_method.h
-  * @brief 
+  * @brief Represents <DigestMethod>  element
   */
 
 #include <axis2_defines.h>

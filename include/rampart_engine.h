@@ -17,6 +17,12 @@
 #ifndef RAMPART_ENGINE_H
 #define RAMPART_ENGINE_H
 
+/**
+  * @file rampart_engine.h
+  * @brief Loads configuratins for Rampart, which defines its behaviuor. 
+  * Also loads modules and initialize Rampart
+  */
+
 /** @defgroup rampart_engine
  * @ingroup rampart_engine
  * @{

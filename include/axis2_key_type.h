@@ -20,8 +20,8 @@
 
 
 /**
-  * @file axis2_key_file_type.h
-  * @defines the key file type. 
+  * @file axis2_key_type.h
+  * @brief defines the key type 
   */
 
 #include <axis2_defines.h>

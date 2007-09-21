@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_key_name.h
-  * @brief 
+  * @brief Represents <KeyName> element
   */
 
 #include <axis2_defines.h>

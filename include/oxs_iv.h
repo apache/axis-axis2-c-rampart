@@ -20,7 +20,7 @@
 
 
 /**
-  * @file oxs_key.h
+  * @file oxs_iv.h
   * @brief Initial Vector related functionalities 
   */
 

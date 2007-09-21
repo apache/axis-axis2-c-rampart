@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_transform.h
-  * @brief 
+  * @brief  Represents <Transform> element 
   */
 
 #include <axis2_defines.h>

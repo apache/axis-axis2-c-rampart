@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_reference_list.h
-  * @brief 
+  * @brief <ReferenceList> element 
   */
 
 #include <axis2_defines.h>

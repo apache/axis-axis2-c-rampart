@@ -20,8 +20,8 @@
 
 
 /**
-  * @file 
-  * @brief 
+  * @file  oxs_token_security_token_reference.h
+  * @brief Represents <SecurityTokenReference> element
   */
 
 #include <axis2_defines.h>

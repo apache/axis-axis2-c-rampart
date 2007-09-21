@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_digest_value.h
-  * @brief 
+  * @brief Represents <DigestValue> element
   */
 
 #include <axis2_defines.h>

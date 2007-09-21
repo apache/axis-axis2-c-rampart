@@ -25,8 +25,8 @@
 #include <openssl/pkcs12.h>
 
 /**
-  * @file 
-  * @brief 
+  * @file openssl_pkcs12.h 
+  * @brief Functions related to keys that are in pkcs12 format
   */
 #ifndef OPENSSL_PKCS12_H
 #define OPENSSL_PKCS12_H

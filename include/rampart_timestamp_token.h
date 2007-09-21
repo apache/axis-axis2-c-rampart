@@ -19,8 +19,8 @@
 #define RAMPART_TIMESTAMP_TOKEN_H
 
 /**
-  * @file rampart_timestamp.h
-  * @brief Timestamp token 
+  * @file rampart_timestamp_token.h
+  * @brief Timestamp token related functions. 
   */
 #ifdef __cplusplus
 extern "C"

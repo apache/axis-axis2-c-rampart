@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_data_reference.h
-  * @brief 
+  * @brief Represents <DataReference>  element
   */
 
 #include <axis2_defines.h>

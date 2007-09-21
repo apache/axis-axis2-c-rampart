@@ -20,8 +20,8 @@
 
 
 /**
-  * @file oxs_token_data_reference.h
-  * @brief 
+  * @file oxs_token_reference.h
+  * @brief Represents <wsse:Reference> element
   */
 
 #include <axis2_defines.h>

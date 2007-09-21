@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_encryption_method.h
-  * @brief 
+  * @brief Represents <EncryptionMethod> element
   */
 
 #include <axis2_defines.h>

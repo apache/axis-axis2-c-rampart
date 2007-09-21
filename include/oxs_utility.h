@@ -20,7 +20,7 @@
 
 
 /**
-  * @file oxs_utilty.h
+  * @file oxs_utility.h
   * @brief The utility module for OMXMLSecurity 
   */
 

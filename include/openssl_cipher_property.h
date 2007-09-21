@@ -19,7 +19,7 @@
 
 /**
   * @file openssl_cipher_property.h 
-  * @brief Bean class for cipher properties
+  * @brief The class to store cipher properties such as name, key size, block size etc
   */
 #ifndef OPENSSL_CIPHER_PROPERTY_H
 #define OPENSSL_CIPHER_PROPERTY_H

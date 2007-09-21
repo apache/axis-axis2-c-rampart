@@ -20,8 +20,8 @@
 
 
 /**
-  * @file 
-  * @brief 
+  * @file oxs_token_x509_issuer_name.h 
+  * @brief Represents <X509IssuerName> element
   */
 
 #include <axis2_defines.h>

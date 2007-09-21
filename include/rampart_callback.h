@@ -21,7 +21,7 @@
 #define RAMPART_CALLBACK_H
 
 /**
-  * @file rampart_callack.h
+  * @file rampart_callback.h 
   * @brief The callback module for a password 
   */
 

@@ -20,8 +20,8 @@
 
 
 /**
-  * @file 
-  * @brief 
+  * @file  oxs_token_x509_data.h
+  * @brief Represents <X509Data>  element
   */
 
 #include <axis2_defines.h>

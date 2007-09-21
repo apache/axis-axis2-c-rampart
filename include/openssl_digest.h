@@ -22,7 +22,7 @@
 
 /**
   * @file openssl_digest.h
-  * @brief 
+  * @brief Digest function implementations. Supports SHA1 and MD5 
   */
 #ifndef OPENSSL_DIGEST
 #define OPENSSL_DIGEST

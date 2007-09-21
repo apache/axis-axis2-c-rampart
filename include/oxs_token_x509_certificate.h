@@ -21,7 +21,7 @@
 
 /**
   * @file oxs_token_x509_certificate.h
-  * @brief 
+  * @brief  Represents <X509Certificate> element 
   */
 
 #include <axis2_defines.h>
