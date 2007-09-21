@@ -238,7 +238,8 @@ openssl_x509_get_serial(const axutil_env_t *env,
     if(serial){
         no = atoi(serial);
 
-        AXIS2_FREE(env->allocator, serial);
+        /*AXIS2_FREE(env->allocator, serial);*/
+        free(serial);
         serial = NULL;
         return no;
     }else{

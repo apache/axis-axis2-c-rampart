@@ -35,8 +35,8 @@
 extern "C" {
 #endif
 
-    /** @defgroup
-     * @ingroup
+    /** @defgroup openssl_x509 OpenSSL X509
+     * @ingroup openssl_x509
      * @{
      */
 

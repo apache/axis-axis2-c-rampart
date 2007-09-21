@@ -35,8 +35,8 @@
 extern "C" {
 #endif
 
-    /** @defgroup
-     * @ingroup
+    /** @defgroup openssl_pkcs12 OpenSSL PKCS12
+     * @ingroup openssl
      * @{
      */
 

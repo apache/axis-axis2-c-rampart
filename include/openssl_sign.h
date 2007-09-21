@@ -31,8 +31,8 @@
 extern "C" {
 #endif
 
-    /** @defgroup
-     * @ingroup
+    /** @defgroup openssl_sign OpenSSL Signatue
+     * @ingroup openssl
      * @{
      */
     /**

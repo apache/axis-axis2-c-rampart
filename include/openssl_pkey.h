@@ -34,8 +34,8 @@
 extern "C" {
 #endif
 
-    /** @defgroup
-     * @ingroup
+    /** @defgroup openssl_pkey OpenSSL PKEY
+     * @ingroup openssl
      * @{
      */
 

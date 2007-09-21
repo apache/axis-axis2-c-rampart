@@ -35,8 +35,8 @@
 extern "C" {
 #endif
 
-    /** @defgroup
-     * @ingroup
+    /** @defgroup openssl_pem OpenSSL PEM
+     * @ingroup openssl
      * @{
      */
 

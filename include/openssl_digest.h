@@ -32,8 +32,9 @@ extern "C" {
 #endif
 
     /**
-      * @defgroup 
-      * @ingroup 
+      * @defgroup openssl_digest OpenSSL Digest 
+      * @ingroup openssl
+      * @{
       */
 
 

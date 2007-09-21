@@ -23,6 +23,13 @@
 #ifndef OPENSSL_CONSTANTS_H
 #define OPENSSL_CONSTANTS_H
 
+/**
+ * @defgroup openssl OpenSSL wrapper
+ * 
+ * @{
+ */
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,6 +53,7 @@ extern "C" {
 #define OPENSSL_DEFAULT_IV16         "0123456701234567"
 #define OPENSSL_DEFAULT_IV24         "012345670123456701234567"
 
+/** @} */
 
 #ifdef __cplusplus
 }

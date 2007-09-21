@@ -24,6 +24,14 @@
 #ifndef OPENSSL_CIPHER_CTX_H
 #define OPENSSL_CIPHER_CTX_H
 
+/**
+ * @defgroup openssl_cipher_ctx OpenSSL Cipher Context
+ * @ingroup openssl
+ * @{
+ */
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif

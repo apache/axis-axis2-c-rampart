@@ -24,6 +24,12 @@
 #ifndef OPENSSL_CIPHER_PROPERTY_H
 #define OPENSSL_CIPHER_PROPERTY_H
 
+/**
+ * @defgroup openssl_cipher_property OpenSSL Cipher Property
+ * @ingroup openssl
+ * @{
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -111,9 +117,8 @@ extern "C" {
     AXIS2_EXTERN openssl_cipher_property_t *AXIS2_CALL
     openssl_cipher_property_create(const axutil_env_t *env);
 
+/** @} */
 
-
-    /* @} */
 #ifdef __cplusplus
 }
 #endif
