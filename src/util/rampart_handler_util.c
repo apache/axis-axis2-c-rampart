@@ -209,7 +209,7 @@ rampart_get_rampart_configuration(const axutil_env_t *env,
     if (!param_x_flow_security)
     {
         AXIS2_LOG_INFO(env->log,
-                       "[rampart][rampart_handler_utils] %s parameter is not set.",param_x_flow_security);
+                       "[rampart][rampart_handler_utils] %d parameter is not set.",param_x_flow_security);
         return NULL;
     }
     value = axutil_param_get_value(param_x_flow_security, env);
