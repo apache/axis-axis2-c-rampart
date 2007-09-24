@@ -61,6 +61,12 @@ cp samples/server/sec_echo/server_axis2.xml $BIN_DIR/samples/server/sec_echo/ser
 echo "Copy headers"
 cp include/*.h $BIN_DIR/include/$INCL_V_DIR
 
+echo "Copy docs"
+cp -r target/docs $BIN_DIR/
+
+echo "Copy API"
+cp -rf xdocs/api $BIN_DIR/docs
+
 echo "Removing garbage in $BIN_DIR"
 cd $BIN_DIR
 
@@ -80,4 +86,4 @@ openssl md5 < $TAR_GZ > $MD5
 echo "To sign please enter password for the private key"
 gpg --armor --output $TAR_GZ.asc --detach-sig $TAR_GZ
 
-echo "DONE" 
+echo "Binary DONE" 
