@@ -4,12 +4,13 @@ mkdir %BINDIST%
 mkdir %BINDIST%\samples
 mkdir %BINDIST%\modules
 mkdir %BINDIST%\include
+mkdir %BINDIST%\include\rampart-1.0.0
 mkdir %BINDIST%\docs
 
 
 xcopy /E /I /Y .\bin\samples\*.* %BINDIST%\samples\
 xcopy /E /I /Y .\modules\*.* %BINDIST%\modules\
-xcopy /E /I /Y .\include\*.* %BINDIST%\include\
+xcopy /E /I /Y .\include\*.* %BINDIST%\include\rampart-1.0.0\
 xcopy /E /I /Y .\docs\*.* %BINDIST%\docs\
 
 xcopy README %BINDIST%
