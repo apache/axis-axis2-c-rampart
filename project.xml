@@ -55,8 +55,8 @@
   <mailingLists>
     <mailingList>
       <name>Rampart C Developer List</name>
-      <subscribe>axis-c-dev-subscribe@ws.apache.org?subject=subscribe</subscribe>
-      <unsubscribe>axis-c-dev-unsubscribe@ws.apache.org?subject=unsubscribe</unsubscribe>
+      <subscribe>rampart-c-dev-subscribe@ws.apache.org?subject=subscribe</subscribe>
+      <unsubscribe>rampart-c-dev-unsubscribe@ws.apache.org?subject=unsubscribe</unsubscribe>
       <archive>http://marc.theaimsgroup.com/?l=axis-c-dev&amp;r=1&amp;w=2</archive>
     </mailingList>
     <mailingList>
