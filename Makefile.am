@@ -8,4 +8,8 @@ EXTRA_DIST = LICENSE NOTICE build.sh autogen.sh samples build test xdocs
 check:	
 	./rampart-tests.sh
 
+dist-hook:
+	    cp -r target/docs $(distdir) 
+		cp -r xdocs/api $(distdir)/docs
+
 
