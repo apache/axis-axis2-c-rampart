@@ -9,9 +9,9 @@ RAMPART_INTDIR = .\int.msvc
 
 MAJOR_VER = 1
 MINOR_VER = 0
-PATCH_VER = 
+PATCH_VER = 0
 
-RAMPART_DIST_NAME = .\..\rampartc-$(MAJOR_VER).$(MINOR_VER)
+RAMPART_DIST_NAME = .\..\rampartc-$(MAJOR_VER).$(MINOR_VER).$(PATCH_VER)
 #RAMPART_DISTDIR = .\..\rampartc
 RAMPART_DISTDIR = $(RAMPART_DIST_NAME)
 
@@ -187,7 +187,10 @@ del_am:
 	del /s *.am
 	chdir .\..\win32
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data
+copy_docs:
+	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
+
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
