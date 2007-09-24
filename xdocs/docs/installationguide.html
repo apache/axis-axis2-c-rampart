@@ -62,8 +62,12 @@ binary distribution on Linux : </p>
     </ul>
   </li>
   <li>Copy modules/rampart to $AXIS2C_HOME/modules
+  <li>Copy samples/server/sec_echo to $AXIS2C_HOME/services/
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
-  <li>Start the server and run the client to consume the secured service
+  <li>Go to samples/client/sec_echo/ and deploy the client repo
+	<pre>%sh deploy_client_repo.sh</pre>
+   <li>Go to samples/secpolicy/ and try a scenario
+	<pre> %sh test_scen.sh scenarioX server-port</pre>
 </ol>
 <a id="linux_source"></a>
 
@@ -87,7 +91,7 @@ the source distribution on Linux :</p>
       <li>This can be done using the following command sequence, in the
         directory where you have extracted the source:
         <ul>
-          <li>./configure</li>
+          <li>./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.1</li>
           <li>make</li>
           <li>make install</li>
         </ul>
@@ -97,7 +101,14 @@ the source distribution on Linux :</p>
     </ul>
   </li>
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
-  <li>Start the server and run the client to consume the secured service
+  <li>If you need to try samples,first you need to build them. Go to samples and run the script build.sh
+	<pre>
+	%sh build.sh
+	</pre>
+  <li>Then go to  samples/secpolicy and try a scenario
+	<pre>
+	%sh test_scen.sh scenarioX server-port
+	</pre>
 </ol>
 <a id="win"></a>
 
@@ -159,6 +170,13 @@ distributions.) </p>
     cannot find this batch file. This file is located in &lt;your MS Visual
     Studio install Directory&gt;\VC\bin directory.)</p>
   </li>
+  <li>Set the patameters in the configure.in
+	<ul>
+	   <li>AXIS2_BIN_DIR = path/to/where/you/have/installed/axis2</li>
+           <li>OPENSSL_BIN_DIR = path/to/where/you/have/installed/openssl</li>
+           <li>DEBUG = 1 if enabled, 0 otherwise</li>
+	</ul>
+   </li>
   <li>To build the system and create the binary files in a directory named
     deploy under the build directory,
     <ul>
