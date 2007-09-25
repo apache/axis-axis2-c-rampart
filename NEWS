@@ -14,7 +14,7 @@ Key features
 
 Major Changes Since Last Release
 --------------------------------
-1. WS-Security policy based configurations
+1. WS-Security Policy (spec 1.1) based configurations 
 2. Replay detection support
 3. Improvements to the context model
 4. Authentication module implementation
