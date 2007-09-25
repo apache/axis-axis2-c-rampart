@@ -1,7 +1,21 @@
-Rampart/C 
+Rampart/C 1.0.0
 
-* Initial release 
-* Usernametoken support
-* Timestamp support
-* Samples for clients and callbacks
+  * WS-Security Policy (spec 1.1) based configurations
+  * Replay detection support
+  * Improvements to the context model
+  * Authentication module implementation
+  * Credentials module implementation
+  * Impirovements to Key/Certificate loading mechanisms
+  * Easy to use deployment scripts
+  * Memory leak fixes
+  * Many bug fixes
+
+--Rampart-C team <rampart-c-dev@ws.apache.org> Tue 25 Sept 2007
+
+Rampart/C 0.90 
+
+  * Initial release 
+  * Usernametoken support
+  * Timestamp support
+  * Samples for clients and callbacks
 -- Axis2-C team <axis-c-dev@ws.apache.org>  Tue 13 June 2006
