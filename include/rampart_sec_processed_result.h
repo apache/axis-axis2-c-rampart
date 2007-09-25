@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
     /**
-      * @defgroup Rampart_Util
+      * @defgroup rampart_sec_processed_result
       * @ingroup Rampart_Util
       */
     /**
