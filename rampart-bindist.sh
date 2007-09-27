@@ -14,9 +14,12 @@ then
     echo "Build samples"
     cd samples
     ./build.sh
+    #to get sample sources
+    make dist
 cd ..
 
 fi
+
 
 echo "Deleting $BIN_DIR, $TAR_GZ, $MD5 if any"
 rm -rf $BIN_DIR
@@ -35,6 +38,8 @@ mkdir $BIN_DIR/samples/secpolicy
 mkdir $BIN_DIR/samples/server
 mkdir $BIN_DIR/include
 mkdir $BIN_DIR/include/$INCL_V_DIR
+mkdir $BIN_DIR/samples/samples_src
+mkdir $BIN_DIR/lib
 
 echo "Copy related files to $BIN_DIR"
 #Copy other related files
@@ -49,6 +54,10 @@ cp NOTICE $BIN_DIR
 echo "Copy rampart module"
 #Copy rampart module
 cp -r $AXIS2C_HOME/modules/rampart $BIN_DIR/modules/
+
+echo "Copy libraries"
+cp $AXIS2C_HOME/lib/liboxstokens.* $BIN_DIR/lib
+cp $AXIS2C_HOME/lib/libomxmlsec.* $BIN_DIR/lib
 
 echo "Copy samples"
 #copy samples
@@ -66,6 +75,12 @@ cp -r target/docs $BIN_DIR/
 
 echo "Copy API"
 cp -rf xdocs/api $BIN_DIR/docs
+
+echo "Copy sample sources"
+tar -xzf samples/rampart-samples-src*.tar.gz
+rm samples/rampart-samples-src*.tar.gz
+cp -r rampart-samples-src*/* $BIN_DIR/samples_src
+rm -rf rampart-samples-src*
 
 echo "Removing garbage in $BIN_DIR"
 cd $BIN_DIR

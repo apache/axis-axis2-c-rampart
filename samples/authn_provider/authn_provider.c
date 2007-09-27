@@ -27,7 +27,7 @@
 #include <axutil_string.h>
 
 axis2_char_t* AXIS2_CALL
-ramaprt_get_sample_password(const axutil_env_t *env,
+ramaprt_authn_get_sample_password(const axutil_env_t *env,
         const axis2_char_t *username)
 {
     /*First set pf password are for sample usernames*/
@@ -78,46 +78,6 @@ ramaprt_get_sample_password(const axutil_env_t *env,
 };
 
 
-axis2_char_t* AXIS2_CALL
-ramaprt_get_sample_password_from_file(const axutil_env_t *env,
-        const axis2_char_t *username)
-{
-    axis2_char_t * password = NULL;
-    FILE *file = NULL;
-    axis2_char_t *filename = "samples/rampart/data/passwords.txt";
-
-    file = fopen ( filename, "r" );
-    if ( file != NULL )
-    {
-       axis2_char_t line [ 128 ];
-       axis2_char_t ch = 0;
-       axis2_char_t *res = NULL;
-       axis2_char_t *un = NULL;
-       axis2_char_t *pw = NULL;
-
-       while ( fgets ( line, sizeof line, file ) != NULL )
-       {
-          res = axutil_strstr(line, ":");
-          ch = res[0];
-          res[0] = '\0';
-          un = (axis2_char_t *) axutil_strdup(env, line);
-          res[0] = ch;
-          if(0 == axutil_strcmp(un, username)){
-             pw = (axis2_char_t *) axutil_strdup(env, &(res[1]));
-             password = axutil_strndup(env, pw, axutil_strlen(pw)-1); /*We need to remove the end of line character*/
-
-             break;
-          }
-       }
-       AXIS2_FREE(env->allocator, un);
-       AXIS2_FREE(env->allocator, pw);
-       fclose ( file );
-    }else{
-       AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Cannot load the password file %s ", filename);
-       perror ( filename );
-    }
-    return password; 
-}
 
 /*Two sample implementations*/
 rampart_authn_provider_status_t AXIS2_CALL
@@ -128,13 +88,8 @@ rampart_sample_authn_provider_check_password(rampart_authn_provider_t *authn_pro
                 const axis2_char_t *password)
 {
     axis2_char_t *local_pw = NULL;
-#ifdef PW_FROM_FILE
-    local_pw = ramaprt_get_sample_password_from_file(env, username);
-    AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Load the password - file impl");
-#else 
-    local_pw = ramaprt_get_sample_password(env, username);
+    local_pw = ramaprt_authn_get_sample_password(env, username);
     AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Load the password - default impl");
-#endif    
     if(local_pw){
         /*Compare passwords*/
         if(0 == axutil_strcmp(password, local_pw)){
@@ -162,7 +117,7 @@ rampart_sample_authn_provider_check_password_digest(rampart_authn_provider_t *au
 
     axis2_char_t *local_pw = NULL;
 
-    local_pw = ramaprt_get_sample_password_from_file(env, username);
+    local_pw = ramaprt_authn_get_sample_password_from_file(env, username);
     if(local_pw){
         axis2_char_t *local_digest = NULL;
         /*Generate the digest*/
