@@ -27,6 +27,58 @@
 #include <axutil_string.h>
 
 axis2_char_t* AXIS2_CALL
+ramaprt_get_sample_password(const axutil_env_t *env,
+        const axis2_char_t *username)
+{
+    /*First set pf password are for sample usernames*/
+    axis2_char_t * pw = NULL;
+    if (0 == axutil_strcmp(username, "Raigama"))
+    {
+        pw = "RaigamaPW" ;
+    }
+    else if (0 == axutil_strcmp(username, "Gampola"))
+    {
+        pw = "GampolaPW";
+    }
+    else if (0 == axutil_strcmp(username, "alice"))
+    {
+        pw = "password";
+    }
+    else if (0 == axutil_strcmp(username, "Alice"))
+    {
+        pw = "abcd!1234";
+    }
+    else if (0 == axutil_strcmp(username, "bob"))
+    {
+        pw = "bobPW";
+    }
+    /*These are for sample keystores*/
+    else if (0 == axutil_strcmp(username, "a"))
+    {
+        pw = "a12345";
+    }
+    else if (0 == axutil_strcmp(username, "b"))
+    {
+        pw = "b12345";
+    }
+    else if (0 == axutil_strcmp(username, "x"))
+    {
+        pw = "x12345";
+    }
+    else if (0 == axutil_strcmp(username, "y"))
+    {
+        pw = "y12345";
+    }
+    else
+    {
+        /*Append 12345 for any name not specified above*/
+        /*sprintf(pw, "%s%s",  username, "12345");*/
+    }
+    return pw;
+};
+
+
+axis2_char_t* AXIS2_CALL
 ramaprt_get_sample_password_from_file(const axutil_env_t *env,
         const axis2_char_t *username)
 {
@@ -61,7 +113,7 @@ ramaprt_get_sample_password_from_file(const axutil_env_t *env,
        AXIS2_FREE(env->allocator, pw);
        fclose ( file );
     }else{
-       AXIS2_LOG_INFO(env->log, "Cannot load the password file %s ", filename);
+       AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Cannot load the password file %s ", filename);
        perror ( filename );
     }
     return password; 
@@ -76,16 +128,24 @@ rampart_sample_authn_provider_check_password(rampart_authn_provider_t *authn_pro
                 const axis2_char_t *password)
 {
     axis2_char_t *local_pw = NULL;
-
+#ifdef PW_FROM_FILE
     local_pw = ramaprt_get_sample_password_from_file(env, username);
+    AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Load the password - file impl");
+#else 
+    local_pw = ramaprt_get_sample_password(env, username);
+    AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Load the password - default impl");
+#endif    
     if(local_pw){
         /*Compare passwords*/
         if(0 == axutil_strcmp(password, local_pw)){
+            AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Access granted");
             return RAMPART_AUTHN_PROVIDER_GRANTED;
         }else{
+            AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Access denied");
             return RAMPART_AUTHN_PROVIDER_DENIED;
         }
     }else{
+        AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] User not found");
         return RAMPART_AUTHN_PROVIDER_USER_NOT_FOUND;
     }
 }
