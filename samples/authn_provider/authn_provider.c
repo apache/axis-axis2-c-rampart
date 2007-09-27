@@ -27,7 +27,7 @@
 #include <axutil_string.h>
 
 axis2_char_t* AXIS2_CALL
-ramaprt_authn_get_sample_password(const axutil_env_t *env,
+rampart_authn_get_sample_password(const axutil_env_t *env,
         const axis2_char_t *username)
 {
     /*First set pf password are for sample usernames*/
@@ -88,7 +88,7 @@ rampart_sample_authn_provider_check_password(rampart_authn_provider_t *authn_pro
                 const axis2_char_t *password)
 {
     axis2_char_t *local_pw = NULL;
-    local_pw = ramaprt_authn_get_sample_password(env, username);
+    local_pw = rampart_authn_get_sample_password(env, username);
     AXIS2_LOG_INFO(env->log, "[rampart][authn_provider_sample] Load the password - default impl");
     if(local_pw){
         /*Compare passwords*/
@@ -117,7 +117,7 @@ rampart_sample_authn_provider_check_password_digest(rampart_authn_provider_t *au
 
     axis2_char_t *local_pw = NULL;
 
-    local_pw = ramaprt_authn_get_sample_password_from_file(env, username);
+    local_pw = rampart_authn_get_sample_password(env, username);
     if(local_pw){
         axis2_char_t *local_digest = NULL;
         /*Generate the digest*/
