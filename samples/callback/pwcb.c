@@ -114,6 +114,7 @@ axis2_get_instance(rampart_callback_t **inst,
 
     if (!(*inst))
     {
+        AXIS2_LOG_INFO(env->log, "[rampart][pwcb_sample] Cannot initialize the PWCB module");
         return AXIS2_FAILURE;
     }
 
