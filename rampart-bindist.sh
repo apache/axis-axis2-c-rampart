@@ -58,6 +58,7 @@ cp -r $AXIS2C_HOME/modules/rampart $BIN_DIR/modules/
 echo "Copy libraries"
 cp $AXIS2C_HOME/lib/liboxstokens.* $BIN_DIR/lib
 cp $AXIS2C_HOME/lib/libomxmlsec.* $BIN_DIR/lib
+cp $AXIS2C_HOME/lib/libomopenssl.* $BIN_DIR/lib
 
 echo "Copy samples"
 #copy samples

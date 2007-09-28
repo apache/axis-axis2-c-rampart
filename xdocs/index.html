@@ -10,7 +10,7 @@
 <body xml:lang="en">
 <h1>Welcome to Apache Rampart/C</h1>
 
-<p>Apache Rampart/C is the security module for Apache Axis2/C. It features in many ways to protect SOAP messages exchanged. This includes SOAP message encryption and signature as specified in <a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf">WS-Security Specification</a>. In addition Apache Rampart/C configurations are based on security policy assertions as per <a href="http://specs.xmlsoap.org/ws/2005/07/securitypolicy/ws-securitypolicy.pdf">WS-Security Policy specificatoin</a></p>
+<p>Apache Rampart/C is the security module for <a href="http://ws.apache.org/axis2/c/">Apache Axis2/C</a>. It features in many ways to protect SOAP messages exchanged. This includes SOAP message encryption and signature as specified in <a href="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf">WS-Security Specification</a>. In addition Apache Rampart/C configurations are based on security policy assertions as per <a href="http://specs.xmlsoap.org/ws/2005/07/securitypolicy/ws-securitypolicy.pdf">WS-Security Policy specificatoin</a></p>
 
 <h2>Why Apache Rampart/C ?</h2>
 <p>In distributed computing, web services play a crucial role. But as many distributed systems web services are also vulnerable for security threats. Developers are always struggling to ensure the integrity, confidentiality of messages. Implementing the right security solution can be an expensive and time consuming task. Rampart/C makes the life easier for those who uses Axis2/C, by providing a configurable security module, which protect SOAP messages from such threats.
@@ -18,8 +18,8 @@
 
 <h2>Latest Release</h2>
 
-<h3>11th May 2007 - Apache Rampart/C Version 0.90 Released</h3>
-<a href="http://ws.apache.org/rampart/c/download.cgi">Download 0.90</a>
+<h3>5th Oct 2007 - Apache Rampart/C Version 1.0 Released</h3>
+<a href="http://ws.apache.org/rampart/c/download.cgi">Download 1.0</a>
 
 <h4>Key Features</h4>
 <ol>
@@ -35,7 +35,19 @@
     <li><strong>Policy based configurations</strong> as per WS-Security Policy : Allows users to express their security related requirements and constraints</li>
 </ol>
 <h4>Major Changes Since Last Release</h4>
-  <p>Apache Rampart/C still in the first release. </p>
+<p>
+ <ol>
+	<li>WS-Security Policy (<a href="http://specs.xmlsoap.org/ws/2005/07/securitypolicy/ws-securitypolicy.pdf">spec 1.1</a>) based configurations</li>
+	<li>Replay detection support</li>
+	<li>Improvements to the context model</li>
+	<li>Authentication module implementation</li>
+	<li>Credentials module implementation</li>
+	<li>Impirovements to Key/Certificate loading mechanisms</li>
+	<li>Easy to use deployment scripts</li>
+	<li>Memory leak fixes</li>
+	<li>Many bug fixes</li>
+ </ol>
+</p>
 
 </body>
 </html>
