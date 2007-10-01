@@ -1,14 +1,25 @@
 #!/bin/bash
-#This script should be placed in rampart/c home directory
-PWDIR=$PWD
-echo "Copy rampart module"
-#Copy rampart module
-cp  -r $PWD/modules/rampart $AXIS2C_HOME/modules/
+echo "Rampart/C binary installer"
+R_HOME=$AXIS2C_HOME
 
-echo "Copy sec_echo sample"
-#Copy sec_echo sample
-cp -r $PWD/samples/server/sec_echo $AXIS2C_HOME/services/
+echo "Copy modules"
+cp -r modules/rampart $R_HOME/modules
 
-echo "Please go to directory $PWD/samples/secpolicy"
-echo "Deploy and run a scenario using"
-echo "\t%sh test_scen.sh scenarioX server-port"
+echo "Copy libs"
+cp lib/* $R_HOME/lib
+
+echo "Copy sample service"
+cp -r bin/samples/server/sec_echo $R_HOME/services
+
+echo "Copy samples"
+rm -rf $R_HOME/bin/samples/rampart
+mkdir $R_HOME/bin/samples/rampart
+cp -r bin/samples/* $R_HOME/bin/samples/rampart
+
+cd bin/samples/client/sec_echo/
+sh deploy_client_repo.sh
+
+echo "It's done... :)"
+
+echo "Go to bin/samples/secpolicy/ and try a scenario"
+echo "   %sh test_scen.sh scenarioX server-port"
