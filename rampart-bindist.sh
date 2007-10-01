@@ -86,6 +86,8 @@ rm -rf rampart-samples-src*
 
 echo "Copy installer script"
 cp build/linux/install_rampart_bin_dist.sh  $BIN_DIR/
+echo "Copy cleaner script"
+cp build/linux/clean_rampart_bin_dist.sh  $BIN_DIR/
 
 echo "Removing garbage in $BIN_DIR"
 cd $BIN_DIR
