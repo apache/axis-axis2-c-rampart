@@ -16,6 +16,9 @@ rm -rf $R_HOME/bin/samples/rampart
 mkdir $R_HOME/bin/samples/rampart
 cp -r bin/samples/* $R_HOME/bin/samples/rampart
 
+echo "Copy axis2.xml"
+cp bin/samples/server/sec_echo/server_axis2.xml $R_HOME/axis2.xml
+
 cd bin/samples/client/sec_echo/
 sh deploy_client_repo.sh
 
