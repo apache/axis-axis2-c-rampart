@@ -77,17 +77,8 @@ Also there are set of builders that builds these models. <br>
 
 <p>Rampart/C is configured using policy assertions defined in WS-Security
 Policy specification 1.1. These policies are defined in policy.xml files.
-There are two policy files for a single Rampart configuration.</p>
-<ol>
-  <li>incoming-secpolicy.xml</li>
-  <li>outgoing-secpolicy.xml</li>
-</ol>
-The former defines how an outgoing message is secured, whilst the latter
-defines how the incoming message should be secured. Apart from the assertions
-mentioned in the specification, Rampart/C uses it's own assertions. (e.g. To
-specify keys and certificates). There are number of such sample policy files
-under rampart/samples/secpolicy.
-
+The client side policies are defined in a seperate policy.xml file located in the client's repository.
+The service's policies are defined in the services.xml file.
 
 <h3>Rampart utilities</h3>
 
