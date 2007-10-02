@@ -204,7 +204,7 @@ rampart_sig_sign_message(
         axutil_array_list_add(nodes_to_sign, env, ts_node);
     }
 
-    if(server_side)
+    if(!server_side)
     {
         if(rampart_context_get_require_ut(rampart_context, env))
         {
