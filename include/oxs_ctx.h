@@ -63,7 +63,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_free(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -75,7 +75,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return mode of the context 
      */
-    oxs_ctx_mode_t AXIS2_CALL
+    AXIS2_EXTERN oxs_ctx_mode_t AXIS2_CALL
     oxs_ctx_get_mode(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -87,7 +87,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return operation of the context 
      */
-    oxs_ctx_operation_t AXIS2_CALL
+    AXIS2_EXTERN oxs_ctx_operation_t AXIS2_CALL
     oxs_ctx_get_operation(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -100,7 +100,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    oxs_key_t *AXIS2_CALL
+    AXIS2_EXTERN oxs_key_t *AXIS2_CALL
     oxs_ctx_get_key(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -112,7 +112,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_id(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -124,7 +124,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_type(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -135,7 +135,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_mime_type(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -147,7 +147,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_encoding(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -159,7 +159,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_recipient(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -171,7 +171,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_carried_key_name(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -183,7 +183,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_enc_mtd_algorithm(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -195,7 +195,7 @@ extern "C"
      * @param env pointer to environment struct
      * @return of the context 
      */
-    axis2_char_t *AXIS2_CALL
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     oxs_ctx_get_input_data(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
@@ -207,7 +207,7 @@ extern "C"
      * @param mode the mode of operation, EncryptedData/EncryptedKey
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_mode(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -221,7 +221,7 @@ extern "C"
      * @param operation the operation Encrypt/Decrypt/Sign/Verify
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_operation(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -235,7 +235,7 @@ extern "C"
      * @param key the key used
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_key(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -248,7 +248,7 @@ extern "C"
      * @param id the id of the context 
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_id(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -262,7 +262,7 @@ extern "C"
      * @param type ???Depricated?
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_type(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -276,7 +276,7 @@ extern "C"
      * @param mime_type the mime type used
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_mime_type(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -291,7 +291,7 @@ extern "C"
      * @param encoding the encoding used
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_encoding(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -305,7 +305,7 @@ extern "C"
      * @param recipient name of recipient
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_recipient(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -320,7 +320,7 @@ extern "C"
      * @param carried_key_name the key name 
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_carried_key_name(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -334,7 +334,7 @@ extern "C"
      * @param enc_mtd_algorithm the encryption method algorithm
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_enc_mtd_algorithm(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
@@ -347,7 +347,7 @@ extern "C"
      * @param input_data the input data
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_ctx_set_input_data(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,

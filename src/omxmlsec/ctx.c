@@ -79,7 +79,7 @@ oxs_ctx_create(const axutil_env_t *env)
 
 
 /*public functions*/
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_free(oxs_ctx_t *ctx,
              const axutil_env_t *env
             )
@@ -140,7 +140,7 @@ oxs_ctx_free(oxs_ctx_t *ctx,
     return AXIS2_SUCCESS;
 }
 
-oxs_ctx_mode_t AXIS2_CALL
+AXIS2_EXTERN oxs_ctx_mode_t AXIS2_CALL
 oxs_ctx_get_mode(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -151,7 +151,7 @@ oxs_ctx_get_mode(
     return ctx->mode ;
 }
 
-oxs_ctx_operation_t AXIS2_CALL
+AXIS2_EXTERN oxs_ctx_operation_t AXIS2_CALL
 oxs_ctx_get_operation(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -163,7 +163,7 @@ oxs_ctx_get_operation(
 }
 
 
-oxs_key_t *AXIS2_CALL
+AXIS2_EXTERN oxs_key_t *AXIS2_CALL
 oxs_ctx_get_key(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -175,7 +175,7 @@ oxs_ctx_get_key(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_id(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -187,7 +187,7 @@ oxs_ctx_get_id(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_type(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -199,7 +199,7 @@ oxs_ctx_get_type(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_mime_type(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -211,7 +211,7 @@ oxs_ctx_get_mime_type(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_encoding(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -223,7 +223,7 @@ oxs_ctx_get_encoding(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_recipient(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -235,7 +235,7 @@ oxs_ctx_get_recipient(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_carried_key_name(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -247,7 +247,7 @@ oxs_ctx_get_carried_key_name(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_enc_mtd_algorithm(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -259,7 +259,7 @@ oxs_ctx_get_enc_mtd_algorithm(
 }
 
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_ctx_get_input_data(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
@@ -271,7 +271,7 @@ oxs_ctx_get_input_data(
 }
 
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_mode(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -285,7 +285,7 @@ oxs_ctx_set_mode(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_operation(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -299,7 +299,7 @@ oxs_ctx_set_operation(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_key(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -318,7 +318,7 @@ oxs_ctx_set_key(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_id(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -338,7 +338,7 @@ oxs_ctx_set_id(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_type(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -358,7 +358,7 @@ oxs_ctx_set_type(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_mime_type(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -378,7 +378,7 @@ oxs_ctx_set_mime_type(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_encoding(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -398,7 +398,7 @@ oxs_ctx_set_encoding(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_recipient(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -418,7 +418,7 @@ oxs_ctx_set_recipient(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_carried_key_name(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -438,7 +438,7 @@ oxs_ctx_set_carried_key_name(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_enc_mtd_algorithm(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
@@ -458,7 +458,7 @@ oxs_ctx_set_enc_mtd_algorithm(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_ctx_set_input_data(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
