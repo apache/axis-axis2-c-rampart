@@ -65,7 +65,22 @@ extern "C"
      * @ingroup oxs
      * @{
      */
+    
+    /*TODO : We need to import functions in other oxs_token_* headers too here */
+    
+    /*<wsse11:SignatureConfirmation> element ************************************************/
+  
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    oxs_token_get_signature_confirmation_value(const axutil_env_t *env, axiom_node_t *signature_confirmation_node);
 
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    oxs_token_get_signature_confirmation_id(const axutil_env_t *env, axiom_node_t *signature_confirmation_node);
+
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_signature_confirmation_element(const axutil_env_t *env,
+                                        axiom_node_t *parent,
+                                        axis2_char_t *id,
+                                        axis2_char_t *val); 
     /** @} */
 
 #ifdef __cplusplus

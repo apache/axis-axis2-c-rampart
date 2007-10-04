@@ -19,7 +19,7 @@ Major Changes Since Last Release
 3. Improvements to the context model
 4. Authentication module implementation
 5. Credentials module implementation
-6. Impirovements to Key/Certificate loading mechanisms
+6. Improvements to Key/Certificate loading mechanisms
 7. Easy to use deployment scripts 
 8. Memory leak fixes
 9. Many bug fixes

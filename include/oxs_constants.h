@@ -134,6 +134,7 @@ extern "C"
 #define OXS_ATTR_TARGET        "Target"
 #define OXS_ATTR_ENCODING_TYPE  "EncodingType"
 #define OXS_ATTR_VALUE_TYPE     "ValueType"
+#define OXS_ATTR_VALUE     "Value"
 
 
     /****************************************************************
