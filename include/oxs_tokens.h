@@ -19,38 +19,10 @@
 #define OXS_TOKENS_H
 
 #include <axutil_qname.h>
-#include <oxs_token_binary_security_token.h>
-#include <oxs_token_embedded.h>
-#include <oxs_token_reference_list.h>
-#include <oxs_token_transforms.h>
-#include <oxs_token_c14n_method.h>
-#include <oxs_token_encrypted_data.h>
-#include <oxs_token_security_token_reference.h>
-#include <oxs_token_x509_certificate.h>
-#include <oxs_token_cipher_data.h>
-#include <oxs_token_encrypted_key.h>
-#include <oxs_token_x509_data.h>
-#include <oxs_token_cipher_value.h>
-#include <oxs_token_encryption_method.h>
-#include <oxs_token_signature.h>
-#include <oxs_token_x509_issuer_name.h>
-#include <oxs_token_data_reference.h>
-#include <oxs_token_key_identifier.h>
-#include <oxs_token_signature_method.h>
-#include <oxs_token_x509_issuer_serial.h>
-#include <oxs_token_digest_method.h>
-#include <oxs_token_key_info.h>
-#include <oxs_token_signature_value.h>
-#include <oxs_token_x509_serial_number.h>
-#include <oxs_token_digest_value.h>
-#include <oxs_token_key_name.h>
-#include <oxs_token_signed_info.h>
-#include <oxs_token_ds_reference.h>
-#include <oxs_token_reference.h>
-#include <oxs_token_transform.h>
-
-
-
+#include <axis2_defines.h>
+#include <axutil_env.h>
+#include <axiom_node.h>
+#include <axiom_element.h>
 
 /**
 * @file oxs_tokens.h
@@ -66,21 +38,460 @@ extern "C"
      * @{
      */
     
-    /*TODO : We need to import functions in other oxs_token_* headers too here */
-    
-    /*<wsse11:SignatureConfirmation> element ************************************************/
-  
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    oxs_token_get_signature_confirmation_value(const axutil_env_t *env, axiom_node_t *signature_confirmation_node);
+    /**
+    * Creates <wsse:BinarySecurityToken> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_binary_security_token_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * id,
+		axis2_char_t * encoding_type,
+		axis2_char_t * value_type,
+		axis2_char_t * data);
+   
+    /**
+    * Creates <ds:CanonicalizationMethod> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_c14n_method_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * algorithm);
 
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    oxs_token_get_signature_confirmation_id(const axutil_env_t *env, axiom_node_t *signature_confirmation_node);
+	/**
+	 * Gets algorithm from <ds:CanonicalizationMethod> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_c14n_method(
+		const axutil_env_t * env, 
+		axiom_node_t * c14n_mtd_node);
 
-    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_signature_confirmation_element(const axutil_env_t *env,
-                                        axiom_node_t *parent,
-                                        axis2_char_t *id,
-                                        axis2_char_t *val); 
+    /**
+    * Creates <xenc:CipherData> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_cipher_data_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+	/**
+	 * Gets cipher value from <xenc:CipherData> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_cipher_value_from_cipher_data(
+		const axutil_env_t * env,
+		axiom_node_t * cd_node);
+
+	/**
+	 * Creates <xenc:CipherValue> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_cipher_value_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * cipher_val);
+
+	/**
+	 * Gets value from <xenc:CipherValue> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_cipher_value(
+		const axutil_env_t * env,
+		axiom_node_t * cv_node);
+
+	/**
+	 * Creates <xenc:DataReference> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_data_reference_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * data_ref);
+
+	/**
+	 * Gets URI reference from <xenc:DataReference> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_data_reference(
+		const axutil_env_t * env, 
+		axiom_node_t * data_ref_node);
+
+    /**
+    * Creates <ds:DigestMethod> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_digest_method_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * algorithm);
+
+	/**
+	 * Gets the algorithm from <ds:DigestMethod> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_digest_method(
+		const axutil_env_t * env, 
+		axiom_node_t * enc_mtd_node);
+
+	/**
+	 * Creates <ds:DigestValue> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_digest_value_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * digest_val);
+
+	/**
+	 * Gets the value from <ds:DigestValue> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_digest_value(
+		const axutil_env_t * env,
+		axiom_node_t * sv_node);
+
+    /**
+    * Creates <ds:Reference> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_ds_reference_element(
+		const axutil_env_t *env,
+		axiom_node_t *parent,
+		axis2_char_t *id,
+		axis2_char_t *uri,
+		axis2_char_t *type);
+
+	/**
+	 * Gets URI reference from <ds:Reference> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_ds_reference(
+		const axutil_env_t * env, 
+		axiom_node_t * ref_node);
+
+	/**
+	 * Creates <wsse:Embedded> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_embedded_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * id);
+
+	/**
+	 * Gets id from <wsse:Embedded> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_embedded_id(
+		const axutil_env_t * env, 
+		axiom_node_t * embedded_node);
+
+    /**
+    * Creates <xenc:EncryptedData> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_encrypted_data_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * type_attribute,
+		axis2_char_t * id);
+
+	/**
+	 * Creates <xenc:EncryptedKey> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_encrypted_key_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent );
+
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_get_encrypted_key_node(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+    /**
+    * Creates <xenc:EncryptionMethod> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_encryption_method_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * algorithm);
+
+	/**
+	 * Gets algorithm from <xenc:EncryptionMethod> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_encryption_method(
+		const axutil_env_t * env, 
+		axiom_node_t * enc_mtd_node);
+
+    /**
+    * Creates <wsse:KeyIdentifier> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_key_identifier_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * encoding_type,
+		axis2_char_t * value_type,
+		axis2_char_t * value);
+
+    /**
+    * Creates <ds:KeyInfo> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_key_info_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+	/**
+	 * Creates <ds:KeyName> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_key_name_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * key_name_val);
+
+	/**
+	 * Creates <wsse:Reference> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_reference_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * ref,
+		axis2_char_t * value_type);
+
+	/**
+	 * Gets URI reference from <wsse:Reference> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_reference(
+		const axutil_env_t * env, 
+		axiom_node_t * ref_node);
+
+	/**
+	 * Gets value type from <wsse:Reference> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_reference_value_type(
+		const axutil_env_t * env, axiom_node_t * ref_node);
+
+	/**
+	 * Creates <xenc:ReferenceList> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_reference_list_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+	/**
+	 * Creates <xenc:DataReference> elements under <xenc:ReferenceList> element
+	 */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_token_build_data_reference_list(
+		const axutil_env_t * env, 
+		axiom_node_t * parent, 
+		axutil_array_list_t * id_list);
+
+	/**
+	 * Gets URI references from <xenc:DataReference> elements under <xenc:ReferenceList> element
+	 */
+    AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
+    oxs_token_get_reference_list_data(
+		const axutil_env_t * env, 
+		axiom_node_t * ref_list_node);
+
+	/**
+	 * Creates <wsse:SecurityTokenReference> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_security_token_reference_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+    /**
+    * Creates <ds:Signature> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_signature_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * id);
+
+	/**
+	 * Creates <ds:SignatureMethod> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_signature_method_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * algorithm);
+
+	/**
+	 * Gets algorithm from <ds:SignatureMethod> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_signature_method(
+		const axutil_env_t * env, 
+		axiom_node_t * enc_mtd_node);
+
+	/**
+	 * Creates <ds:SignatureValue> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_signature_value_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * signature_val);
+
+	/**
+	 * Gets signature value from <ds:SignatureValue> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_signature_value(
+		const axutil_env_t * env,
+		axiom_node_t * sv_node);
+
+	/**
+	 * Creates <ds:SignedInfo> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_signed_info_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+    /**
+    * Creates <ds:Transform> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_transform_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * algorithm);
+
+	/**
+	 * Gets algorithm from <ds:Transform> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_transform(
+		const axutil_env_t * env, 
+		axiom_node_t * transform_node);
+
+    /**
+    * Creates <ds:Transforms> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_transforms_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+    /**
+    * Creates <ds:X509Certificate> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_x509_certificate_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * cert_data);
+
+	/**
+	 * Gets data from <ds:X509Certificate> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_x509_certificate(
+		const axutil_env_t * env,
+		axiom_node_t * sv_node);
+
+    /**
+    * Creates <ds:X509Data> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_x509_data_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+
+    /**
+    * Creates <ds:X509IssuerName> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_issuer_name_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * value );
+
+	/**
+	 * Gets issuer name from <ds:X509IssuerName> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_issuer_name(
+		const axutil_env_t * env,
+		axiom_node_t * issuer_name_node);
+
+    /**
+    * Creates <ds:X509IssuerSerial> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_x509_issuer_serial_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent);
+	
+	/**
+	 * Creates <ds:X509IssuerSerial> element with issuer name and serial number
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_x509_issuer_serial_with_data(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * issuer_name,
+		axis2_char_t * serial_number);
+
+	/**
+	 * Creates <ds:X509SerialNumber> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_serial_number_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * value );
+
+	/**
+	 * Gets serial number from <ds:X509SerialNumber> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_serial_number(
+		const axutil_env_t * env,
+		axiom_node_t * serial_number_node);
+
+    /**
+	 * Creates <wsse11:SignatureConfirmation> element
+	 */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_signature_confirmation_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * id,
+		axis2_char_t * val); 
+
+	/**
+	 * Gets value from <wsse11:SignatureConfirmation> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_signature_confirmation_value(
+		const axutil_env_t * env, 
+		axiom_node_t * signature_confirmation_node);
+
+	/**
+	 * Gets id from <wsse11:SignatureConfirmation> element
+	 */
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_token_get_signature_confirmation_id(
+		const axutil_env_t * env, 
+		axiom_node_t * signature_confirmation_node);
+
     /** @} */
 
 #ifdef __cplusplus

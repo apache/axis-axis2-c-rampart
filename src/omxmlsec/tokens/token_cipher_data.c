@@ -19,8 +19,7 @@
 #include <axiom_element.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_cipher_data.h>
-#include <oxs_token_cipher_value.h>
+#include <oxs_tokens.h>
 #include <oxs_axiom.h>
 
 

@@ -18,9 +18,7 @@
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_x509_issuer_serial.h>
-#include <oxs_token_x509_issuer_name.h>
-#include <oxs_token_x509_serial_number.h>
+#include <oxs_tokens.h>
 #include <axiom_element.h>
 
 

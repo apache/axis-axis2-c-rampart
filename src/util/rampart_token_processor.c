@@ -28,8 +28,7 @@
 #include <oxs_key_mgr.h>
 #include <oxs_axiom.h>
 #include <oxs_x509_cert.h>
-#include <oxs_token_reference.h>
-#include <oxs_token_binary_security_token.h>
+#include <oxs_tokens.h>
 #include <oxs_xml_key_processor.h>
 #include <rampart_token_processor.h>
 

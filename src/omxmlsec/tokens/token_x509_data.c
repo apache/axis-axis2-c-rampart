@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_x509_data.h>
+#include <oxs_tokens.h>
 #include <axiom_element.h>
 
 

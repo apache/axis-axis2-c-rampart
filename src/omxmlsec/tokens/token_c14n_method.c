@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_c14n_method.h>
+#include <oxs_tokens.h>
 #include <axiom_attribute.h>
 #include <axiom_element.h>
 

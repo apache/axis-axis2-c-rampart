@@ -18,9 +18,9 @@
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_reference_list.h>
+#include <oxs_tokens.h>
 #include <axiom_element.h>
-#include <oxs_token_data_reference.h>
+#include <oxs_tokens.h>
 #include <axutil_array_list.h>
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL

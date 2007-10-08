@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_ds_reference.h>
+#include <oxs_tokens.h>
 #include <axiom_attribute.h>
 #include <axiom_element.h>
 
@@ -85,4 +85,5 @@ oxs_token_get_ds_reference(const axutil_env_t *env, axiom_node_t *ref_node)
     return ref;
 
 }
+
 

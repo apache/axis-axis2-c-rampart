@@ -17,7 +17,7 @@
 
 #include <oxs_constants.h>
 #include <oxs_error.h>
-#include <oxs_token_binary_security_token.h>
+#include <oxs_tokens.h>
 #include <oxs_utility.h>
 #include <axiom_attribute.h>
 #include <axiom_element.h>
