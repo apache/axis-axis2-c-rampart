@@ -502,6 +502,49 @@ extern "C"
         axis2_char_t * id,
         axis2_char_t * algo);
 
+    /**
+     * Creates <wsc:Length> element
+     */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_length_element(const axutil_env_t *env,
+                                     axiom_node_t *parent,
+                                     axis2_char_t* length_val);
+	/**
+	 * Gets value from <wsc:Length> element
+	 */
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_length_value(const axutil_env_t *env,
+                           axiom_node_t *length_node);
+    /**
+     * Creates <wsc:Offset> element
+     */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_offset_element(const axutil_env_t *env,
+                                     axiom_node_t *parent,
+                                     axis2_char_t* offset_val);
+	/**
+	 * Gets value from <wsc:Offset> element
+	 */
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_offset_value(const axutil_env_t *env,
+                           axiom_node_t *offset_node);
+    /**
+     * Creates <wsc:Nonce> element
+     */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_nonce_element(const axutil_env_t *env,
+                                     axiom_node_t *parent,
+                                     axis2_char_t* nonce_val);
+	/**
+	 * Gets value from <wsc:Nonce> element
+	 */
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_nonce_value(const axutil_env_t *env,
+                           axiom_node_t *nonce_node);
+
+
+
+
     /** @} */
 
 #ifdef __cplusplus
