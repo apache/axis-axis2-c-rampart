@@ -73,6 +73,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     oxs_key_t *session_key = NULL;
     axutil_array_list_t *nodes_to_encrypt = NULL;
     axis2_char_t *enc_sym_algo = NULL;
+    int i = 0;
 
     /*TODO Derived Key Encryption*/
 
@@ -119,6 +120,37 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         2. Encrypt using that key       
      */
 
+    /*Repeat until all encryption parts are encrypted*/
+    for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
+    {
+        axiom_node_t *node_to_enc = NULL;
+        oxs_ctx_t *enc_ctx = NULL;
+        oxs_key_t *derived_key = NULL;
+        axis2_char_t *dk_id = NULL;
+        axis2_char_t *enc_data_id = NULL;
+
+        /*Get the node to be encrypted*/
+        node_to_enc = (axiom_node_t *)axutil_array_list_get
+                      (nodes_to_encrypt, env, i);
+    
+        /*Derive a new key*/
+        derived_key = oxs_key_create(env);
+        status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key); 
+        dk_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
+
+        /*Create the encryption context for OMXMLSEC*/
+        enc_ctx = oxs_ctx_create(env);
+        /*Set the key*/
+        oxs_ctx_set_key(enc_ctx, env, session_key);
+        /*Set the algorithm*/
+        oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);  
+
+        /*Generate ID for the encrypted data element*/       
+        enc_data_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
+        
+        /*Free derived key*/
+        oxs_key_free(derived_key, env);
+    }/*End of for loop. Interating nodes_to_encrypt list*/
     return status;
 }
 
