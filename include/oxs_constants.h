@@ -51,9 +51,10 @@ extern "C"
 #define OXS_DS "ds"
 #define OXS_WSSE "wsse"
 #define OXS_WSSE_11 "wsse11"
+#define OXS_WSU "wsu"
+#define OXS_WSC "wsc"
 #define OXS_WSSE_XMLNS      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 #define OXS_WSSE_11_XMLNS   "http://docs.oasis-open.org/wss/2005/xx/oasis-2005xx-wss-wssecurity-secext-1.1.xsd"
-#define OXS_WSU "wsu"
 #define OXS_WSU_XMLNS "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
     /****************************************************************
         ID Prefixes
@@ -63,6 +64,7 @@ extern "C"
 #define OXS_SIG_ID "SigID"
 #define OXS_CERT_ID "CertID"
 #define OXS_EMBEDDED_ID "EmbeddedID"
+#define OXS_DERIVED_ID "DerivedID"
 
     /****************************************************************
        Global namespaces 
@@ -70,6 +72,7 @@ extern "C"
 #define OXS_DSIG_NS                "http://www.w3.org/2000/09/xmldsig#"
 #define OXS_ENC_NS                 "http://www.w3.org/2001/04/xmlenc#"
 #define OXS_WSSE_NS                "http://schemas.xmlsoap.org/ws/2002/04/secext"
+#define OXS_WSC_NS "http://schemas.xmlsoap.org/ws/2005/02/sc"
 
     /****************************************************************
         DSig Nodes  
@@ -119,6 +122,16 @@ extern "C"
 #define OXS_NODE_SECURITY_TOKEN_REFRENCE    "SecurityTokenReference"
 #define OXS_NODE_EMBEDDED    "Embedded"
 
+    /****************************************************************
+        Secure Conversation Nodes
+    ****************************************************************/
+#define OXS_NODE_DERIVED_KEY_TOKEN     "DerivedKeyToken"
+#define OXS_NODE_PROPERTIES "Properties"
+#define OXS_NODE_GENERATION "Generation"
+#define OXS_NODE_OFFSET "Offset"
+#define OXS_NODE_LENGTH "Length"
+#define OXS_NODE_LABEL "Label"
+#define OXS_NODE_NONCE "Nonce"
 
     /****************************************************************
         Attributes

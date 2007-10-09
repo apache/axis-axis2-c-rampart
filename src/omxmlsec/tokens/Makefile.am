@@ -8,7 +8,7 @@ liboxstokens_la_SOURCES =  token_encrypted_data.c token_encryption_method.c toke
 						token_embedded.c token_reference.c token_signature_value.c token_signed_info.c \
 						token_c14n_method.c token_signature_method.c token_digest_method.c token_digest_value.c \
 						token_transform.c token_transforms.c token_signature.c token_ds_reference.c \
-						token_x509_certificate.c token_signature_confirmation.c
+						token_x509_certificate.c token_signature_confirmation.c token_derived_key_token.c 
 
 
 INCLUDES = -I$(top_builddir)/include \

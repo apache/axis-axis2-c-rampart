@@ -492,6 +492,16 @@ extern "C"
 		const axutil_env_t * env, 
 		axiom_node_t * signature_confirmation_node);
 
+    /**
+     * Creates <wsc:DerivedKeyToken> element
+     */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_derived_key_token_element(
+        const axutil_env_t * env,
+        axiom_node_t * parent,
+        axis2_char_t * id,
+        axis2_char_t * algo);
+
     /** @} */
 
 #ifdef __cplusplus

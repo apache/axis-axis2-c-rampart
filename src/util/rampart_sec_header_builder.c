@@ -37,58 +37,78 @@
 /*Private functions*/
 axis2_status_t AXIS2_CALL
 rampart_shb_do_symmetric_binding( const axutil_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    rampart_context_t *rampart_context,
-    axiom_soap_envelope_t *soap_envelope,
-    axiom_node_t *sec_node,
-    axiom_namespace_t *sec_ns_obj)
+                                  axis2_msg_ctx_t *msg_ctx,
+                                  rampart_context_t *rampart_context,
+                                  axiom_soap_envelope_t *soap_envelope,
+                                  axiom_node_t *sec_node,
+                                  axiom_namespace_t *sec_ns_obj)
 {
     axis2_status_t status = AXIS2_FAILURE;
+    axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
 
     /*TODO Symmetric binding*/
 
     if(rampart_context_is_include_timestamp(rampart_context,env))
     {
-            int ttl = -1;
-            AXIS2_LOG_INFO(env->log, "[rampart][shb]  building Timestamp Token");
-            AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using default timeToLive value %d",
-                           RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
-            /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
-            ttl = rampart_context_get_ttl(rampart_context,env);
+        int ttl = -1;
+        AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, building Timestamp Token");
+        AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, Using default timeToLive value %d",
+                       RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
+        /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
+        ttl = rampart_context_get_ttl(rampart_context,env);
 
-            status = rampart_timestamp_token_build(env,
-                                                   sec_node, sec_ns_obj, ttl);
+        status = rampart_timestamp_token_build(env,
+                                               sec_node, sec_ns_obj, ttl);
+        if (status == AXIS2_FAILURE)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Sym binding, Timestamp Token build failed. ERROR");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    /*User name tokens includes in messages sent from client to server*/
+    if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
+    {
+        if(rampart_context_is_include_username_token(rampart_context,env))
+        {
+
+            /*Now we are passing rampart_context here so inside this method
+            relevant parameters are extracted. */
+
+            AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, building UsernmaeToken");
+            status =rampart_username_token_build(
+                        env,
+                        rampart_context,
+                        sec_node,
+                        sec_ns_obj);
             if (status == AXIS2_FAILURE)
             {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Timestamp Token build failed. ERROR");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Sym binding, UsernmaeToken build failed. ERROR");
                 return AXIS2_FAILURE;
             }
-       }
-
-       /*User name tokens includes in messages sent from client to server*/
-        if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
-        {
-            if(rampart_context_is_include_username_token(rampart_context,env))
-            {
-
-                /*Now we are passing rampart_context here so inside this method
-                relevant parameters are extracted. */
-
-                AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
-                status =rampart_username_token_build(
-                            env,
-                            rampart_context,
-                            sec_node,
-                            sec_ns_obj);
-                if (status == AXIS2_FAILURE)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] UsernmaeToken build failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-            }
         }
+    }
 
+    /*Check the encryption and signature order*/
+    if(rampart_context_is_encrypt_before_sign(rampart_context, env))
+    {
+        /*TODO encrypt before sign*/
+
+    }else{ /*Sign before encrypt*/
+        is_encrypt_before_sign = AXIS2_FALSE;
+        
+        /*First do signature specific stuff*/
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if(status != AXIS2_SUCCESS){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Sym binding, Signing failed. ERROR");
+            return AXIS2_FAILURE;
+        }
+        /*Then Handle Encryption stuff*/
+
+
+    }
     status = AXIS2_SUCCESS;
 
     return status;
