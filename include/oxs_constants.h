@@ -305,6 +305,8 @@ extern "C"
 #define OXS_NAME_SHA512           "sha512"
 #define OXS_HREF_SHA512           "http://www.w3.org/2001/04/xmlenc#sha512"
 
+#define OXS_SC_DK_NAME_P_SHA1    "P_SHA-1"
+#define OXS_SC_DK_HREF_P_SHA1           "http://schemas.xmlsoap.org/ws/2005/02/sc/dk/p_sha1"
     /****************************************************************
         X509 
     ****************************************************************/

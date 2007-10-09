@@ -63,6 +63,66 @@ rampart_enc_get_nodes_to_encrypt(
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_enc_dk_encrypt_message(const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+    oxs_key_t *session_key = NULL;
+    axutil_array_list_t *nodes_to_encrypt = NULL;
+    axis2_char_t *enc_sym_algo = NULL;
+
+    /*TODO Derived Key Encryption*/
+
+    /*Get nodes to be encrypted*/
+    nodes_to_encrypt = axutil_array_list_create(env, 0);
+    status = rampart_enc_get_nodes_to_encrypt(
+                 rampart_context, env, soap_envelope, nodes_to_encrypt);
+
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_signature] Error occured in Adding Encrypted parts..");
+        axutil_array_list_free(nodes_to_encrypt, env);
+        nodes_to_encrypt = NULL;
+        return AXIS2_FAILURE;
+    }
+
+
+    /*Get the symmetric encryption algorithm*/
+    enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
+
+    /*If not specified set the default*/
+    if(!enc_sym_algo ||  (0 == axutil_strcmp(enc_sym_algo, "")))
+    {
+        AXIS2_LOG_INFO(env->log,
+                       "[rampart][rampart_encryption] No symmetric algorithm is specified for encryption. Using the default");
+        enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
+    }
+
+
+    /*Generate the  session key*/
+    session_key = oxs_key_create(env);
+    status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+    if(AXIS2_FAILURE == status)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_encryption] Cannot generate the key for the algorithm %s, ", enc_sym_algo);
+        return AXIS2_FAILURE;
+    }
+
+    
+    /* For each and every encryption part.
+        1. Derive a new key
+        2. Encrypt using that key       
+     */
+
+    return status;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_enc_encrypt_message(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
