@@ -544,6 +544,37 @@ extern "C"
 
 
 
+    /**
+     * Creates <wsc:Properties> element
+     */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_properties_element(const axutil_env_t *env,
+                                     axiom_node_t *parent,
+                                     axis2_char_t* properties_val);
+
+	/**
+	 * Gets value from <wsc:Properties> element
+	 */
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_properties_value(const axutil_env_t *env,
+                           axiom_node_t *properties_node);
+    
+    /**
+     * Creates <wsc:Generation> element
+     */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+    oxs_token_build_generation_element(const axutil_env_t *env,
+                                     axiom_node_t *parent,
+                                     axis2_char_t* generation_val);
+    
+	/**
+	 * Gets value from <wsc:Generation> element
+	 */
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_generation_value(const axutil_env_t *env,
+                           axiom_node_t *generation_node);
+
+
 
     /** @} */
 
