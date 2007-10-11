@@ -16,56 +16,60 @@
  */
 #include <axis2_module.h>
 #include <rampart_mod.h>
+#include <rampart_constants.h>
 #include <axis2_conf_ctx.h>
 
 axis2_status_t AXIS2_CALL
-mod_rampart_shutdown(axis2_module_t *module,
+rampart_mod_shutdown(axis2_module_t *module,
         const axutil_env_t *env);
 
 axis2_status_t AXIS2_CALL
-mod_rampart_init(axis2_module_t *module,
+rampart_mod_init(axis2_module_t *module,
         const axutil_env_t *env,
         axis2_conf_ctx_t *conf_ctx,
         axis2_module_desc_t *module_desc);
 
 axis2_status_t AXIS2_CALL
-mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
+rampart_mod_fill_handler_create_func_map(axis2_module_t *module,
         const axutil_env_t *env);
 
 static const axis2_module_ops_t addr_module_ops_var = {
-    mod_rampart_init,
-    mod_rampart_shutdown,
-    mod_rampart_fill_handler_create_func_map
+    rampart_mod_init,
+    rampart_mod_shutdown,
+    rampart_mod_fill_handler_create_func_map
     };
 
 axis2_module_t *
-mod_rampart_create(const axutil_env_t *env)
+rampart_mod_create(const axutil_env_t *env)
 {
     axis2_module_t *module = NULL;
+    /* Allocate memory for the module */
     module = AXIS2_MALLOC(env->allocator,
             sizeof(axis2_module_t));
 
-
+    /* Set module operations*/
     module->ops = &addr_module_ops_var;
     return module;
 }
 
 axis2_status_t AXIS2_CALL
-mod_rampart_init(axis2_module_t *module,
+rampart_mod_init(axis2_module_t *module,
         const axutil_env_t *env,
         axis2_conf_ctx_t *conf_ctx,
         axis2_module_desc_t *module_desc)
 {
-    /* Any initialization stuff of mod_rampart goes here */
-    AXIS2_LOG_INFO(env->log,"[rampart][mod_rampart] mod_rampart initialized");
+    /* Any initialization stuff of Rampart module goes here. At the moment we have NONE. 
+     * Intialization happens in handlers depending on the message flow and policies
+     * */
+    AXIS2_LOG_INFO(env->log,"[rampart][rampart_mod] rampart_mod initialized");
     return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
-mod_rampart_shutdown(axis2_module_t *module,
+rampart_mod_shutdown(axis2_module_t *module,
         const axutil_env_t *env)
 {
-    AXIS2_LOG_INFO(env->log,"[rampart][mod_rampart] mod_rampart shutdown");
+    AXIS2_LOG_INFO(env->log,"[rampart][rampart_mod] rampart_mod shutdown");
 
     if (module->handler_create_func_map)
     {
@@ -82,7 +86,7 @@ mod_rampart_shutdown(axis2_module_t *module,
 }
 
 axis2_status_t AXIS2_CALL
-mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
+rampart_mod_fill_handler_create_func_map(axis2_module_t *module,
         const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
@@ -94,11 +98,15 @@ mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
-    /*TODO Define names as constants*/
-    axutil_hash_set(module->handler_create_func_map, "RampartInHandler",
+
+    /* Set Rampart Handlers
+     * 1. Rampart In Handler to process message
+     * 2. Rampart Out Handler to build the message
+     * */
+    axutil_hash_set(module->handler_create_func_map, RAMPART_IN_HANDLER, 
             AXIS2_HASH_KEY_STRING, rampart_in_handler_create);
 
-    axutil_hash_set(module->handler_create_func_map, "RampartOutHandler",
+    axutil_hash_set(module->handler_create_func_map, RAMPART_OUT_HANDLER,
             AXIS2_HASH_KEY_STRING, rampart_out_handler_create);
 
     return AXIS2_SUCCESS;
@@ -107,15 +115,14 @@ mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
 /**
  * Following block distinguish the exposed part of the dll.
  */
-
 AXIS2_EXPORT int
 axis2_get_instance(axis2_module_t **inst,
         const axutil_env_t *env)
 {
-    *inst = mod_rampart_create(env);
+    *inst = rampart_mod_create(env);
     if (!(*inst))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][mod_rampart] Rampart module creation failed");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rampart_mod] Rampart module creation failed");
         return AXIS2_FAILURE;
     }
 
@@ -129,7 +136,7 @@ axis2_remove_instance(axis2_module_t *inst,
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)
     {
-        status = mod_rampart_shutdown(inst, env);
+        status = rampart_mod_shutdown(inst, env);
     }
     return status;
 }

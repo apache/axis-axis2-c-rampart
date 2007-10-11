@@ -50,7 +50,9 @@ extern "C"
       *
       */
 
-
+    /*Rampart module*/
+#define RAMPART_IN_HANDLER  "RampartInHandler"
+#define RAMPART_OUT_HANDLER  "RampartOutHandler"
 
     /*Default values*/
 #define RAMPART_DEFAULT_KT_ALGO OXS_DEFAULT_KT_ALGO_HREF
