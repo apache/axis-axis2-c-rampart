@@ -172,7 +172,7 @@ extern "C"
      * @return of the context 
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    oxs_ctx_get_carried_key_name(
+    oxs_ctx_get_ref_key_name(
         oxs_ctx_t *ctx,
         const axutil_env_t *env
     );
@@ -317,14 +317,14 @@ extern "C"
      * 
      * @param ctx The OMXMLSecurity context 
      * @param env pointer to environment struct
-     * @param carried_key_name the key name 
+     * @param ref_key_name the key name 
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_ctx_set_carried_key_name(
+    oxs_ctx_set_ref_key_name(
         oxs_ctx_t *ctx,
         const axutil_env_t *env,
-        axis2_char_t *carried_key_name
+        axis2_char_t *ref_key_name
     );
 
     /**

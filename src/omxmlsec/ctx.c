@@ -38,7 +38,7 @@ struct oxs_ctx_t
     axis2_char_t*           mime_type;
     axis2_char_t*           encoding;
     axis2_char_t*           recipient;
-    axis2_char_t*           carried_key_name;
+    axis2_char_t*           ref_key_name;
 
     /*attributes from EncryptionMethod*/
     axis2_char_t*           enc_mtd_algorithm;
@@ -70,7 +70,7 @@ oxs_ctx_create(const axutil_env_t *env)
     ctx->mime_type  = NULL;
     ctx->encoding  = NULL;
     ctx->recipient  = NULL;
-    ctx->carried_key_name  = NULL;
+    ctx->ref_key_name  = NULL;
     ctx->enc_mtd_algorithm  = NULL;
     ctx->input_data  = NULL;
 
@@ -116,10 +116,10 @@ oxs_ctx_free(oxs_ctx_t *ctx,
         ctx->recipient = NULL;
     }
 
-    if (ctx->carried_key_name)
+    if (ctx->ref_key_name)
     {
-        AXIS2_FREE(env->allocator, ctx->carried_key_name);
-        ctx->carried_key_name = NULL;
+        AXIS2_FREE(env->allocator, ctx->ref_key_name);
+        ctx->ref_key_name = NULL;
     }
 
     if (ctx->enc_mtd_algorithm)
@@ -236,14 +236,14 @@ oxs_ctx_get_recipient(
 
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_ctx_get_carried_key_name(
+oxs_ctx_get_ref_key_name(
     oxs_ctx_t *ctx,
     const axutil_env_t *env
 )
 {
     AXIS2_ENV_CHECK(env, NULL);
 
-    return ctx->carried_key_name ;
+    return ctx->ref_key_name ;
 }
 
 
@@ -419,21 +419,21 @@ oxs_ctx_set_recipient(
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-oxs_ctx_set_carried_key_name(
+oxs_ctx_set_ref_key_name(
     oxs_ctx_t *ctx,
     const axutil_env_t *env,
-    axis2_char_t *carried_key_name
+    axis2_char_t *ref_key_name
 )
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, carried_key_name, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, ref_key_name, AXIS2_FAILURE);
 
-    if (ctx->carried_key_name)
+    if (ctx->ref_key_name)
     {
-        AXIS2_FREE(env->allocator, ctx->carried_key_name);
-        ctx->carried_key_name = NULL;
+        AXIS2_FREE(env->allocator, ctx->ref_key_name);
+        ctx->ref_key_name = NULL;
     }
-    ctx->carried_key_name = axutil_strdup(env, carried_key_name);
+    ctx->ref_key_name = axutil_strdup(env, ref_key_name);
 
     return AXIS2_SUCCESS;
 }

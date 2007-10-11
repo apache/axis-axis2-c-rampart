@@ -376,7 +376,12 @@ rampart_shb_build_message(
         /*Do Symmetric_binding specific things*/
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. We do not support yet");
         status = rampart_shb_do_symmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj);
-        return AXIS2_FAILURE;
+        if(AXIS2_FAILURE == status){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding failed");
+            return AXIS2_FAILURE;
+        }else{
+            return AXIS2_SUCCESS;
+        }
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
     {

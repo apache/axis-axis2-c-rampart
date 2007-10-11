@@ -291,8 +291,20 @@ oxs_xml_enc_encrypt_data(const axutil_env_t *env,
     /*Call encryption. Result should be base64 encoded*/
     ret = oxs_encryption_symmetric_crypt(env, enc_ctx, content_buf, result_buf);
 
-    /*Create EncryptionMethod, CipherData element and populate*/
+    /*Create EncryptionMethod*/
     enc_mtd_node = oxs_token_build_encryption_method_element(env, *enc_type_node, sym_algo);
+
+    /*If the enc_ctx has a key name, then build the KeyInfo element*/
+    if(oxs_ctx_get_ref_key_name(enc_ctx, env)){
+        axiom_node_t *key_info_node = NULL;
+        axiom_node_t *str_node = NULL;
+        axiom_node_t *ref_node = NULL;
+
+        key_info_node = oxs_token_build_key_info_element(env, *enc_type_node);
+        str_node = oxs_token_build_security_token_reference_element(env, key_info_node);
+        ref_node = oxs_token_build_reference_element(env, str_node, oxs_ctx_get_ref_key_name(enc_ctx, env), NULL);
+    }
+    /*Create CipherData element and populate*/
     cd_node = oxs_token_build_cipher_data_element(env, *enc_type_node);
     cv_node = oxs_token_build_cipher_value_element(env, cd_node, (axis2_char_t*)oxs_buffer_get_data(result_buf, env));
 

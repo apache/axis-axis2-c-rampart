@@ -72,6 +72,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     oxs_key_t *session_key = NULL;
     axutil_array_list_t *nodes_to_encrypt = NULL;
+    axutil_array_list_t *id_list = NULL;
     axis2_char_t *enc_sym_algo = NULL;
     int i = 0;
 
@@ -110,7 +111,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
 
-    
+    id_list = axutil_array_list_create(env, 5);
     /* For each and every encryption part.
         1. Derive a new key
         2. Encrypt using that key       
@@ -123,6 +124,8 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         oxs_ctx_t *enc_ctx = NULL;
         oxs_key_t *derived_key = NULL;
         axis2_char_t *enc_data_id = NULL;
+        axiom_node_t *parent_of_node_to_enc = NULL;
+        axiom_node_t *enc_data_node = NULL;
 
         /*Get the node to be encrypted*/
         node_to_enc = (axiom_node_t *)axutil_array_list_get
@@ -137,13 +140,34 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
 
         /*Set the derived key for the encryption*/
         oxs_ctx_set_key(enc_ctx, env, derived_key);
-        
+
+        /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
+        oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
+
         /*Set the algorithm*/
         oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);  
 
-        /*Generate ID for the encrypted data element*/       
+        /*Generate ID for the encrypted data ielement*/       
+        parent_of_node_to_enc = axiom_node_get_parent(node_to_enc, env);
         enc_data_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
-    
+ 
+        if(parent_of_node_to_enc || enc_data_id)
+        {
+            enc_data_node = oxs_token_build_encrypted_data_element(env,
+                            parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, enc_data_id );
+            status = oxs_xml_enc_encrypt_node(env, enc_ctx,
+                                                  node_to_enc, &enc_data_node);
+            axutil_array_list_add(id_list, env, enc_data_id);
+            if(AXIS2_FAILURE == status)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption] Cannot encrypt the node " );
+                return AXIS2_FAILURE;
+            }
+
+        }
+        oxs_ctx_free(enc_ctx, env);
+        enc_ctx = NULL;
         
         /*Free derived key*/
         oxs_key_free(derived_key, env);
