@@ -84,7 +84,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
         return AXIS2_FAILURE;
     }
 
-    /*We are checking for the soap header element*/
+    /* We are checking for the soap header element*/
     soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
 
     if (!soap_header)
@@ -94,7 +94,7 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
         return AXIS2_SUCCESS;
     }
 
-    /*if the soap header is available then add the security header*/
+    /* If the soap header is available then add the security header*/
     if (soap_header)
     {
         soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
@@ -106,17 +106,23 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
         }
         soap_header_ele = (axiom_element_t *)axiom_node_get_data_element(soap_header_node,env);
 
-        /*since rampart out_handler is a global handler we should
-        first check whether the rampart module is engaged.If not we
-        should not process the message and return success.*/
+        /* Since rampart out_handler is a global handler we should
+         * first check whether the rampart module is engaged.If not we
+         * should not process the message and return success.
+         * */
 
-        /*This method is implemented in rampart_handler utils.*/
+        /* Is rampart engaged? Just checking*/
         if(!rampart_is_rampart_engaged(env,msg_ctx))
         {
             AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] Ramart is not engaged. No security support");
             return AXIS2_SUCCESS;
         }
 
+        /* Build configurations
+         * 1. Load policies
+         * 2. Create rampart context
+         * 3. Set policies to define ramprat behaviuor 
+         * */
         rampart_context = rampart_engine_build_configuration(env, msg_ctx, AXIS2_FALSE);
 
         if(!rampart_context)
@@ -125,13 +131,16 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
             return AXIS2_FAILURE;
         }
 
-        /*We call the security header builder*/
+        /* We call the security header builder.
+         * Based on security policies we build the message.
+         * Encrypt/Sign/UT/TS/Attach Key Info etc.*/
         status = rampart_shb_build_message(env, msg_ctx, rampart_context, soap_envelope);
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                            "[rampart][rampart_out_handler] Security header building failed ERROR");
             return AXIS2_FAILURE;
         }
+        
         if(serverside)
         {
             rampart_context_free(rampart_context, env);

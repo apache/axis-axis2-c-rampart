@@ -94,6 +94,7 @@ mod_rampart_fill_handler_create_func_map(axis2_module_t *module,
                 AXIS2_FAILURE);
         return AXIS2_FAILURE;
     }
+    /*TODO Define names as constants*/
     axutil_hash_set(module->handler_create_func_map, "RampartInHandler",
             AXIS2_HASH_KEY_STRING, rampart_in_handler_create);
 
@@ -114,6 +115,7 @@ axis2_get_instance(axis2_module_t **inst,
     *inst = mod_rampart_create(env);
     if (!(*inst))
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][mod_rampart] Rampart module creation failed");
         return AXIS2_FAILURE;
     }
 
