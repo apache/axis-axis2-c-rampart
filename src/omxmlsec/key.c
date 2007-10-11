@@ -33,7 +33,7 @@ struct oxs_key_t
 
 /******************** end of function headers *****************/
 
-unsigned char *AXIS2_CALL
+AXIS2_EXTERN unsigned char *AXIS2_CALL
 oxs_key_get_data(
     const oxs_key_t *key,
     const axutil_env_t *env)
@@ -43,7 +43,7 @@ oxs_key_get_data(
     return oxs_buffer_get_data(key->buf, env);
 }
 
-axis2_char_t *AXIS2_CALL
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_key_get_name(
     const oxs_key_t *key,
     const axutil_env_t *env)
@@ -54,7 +54,7 @@ oxs_key_get_name(
 
 }
 
-oxs_buffer_t *AXIS2_CALL
+AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
 oxs_key_get_buffer(const oxs_key_t *key,
                    const axutil_env_t *env)
 {
@@ -62,7 +62,7 @@ oxs_key_get_buffer(const oxs_key_t *key,
     return key->buf;
 }
 
-int AXIS2_CALL
+AXIS2_EXTERN int AXIS2_CALL
 oxs_key_get_size(
     const oxs_key_t *key,
     const axutil_env_t *env)
@@ -72,7 +72,7 @@ oxs_key_get_size(
     return oxs_buffer_get_size(key->buf, env);
 }
 
-int AXIS2_CALL
+AXIS2_EXTERN int AXIS2_CALL
 oxs_key_get_usage(
     const oxs_key_t *key,
     const axutil_env_t *env)
@@ -84,7 +84,7 @@ oxs_key_get_usage(
 
 
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_set_name(
     oxs_key_t *key,
     const axutil_env_t *env,
@@ -104,7 +104,7 @@ oxs_key_set_name(
 }
 
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_set_usage(
     oxs_key_t *key,
     const axutil_env_t *env,
@@ -117,7 +117,7 @@ oxs_key_set_usage(
 
 }
 
-oxs_key_t *AXIS2_CALL
+AXIS2_EXTERN oxs_key_t *AXIS2_CALL
 oxs_key_dup(oxs_key_t *key,
             const axutil_env_t *env)
 {
@@ -169,7 +169,7 @@ oxs_key_create(const axutil_env_t *env)
 }
 
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_free(oxs_key_t *key,
              const axutil_env_t *env)
 {
@@ -186,7 +186,7 @@ oxs_key_free(oxs_key_t *key,
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_populate_with_buf(oxs_key_t *key,
                           const axutil_env_t *env,
                           oxs_buffer_t *buffer,
@@ -203,7 +203,7 @@ oxs_key_populate_with_buf(oxs_key_t *key,
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_populate(oxs_key_t *key,
                  const axutil_env_t *env,
                  unsigned char *data,
@@ -224,7 +224,7 @@ oxs_key_populate(oxs_key_t *key,
 }
 
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_read_from_file(oxs_key_t *key,
                        const axutil_env_t *env,
                        axis2_char_t *file_name)
@@ -246,7 +246,7 @@ oxs_key_read_from_file(oxs_key_t *key,
 
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_for_algo(oxs_key_t *key,
                  const axutil_env_t *env,
                  axis2_char_t *key_algo)

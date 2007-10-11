@@ -20,6 +20,7 @@
 #include <oxs_derivation.h>
 #include <oxs_key.h>
 #include <oxs_error.h>
+#include <oxs_utility.h>
 #include <oxs_asym_ctx.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -31,13 +32,25 @@ oxs_derivation_derive_key(const axutil_env_t *env,
                          )
 {
     axis2_status_t status = AXIS2_FAILURE;
-
+    axis2_char_t *dk_id = NULL;
     /*TODO Concatenate the seed and label*/
 
     /*TODO P_SHA1 (secret, label + seed)*/
     
-    /*TODO Populate the derived key*/
-    
+    /*TODO Populate the derived key. What we do here is fake. We use the same key ;-)*/
+    dk_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
+    status = oxs_key_populate(derived_key, env,
+        oxs_key_get_data(secret, env),
+        dk_id,
+        oxs_key_get_size(secret, env),
+        oxs_key_get_usage(secret, env));
+        /*status = oxs_key_populate_with_buf(derived_key, env, 
+            oxs_key_get_buffer(secret, env), 
+            1,
+            2);
+            oxs_key_get_size(secret, env), 
+            oxs_key_get_usage(secret, env));
+    oxs_key_set_name(derived_key, env, dk_id);    */
  
 
     return status;

@@ -75,8 +75,6 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_char_t *enc_sym_algo = NULL;
     int i = 0;
 
-    /*TODO Derived Key Encryption*/
-
     /*Get nodes to be encrypted*/
     nodes_to_encrypt = axutil_array_list_create(env, 0);
     status = rampart_enc_get_nodes_to_encrypt(
@@ -91,7 +89,6 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
 
-
     /*Get the symmetric encryption algorithm*/
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
 
@@ -102,7 +99,6 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                        "[rampart][rampart_encryption] No symmetric algorithm is specified for encryption. Using the default");
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
-
 
     /*Generate the  session key*/
     session_key = oxs_key_create(env);
@@ -126,7 +122,6 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         axiom_node_t *node_to_enc = NULL;
         oxs_ctx_t *enc_ctx = NULL;
         oxs_key_t *derived_key = NULL;
-        axis2_char_t *dk_id = NULL;
         axis2_char_t *enc_data_id = NULL;
 
         /*Get the node to be encrypted*/
@@ -136,17 +131,19 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         /*Derive a new key*/
         derived_key = oxs_key_create(env);
         status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key); 
-        dk_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
 
         /*Create the encryption context for OMXMLSEC*/
         enc_ctx = oxs_ctx_create(env);
-        /*Set the key*/
-        oxs_ctx_set_key(enc_ctx, env, session_key);
+
+        /*Set the derived key for the encryption*/
+        oxs_ctx_set_key(enc_ctx, env, derived_key);
+        
         /*Set the algorithm*/
         oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);  
 
         /*Generate ID for the encrypted data element*/       
         enc_data_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
+    
         
         /*Free derived key*/
         oxs_key_free(derived_key, env);
