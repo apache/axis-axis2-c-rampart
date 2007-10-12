@@ -28,9 +28,10 @@ struct oxs_key_t
 {
     oxs_buffer_t *buf;
     axis2_char_t *name;
-    axis2_char_t *nonce;
     int           usage;
-    int           offset;
+    
+    axis2_char_t *nonce;  /*Specially added for WS-Secure Conversation*/
+    int           offset; /*Specially added for WS-Secure Conversation*/
 };
 
 /******************** end of function headers *****************/
@@ -53,7 +54,16 @@ oxs_key_get_name(
     AXIS2_ENV_CHECK(env, NULL);
 
     return key->name;
+}
 
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+oxs_key_get_nonce(
+    const oxs_key_t *key,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+
+    return key->nonce;
 }
 
 AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
@@ -85,7 +95,6 @@ oxs_key_get_usage(
 }
 
 
-
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_set_name(
     oxs_key_t *key,
@@ -102,6 +111,26 @@ oxs_key_set_name(
         key->name = NULL;
     }
     key->name = axutil_strdup(env, name);
+    return AXIS2_SUCCESS;
+}
+
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_key_set_nonce(
+    oxs_key_t *key,
+    const axutil_env_t *env,
+    axis2_char_t *nonce)
+{
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, nonce, AXIS2_FAILURE);
+
+    if (key->nonce)
+    {
+        AXIS2_FREE(env->allocator, key->nonce);
+        key->nonce = NULL;
+    }
+    key->nonce = axutil_strdup(env, nonce);
     return AXIS2_SUCCESS;
 }
 
@@ -162,7 +191,9 @@ oxs_key_create(const axutil_env_t *env)
 
     key->buf = NULL;
     key->name = NULL;
+    key->nonce = NULL;
     key->usage = -1;
+    key->offset = 0;
 
     /*additionally we need to create a buffer to keep data*/
     key->buf = oxs_buffer_create(env);
@@ -181,6 +212,8 @@ oxs_key_free(oxs_key_t *key,
     key->buf = NULL;
     AXIS2_FREE(env->allocator,  key->name);
     key->name = NULL;
+    AXIS2_FREE(env->allocator,  key->nonce);
+    key->nonce = NULL;
 
     AXIS2_FREE(env->allocator,  key);
     key = NULL;

@@ -577,7 +577,7 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
                      oxs_buffer_get_data(result_buf, env),
                      "decrypted_session_key",
                      oxs_buffer_get_size(result_buf, env),
-                     OXS_KEY_USAGE_DECRYPT  );
+                     OXS_KEY_USAGE_SESSION  );
     /*Free*/
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;

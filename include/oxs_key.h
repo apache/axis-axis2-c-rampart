@@ -39,16 +39,12 @@ extern "C"
 {
 #endif
 
-    /*Key is for signing*/
-#define OXS_KEY_USAGE_SIGN          0
-    /*Key is for verifying signature*/
-#define OXS_KEY_USAGE_VERIFY        1
-    /*Key is for encrypting */
-#define OXS_KEY_USAGE_ENCRYPT       2
-    /*Key is for decrypting*/
-#define OXS_KEY_USAGE_DECRYPT       3
     /*Key usage is not specified yet*/
-#define OXS_KEY_USAGE_NONE          4
+#define OXS_KEY_USAGE_NONE          0
+    /*Key is a session key */
+#define OXS_KEY_USAGE_SESSION       1
+    /*Key is a derived key */
+#define OXS_KEY_USAGE_DERIVED       2 
 
 #define OXS_KEY_DEFAULT_SIZE        64
 
@@ -77,6 +73,16 @@ extern "C"
         const oxs_key_t *key,
         const axutil_env_t *env);
     /**
+    * Gets the nonce of the key.
+    * @param key oxs_key ptr to key
+    * @param env pointer to environment struct
+    * @return nonce of the key
+    */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    oxs_key_get_nonce(
+        const oxs_key_t *key,
+        const axutil_env_t *env);
+    /**
     * Gets the size of the key.
     * @param key oxs_key ptr to key
     * @param env pointer to environment struct
@@ -97,6 +103,16 @@ extern "C"
         const oxs_key_t *key,
         const axutil_env_t *env);
 
+    /**
+    * Gets the offset of the key.
+    * @param key oxs_key ptr to key
+    * @param env pointer to environment struct
+    * @return offset of the key
+    */
+    AXIS2_EXTERN int AXIS2_CALL
+    oxs_key_get_offset(
+        const oxs_key_t *key,
+        const axutil_env_t *env);
 
     /**
     * Sets the name of the key.
