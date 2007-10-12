@@ -140,9 +140,9 @@ rampart_engine_build_configuration(
                                           "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_engine] Cannot create security policy from policy.");
-			
-			rampart_context_free(rampart_context, env);
-			rampart_context = NULL;
+
+            rampart_context_free(rampart_context, env);
+            rampart_context = NULL;
             return NULL;
         }
 
@@ -156,9 +156,9 @@ rampart_engine_build_configuration(
                                           "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_engine] rampc policies creation failed.");
-			
-			rampart_context_free(rampart_context, env);
-			rampart_context = NULL;
+
+            rampart_context_free(rampart_context, env);
+            rampart_context = NULL;
             return NULL;
         }
     }
@@ -171,8 +171,8 @@ rampart_engine_build_configuration(
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][engine] Conf context is NULL ");
             rampart_context_free(rampart_context, env);
-			rampart_context = NULL;
-			return NULL;
+            rampart_context = NULL;
+            return NULL;
         }
 
         ctx = axis2_conf_ctx_get_base(conf_ctx,env);
@@ -181,8 +181,8 @@ rampart_engine_build_configuration(
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][engine] axis2 context is NULL ");
             rampart_context_free(rampart_context, env);
-			rampart_context = NULL;
-			return NULL;
+            rampart_context = NULL;
+            return NULL;
         }
         property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
                    AXIS2_TRUE, (void *)rampart_context_free, rampart_context);

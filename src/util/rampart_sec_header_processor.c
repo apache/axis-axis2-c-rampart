@@ -437,8 +437,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                         "[rampart][shp] Cannot decrypt the EncryptedKey");
         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                       "Key decryption failed", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
-		oxs_asym_ctx_free(asym_ctx, env);
-		asym_ctx = NULL;
+        oxs_asym_ctx_free(asym_ctx, env);
+        asym_ctx = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -455,8 +455,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                                       "Error in the policy. No summetric algo", RAMPART_FAULT_IN_POLICY, msg_ctx);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][shp] Symetric enc algorithm not specified in policy.");
-		oxs_asym_ctx_free(asym_ctx, env);
-		asym_ctx = NULL;
+        oxs_asym_ctx_free(asym_ctx, env);
+        asym_ctx = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -496,8 +496,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
-			oxs_asym_ctx_free(asym_ctx, env);
-			asym_ctx = NULL;
+            oxs_asym_ctx_free(asym_ctx, env);
+            asym_ctx = NULL;
             return AXIS2_FAILURE;
         }
         /*Create an enc_ctx*/
@@ -510,8 +510,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                             "Cannot find EncryptionMethod Element");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
-			oxs_asym_ctx_free(asym_ctx, env);
-			asym_ctx = NULL;
+            oxs_asym_ctx_free(asym_ctx, env);
+            asym_ctx = NULL;
             return AXIS2_FAILURE;
         }
 
@@ -522,8 +522,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                             "Cannot get the Symmetric Algorithm from Soap message.");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
-			oxs_asym_ctx_free(asym_ctx, env);
-			asym_ctx = NULL;
+            oxs_asym_ctx_free(asym_ctx, env);
+            asym_ctx = NULL;
 
             return AXIS2_FAILURE;
         }
@@ -535,8 +535,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
             rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
                                           "The content is encrypted with the wrong algorithm",
                                           RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
-			oxs_asym_ctx_free(asym_ctx, env);
-			asym_ctx = NULL;
+            oxs_asym_ctx_free(asym_ctx, env);
+            asym_ctx = NULL;
             return AXIS2_FAILURE;
 
         }
@@ -550,8 +550,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
-			oxs_asym_ctx_free(asym_ctx, env);
-			asym_ctx = NULL;
+            oxs_asym_ctx_free(asym_ctx, env);
+            asym_ctx = NULL;
             return AXIS2_FAILURE;
         }
 
@@ -607,11 +607,11 @@ rampart_shp_process_reference_list(
 
     if((!reference_list) || (0 == axutil_array_list_size(reference_list, env)))
     {
-		if (reference_list)
-		{
-			axutil_array_list_free(reference_list, env);
-			reference_list = NULL;
-		}
+        if (reference_list)
+        {
+            axutil_array_list_free(reference_list, env);
+            reference_list = NULL;
+        }
 
         AXIS2_LOG_INFO(env->log,
                        "[rampart][shp] Nothing Encrypted Outside security header");
@@ -644,15 +644,15 @@ rampart_shp_process_reference_list(
                             "[rampart][shp] Node with ID=%s cannot be found", id2);
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
-			axutil_array_list_free(reference_list, env);
-			reference_list = NULL;
-			AXIS2_FREE(env->allocator, id2);
-			id2 = NULL;
+            axutil_array_list_free(reference_list, env);
+            reference_list = NULL;
+            AXIS2_FREE(env->allocator, id2);
+            id2 = NULL;
             return AXIS2_FAILURE;
         }
 
-		AXIS2_FREE(env->allocator, id2);
-		id2 = NULL;
+        AXIS2_FREE(env->allocator, id2);
+        id2 = NULL;
 
         key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node,
                         OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
@@ -681,8 +681,8 @@ rampart_shp_process_reference_list(
                         ref_id = axutil_string_substring_starting_at(axutil_strdup(env, ref), 1);
 
                         encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id, NULL);
-						AXIS2_FREE(env->allocator, ref_id);
-						ref_id = NULL;
+                        AXIS2_FREE(env->allocator, ref_id);
+                        ref_id = NULL;
                         if(encrypted_key_node)
                         {
                             ref_list_node = axiom_node_detach(ref_list_node, env);
@@ -698,8 +698,8 @@ rampart_shp_process_reference_list(
         }
     }
 
-	axutil_array_list_free(reference_list, env);
-	reference_list = NULL;
+    axutil_array_list_free(reference_list, env);
+    reference_list = NULL;
     return status;
 }
 

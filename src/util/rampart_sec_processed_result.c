@@ -72,8 +72,8 @@ rampart_set_security_processed_results_property(const axutil_env_t *env,
     sec_processed_results = axutil_hash_make(env);
 
     sec_processed_results_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
-                   AXIS2_TRUE, (void *)axutil_hash_free, sec_processed_results);
-    
+                                 AXIS2_TRUE, (void *)axutil_hash_free, sec_processed_results);
+
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_SECURITY_PROCESSED_RESULTS, sec_processed_results_prop);
 
     return AXIS2_SUCCESS;

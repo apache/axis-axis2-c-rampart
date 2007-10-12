@@ -247,7 +247,7 @@ rampart_username_token_validate(
 
         return AXIS2_FAILURE;
     }
-    
+
     /*Check: Any USERNAME_TOKEN MUST NOT have more than one PASSWORD*/
     if (1 <  oxs_axiom_get_number_of_children_with_qname(env, ut_node,
             RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, RAMPART_WSSE_XMLNS, RAMPART_WSSE))
@@ -400,8 +400,8 @@ rampart_username_token_validate(
      * If authentication module is defined use it. 
      * Else try the usual approach to get password from the callback and compare
      **/
-    
-    
+
+
     /*In both authentication and password callback methods we should first try to
      *use function pointers. */
 
@@ -454,7 +454,7 @@ rampart_username_token_validate(
             }
         }
     }
-    
+
     authn_provider = rampart_context_get_authn_provider(rampart_context, env);
     if(authn_provider)
     {
@@ -520,9 +520,9 @@ rampart_username_token_validate(
                 password_from_svr = rampart_callback_password(env, password_callback, username);
             }
         }else{
-            
+
             AXIS2_LOG_INFO(env->log,
-                       "[rampart][rampart_usernametoken] Using the password is in the context");
+                           "[rampart][rampart_usernametoken] Using the password is in the context");
         }
 
         if (!password_from_svr)

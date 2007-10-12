@@ -28,7 +28,9 @@ struct oxs_key_t
 {
     oxs_buffer_t *buf;
     axis2_char_t *name;
+    axis2_char_t *nonce;
     int           usage;
+    int           offset;
 };
 
 /******************** end of function headers *****************/

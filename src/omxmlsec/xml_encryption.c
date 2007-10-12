@@ -497,8 +497,10 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
 
     cd_node = oxs_token_build_cipher_data_element(env, encrypted_key_node);
     cv_node = oxs_token_build_cipher_value_element(env, cd_node,  encrypted_key_data);
-    oxs_token_build_data_reference_list(env, encrypted_key_node, id_list);
-
+    /*If and only if the id_list the present, we create the reference list*/
+    if(id_list){
+        oxs_token_build_data_reference_list(env, encrypted_key_node, id_list);
+    }
     /*Free*/
     oxs_buffer_free(result, env);
     result = NULL;

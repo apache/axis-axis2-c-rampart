@@ -182,7 +182,7 @@ rampart_sig_sign_message(
     {
         AXIS2_LOG_INFO(env->log,
                        "[rampart][rampart_signature] No parts specified or specified parts can't be found for Signature.");
-		axutil_array_list_free(nodes_to_sign, env);
+        axutil_array_list_free(nodes_to_sign, env);
         nodes_to_sign = NULL;
         return AXIS2_SUCCESS;
     }
@@ -197,8 +197,8 @@ rampart_sig_sign_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_signature] Required timestamp cannot be found.");
-			axutil_array_list_free(nodes_to_sign, env);
-			nodes_to_sign = NULL;
+            axutil_array_list_free(nodes_to_sign, env);
+            nodes_to_sign = NULL;
             return AXIS2_FAILURE;
         }
         axutil_array_list_add(nodes_to_sign, env, ts_node);
@@ -215,8 +215,8 @@ rampart_sig_sign_message(
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_signature] Required username token cannot be found.");
-				axutil_array_list_free(nodes_to_sign, env);
-				nodes_to_sign = NULL;
+                axutil_array_list_free(nodes_to_sign, env);
+                nodes_to_sign = NULL;
                 return AXIS2_FAILURE;
             }
             axutil_array_list_add(nodes_to_sign, env, ut_node);
@@ -230,8 +230,8 @@ rampart_sig_sign_message(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] Signature Token is not specified");
-		axutil_array_list_free(nodes_to_sign, env);
-		nodes_to_sign = NULL;
+        axutil_array_list_free(nodes_to_sign, env);
+        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }
     token_type = rp_property_get_type(token, env);
@@ -240,8 +240,8 @@ rampart_sig_sign_message(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] Token type %d not supported", token_type);
-		axutil_array_list_free(nodes_to_sign, env);
-		nodes_to_sign = NULL;
+        axutil_array_list_free(nodes_to_sign, env);
+        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -249,8 +249,8 @@ rampart_sig_sign_message(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] We still do not support derived keys");
-		axutil_array_list_free(nodes_to_sign, env);
-		nodes_to_sign = NULL;
+        axutil_array_list_free(nodes_to_sign, env);
+        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -267,8 +267,8 @@ rampart_sig_sign_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_signature] Cannot get certificate");
-			axutil_array_list_free(nodes_to_sign, env);
-			nodes_to_sign = NULL;
+            axutil_array_list_free(nodes_to_sign, env);
+            nodes_to_sign = NULL;
             return AXIS2_FAILURE;
         }
         /*This flag will be useful when creating key Info element.*/
@@ -281,8 +281,8 @@ rampart_sig_sign_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_signature] Certificate data cannot be loaded from the cert.");
-			axutil_array_list_free(nodes_to_sign, env);
-			nodes_to_sign = NULL;
+            axutil_array_list_free(nodes_to_sign, env);
+            nodes_to_sign = NULL;
             return AXIS2_FAILURE;
         }
 
@@ -292,8 +292,8 @@ rampart_sig_sign_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_signature] Binary Security Token creation failed.");
-			axutil_array_list_free(nodes_to_sign, env);
-			nodes_to_sign = NULL;
+            axutil_array_list_free(nodes_to_sign, env);
+            nodes_to_sign = NULL;
             return AXIS2_FAILURE;
         }
         oxs_x509_cert_free(cert, env);
@@ -309,8 +309,8 @@ rampart_sig_sign_message(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] Cannot attach the token.");
-		axutil_array_list_free(nodes_to_sign, env);
-		nodes_to_sign = NULL;
+        axutil_array_list_free(nodes_to_sign, env);
+        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -347,13 +347,13 @@ rampart_sig_sign_message(
             oxs_sign_part_set_node(sign_part, env, node_to_sign);
             oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
             axutil_array_list_add(sign_parts, env, sign_part);
-			AXIS2_FREE(env->allocator, id);
-			id = NULL;
+            AXIS2_FREE(env->allocator, id);
+            id = NULL;
         }
     }
 
-	axutil_array_list_free(nodes_to_sign, env);
-	nodes_to_sign = NULL;
+    axutil_array_list_free(nodes_to_sign, env);
+    nodes_to_sign = NULL;
 
     sign_ctx = oxs_sign_ctx_create(env);
 
@@ -502,8 +502,8 @@ rampart_sig_sign_message(
         cert_id_ref = axutil_stracat(env, "#",cert_id);
         reference_node = oxs_token_build_reference_element(
                              env, str_node, cert_id_ref, OXS_VALUE_X509V3);
-		AXIS2_FREE(env->allocator, cert_id_ref);
-		cert_id_ref = NULL;
+        AXIS2_FREE(env->allocator, cert_id_ref);
+        cert_id_ref = NULL;
         if(!reference_node)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
