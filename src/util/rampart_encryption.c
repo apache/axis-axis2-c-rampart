@@ -73,8 +73,10 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     oxs_key_t *session_key = NULL;
     axutil_array_list_t *nodes_to_encrypt = NULL;
     axutil_array_list_t *id_list = NULL;
+    axutil_array_list_t *dk_list = NULL;
     axis2_char_t *enc_sym_algo = NULL;
     int i = 0;
+    int j = 0;
 
     /*Get nodes to be encrypted*/
     nodes_to_encrypt = axutil_array_list_create(env, 0);
@@ -112,6 +114,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     }
 
     id_list = axutil_array_list_create(env, 5);
+    dk_list = axutil_array_list_create(env, 5);
     /* For each and every encryption part.
         1. Derive a new key
         2. Encrypt using that key       
@@ -169,9 +172,22 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         oxs_ctx_free(enc_ctx, env);
         enc_ctx = NULL;
         
-        /*Free derived key*/
-        oxs_key_free(derived_key, env);
-    }/*End of for loop. Interating nodes_to_encrypt list*/
+    }/*End of for loop. Iterating nodes_to_encrypt list*/
+    
+    /*Free node list*/
+    axutil_array_list_free(nodes_to_encrypt, env);
+    nodes_to_encrypt = NULL;
+
+    /*TODO Encrypt the session key using the Public Key of the recipient*/
+
+    /*Add used <wsc:DerivedKeyToken> elements to the header*/
+    for(j=0 ; j < axutil_array_list_size(dk_list, env); j++){
+        oxs_key_t *dk = NULL;
+        
+        dk = (oxs_key_t *)axutil_array_list_get(dk_list, env, j);
+        /*TODO build the <wsc:DerivedKeyToken> element*/
+
+    }/*End of For loop of dk_list iteration*/
     return status;
 }
 

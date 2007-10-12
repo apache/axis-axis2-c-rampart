@@ -68,7 +68,7 @@ oxs_buffer_create(const axutil_env_t *env)
 
 }
 
-oxs_buffer_t *AXIS2_CALL
+AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
 oxs_buffer_dup(oxs_buffer_t *buffer, const axutil_env_t *env)
 {
     oxs_buffer_t *buf = NULL;
@@ -80,7 +80,7 @@ oxs_buffer_dup(oxs_buffer_t *buffer, const axutil_env_t *env)
     return buf;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_free(
     oxs_buffer_t *buffer,
     const axutil_env_t *env
@@ -100,7 +100,7 @@ oxs_buffer_free(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_remove_head(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -141,7 +141,7 @@ oxs_buffer_remove_head(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_remove_tail(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -173,7 +173,7 @@ oxs_buffer_remove_tail(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_populate(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -200,7 +200,7 @@ oxs_buffer_populate(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_append(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -227,7 +227,7 @@ oxs_buffer_append(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_prepend(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -256,7 +256,7 @@ oxs_buffer_prepend(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_read_file(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -307,7 +307,7 @@ oxs_buffer_read_file(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_set_size(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -332,7 +332,7 @@ oxs_buffer_set_size(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_buffer_set_max_size(
     oxs_buffer_t *buffer,
     const axutil_env_t *env,
@@ -410,7 +410,7 @@ oxs_buffer_set_max_size(
     return AXIS2_SUCCESS;
 }
 
-unsigned char* AXIS2_CALL
+AXIS2_EXTERN unsigned char* AXIS2_CALL
 oxs_buffer_get_data(
     oxs_buffer_t *buffer,
     const axutil_env_t *env
@@ -421,7 +421,7 @@ oxs_buffer_get_data(
     return buffer->data;
 }
 
-int AXIS2_CALL
+AXIS2_EXTERN int AXIS2_CALL
 oxs_buffer_get_size(
     oxs_buffer_t *buffer,
     const axutil_env_t *env
@@ -432,7 +432,7 @@ oxs_buffer_get_size(
     return buffer->size;
 }
 
-int AXIS2_CALL
+AXIS2_EXTERN int AXIS2_CALL
 oxs_buffer_get_max_size(
     oxs_buffer_t *buffer,
     const axutil_env_t *env

@@ -64,7 +64,7 @@ extern "C"
     *@param env pointer to environment struct
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_free(
         oxs_buffer_t *buffer,
         const axutil_env_t *env
@@ -76,7 +76,7 @@ extern "C"
     *@param size number of characters to be removed
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_remove_head(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -89,7 +89,7 @@ extern "C"
     *@param size number of characters to be removed		
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_remove_tail(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -103,7 +103,7 @@ extern "C"
     *@size the effective length of data
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_populate(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -118,7 +118,7 @@ extern "C"
     *@size the effective length of data
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_append(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -133,7 +133,7 @@ extern "C"
     *@size the effective length of data
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_prepend(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -147,7 +147,7 @@ extern "C"
     *@filename The name of the file
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_read_file(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -160,7 +160,7 @@ extern "C"
     *@size the value of the size
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_set_size(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -173,7 +173,7 @@ extern "C"
     *@size the maximum size of the buffer
     *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
-    axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_buffer_set_max_size(
         oxs_buffer_t *buffer,
         const axutil_env_t *env,
@@ -185,7 +185,7 @@ extern "C"
     *@env pointer to environment struct
     *@return data in the buffer
     */
-    unsigned char* AXIS2_CALL
+    AXIS2_EXTERN unsigned char* AXIS2_CALL
     oxs_buffer_get_data(
         oxs_buffer_t *buffer,
         const axutil_env_t *env
@@ -196,7 +196,7 @@ extern "C"
     *@env pointer to environment struct
     *@return the effective length of the buffer as int
     */
-    int AXIS2_CALL
+    AXIS2_EXTERN int AXIS2_CALL
     oxs_buffer_get_size(
         oxs_buffer_t *buffer,
         const axutil_env_t *env
@@ -207,13 +207,13 @@ extern "C"
     *@env pointer to environment struct
     *@return the maximum size of the buffer
     */
-    int AXIS2_CALL
+    AXIS2_EXTERN int AXIS2_CALL
     oxs_buffer_get_max_size(
         oxs_buffer_t *buffer,
         const axutil_env_t *env
     );
 
-    oxs_buffer_t *AXIS2_CALL
+    AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
     oxs_buffer_dup(oxs_buffer_t *buffer, const axutil_env_t *env);
 
     AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
