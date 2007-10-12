@@ -34,6 +34,149 @@
 /*Private functions*/
 
 axis2_status_t AXIS2_CALL
+rampart_enc_encrypt_session_key(const axutil_env_t *env,
+    oxs_key_t *session_key,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node,
+    axutil_array_list_t *id_list)
+{
+    oxs_asym_ctx_t *asym_ctx = NULL;	
+    axis2_char_t *enc_asym_algo = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
+    axis2_bool_t server_side = AXIS2_FALSE;
+    rp_property_t *token = NULL;
+    rp_property_type_t token_type;
+    rampart_callback_t *password_callback = NULL;
+    password_callback_fn password_function = NULL;
+    axis2_char_t *eki = NULL;
+    void *key_buf = NULL;
+    void *param = NULL;
+    axis2_char_t *certificate_file = NULL;
+    axis2_char_t *password = NULL;
+    axis2_char_t *enc_user = NULL;
+    token = rampart_context_get_token(rampart_context, env,
+                                      AXIS2_TRUE, server_side, AXIS2_FALSE);
+    token_type = rp_property_get_type(token, env);
+
+    if(!rampart_context_is_token_type_supported(token_type, env))
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_encryption] Specified token type not supported.");
+        return AXIS2_FAILURE;
+    }
+                                       
+    /*Get the asymmetric key encryption algorithm*/
+    enc_asym_algo = rampart_context_get_enc_asym_algo(rampart_context, env);
+
+    /*Get encryption key identifier*/
+    /*First we should check whether we include the token in the
+     *message.*/
+
+    if(rampart_context_is_token_include(rampart_context,
+                                        token, token_type, server_side, AXIS2_FALSE, env))
+    {
+        eki = RAMPART_STR_DIRECT_REFERENCE;
+    }
+    else
+    {
+        eki = rampart_context_get_key_identifier(rampart_context, token, env);
+    }
+    if(!eki)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_encryption] No mechanism for attaching the certificate info.");
+        return AXIS2_FAILURE;
+    }
+
+    /*Create asymmetric encryption context*/
+    asym_ctx = oxs_asym_ctx_create(env);
+    oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
+
+    /*First check whether the public key is set*/
+    key_buf = rampart_context_get_receiver_certificate(rampart_context, env);
+    if(key_buf)
+    {
+        axis2_key_type_t type = 0;
+        type = rampart_context_get_receiver_certificate_type(rampart_context, env);
+        if(type == AXIS2_KEY_TYPE_PEM)
+        {
+            oxs_asym_ctx_set_format(asym_ctx, env, OXS_ASYM_CTX_FORMAT_PEM);
+            oxs_asym_ctx_set_pem_buf(asym_ctx, env, (axis2_char_t *)key_buf);
+        }
+    }
+
+    /*Buffer is null load from the file*/
+    else
+    {
+        certificate_file = rampart_context_get_receiver_certificate_file(
+                               rampart_context, env);
+        oxs_asym_ctx_set_file_name(asym_ctx, env, certificate_file);
+        oxs_asym_ctx_set_format(asym_ctx, env,
+                                oxs_util_get_format_by_file_extension(env, certificate_file));
+
+        /*Get the password to retrieve the key from key store*/
+        password = rampart_context_get_prv_key_password(rampart_context, env);
+
+        if(!password)
+        {
+            enc_user = rampart_context_get_encryption_user(rampart_context, env);
+
+            if(!enc_user)
+            {
+                enc_user = rampart_context_get_user(rampart_context, env);
+            }
+
+            if(enc_user)
+            {
+                password_function = rampart_context_get_pwcb_function(rampart_context, env);
+                if(password_function)
+                {
+                    password = (*password_function)(env, enc_user, param);
+                }
+
+                else
+                {
+                    password_callback = rampart_context_get_password_callback
+                                        (rampart_context, env);
+                    if(!password_callback)
+                    {
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                        "[rampart][rampart_encryption] Password call back module is not loaded.");
+                        return AXIS2_FAILURE;
+                    }
+                    password = rampart_callback_password(env, password_callback, enc_user);
+                    if(password)
+                    {
+                        oxs_asym_ctx_set_password(asym_ctx, env, password);
+                    }
+                }
+            }
+        }
+    }
+    oxs_asym_ctx_set_operation(asym_ctx, env,
+                               OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
+    oxs_asym_ctx_set_st_ref_pattern(asym_ctx, env, eki);
+
+    /*Encrypt the session key*/
+    status = oxs_xml_enc_encrypt_key(env, asym_ctx,
+                                     sec_node, session_key, id_list);
+    oxs_asym_ctx_free(asym_ctx, env);
+    asym_ctx = NULL;
+    
+    if(AXIS2_FAILURE == status)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_encryption] Session key encryption failed.");
+        return AXIS2_FAILURE;
+    }else{
+	    return AXIS2_SUCCESS;
+    }
+
+}
+
+axis2_status_t AXIS2_CALL
 rampart_enc_get_nodes_to_encrypt(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
@@ -204,20 +347,10 @@ rampart_enc_encrypt_message(
     axutil_array_list_t *id_list = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *enc_sym_algo = NULL;
-    axis2_char_t *enc_asym_algo = NULL;
-    axis2_char_t *eki = NULL;
-    axis2_char_t *certificate_file = NULL;
-    axis2_char_t *password = NULL;
     oxs_key_t *session_key = NULL;
-    oxs_asym_ctx_t *asym_ctx = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_type_t token_type;
     rp_property_t *token = NULL;
-    axis2_char_t *enc_user = NULL;
-    rampart_callback_t *password_callback = NULL;
-    password_callback_fn password_function = NULL;
-    void *param = NULL;
-    void *key_buf = NULL;
     int i = 0;
     axis2_bool_t signature_protection = AXIS2_FALSE;
     axiom_node_t *sig_node = NULL;
@@ -376,108 +509,11 @@ rampart_enc_encrypt_message(
     axutil_array_list_free(nodes_to_encrypt, env);
     nodes_to_encrypt = NULL;
 
-    /*Get the asymmetric key encryption algorithm*/
-    enc_asym_algo = rampart_context_get_enc_asym_algo(rampart_context, env);
-
-    /*Get encryption key identifier*/
-    /*First we should check whether we include the token in the
-     *message.*/
-
-    if(rampart_context_is_token_include(rampart_context,
-                                        token, token_type, server_side, AXIS2_FALSE, env))
-    {
-        eki = RAMPART_STR_DIRECT_REFERENCE;
-    }
-    else
-    {
-        eki = rampart_context_get_key_identifier(rampart_context, token, env);
-    }
-    if(!eki)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] No mechanism for attaching the certificate info.");
+    /*We need to encrypt the session key.*/
+    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, id_list);
+    if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
-
-    /*Create asymmetric encryption context*/
-    asym_ctx = oxs_asym_ctx_create(env);
-    oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
-
-    /*First check whether the public key is set*/
-    key_buf = rampart_context_get_receiver_certificate(rampart_context, env);
-    if(key_buf)
-    {
-        axis2_key_type_t type = 0;
-        type = rampart_context_get_receiver_certificate_type(rampart_context, env);
-        if(type == AXIS2_KEY_TYPE_PEM)
-        {
-            oxs_asym_ctx_set_format(asym_ctx, env, OXS_ASYM_CTX_FORMAT_PEM);
-            oxs_asym_ctx_set_pem_buf(asym_ctx, env, (axis2_char_t *)key_buf);
-        }
-    }
-
-    /*Buffer is null load from the file*/
-    else
-    {
-        certificate_file = rampart_context_get_receiver_certificate_file(
-                               rampart_context, env);
-        oxs_asym_ctx_set_file_name(asym_ctx, env, certificate_file);
-        oxs_asym_ctx_set_format(asym_ctx, env,
-                                oxs_util_get_format_by_file_extension(env, certificate_file));
-
-        /*Get the password to retrieve the key from key store*/
-        password = rampart_context_get_prv_key_password(rampart_context, env);
-
-        if(!password)
-        {
-            enc_user = rampart_context_get_encryption_user(rampart_context, env);
-
-            if(!enc_user)
-            {
-                enc_user = rampart_context_get_user(rampart_context, env);
-            }
-
-            if(enc_user)
-            {
-                password_function = rampart_context_get_pwcb_function(rampart_context, env);
-                if(password_function)
-                {
-                    password = (*password_function)(env, enc_user, param);
-                }
-
-                else
-                {
-                    password_callback = rampart_context_get_password_callback
-                                        (rampart_context, env);
-                    if(!password_callback)
-                    {
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                        "[rampart][rampart_encryption] Password call back module is not loaded.");
-                        return AXIS2_FAILURE;
-                    }
-                    password = rampart_callback_password(env, password_callback, enc_user);
-                    if(password)
-                    {
-                        oxs_asym_ctx_set_password(asym_ctx, env, password);
-                    }
-                }
-            }
-        }
-    }
-    oxs_asym_ctx_set_operation(asym_ctx, env,
-                               OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
-    oxs_asym_ctx_set_st_ref_pattern(asym_ctx, env, eki);
-
-    /*Encrypt the session key*/
-    status = oxs_xml_enc_encrypt_key(env, asym_ctx,
-                                     sec_node, session_key, id_list);
-    if(AXIS2_FAILURE == status)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] Session key encryption failed.");
-        return AXIS2_FAILURE;
-    }
-
     /*Free id_list*/
     if(id_list)
     {
@@ -497,8 +533,6 @@ rampart_enc_encrypt_message(
     }
 
 
-    oxs_asym_ctx_free(asym_ctx, env);
-    asym_ctx = NULL;
 
     oxs_key_free(session_key, env);
     session_key = NULL;
