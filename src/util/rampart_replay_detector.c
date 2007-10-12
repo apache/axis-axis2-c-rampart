@@ -260,6 +260,14 @@ rampart_replay_detector_with_linked_list(const axutil_env_t *env,
     const axis2_char_t *addr_msg_id = NULL;
     int max_rcds = RAMPART_RD_DEF_MAX_RCDS;
     axis2_status_t status = AXIS2_FAILURE;
+	void* pool = NULL;
+	
+	/* since replay details have to be stored until the application finished, 
+	 * they have to be created in golbal pool. If those are created in msg's pool, 
+	 * then it will be deleted after the request is served. (specially when using 
+	 * with apache, current_pool will denote the message's pool) */
+	pool = env->allocator->current_pool;
+	axutil_allocator_switch_to_global_pool(env->allocator);
 
     /* By using just Timestamps we dont need addressing. But there is a chance that
      * two messages might generated exactly at the same time*/
@@ -284,6 +292,7 @@ rampart_replay_detector_with_linked_list(const axutil_env_t *env,
     ll = rampart_replay_detector_get_ll_db(env, msg_ctx);
     if(!ll){
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the linked-list for replay detection from msg_ctx");
+		env->allocator->current_pool = pool;
         return AXIS2_FAILURE;
     }else{
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_linked_list_size(ll, env));
@@ -303,6 +312,7 @@ rampart_replay_detector_with_linked_list(const axutil_env_t *env,
         if(AXIS2_TRUE == rampart_replay_detector_linked_list_contains(ll, env, (void*)msg_id)){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] For ID=%s, a replay detected", msg_id);
             /*printf("[rampart][rrd] For ID=%s, a replay detected", msg_id);*/
+			env->allocator->current_pool = pool;
             return AXIS2_FAILURE;
         }
 
@@ -318,6 +328,7 @@ rampart_replay_detector_with_linked_list(const axutil_env_t *env,
 
         /*Add current record*/
         status = axutil_linked_list_add(ll, env, (void*)axutil_strdup(env,msg_id));
+		env->allocator->current_pool = pool;
         if(AXIS2_SUCCESS == status){
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Adding record  %s\n", msg_id );
             /*printf("[rampart][rrd] Adding record  %s\n", msg_id );*/
