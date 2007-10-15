@@ -38,7 +38,7 @@ AXIS2_MODS = $(AXIS2_BIN_DIR)\modules
 ##################### compiler options
 
 CC = @cl.exe 
-CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"  \
+CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"  $(CRUNTIME) \
 	 /D "AXIS2_SVR_MULTI_THREADED" /w /nologo $(AXIS2_INCLUDE_PATH) 
 
 ################### linker options
@@ -59,9 +59,9 @@ LIBS = $(LIBS) libeay32MT.lib ssleay32MT.lib
 
 !if "$(DEBUG)" == "1"
 CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7
-LDFLAGS = $(LDFLAGS) /DEBUG /NODEFAULTLIB:LIBCMTD.lib 
+LDFLAGS = $(LDFLAGS) /DEBUG
 !else
-CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 /MT
+CFLAGS = $(CFLAGS) /D "NDEBUG" /O2
 LDFLAGS = $(LDFLAGS)
 !endif
 
