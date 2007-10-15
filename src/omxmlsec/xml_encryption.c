@@ -492,9 +492,9 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
         status = oxs_xml_enc_populate_stref_with_bst(env, asym_ctx, stref_node, parent);
     }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_KEY_IDENTIFIER)){
         status = oxs_xml_enc_populate_stref_with_key_identifier(env, asym_ctx, stref_node);
+    }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_THUMB_PRINT)){
+        /*TODO: Need to support Thumbprint Ref*/
     }
-
-
     cd_node = oxs_token_build_cipher_data_element(env, encrypted_key_node);
     cv_node = oxs_token_build_cipher_value_element(env, cd_node,  encrypted_key_data);
     /*If and only if the id_list the present, we create the reference list*/
