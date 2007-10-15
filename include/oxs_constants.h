@@ -203,6 +203,12 @@ extern "C"
 #define OXS_HREF_DSA_SHA1          "http://www.w3.org/2000/09/xmldsig#dsa-sha1"
 
     /****************************************************************
+       HMAC
+     ****************************************************************/
+#define OXS_NAME_HMAC_SHA1      "HmacSha1"
+#define OXS_HREF_HMAC_SHA1    "http://www.w3.org/2000/09/xmldsig#hmac-sha1"
+
+    /****************************************************************
        EncryptedKey
     ****************************************************************/
 #define OXS_NAME_ENCRYPTED_KEY         "enc-key"
