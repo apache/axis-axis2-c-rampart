@@ -47,23 +47,29 @@
 static axis2_status_t
 oxs_xml_enc_populate_stref_with_key_identifier(const axutil_env_t *env,
         oxs_asym_ctx_t *asym_ctx,
-        axiom_node_t *stref_node)
+        axiom_node_t *stref_node, 
+        axis2_bool_t is_thumbprint)
 {
     axiom_node_t *key_identifier_node = NULL;
     axis2_char_t *key_identifier = NULL;
+    axis2_char_t *val_type = NULL;
     oxs_x509_cert_t *cert = NULL;
 
     cert = oxs_asym_ctx_get_certificate(asym_ctx, env);
-    key_identifier = oxs_x509_cert_get_key_identifier(cert, env);
+    if(is_thumbprint){
+        key_identifier = oxs_x509_cert_get_fingerprint(cert, env);
+        val_type = OXS_X509_TUMBP_PRINT_SHA1;
+    }else{
+        key_identifier = oxs_x509_cert_get_key_identifier(cert, env);
+        val_type = OXS_X509_SUBJ_KI;
+    }
     if(!key_identifier){
         return AXIS2_FAILURE;
     }
-
     /*Build KeyIdentifier node*/
     key_identifier_node = oxs_token_build_key_identifier_element(
                               env, stref_node, OXS_ENCODING_BASE64BINARY,
-                              OXS_X509_SUBJ_KI, key_identifier);
-
+                              val_type, key_identifier);
     return AXIS2_SUCCESS;
 }
 
@@ -491,9 +497,10 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
     }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_DIRECT_REFERENCE)){
         status = oxs_xml_enc_populate_stref_with_bst(env, asym_ctx, stref_node, parent);
     }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_KEY_IDENTIFIER)){
-        status = oxs_xml_enc_populate_stref_with_key_identifier(env, asym_ctx, stref_node);
+        status = oxs_xml_enc_populate_stref_with_key_identifier(env, asym_ctx, stref_node, AXIS2_FALSE);
     }else if(0 == axutil_strcmp(st_ref_pattern, OXS_STR_THUMB_PRINT)){
         /*TODO: Need to support Thumbprint Ref*/
+        status = oxs_xml_enc_populate_stref_with_key_identifier(env, asym_ctx, stref_node, AXIS2_TRUE);
     }
     cd_node = oxs_token_build_cipher_data_element(env, encrypted_key_node);
     cv_node = oxs_token_build_cipher_value_element(env, cd_node,  encrypted_key_data);

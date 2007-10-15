@@ -362,7 +362,7 @@ extern "C"
 #define OXS_ENCODING_BASE64BINARY "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
 #define OXS_VALUE_X509V3 "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
 #define OXS_X509_SUBJ_KI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier"
-
+#define OXS_X509_TUMBP_PRINT_SHA1 "http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#ThumbprintSHA1"
     /****************************************************************
         ST References
     ****************************************************************/
