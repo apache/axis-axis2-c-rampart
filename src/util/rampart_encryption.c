@@ -30,6 +30,7 @@
 #include <oxs_asym_ctx.h>
 #include <oxs_xml_encryption.h>
 #include <axis2_key_type.h>
+#include <oxs_derivation.h>
 
 /*Private functions*/
 
