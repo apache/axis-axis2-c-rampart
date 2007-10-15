@@ -339,7 +339,6 @@ openssl_x509_get_info(const axutil_env_t *env,
             return NULL;
         }
     }else if(OPENSSL_X509_INFO_FINGER == type){
-        int j = 0;
         const EVP_MD *digest = NULL;
         unsigned char md[EVP_MAX_MD_SIZE];
         unsigned int _n = 0;
@@ -347,12 +346,19 @@ openssl_x509_get_info(const axutil_env_t *env,
         digest = EVP_sha1();/*If we use EVP_md5(); here we can get the digest from md5. */
         if(X509_digest(cert,digest,md,&_n))
         {
-            BIO_printf(out, "%s:", OBJ_nid2sn(EVP_MD_type(digest)));
+            /*BIO_printf(out, "%s:", OBJ_nid2sn(EVP_MD_type(digest)));
+            int j = 0;
             for (j=0; j<(int)_n; j++)
             {
                 BIO_printf (out, "%02X",md[j]);
                 if (j+1 != (int)_n) BIO_printf(out,":");
-            }
+            }*/
+            /*We need to base64 encode the digest value of the finger print*/
+            axis2_char_t *encoded_str = NULL;
+            
+            encoded_str = AXIS2_MALLOC(env->allocator, axutil_base64_encode_len(_n));
+            axutil_base64_encode(encoded_str, (char*)md, SHA_DIGEST_LENGTH);
+            BIO_printf(out, "%s", encoded_str);  
         }
     }else if(OPENSSL_X509_INFO_SIGNATURE == type){
         int i = 0;
