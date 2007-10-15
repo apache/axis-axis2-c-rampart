@@ -50,6 +50,11 @@ oxs_token_build_derived_key_token_element(const axutil_env_t *env,
         return NULL;
     }
 
+    if(algo){
+        algo_att =  axiom_attribute_create(env, OXS_ATTR_ALGORITHM, algo, NULL);
+        ret = axiom_element_add_attribute(derived_key_token_ele, env, algo_att, derived_key_token_node);
+    }
+
     if (!id)
     {
         id = oxs_util_generate_id(env,(axis2_char_t*)OXS_DERIVED_ID);
@@ -57,10 +62,8 @@ oxs_token_build_derived_key_token_element(const axutil_env_t *env,
 
 
     id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id,ns);
-    algo_att =  axiom_attribute_create(env, OXS_ATTR_ALGORITHM, algo, NULL);
 
     ret = axiom_element_add_attribute(derived_key_token_ele, env, id_attr, derived_key_token_node);
-    ret = axiom_element_add_attribute(derived_key_token_ele, env, algo_att, derived_key_token_node);
 
     return derived_key_token_node;
 }

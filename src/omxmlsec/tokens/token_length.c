@@ -23,26 +23,27 @@
 #include <oxs_axiom.h>
 
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+AXIS2_EXTERN int AXIS2_CALL
 oxs_token_get_length_value(const axutil_env_t *env,
                            axiom_node_t *length_node)
 {
     axis2_char_t *value = NULL;
     value = (axis2_char_t*)oxs_axiom_get_node_content(env, length_node);
-    return value;
 
+    return axutil_atoi(value);
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_length_element(const axutil_env_t *env,
                                      axiom_node_t *parent,
-                                     axis2_char_t* length_val
+                                     int length
                                     )
 {
     axiom_node_t *length_node = NULL;
     axiom_element_t *length_ele = NULL;
     axis2_status_t ret;
     axiom_namespace_t *ns_obj = NULL;
+    axis2_char_t *length_val = NULL;
 
     ns_obj = axiom_namespace_create(env, OXS_WSC_NS,
                                     OXS_WSC);
@@ -55,6 +56,11 @@ oxs_token_build_length_element(const axutil_env_t *env,
         return NULL;
     }
 
+    if(length > 0){
+        length_val = (axis2_char_t *) AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * 32);
+        sprintf(length_val, "%d", length );
+    }
+ 
     if (length_val)
     {
         ret  = axiom_element_set_text(length_ele, env, length_val, length_node);

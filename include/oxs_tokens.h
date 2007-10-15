@@ -508,11 +508,11 @@ extern "C"
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_token_build_length_element(const axutil_env_t *env,
                                      axiom_node_t *parent,
-                                     axis2_char_t* length_val);
+                                     int length);
 	/**
 	 * Gets value from <wsc:Length> element
 	 */
-    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    AXIS2_EXTERN int AXIS2_CALL
     oxs_token_get_length_value(const axutil_env_t *env,
                            axiom_node_t *length_node);
     /**
@@ -521,11 +521,11 @@ extern "C"
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_token_build_offset_element(const axutil_env_t *env,
                                      axiom_node_t *parent,
-                                     axis2_char_t* offset_val);
+                                     int offset);
 	/**
 	 * Gets value from <wsc:Offset> element
 	 */
-    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    AXIS2_EXTERN int AXIS2_CALL
     oxs_token_get_offset_value(const axutil_env_t *env,
                            axiom_node_t *offset_node);
     /**

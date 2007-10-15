@@ -304,7 +304,11 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                             parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, enc_data_id );
             status = oxs_xml_enc_encrypt_node(env, enc_ctx,
                                                   node_to_enc, &enc_data_node);
+            /*Add Ids to the list. We will create reference list*/
             axutil_array_list_add(id_list, env, enc_data_id);
+
+            /*Add derived key to the list. We will create tokens*/
+            axutil_array_list_add(dk_list, env, derived_key);
             if(AXIS2_FAILURE == status)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -334,8 +338,11 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         oxs_key_t *dk = NULL;
         
         dk = (oxs_key_t *)axutil_array_list_get(dk_list, env, j);
-        /*TODO build the <wsc:DerivedKeyToken> element*/
         
+        /*TODO build the <wsc:DerivedKeyToken> element*/
+        if(dk){
+            oxs_derivation_build_derived_key_token(env, dk, sec_node, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, "fake_key_id");
+        }
     }/*End of For loop of dk_list iteration*/
     return status;
 }

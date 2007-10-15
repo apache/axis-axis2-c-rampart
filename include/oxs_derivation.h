@@ -39,6 +39,7 @@ extern "C"
 {
 #endif
 
+
     /**
      * Derive Keys 
      * Caller must free memory
@@ -58,7 +59,12 @@ extern "C"
                          oxs_key_t *derived_key
                          );
 
-
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_derivation_build_derived_key_token(const axutil_env_t *env,
+    oxs_key_t *derived_key,
+    axiom_node_t *parent,
+    axis2_char_t *stref_uri,
+    axis2_char_t *stref_val_type);
 
     /** @} */
 #ifdef __cplusplus

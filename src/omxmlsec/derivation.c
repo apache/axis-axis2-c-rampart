@@ -22,6 +22,47 @@
 #include <oxs_error.h>
 #include <oxs_utility.h>
 #include <oxs_asym_ctx.h>
+#include <oxs_tokens.h>
+
+
+AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+oxs_derivation_build_derived_key_token(const axutil_env_t *env,
+    oxs_key_t *derived_key,
+    axiom_node_t *parent,
+    axis2_char_t *stref_uri,
+    axis2_char_t *stref_val_type)
+{
+    axiom_node_t *dk_token = NULL;
+    axiom_node_t *str_token = NULL;
+    axiom_node_t *ref_token = NULL;
+    axiom_node_t *nonce_token = NULL;
+    axiom_node_t *offset_token = NULL;
+    axiom_node_t *length_token = NULL;
+    
+    axis2_char_t *dk_id = NULL;
+    axis2_char_t *nonce = NULL;
+    int offset = 0;
+    int length = 0; 
+
+    dk_token = oxs_token_build_derived_key_token_element(env, parent, dk_id, NULL);
+    str_token = oxs_token_build_security_token_reference_element(env, dk_token); 
+    ref_token = oxs_token_build_reference_element(env, dk_token, stref_uri, stref_val_type);
+
+    /*Create offset*/
+    if(offset > 0){
+        offset_token = oxs_token_build_offset_element(env, dk_token, offset);
+    }
+    /*Create length*/
+    if(length > 0){
+        length_token = oxs_token_build_length_element(env, dk_token, length);
+    }
+    /*Create nonce*/
+    if(nonce){
+        nonce_token = oxs_token_build_nonce_element(env, dk_token, nonce);
+    }
+   
+    return dk_token; 
+}
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_derivation_derive_key(const axutil_env_t *env,

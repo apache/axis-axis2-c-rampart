@@ -374,6 +374,12 @@ extern "C"
 #define OXS_STR_EXTERNAL_URI "ExternalUri"
 #define OXS_STR_ENCRYPTED_KEY "Encryptedkey"
 
+    
+    /****************************************************************
+        WS Security 1.1
+    ****************************************************************/
+#define OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY "http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"
+
     /*************************************************************************/
 
 
