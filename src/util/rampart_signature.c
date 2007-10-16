@@ -37,6 +37,7 @@
 #include <oxs_xml_signature.h>
 #include <axis2_key_type.h>
 #include <rampart_token_builder.h>
+#include <rampart_util.h>
 /*Public functions*/
 
 oxs_x509_cert_t *AXIS2_CALL

@@ -19,6 +19,7 @@
 #include <rampart_constants.h>
 #include <oxs_axiom.h>
 #include <oxs_x509_cert.h>
+#include <rampart_replay_detector.h>
 
 struct rampart_context_t
 {
@@ -49,6 +50,7 @@ struct rampart_context_t
     rp_secpolicy_t *secpolicy;
     rampart_callback_t *password_callback_module;
     rampart_authn_provider_t *authn_provider;
+	rampart_replay_detector_t *replay_detector;
     auth_password_func authenticate_with_password;
     auth_digest_func authenticate_with_digest;
 
@@ -171,6 +173,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->secpolicy = NULL;
     rampart_context->password_callback_module = NULL;
     rampart_context->authn_provider = NULL;
+	rampart_context->replay_detector = NULL;
     rampart_context->authenticate_with_password = NULL;
     rampart_context->authenticate_with_digest = NULL;
     rampart_context->require_ut = AXIS2_FALSE;
@@ -776,6 +779,27 @@ rampart_context_set_authn_provider(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN struct rampart_replay_detector_t *AXIS2_CALL
+rampart_context_get_replay_detector(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    return (void*)rampart_context->replay_detector;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_replay_detector(rampart_context_t *rampart_context,
+                                   const axutil_env_t *env,
+                                   rampart_replay_detector_t *replay_detector)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error,replay_detector,AXIS2_FAILURE);
+
+    rampart_context->replay_detector = replay_detector;
+    return AXIS2_SUCCESS;
+}
 
 AXIS2_EXTERN oxs_key_t *AXIS2_CALL
 rampart_context_get_session_key(
@@ -1504,6 +1528,19 @@ rampart_context_get_authn_module_name(
         return NULL;
 
     return rp_rampart_config_get_authenticate_module(config,env);
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rampart_context_get_replay_detector_name(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_rampart_config_t *config = NULL;
+    config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
+    if(!config)
+        return NULL;
+
+    return rp_rampart_config_get_replay_detector(config,env);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL

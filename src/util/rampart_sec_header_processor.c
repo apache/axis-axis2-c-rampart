@@ -38,6 +38,7 @@
 #include <oxs_sign_ctx.h>
 #include <oxs_xml_signature.h>
 #include <oxs_key_mgr.h>
+#include <rampart_replay_detector.h>
 
 /*Private functions*/
 static axis2_bool_t
@@ -1441,30 +1442,62 @@ rampart_shp_process_message(const axutil_env_t *env,
             }
         }
 
-        if(NULL == rampart_context_get_rd_val(rampart_context, env)){
+        if((NULL == rampart_context_get_rd_val(rampart_context, env)) && (NULL == rampart_context_get_replay_detector(rampart_context, env)))
+		{
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Replay detection is not specified. Nothing to do");
             need_replay_detection = AXIS2_FALSE;
-        }else{
+        }
+		else
+		{
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Checking message for replay.");
             need_replay_detection = AXIS2_TRUE;
         }
-        if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/
-            rampart_is_replayed_fn rd_fn = NULL;
-            /*Is replayed*/
-            rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
-            if(rd_fn){
-                status  = (*rd_fn)(env, msg_ctx, rampart_context);
-                if(status != AXIS2_SUCCESS){
-                    /*Scream .. replayed*/
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Message can be replayed");
-                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
-                    return AXIS2_FAILURE;
-                }else{
-                    AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
-                }
-            }else{
-                AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
-            }
+        if(AXIS2_TRUE == need_replay_detection)
+		{/*TODO Chk for the policy configuration*/
+			rampart_replay_detector_t* replay_detector = (rampart_replay_detector_t*)rampart_context_get_replay_detector(rampart_context, env);
+			if (replay_detector)
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Using replay module.");
+				status = RAMPART_REPLAY_DETECTOR_IS_REPLAYED(replay_detector, env, msg_ctx, rampart_context);
+				if(status != AXIS2_SUCCESS)
+				{
+					/*Scream .. replayed*/
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Message can be replayed");
+					rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
+					return AXIS2_FAILURE;
+				}
+				else
+				{
+					AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
+				}
+			}
+			else
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay module not defined. Using replay function.");
+				rampart_is_replayed_fn rd_fn = NULL;
+				
+				/*Is replayed*/
+				rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
+				if(rd_fn)
+				{
+					status  = (*rd_fn)(env, msg_ctx, rampart_context);
+					if(status != AXIS2_SUCCESS)
+					{
+						/*Scream .. replayed*/
+						AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Message can be replayed");
+						rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
+						return AXIS2_FAILURE;
+					}
+					else
+					{
+						AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
+					}
+				}
+				else
+				{
+					AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
+				}
+			}
         }
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Security header element processing, DONE ");
         /*Do the action accordingly*/
@@ -1505,22 +1538,65 @@ rampart_shp_process_message(const axutil_env_t *env,
             }
         }
 
-        if(AXIS2_TRUE == need_replay_detection){/*TODO Chk for the policy configuration*/
-            rampart_is_replayed_fn rd_fn = NULL;
-            /*Is replayed*/
-            rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
-            if(rd_fn){
-                status  = (*rd_fn)(env, msg_ctx, rampart_context);
-                if(status != AXIS2_SUCCESS){
-                    /*Scream .. replayed*/
-                    return AXIS2_FAILURE;
-                }else{
-                    AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
-                }
-            }else{
-                AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
-            }
+        if((NULL == rampart_context_get_rd_val(rampart_context, env)) && (NULL == rampart_context_get_replay_detector(rampart_context, env)))
+		{
+            AXIS2_LOG_INFO(env->log, "[rampart][shp] Replay detection is not specified. Nothing to do");
+            need_replay_detection = AXIS2_FALSE;
         }
+		else
+		{
+            AXIS2_LOG_INFO(env->log, "[rampart][shp] Checking message for replay.");
+            need_replay_detection = AXIS2_TRUE;
+        }
+
+        if(AXIS2_TRUE == need_replay_detection)
+		{/*TODO Chk for the policy configuration*/
+			rampart_replay_detector_t* replay_detector = (rampart_replay_detector_t*)rampart_context_get_replay_detector(rampart_context, env);
+			if (replay_detector)
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Using replay module.");
+				status = RAMPART_REPLAY_DETECTOR_IS_REPLAYED(replay_detector, env, msg_ctx, rampart_context);
+				if(status != AXIS2_SUCCESS)
+				{
+					/*Scream .. replayed*/
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Message can be replayed");
+					rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
+					return AXIS2_FAILURE;
+				}
+				else
+				{
+					AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
+				}
+			}
+			else
+			{
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay module not defined. Using replay function.");
+				rampart_is_replayed_fn rd_fn = NULL;
+				
+				/*Is replayed*/
+				rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
+				if(rd_fn)
+				{
+					status  = (*rd_fn)(env, msg_ctx, rampart_context);
+					if(status != AXIS2_SUCCESS)
+					{
+						/*Scream .. replayed*/
+						AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Message can be replayed");
+						rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
+						return AXIS2_FAILURE;
+					}
+					else
+					{
+						AXIS2_LOG_INFO(env->log, "[rampart][shp] Checked message for replays. Not a replay.");
+					}
+				}
+				else
+				{
+					AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
+				}
+			}
+		}
+
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Security header element processing, DONE ");
         /*Do the action accordingly*/
         return AXIS2_SUCCESS;

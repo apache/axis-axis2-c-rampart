@@ -31,7 +31,6 @@
 #include <rp_includes.h>
 #include <rp_secpolicy.h>
 #include <rampart_authn_provider.h>
-#include <rampart_util.h>
 #include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_callback.h>
@@ -339,6 +338,11 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN struct rampart_replay_detector_t *AXIS2_CALL
+    rampart_context_get_replay_detector(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_authn_provider(rampart_context_t *rampart_context,
                                        const axutil_env_t *env,
@@ -376,6 +380,11 @@ extern "C"
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_authn_module_name(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_replay_detector_name(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 

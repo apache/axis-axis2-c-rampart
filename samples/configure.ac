@@ -108,6 +108,7 @@ AC_CONFIG_FILES([Makefile \
         callback/Makefile \
         callback/htpasswd_callback/Makefile \
         authn_provider/Makefile \
+		replay_detector/Makefile \
         credential_provider/Makefile \
         server/Makefile \
         server/sec_echo/Makefile \

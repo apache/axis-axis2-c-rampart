@@ -58,13 +58,10 @@ extern "C"
     struct rampart_replay_detector_ops
     {
         axis2_status_t (AXIS2_CALL*
-                        load)(rampart_replay_detector_t *replay_detector,
-                              const axutil_env_t *env);
-
-        axis2_status_t (AXIS2_CALL*
                         is_replayed)(rampart_replay_detector_t *rrd,
                                      const axutil_env_t* env,
-                                     axis2_msg_ctx_t *msg_ctx);
+                                     axis2_msg_ctx_t *msg_ctx,
+									 rampart_context_t *rampart_context);
 
         axis2_status_t (AXIS2_CALL*
                         free)(rampart_replay_detector_t *rrd,
@@ -75,6 +72,7 @@ extern "C"
     struct rampart_replay_detector
     {
         rampart_replay_detector_ops_t *ops;
+		axutil_param_t *param;
     };
 
     /*The default impl for RRD*/
@@ -101,12 +99,19 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_replay_detector_final_cleanup(const axutil_env_t *env,
                                           axis2_msg_ctx_t* msg_ctx);
-    /*************************** Function macros **********************************/
-#define RAMPART_REPLAY_DETECTOR_LOAD(replay_detector, env) \
-      ((replay_detector)->ops->load(replay_detector, env))
 
-#define RAMPART_REPLAY_DETECTOR_IS_REPLAYED(replay_detector, env, msg_ctx) \
-      ((replay_detector)->ops->replay_detector_is_replayed(replay_detector, env, msg_ctx))
+	AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+	rampart_replay_detector_linked_list_contains(axutil_linked_list_t *linked_list,
+												const axutil_env_t *env,
+												axis2_char_t *id);
+
+	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+	rampart_replay_detector_get_ts(const axutil_env_t *env,
+									axis2_msg_ctx_t* msg_ctx);
+
+    /*************************** Function macros **********************************/
+#define RAMPART_REPLAY_DETECTOR_IS_REPLAYED(replay_detector, env, msg_ctx, rampart_context) \
+      ((replay_detector)->ops->is_replayed(replay_detector, env, msg_ctx, rampart_context))
 
 #define RAMPART_REPLAY_DETECTOR_FREE(replay_detector, env) \
         ((replay_detector)->ops->free(replay_detector, env))

@@ -30,6 +30,7 @@
 #include <rampart_constants.h>
 #include <rampart_callback.h>
 #include <rampart_credentials.h>
+#include <rampart_replay_detector.h>
 
 /*Calculate the hash of concatenated string of
  * nonce, created and the password.
@@ -124,6 +125,25 @@ rampart_load_auth_module(const axutil_env_t *env,
     return authp;
 }
 
+AXIS2_EXTERN rampart_replay_detector_t* AXIS2_CALL
+rampart_load_replay_detector(const axutil_env_t *env,
+                         axis2_char_t *replay_detector_name)
+{
+    rampart_replay_detector_t *rd = NULL;
+    axutil_param_t *param = NULL;
+
+    rd = (rampart_replay_detector_t*)rampart_load_module(env, replay_detector_name, &param);
+    if (!rd)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the replay detection  module %s. ERROR", replay_detector_name);
+        return AXIS2_FAILURE;
+    }
+    if(param){
+        rd->param = param;
+    }
+
+    return rd;
+}
 
 AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
 rampart_load_pwcb_module(const axutil_env_t *env,

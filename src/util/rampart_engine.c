@@ -30,7 +30,6 @@
 #include <rampart_util.h>
 #include <rampart_constants.h>
 #include <rampart_callback.h>
-#include <rampart_replay_detector.h>
 #include <axis2_msg.h>
 #include <axis2_conf_ctx.h>
 #include <rampart_handler_util.h>
@@ -190,7 +189,8 @@ rampart_engine_build_configuration(
     }
     else
     { /*Server side only*/
-        /*We set our default impl of replay detection function*/
+        /*We set our default impl of replay detection function. if the module is not set, then 
+		 * this function will be used*/
         if(is_inflow)
         {
             rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list/*rampart_replay_detector_default*/);
@@ -287,8 +287,10 @@ set_rampart_user_properties(
 
     rampart_callback_t* password_callback_module = NULL;
     rampart_authn_provider_t *authn_provider = NULL;
+	rampart_replay_detector_t *replay_detector = NULL;
     axis2_char_t *pwcb_module_name = NULL;
     axis2_char_t *authn_provider_name = NULL;
+	axis2_char_t *replay_detector_name = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
 
     status = rampart_context_set_user_from_file(rampart_context,env);
@@ -330,6 +332,15 @@ set_rampart_user_properties(
         authn_provider = rampart_load_auth_module(env,authn_provider_name);
         if(authn_provider)
             rampart_context_set_authn_provider(rampart_context,env,authn_provider);
+    }
+
+    replay_detector_name = rampart_context_get_replay_detector_name(rampart_context,env);
+
+    if(replay_detector_name)
+    {
+        replay_detector = rampart_load_replay_detector(env,replay_detector_name);
+        if(replay_detector)
+            rampart_context_set_replay_detector(rampart_context,env,replay_detector);
     }
     return status;
 }

@@ -25,6 +25,7 @@
 #include <rampart_authn_provider.h>
 #include <rampart_credentials.h>
 #include <rampart_callback.h>
+#include <rampart_replay_detector.h>
 /**
   * @file rampart_util.h
   * @brief Utilities of rampart
@@ -95,6 +96,16 @@ extern "C" {
     rampart_load_auth_module(const axutil_env_t *env,
                              axis2_char_t *auth_module_name);
 
+    /**
+     * Load replay detection module
+     * User MUST free memory
+     * @param env pointer to environment struct
+     * @param replay_detector_name name of the replay detection module
+     * @return creatd replay detection module
+     */
+    AXIS2_EXTERN rampart_replay_detector_t* AXIS2_CALL
+    rampart_load_replay_detector(const axutil_env_t *env,
+                             axis2_char_t *replay_detector_name);
     /**
      * Call auth module
      * @param env pointer to environment struct

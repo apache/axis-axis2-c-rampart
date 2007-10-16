@@ -23,6 +23,7 @@
 #include <rampart_constants.h>
 #include <rampart_sec_processed_result.h>
 #include <rampart_util.h>
+
 /*Private functions*/
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_replay_detector_linked_list_contains(axutil_linked_list_t *linked_list,
@@ -423,7 +424,4 @@ rampart_replay_detector_default(const axutil_env_t *env,
         return AXIS2_SUCCESS;
     }
 }
-
-
-
 
