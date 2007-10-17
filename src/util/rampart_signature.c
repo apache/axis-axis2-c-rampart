@@ -38,6 +38,128 @@
 #include <axis2_key_type.h>
 #include <rampart_token_builder.h>
 #include <rampart_util.h>
+
+/*Private functions*/
+axis2_status_t AXIS2_CALL
+rampart_sig_pack_for_asym(const axutil_env_t *env,
+                rampart_context_t *rampart_context,
+		     oxs_sign_ctx_t *sign_ctx)
+{
+    openssl_pkey_t *prvkey = NULL;
+    axis2_char_t *prv_key_file = NULL;
+    axis2_char_t *password = NULL;
+    axis2_char_t *enc_user = NULL;
+    axis2_char_t *asym_sig_algo = NULL;
+    password_callback_fn password_function = NULL;
+    rampart_callback_t *password_callback = NULL;
+    void *key_buf = NULL;
+    void *param = NULL;
+
+ /*First check whether the private key is set*/
+    key_buf = rampart_context_get_prv_key(rampart_context, env);
+    if(key_buf)
+    {
+        axis2_key_type_t type = 0;
+        type = rampart_context_get_prv_key_type(rampart_context, env);
+        if(type == AXIS2_KEY_TYPE_PEM)
+        {
+            prvkey = oxs_key_mgr_load_private_key_from_string(
+                         env, (axis2_char_t *)key_buf, NULL);
+            if(!prvkey)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature] Can't load the key from buffer");
+                return AXIS2_FAILURE;
+            }
+        }
+    }else{  /*Buffer is null load from the file*/
+        prv_key_file = rampart_context_get_private_key_file(
+                           rampart_context, env);
+        if(!prv_key_file)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature]Private Key file is not specified.");
+            return AXIS2_FAILURE;
+        }
+
+        /*Get the password to retrieve the key from key store*/
+        password = rampart_context_get_prv_key_password(rampart_context, env);
+
+        if(!password)
+        {
+            enc_user = rampart_context_get_encryption_user(rampart_context, env);
+
+            if(!enc_user)
+            {
+                enc_user = rampart_context_get_user(rampart_context, env);
+            }
+
+            if(enc_user)
+            {
+                password_function = rampart_context_get_pwcb_function(rampart_context, env);
+                if(password_function)
+                {
+                    password = (*password_function)(env, enc_user, param);
+                }
+                else
+                {
+                    password_callback = rampart_context_get_password_callback(
+                                            rampart_context, env);
+                    if(!password_callback)
+                    {
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                        "[rampart][rampart_signature] Password call back module is not loaded.");
+                        return AXIS2_FAILURE;
+                    }
+                    password = rampart_callback_password(env, password_callback, enc_user);
+                }
+            }
+        }
+        if(oxs_util_get_format_by_file_extension(env, prv_key_file) ==
+                OXS_ASYM_CTX_FORMAT_PKCS12)
+        {
+            oxs_x509_cert_t *c = NULL;
+            if((oxs_key_mgr_read_pkcs12_key_store(env, prv_key_file,
+                                                  password, &c, &prvkey)==AXIS2_FAILURE) || !prvkey)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature] Cannot load the private key from pfx file.");
+                return AXIS2_FAILURE;
+            }
+        }
+        else if(oxs_util_get_format_by_file_extension(env, prv_key_file)
+                ==OXS_ASYM_CTX_FORMAT_PEM)
+        {
+            prvkey = oxs_key_mgr_load_private_key_from_pem_file(
+                         env, prv_key_file, password);
+            if(!prvkey)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature] Cannot load the private key from file.");
+                return AXIS2_FAILURE;
+            }
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Unknown Private key format.");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    /*Get the asymmetric signature algorithm*/
+    asym_sig_algo = rampart_context_get_asym_sig_algo(rampart_context, env);
+    
+    /*These properties will set for creating signed info element*/
+
+    oxs_sign_ctx_set_private_key(sign_ctx, env, prvkey);
+    oxs_sign_ctx_set_sign_mtd_algo(sign_ctx, env, asym_sig_algo);
+    oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, OXS_HREF_XML_EXC_C14N);
+    oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_SIGN);
+
+    return AXIS2_SUCCESS;
+}
+
 /*Public functions*/
 
 oxs_x509_cert_t *AXIS2_CALL
@@ -139,25 +261,16 @@ rampart_sig_sign_message(
 {
     axutil_array_list_t *nodes_to_sign = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_char_t *asym_sig_algo = NULL;
     axis2_char_t *digest_method = NULL;
     oxs_sign_ctx_t *sign_ctx = NULL;
     axutil_array_list_t *sign_parts = NULL;
     /*axutil_array_list_t *tr_list = NULL;*/
-    axis2_char_t *prv_key_file = NULL;
-    axis2_char_t *password = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_type_t token_type;
     rp_property_t *token = NULL;
-    axis2_char_t *enc_user = NULL;
-    openssl_pkey_t *prvkey = NULL;
-    rampart_callback_t *password_callback = NULL;
-    password_callback_fn password_function = NULL;
     axiom_node_t *sig_node = NULL;
     axis2_char_t *eki = NULL;
     axis2_bool_t is_direct_reference = AXIS2_TRUE;
-    void *param = NULL;
-    void *key_buf = NULL;
     int i = 0;
     oxs_x509_cert_t *cert = NULL;
     axiom_node_t *key_info_node = NULL;
@@ -300,12 +413,11 @@ rampart_sig_sign_message(
         oxs_x509_cert_free(cert, env);
         cert = NULL;
 
-    }
-    else
-    {
+    }else{
         eki = rampart_context_get_key_identifier(rampart_context, token, env);
         is_direct_reference = AXIS2_FALSE;
     }
+
     if(!eki)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -315,8 +427,6 @@ rampart_sig_sign_message(
         return AXIS2_FAILURE;
     }
 
-    /*Get the asymmetric signature algorithm*/
-    asym_sig_algo = rampart_context_get_asym_sig_algo(rampart_context, env);
     digest_method = rampart_context_get_digest_mtd(rampart_context, env);
 
     sign_parts = axutil_array_list_create(env,0);
@@ -358,112 +468,12 @@ rampart_sig_sign_message(
 
     sign_ctx = oxs_sign_ctx_create(env);
 
-    /*First check whether the private key is set*/
+    /*pack for asymmetric signature*/
+    status = rampart_sig_pack_for_asym(env, rampart_context, sign_ctx);
 
-    key_buf = rampart_context_get_prv_key(rampart_context, env);
-    if(key_buf)
-    {
-        axis2_key_type_t type = 0;
-        type = rampart_context_get_prv_key_type(rampart_context, env);
-        if(type == AXIS2_KEY_TYPE_PEM)
-        {
-            prvkey = oxs_key_mgr_load_private_key_from_string(
-                         env, (axis2_char_t *)key_buf, NULL);
-            if(!prvkey)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Can't load the key from buffer");
-                return AXIS2_FAILURE;
-            }
-        }
-    }
-
-    /*Buffer is null load from the file*/
-
-    else
-    {
-        prv_key_file = rampart_context_get_private_key_file(
-                           rampart_context, env);
-        if(!prv_key_file)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature]Private Key file is not specified.");
-            return AXIS2_FAILURE;
-        }
-
-        /*Get the password to retrieve the key from key store*/
-        password = rampart_context_get_prv_key_password(rampart_context, env);
-
-        if(!password)
-        {
-            enc_user = rampart_context_get_encryption_user(rampart_context, env);
-
-            if(!enc_user)
-            {
-                enc_user = rampart_context_get_user(rampart_context, env);
-            }
-
-            if(enc_user)
-            {
-                password_function = rampart_context_get_pwcb_function(rampart_context, env);
-                if(password_function)
-                {
-                    password = (*password_function)(env, enc_user, param);
-                }
-                else
-                {
-                    password_callback = rampart_context_get_password_callback(
-                                            rampart_context, env);
-                    if(!password_callback)
-                    {
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                        "[rampart][rampart_signature] Password call back module is not loaded.");
-                        return AXIS2_FAILURE;
-                    }
-                    password = rampart_callback_password(env, password_callback, enc_user);
-                }
-            }
-        }
-        if(oxs_util_get_format_by_file_extension(env, prv_key_file) ==
-                OXS_ASYM_CTX_FORMAT_PKCS12)
-        {
-            oxs_x509_cert_t *c = NULL;
-            if((oxs_key_mgr_read_pkcs12_key_store(env, prv_key_file,
-                                                  password, &c, &prvkey)==AXIS2_FAILURE) || !prvkey)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Cannot load the private key from pfx file.");
-                return AXIS2_FAILURE;
-            }
-        }
-        else if(oxs_util_get_format_by_file_extension(env, prv_key_file)
-                ==OXS_ASYM_CTX_FORMAT_PEM)
-        {
-            prvkey = oxs_key_mgr_load_private_key_from_pem_file(
-                         env, prv_key_file, password);
-            if(!prvkey)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Cannot load the private key from file.");
-                return AXIS2_FAILURE;
-            }
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Unknown Private key format.");
-            return AXIS2_FAILURE;
-        }
-    }
-
-    /*These properties will set for creating signed info element*/
-
-    oxs_sign_ctx_set_private_key(sign_ctx, env, prvkey);
-    oxs_sign_ctx_set_sign_mtd_algo(sign_ctx, env, asym_sig_algo);
-    oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, OXS_HREF_XML_EXC_C14N);
+    /*Set which parts to be signed*/
     oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_parts);
-    oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_SIGN);
-
+    
     /*All the things are ready for signing.
     So lets try signing*/
 
@@ -475,11 +485,9 @@ rampart_sig_sign_message(
         return AXIS2_FAILURE;
     }
     /*Free sig ctx*/
-
     oxs_sign_ctx_free(sign_ctx, env);
-
+    
     /*Now we must build the Key Info element*/
-
     key_info_node = oxs_token_build_key_info_element(env, sig_node);
     if(!key_info_node)
     {
