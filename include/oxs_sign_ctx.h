@@ -33,6 +33,7 @@
 #include <axutil_env.h>
 #include <axiom_node.h>
 #include <oxs_x509_cert.h>
+#include <oxs_key.h>
 #include <openssl_pkey.h>
 
 #ifdef __cplusplus
@@ -149,6 +150,17 @@ extern "C"
         const axutil_env_t *env);
 
     /**
+     * Get shared secret of the signature context
+     * @sign_ctx the signature context
+     * @env the environemnt struct 
+     * @return the shared secret
+     */
+    AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+    oxs_sign_ctx_get_secret(
+    const oxs_sign_ctx_t *sign_ctx,
+    const axutil_env_t *env);
+ 
+    /**
      * Get the operation of the signature context
      * @sign_ctx the signature context
      * @env the environemnt struct 
@@ -251,6 +263,19 @@ extern "C"
         const axutil_env_t *env,
         openssl_pkey_t *pub_key);
 
+    /**
+     * Set the shared secret of the signature context @sign_ctx
+     * @sign_ctx the signature context
+     * @env the environemnt struct
+     * @secret the shared secret
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_sign_ctx_set_secret(
+        oxs_sign_ctx_t *sign_ctx,
+        const axutil_env_t *env,
+        oxs_key_t *secret);
+    
     /**
      * Set the operation of the signature context @sign_ctx
      * @sign_ctx the signature context

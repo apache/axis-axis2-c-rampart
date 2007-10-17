@@ -41,7 +41,7 @@ extern "C" {
         AXIS2_EXTERN axis2_status_t AXIS2_CALL
         openssl_hmac_sha1(const axutil_env_t *env,
              oxs_buffer_t *secret,
-             oxs_buffer_t *seed,
+             oxs_buffer_t *input,
              oxs_buffer_t *output); 
     /* @} */
 #ifdef __cplusplus

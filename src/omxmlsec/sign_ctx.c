@@ -31,6 +31,7 @@ struct oxs_sign_ctx_t
     openssl_pkey_t *prv_key ;
     openssl_pkey_t *pub_key ;
     oxs_sign_operation_t operation;
+    oxs_key_t *secret;
 };
 
 /*Public functions*/
@@ -103,6 +104,15 @@ oxs_sign_ctx_get_public_key(
     }
 }
 
+AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+oxs_sign_ctx_get_secret(
+    const oxs_sign_ctx_t *sign_ctx,
+    const axutil_env_t *env)
+{
+    return sign_ctx->secret;
+}
+
+
 AXIS2_EXTERN oxs_sign_operation_t AXIS2_CALL
 oxs_sign_ctx_get_operation(
     const oxs_sign_ctx_t *sign_ctx,
@@ -152,6 +162,21 @@ oxs_sign_ctx_set_public_key(
     sign_ctx->pub_key = pub_key;
     return AXIS2_SUCCESS;
 }
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_sign_ctx_set_secret(
+    oxs_sign_ctx_t *sign_ctx,
+    const axutil_env_t *env,
+    oxs_key_t *secret)
+{
+    if (sign_ctx->secret )
+    {
+        sign_ctx->secret = NULL;
+    }
+    sign_ctx->secret = secret;
+    return AXIS2_SUCCESS;
+}
+
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sign_ctx_set_sign_mtd_algo(
