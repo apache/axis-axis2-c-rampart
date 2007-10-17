@@ -1442,7 +1442,7 @@ rampart_shp_process_message(const axutil_env_t *env,
             }
         }
 
-        if((NULL == rampart_context_get_rd_val(rampart_context, env)) && (NULL == rampart_context_get_replay_detector(rampart_context, env)))
+        if((NULL == rampart_context_get_rd_val(rampart_context, env)) && (NULL == rampart_context_get_replay_detector_name(rampart_context, env)))
 		{
             AXIS2_LOG_INFO(env->log, "[rampart][shp] Replay detection is not specified. Nothing to do");
             need_replay_detection = AXIS2_FALSE;
@@ -1454,9 +1454,17 @@ rampart_shp_process_message(const axutil_env_t *env,
         }
         if(AXIS2_TRUE == need_replay_detection)
 		{/*TODO Chk for the policy configuration*/
-			rampart_replay_detector_t* replay_detector = (rampart_replay_detector_t*)rampart_context_get_replay_detector(rampart_context, env);
-			if (replay_detector)
+			axis2_char_t* replay_detector_name = rampart_context_get_replay_detector_name(rampart_context, env);
+			if (replay_detector_name)
 			{
+				rampart_replay_detector_t* replay_detector = (rampart_replay_detector_t*)rampart_context_get_replay_detector(rampart_context, env);
+				if (!replay_detector)
+				{
+					AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Cannot find the replay detector module");
+					rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is replayed", RAMPART_FAULT_MSG_REPLAYED, msg_ctx);
+					return AXIS2_FAILURE;
+				}
+
 				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Using replay module.");
 				status = RAMPART_REPLAY_DETECTOR_IS_REPLAYED(replay_detector, env, msg_ctx, rampart_context);
 				if(status != AXIS2_SUCCESS)
@@ -1473,8 +1481,8 @@ rampart_shp_process_message(const axutil_env_t *env,
 			}
 			else
 			{
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay module not defined. Using replay function.");
 				rampart_is_replayed_fn rd_fn = NULL;
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay module not defined. Using replay function.");
 				
 				/*Is replayed*/
 				rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
@@ -1570,8 +1578,8 @@ rampart_shp_process_message(const axutil_env_t *env,
 			}
 			else
 			{
-				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay module not defined. Using replay function.");
 				rampart_is_replayed_fn rd_fn = NULL;
+				AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay module not defined. Using replay function.");
 				
 				/*Is replayed*/
 				rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);

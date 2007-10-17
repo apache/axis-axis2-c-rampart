@@ -347,6 +347,11 @@ extern "C"
     rampart_context_set_authn_provider(rampart_context_t *rampart_context,
                                        const axutil_env_t *env,
                                        rampart_authn_provider_t *authn_provider);
+	
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_context_set_replay_detector(rampart_context_t *rampart_context,
+                                   const axutil_env_t *env,
+                                   struct rampart_replay_detector_t *replay_detector);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_get_require_timestamp(

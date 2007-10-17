@@ -792,12 +792,12 @@ rampart_context_get_replay_detector(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_replay_detector(rampart_context_t *rampart_context,
                                    const axutil_env_t *env,
-                                   rampart_replay_detector_t *replay_detector)
+                                   struct rampart_replay_detector_t *replay_detector)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,replay_detector,AXIS2_FAILURE);
 
-    rampart_context->replay_detector = replay_detector;
+    rampart_context->replay_detector = (rampart_replay_detector_t*)replay_detector;
     return AXIS2_SUCCESS;
 }
 

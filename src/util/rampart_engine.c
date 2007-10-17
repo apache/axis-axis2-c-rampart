@@ -340,7 +340,7 @@ set_rampart_user_properties(
     {
         replay_detector = rampart_load_replay_detector(env,replay_detector_name);
         if(replay_detector)
-            rampart_context_set_replay_detector(rampart_context,env,replay_detector);
+            rampart_context_set_replay_detector(rampart_context,env,(void*)replay_detector);
     }
     return status;
 }

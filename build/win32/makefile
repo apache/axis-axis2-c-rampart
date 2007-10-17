@@ -72,6 +72,7 @@ distdir:
 	if not exist $(RAMPART_DISTDIR) mkdir $(RAMPART_DISTDIR)
 	mkdir $(RAMPART_DISTDIR)\bin\samples\callback
 	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
+	mkdir $(RAMPART_DISTDIR)\bin\samples\replay_detector
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
@@ -89,6 +90,7 @@ intdirs:
 
 	if not exist $(RAMPART_INTDIR)\samples\callback\pwcb mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
 	if not exist $(RAMPART_INTDIR)\samples\authn_provider mkdir $(RAMPART_INTDIR)\samples\authn_provider
+	if not exist $(RAMPART_INTDIR)\samples\replay_detector mkdir $(RAMPART_INTDIR)\samples\replay_detector
 	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
@@ -116,6 +118,12 @@ mod_rampart_authn:
 	      /Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
 	      /OUT:$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
+
+mod_rampart_rd:
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\replay_detector\rampart_replay_detector_flat_file.c \
+		  /Fo$(RAMPART_INTDIR)\samples\replay_detector\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\replay_detector\*.obj mod_rampart.lib axutil.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
+		  /OUT:$(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll
 
 mod_rampart_services_sec_echo:
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
@@ -177,7 +185,7 @@ copy_dist_files:
 
 #copy make_bin_dist.bat $(RAMPART_DISTDIR)
 
-mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include copy_dist_files
+mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_rd mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include copy_dist_files
 
 mv_dist:
 	move $(RAMPART_DISTDIR) $(RAMPART_DIST_NAME)
@@ -190,7 +198,7 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
