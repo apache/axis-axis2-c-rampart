@@ -27,7 +27,7 @@
 */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_hmac_sha1(const axutil_env_t *env,
-             oxs_buffer_t *secret,
+             oxs_key_t *secret,
              oxs_buffer_t *input,
              oxs_buffer_t *output)
 {
@@ -36,7 +36,7 @@ openssl_hmac_sha1(const axutil_env_t *env,
     unsigned int hashed_len;
 
     HMAC_CTX_init(&ctx);
-    HMAC_Init_ex(&ctx, oxs_buffer_get_data(secret, env), oxs_buffer_get_size(secret, env), EVP_sha1(), NULL);
+    HMAC_Init_ex(&ctx, oxs_key_get_data(secret, env), oxs_key_get_size(secret, env), EVP_sha1(), NULL);
     HMAC_Update(&ctx, oxs_buffer_get_data(input, env), oxs_buffer_get_size(input, env));
     HMAC_Final(&ctx, hmac, &hashed_len);
     HMAC_cleanup(&ctx); 

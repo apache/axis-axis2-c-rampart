@@ -28,7 +28,45 @@
 #include <openssl_sign.h>
 #include <openssl_digest.h>
 
-/*Private functions*/
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
+                      oxs_sign_ctx_t *sign_ctx,
+                      oxs_buffer_t *input,
+                      oxs_buffer_t *output)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+    axis2_char_t *encoded_str = NULL;
+    oxs_buffer_t *signed_result_buf = NULL;
+    oxs_key_t *secret = NULL;
+    int signedlen = -1;
+    int encodedlen = -1;
+    int ret = -1;
+    /*Create output buffer to store signed data*/
+    signed_result_buf = oxs_buffer_create(env);
+
+    /*Get the shared secret form the sig_ctx*/
+    secret = oxs_sign_ctx_get_secret(sign_ctx, env);
+    /*Sign using HMAC-SHA1*/
+    status = openssl_hmac_sha1(env, secret, input, signed_result_buf);
+    if(AXIS2_FAILURE == status){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"Signature failed. using HMAC-SHA1 ");
+    }
+
+    /*Base64 encode*/
+    encodedlen = axutil_base64_encode_len(signedlen);
+    encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
+    ret = axutil_base64_encode(encoded_str, (const char *)
+            oxs_buffer_get_data(signed_result_buf, env), signedlen);
+    status = oxs_buffer_populate(output, env, (unsigned char*)encoded_str,
+                                 encodedlen);
+
+    /*Free signed_result_buf*/
+    oxs_buffer_free(signed_result_buf, env);
+    signed_result_buf = NULL;
+
+    return AXIS2_SUCCESS;
+}
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_sign_rsa_sha1(const axutil_env_t *env,
                       oxs_sign_ctx_t *sign_ctx,
@@ -85,7 +123,7 @@ oxs_sig_sign(const axutil_env_t *env,
 {
     axis2_char_t *sign_algo = NULL;
 
-    /*Get algo*/
+    /*Get algo. To check whether we support*/
     sign_algo = oxs_sign_ctx_get_sign_mtd_algo(sign_ctx, env);
 
     /*Prepare content and sign*/
@@ -95,10 +133,7 @@ oxs_sig_sign(const axutil_env_t *env,
     } 
     else if ((axutil_strcmp(sign_algo, OXS_HREF_DSA_SHA1)) == 0)
     {
-        /*Error we do not support*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                  "Cannot support cipher %s", sign_algo);
-        return AXIS2_FAILURE;
+        oxs_sig_sign_hmac_sha1(env, sign_ctx, input, output);
     }
     else
     {

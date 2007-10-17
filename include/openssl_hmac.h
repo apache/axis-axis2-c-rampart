@@ -20,6 +20,7 @@
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <oxs_buffer.h>
+#include <oxs_key.h>
 
 /**
   * @file openssl_hmac.h
@@ -40,7 +41,7 @@ extern "C" {
 
         AXIS2_EXTERN axis2_status_t AXIS2_CALL
         openssl_hmac_sha1(const axutil_env_t *env,
-             oxs_buffer_t *secret,
+             oxs_key_t *secret,
              oxs_buffer_t *input,
              oxs_buffer_t *output); 
     /* @} */

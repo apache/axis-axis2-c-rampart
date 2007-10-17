@@ -42,6 +42,22 @@ extern "C"
 {
 #endif
     /**
+     * Signs an input buffer @input using the HMAC-SHA1 algorithm.
+     * The secret will be taken form the signature context @sign_ctx
+     * Result will be placed in output buffer @output
+     * @env pointer to environment struct
+     * @sign_ctx the signature context
+     * @input input buffer
+     * @output output buffer
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
+                      oxs_sign_ctx_t *sign_ctx,
+                      oxs_buffer_t *input,
+                      oxs_buffer_t *output);
+
+    /**
      * Signs an input buffer @input using the RSA-SHA1 algorithm.
      * Result will be placed in output buffer @output
      * @env pointer to environment struct
