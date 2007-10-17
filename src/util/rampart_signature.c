@@ -41,6 +41,23 @@
 
 /*Private functions*/
 axis2_status_t AXIS2_CALL
+rampart_sig_pack_for_sym(const axutil_env_t *env,
+                rampart_context_t *rampart_context,
+                oxs_sign_ctx_t *sign_ctx)
+{
+    oxs_key_t *secret = NULL;
+
+    /*Create a key*/
+    secret = oxs_key_create(env);
+
+    oxs_sign_ctx_set_sign_mtd_algo(sign_ctx, env, OXS_HREF_HMAC_SHA1);
+    oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, OXS_HREF_XML_EXC_C14N);
+    oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_SIGN);
+    
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
 rampart_sig_pack_for_asym(const axutil_env_t *env,
                 rampart_context_t *rampart_context,
 		     oxs_sign_ctx_t *sign_ctx)
@@ -468,20 +485,17 @@ rampart_sig_sign_message(
 
     sign_ctx = oxs_sign_ctx_create(env);
 
-    /*pack for asymmetric signature*/
+    /* Pack for asymmetric signature*/
     status = rampart_sig_pack_for_asym(env, rampart_context, sign_ctx);
 
-    /*Set which parts to be signed*/
+    /* Set which parts to be signed*/
     oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_parts);
     
-    /*All the things are ready for signing.
-    So lets try signing*/
-
+    /* All the things are ready for signing. So lets try signing*/
     status = oxs_xml_sig_sign(env, sign_ctx, sec_node, &sig_node);
     if(status!=AXIS2_SUCCESS)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_signature] Message signing failed.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Message signing failed.");
         return AXIS2_FAILURE;
     }
     /*Free sig ctx*/
