@@ -40,6 +40,174 @@
 #include <rampart_util.h>
 
 /*Private functions*/
+
+oxs_x509_cert_t *AXIS2_CALL
+rampart_sig_get_cert(const axutil_env_t *env,
+                     rampart_context_t *rampart_context)
+{
+    void *key_buf = NULL;
+    axis2_key_type_t type = 0;
+    oxs_x509_cert_t *cert = NULL;
+    axis2_char_t *certificate_file = NULL;
+
+    key_buf = rampart_context_get_certificate(rampart_context, env);
+    if(key_buf)
+    {
+        type = rampart_context_get_certificate_type(rampart_context, env);
+        if(type == AXIS2_KEY_TYPE_PEM)
+        {
+            cert = oxs_key_mgr_load_x509_cert_from_string(env,
+                    (axis2_char_t *)key_buf);
+            if(!cert)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature] Certificate cannot be loaded from the buffer.");
+                return NULL;
+            }
+            else
+            {
+                return cert;
+            }
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Key file type unknown.");
+            return NULL;
+        }
+    }
+    else
+    {
+        certificate_file = rampart_context_get_certificate_file(rampart_context, env);
+        if(certificate_file)
+        {
+            cert = oxs_key_mgr_load_x509_cert_from_pem_file(env, certificate_file);
+            if(!cert)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature] Certificate cannot be loaded from the file.");
+                return NULL;
+            }
+            else
+            {
+                return cert;
+            }
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Public key certificate file is not specified.");
+            return NULL;
+        }
+    }
+}
+
+axis2_status_t AXIS2_CALL
+rampart_sig_prepare_key_info_for_sym_binding(const axutil_env_t *env,
+                rampart_context_t *rampart_context,
+                oxs_sign_ctx_t *sign_ctx,
+        		axiom_node_t *sig_node,
+                oxs_key_t *key)
+{
+    axiom_node_t *key_info_node = NULL;
+    axiom_node_t *str_node = NULL;
+
+    /*Now we must build the Key Info element*/
+    key_info_node = oxs_token_build_key_info_element(env, sig_node);
+    str_node = oxs_token_build_security_token_reference_element(
+                           env, key_info_node);
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
+rampart_sig_prepare_key_info_for_asym_binding(const axutil_env_t *env,
+                rampart_context_t *rampart_context,
+                oxs_sign_ctx_t *sign_ctx,
+        		axiom_node_t *sig_node,
+                axis2_char_t *cert_id,
+                axis2_char_t *eki)
+{
+    axiom_node_t *key_info_node = NULL;
+    axis2_bool_t is_direct_reference = AXIS2_TRUE;
+    axis2_status_t status = AXIS2_FAILURE;
+
+    /*Now we must build the Key Info element*/
+    key_info_node = oxs_token_build_key_info_element(env, sig_node);
+    
+    if(is_direct_reference)
+    {
+        axiom_node_t *str_node = NULL;
+        axiom_node_t *reference_node = NULL;
+        axis2_char_t *cert_id_ref = NULL;
+        
+        str_node = oxs_token_build_security_token_reference_element(
+                       env, key_info_node);
+
+        if(!str_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
+            return AXIS2_FAILURE;
+        }
+        cert_id_ref = axutil_stracat(env, "#",cert_id);
+        reference_node = oxs_token_build_reference_element(
+                             env, str_node, cert_id_ref, OXS_VALUE_X509V3);
+        AXIS2_FREE(env->allocator, cert_id_ref);
+        cert_id_ref = NULL;
+        if(!reference_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
+            return AXIS2_FAILURE;
+        }
+    }
+    else
+    {
+        oxs_x509_cert_t *cert = NULL;
+        
+        cert = rampart_sig_get_cert(env, rampart_context);
+        if(!cert)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Cannot get the certificate");
+            return AXIS2_FAILURE;
+        }
+        if(axutil_strcmp(eki, RAMPART_STR_EMBEDDED) == 0)
+        {
+            status = rampart_token_build_security_token_reference(
+                         env, key_info_node, cert, RTBP_EMBEDDED);
+        }
+        else if(axutil_strcmp(eki, RAMPART_STR_ISSUER_SERIAL) == 0)
+        {
+            status = rampart_token_build_security_token_reference(
+                         env, key_info_node, cert, RTBP_X509DATA_ISSUER_SERIAL);
+        }
+        else if(axutil_strcmp(eki, RAMPART_STR_KEY_IDENTIFIER) == 0)
+        {
+            status = rampart_token_build_security_token_reference(
+                         env, key_info_node, cert, RTBP_KEY_IDENTIFIER);
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_signature] Unknown key Identifier type.Token attaching failed");
+            status = AXIS2_FAILURE;
+        }
+        oxs_x509_cert_free(cert, env);
+        cert = NULL;
+    }
+
+    /*FREE*/
+    if(cert_id)
+    {
+        AXIS2_FREE(env->allocator, cert_id);
+        cert_id = NULL;
+    }
+
+    return AXIS2_FAILURE;
+}
+
+
 axis2_status_t AXIS2_CALL
 rampart_sig_pack_for_sym(const axutil_env_t *env,
                 rampart_context_t *rampart_context,
@@ -53,6 +221,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
     oxs_sign_ctx_set_sign_mtd_algo(sign_ctx, env, OXS_HREF_HMAC_SHA1);
     oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, OXS_HREF_XML_EXC_C14N);
     oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_SIGN);
+    oxs_sign_ctx_set_secret(sign_ctx, env, secret);
     
     return AXIS2_SUCCESS;
 }
@@ -179,66 +348,6 @@ rampart_sig_pack_for_asym(const axutil_env_t *env,
 
 /*Public functions*/
 
-oxs_x509_cert_t *AXIS2_CALL
-rampart_sig_get_cert(const axutil_env_t *env,
-                     rampart_context_t *rampart_context)
-{
-    void *key_buf = NULL;
-    axis2_key_type_t type = 0;
-    oxs_x509_cert_t *cert = NULL;
-    axis2_char_t *certificate_file = NULL;
-
-    key_buf = rampart_context_get_certificate(rampart_context, env);
-    if(key_buf)
-    {
-        type = rampart_context_get_certificate_type(rampart_context, env);
-        if(type == AXIS2_KEY_TYPE_PEM)
-        {
-            cert = oxs_key_mgr_load_x509_cert_from_string(env,
-                    (axis2_char_t *)key_buf);
-            if(!cert)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Certificate cannot be loaded from the buffer.");
-                return NULL;
-            }
-            else
-            {
-                return cert;
-            }
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Key file type unknown.");
-            return NULL;
-        }
-    }
-    else
-    {
-        certificate_file = rampart_context_get_certificate_file(rampart_context, env);
-        if(certificate_file)
-        {
-            cert = oxs_key_mgr_load_x509_cert_from_pem_file(env, certificate_file);
-            if(!cert)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Certificate cannot be loaded from the file.");
-                return NULL;
-            }
-            else
-            {
-                return cert;
-            }
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Public key certificate file is not specified.");
-            return NULL;
-        }
-    }
-}
 
 axis2_status_t AXIS2_CALL
 rampart_sig_get_nodes_to_sign(
@@ -291,7 +400,6 @@ rampart_sig_sign_message(
     axis2_bool_t is_direct_reference = AXIS2_TRUE;
     int i = 0;
     oxs_x509_cert_t *cert = NULL;
-    axiom_node_t *key_info_node = NULL;
     axiom_node_t *bst_node = NULL;
     axis2_char_t *cert_id = NULL;
 
@@ -502,83 +610,18 @@ rampart_sig_sign_message(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Message signing failed.");
         return AXIS2_FAILURE;
     }
+    if(RP_PROPERTY_ASYMMETRIC_BINDING == binding_type){
+    	rampart_sig_prepare_key_info_for_asym_binding(env, rampart_context, sign_ctx, sig_node , cert_id, eki);
+    }else if(RP_PROPERTY_SYMMETRIC_BINDING == binding_type){
+        oxs_key_t *signed_key = NULL;
+        
+        signed_key = oxs_sign_ctx_get_secret(sign_ctx, env); 
+        rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key );
+    }
+
     /*Free sig ctx*/
     oxs_sign_ctx_free(sign_ctx, env);
     
-    /*Now we must build the Key Info element*/
-    key_info_node = oxs_token_build_key_info_element(env, sig_node);
-    if(!key_info_node)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_signature] Key info element build failed.");
-        return AXIS2_FAILURE;
-    }
-    if(is_direct_reference)
-    {
-        axiom_node_t *str_node = NULL;
-        axiom_node_t *reference_node = NULL;
-        axis2_char_t *cert_id_ref = NULL;
-        str_node = oxs_token_build_security_token_reference_element(
-                       env, key_info_node);
-        if(!str_node)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
-            return AXIS2_FAILURE;
-        }
-        cert_id_ref = axutil_stracat(env, "#",cert_id);
-        reference_node = oxs_token_build_reference_element(
-                             env, str_node, cert_id_ref, OXS_VALUE_X509V3);
-        AXIS2_FREE(env->allocator, cert_id_ref);
-        cert_id_ref = NULL;
-        if(!reference_node)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
-            return AXIS2_FAILURE;
-        }
-    }
-    else
-    {
-        cert = rampart_sig_get_cert(env, rampart_context);
-        if(!cert)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Cannot get the certificate");
-            return AXIS2_FAILURE;
-        }
-        if(axutil_strcmp(eki, RAMPART_STR_EMBEDDED) == 0)
-        {
-            status = rampart_token_build_security_token_reference(
-                         env, key_info_node, cert, RTBP_EMBEDDED);
-        }
-        else if(axutil_strcmp(eki, RAMPART_STR_ISSUER_SERIAL) == 0)
-        {
-            status = rampart_token_build_security_token_reference(
-                         env, key_info_node, cert, RTBP_X509DATA_ISSUER_SERIAL);
-        }
-        else if(axutil_strcmp(eki, RAMPART_STR_KEY_IDENTIFIER) == 0)
-        {
-            status = rampart_token_build_security_token_reference(
-                         env, key_info_node, cert, RTBP_KEY_IDENTIFIER);
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Unknown key Identifier type.Token attaching failed");
-            status = AXIS2_FAILURE;
-        }
-        oxs_x509_cert_free(cert, env);
-        cert = NULL;
-    }
-
-    /*FREE*/
-    if(cert_id)
-    {
-        AXIS2_FREE(env->allocator, cert_id);
-        cert_id = NULL;
-    }
-
     return status;
 }
 
