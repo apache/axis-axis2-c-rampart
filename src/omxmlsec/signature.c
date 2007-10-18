@@ -50,6 +50,7 @@ oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
     status = openssl_hmac_sha1(env, secret, input, signed_result_buf);
     if(AXIS2_FAILURE == status){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"Signature failed. using HMAC-SHA1 ");
+        return AXIS2_FAILURE;
     }
 
     /*Base64 encode*/
@@ -131,7 +132,7 @@ oxs_sig_sign(const axutil_env_t *env,
     {
         oxs_sig_sign_rsa_sha1(env, sign_ctx, input, output);
     } 
-    else if ((axutil_strcmp(sign_algo, OXS_HREF_DSA_SHA1)) == 0)
+    else if ((axutil_strcmp(sign_algo, OXS_HREF_HMAC_SHA1)) == 0)
     {
         oxs_sig_sign_hmac_sha1(env, sign_ctx, input, output);
     }

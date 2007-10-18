@@ -32,13 +32,32 @@ openssl_hmac_sha1(const axutil_env_t *env,
              oxs_buffer_t *output)
 {
     HMAC_CTX ctx;
-    unsigned char hmac[MD5_DIGEST_LENGTH];
+    unsigned char hmac[EVP_MAX_MD_SIZE + 1];
     unsigned int hashed_len;
+
+    if(!secret){
+       oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] No key to sign ");
+       return AXIS2_FAILURE; 
+    }
+    
+    if(!input){
+       oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] Nothing to sign ");
+       return AXIS2_FAILURE; 
+    }
+    
+    if(!output){
+       oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] The buffer to place signature is NULL ");
+       return AXIS2_FAILURE; 
+    }
 
     HMAC_CTX_init(&ctx);
     HMAC_Init_ex(&ctx, oxs_key_get_data(secret, env), oxs_key_get_size(secret, env), EVP_sha1(), NULL);
     HMAC_Update(&ctx, oxs_buffer_get_data(input, env), oxs_buffer_get_size(input, env));
     HMAC_Final(&ctx, hmac, &hashed_len);
+
+    /*Fill the output buffer*/
+    oxs_buffer_populate(output, env, hmac, hashed_len); 
+
     HMAC_cleanup(&ctx); 
     
     HMAC_CTX_cleanup(&ctx);

@@ -100,7 +100,13 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
         is_encrypt_before_sign = AXIS2_FALSE;
 
         /*TODO First do signature specific stuff using Symmetric key*/
-
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if(status != AXIS2_SUCCESS)
+        {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Signing failed. ERROR");
+                return AXIS2_FAILURE;
+        }
 
         /*Then Handle Encryption stuff*/
         status = rampart_enc_dk_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);

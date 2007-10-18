@@ -284,6 +284,7 @@ rampart_sig_sign_message(
     /*axutil_array_list_t *tr_list = NULL;*/
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_type_t token_type;
+    rp_property_type_t binding_type;
     rp_property_t *token = NULL;
     axiom_node_t *sig_node = NULL;
     axis2_char_t *eki = NULL;
@@ -376,14 +377,6 @@ rampart_sig_sign_message(
         return AXIS2_FAILURE;
     }
 
-    if(rampart_context_check_is_derived_keys(env,token))
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_signature] We still do not support derived keys");
-        axutil_array_list_free(nodes_to_sign, env);
-        nodes_to_sign = NULL;
-        return AXIS2_FAILURE;
-    }
 
     /*If the requirement is to include the token we should build the binary security
      * token element here.*/
@@ -484,9 +477,20 @@ rampart_sig_sign_message(
     nodes_to_sign = NULL;
 
     sign_ctx = oxs_sign_ctx_create(env);
+    /*Get the binding type. Either symmetric or asymmetric for signature*/
+    binding_type = rampart_context_get_binding_type(rampart_context,env);
 
-    /* Pack for asymmetric signature*/
-    status = rampart_sig_pack_for_asym(env, rampart_context, sign_ctx);
+    if(RP_PROPERTY_ASYMMETRIC_BINDING == binding_type){
+        /* Pack for asymmetric signature*/
+        status = rampart_sig_pack_for_asym(env, rampart_context, sign_ctx);
+    }else if(RP_PROPERTY_SYMMETRIC_BINDING == binding_type){
+        /* Pack for symmetric signature*/
+        status = rampart_sig_pack_for_sym(env, rampart_context, sign_ctx);
+    }else{
+        /*We do not support*/
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rampart_signature] Signature support only symmetric and asymmetric bindings.");
+        return AXIS2_FAILURE;
+    }
 
     /* Set which parts to be signed*/
     oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_parts);
