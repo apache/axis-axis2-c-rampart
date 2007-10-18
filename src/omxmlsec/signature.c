@@ -27,6 +27,7 @@
 #include <openssl_rsa.h>
 #include <openssl_sign.h>
 #include <openssl_digest.h>
+#include <openssl_hmac.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
