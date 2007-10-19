@@ -111,11 +111,21 @@ rampart_sig_prepare_key_info_for_sym_binding(const axutil_env_t *env,
 {
     axiom_node_t *key_info_node = NULL;
     axiom_node_t *str_node = NULL;
-
+    axiom_node_t *reference_node = NULL;    
+    axis2_char_t *id_ref = NULL;
+    axis2_char_t *key_id = NULL;
+    
     /*Now we must build the Key Info element*/
     key_info_node = oxs_token_build_key_info_element(env, sig_node);
     str_node = oxs_token_build_security_token_reference_element(
                            env, key_info_node);
+    /*Create the reference Id*/
+    key_id = oxs_key_get_name(key, env);
+    id_ref = axutil_stracat(env, "#",key_id);
+    
+    reference_node = oxs_token_build_reference_element(env, str_node,
+                        id_ref, OXS_ENCODING_BASE64BINARY );   
+     
     return AXIS2_SUCCESS;
 }
 

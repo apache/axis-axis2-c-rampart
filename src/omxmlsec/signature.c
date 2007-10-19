@@ -54,6 +54,7 @@ oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
         return AXIS2_FAILURE;
     }
 
+    signedlen = oxs_buffer_get_size(signed_result_buf, env);
     /*Base64 encode*/
     encodedlen = axutil_base64_encode_len(signedlen);
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
