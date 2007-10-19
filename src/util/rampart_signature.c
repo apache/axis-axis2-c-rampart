@@ -107,24 +107,37 @@ rampart_sig_prepare_key_info_for_sym_binding(const axutil_env_t *env,
                 rampart_context_t *rampart_context,
                 oxs_sign_ctx_t *sign_ctx,
         		axiom_node_t *sig_node,
-                oxs_key_t *key)
+                oxs_key_t *key,
+                axis2_char_t* encrypted_key_id)
 {
     axiom_node_t *key_info_node = NULL;
     axiom_node_t *str_node = NULL;
     axiom_node_t *reference_node = NULL;    
     axis2_char_t *id_ref = NULL;
     axis2_char_t *key_id = NULL;
+    axis2_char_t *value_type = NULL;
     
     /*Now we must build the Key Info element*/
     key_info_node = oxs_token_build_key_info_element(env, sig_node);
     str_node = oxs_token_build_security_token_reference_element(
                            env, key_info_node);
     /*Create the reference Id*/
-    key_id = oxs_key_get_name(key, env);
+    /*There are two ways the key info can be built
+     * 1. If the key used to sign is encrypted using an X509 Certificate, then that EncryptedKey's id will be used
+     * 2. If the key used to sign is derrived from the session key, then the Id of the derived key will be used 
+     */
+    if(encrypted_key_id){
+        key_id = encrypted_key_id;
+        value_type = OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY;
+    }else{
+        key_id = oxs_key_get_name(key, env);
+        value_type = NULL;
+    }
+    
     id_ref = axutil_stracat(env, "#",key_id);
     
     reference_node = oxs_token_build_reference_element(env, str_node,
-                        id_ref, OXS_ENCODING_BASE64BINARY );   
+                        id_ref, value_type );   
      
     return AXIS2_SUCCESS;
 }
@@ -224,10 +237,14 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
                 oxs_sign_ctx_t *sign_ctx)
 {
     oxs_key_t *secret = NULL;
-
-    /*Create a key*/
-    secret = oxs_key_create(env);
-
+   
+    /*We are trying to reuse the same session key which is used for encryption*/
+    secret = rampart_context_get_session_key(rampart_context, env);
+    if(!secret){
+        /*Create a new key and set to the rampart_context. This usually happens when the SignBeforeEncrypt*/
+        secret = oxs_key_create(env);
+        rampart_context_set_session_key(rampart_context, env, secret);
+    }
     oxs_sign_ctx_set_sign_mtd_algo(sign_ctx, env, OXS_HREF_HMAC_SHA1);
     oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, OXS_HREF_XML_EXC_C14N);
     oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_SIGN);
@@ -624,9 +641,12 @@ rampart_sig_sign_message(
     	rampart_sig_prepare_key_info_for_asym_binding(env, rampart_context, sign_ctx, sig_node , cert_id, eki);
     }else if(RP_PROPERTY_SYMMETRIC_BINDING == binding_type){
         oxs_key_t *signed_key = NULL;
+        axis2_char_t *enc_key_id = NULL;
+
+        /*TODO get encrypted key id*/
         
         signed_key = oxs_sign_ctx_get_secret(sign_ctx, env); 
-        rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key );
+        rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, enc_key_id  );
     }
 
     /*Free sig ctx*/

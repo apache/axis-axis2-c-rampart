@@ -251,8 +251,13 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
 
-    /*Generate the  session key*/
-    session_key = oxs_key_create(env);
+    session_key = rampart_context_get_session_key(rampart_context, env);
+    if(!session_key){
+        /*Generate the  session key*/
+        session_key = oxs_key_create(env);
+        rampart_context_set_session_key(rampart_context, env, session_key);
+    }
+ 
     status = oxs_key_for_algo(session_key, env, enc_sym_algo);
     if(AXIS2_FAILURE == status)
     {
@@ -476,9 +481,13 @@ rampart_enc_encrypt_message(
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
 
-    /*Generate the  session key*/
-    session_key = oxs_key_create(env);
-    status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+    session_key = rampart_context_get_session_key(rampart_context, env);
+    if(!session_key){
+        /*Generate the  session key*/
+         session_key = oxs_key_create(env);
+         status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+         rampart_context_set_session_key(rampart_context, env, session_key);
+    }
     if(AXIS2_FAILURE == status)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -574,8 +583,8 @@ rampart_enc_encrypt_message(
 
 
 
-    oxs_key_free(session_key, env);
-    session_key = NULL;
+    /*oxs_key_free(session_key, env);
+    session_key = NULL;*/
 
     return AXIS2_SUCCESS;
 }
