@@ -640,12 +640,28 @@ rampart_sig_sign_message(
     if(RP_PROPERTY_ASYMMETRIC_BINDING == binding_type){
     	rampart_sig_prepare_key_info_for_asym_binding(env, rampart_context, sign_ctx, sig_node , cert_id, eki);
     }else if(RP_PROPERTY_SYMMETRIC_BINDING == binding_type){
+        axiom_node_t *encrypted_key_node = NULL;
         oxs_key_t *signed_key = NULL;
         axis2_char_t *enc_key_id = NULL;
 
-        /*TODO get encrypted key id*/
-        
-        signed_key = oxs_sign_ctx_get_secret(sign_ctx, env); 
+        signed_key = oxs_sign_ctx_get_secret(sign_ctx, env);    
+        /*If there is an EncryptedKey element use the Id. If not, generate an Id and use it*/ 
+        encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY); 
+        if(!encrypted_key_node){
+            /*There is no EncryptedKey so generate one*/
+            status = rampart_enc_encrypt_session_key(env, signed_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+            if(AXIS2_FAILURE == status){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Cannot encrypt the session key " );
+                return AXIS2_FAILURE;
+            } 
+            encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
+            /*Add Id attribute*/
+            enc_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
+            oxs_axiom_add_attribute(env, encrypted_key_node, NULL, NULL, OXS_ATTR_ID, enc_key_id);
+        }else{
+            /*There is the encrypted key. May be used by the encryption process. So get the Id and use it*/
+            enc_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
+        }
         rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, enc_key_id  );
     }
 

@@ -335,32 +335,39 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axutil_array_list_free(nodes_to_encrypt, env);
     nodes_to_encrypt = NULL;
 
-    /* Encrypt the session key using the Public Key of the recipient*/
+    /* If not done already, Encrypt the session key using the Public Key of the recipient*/
     /* Note: Here we do not send the id_list to create a ReferenceList inside the encrypted key. Instead we create the 
      *       ReferenceList as a child of Security element */
-    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
-    if(AXIS2_FAILURE == status){
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            
+    encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
+    if(!encrypted_key_node){
+        /*Create EncryptedKey element*/
+        status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+        if(AXIS2_FAILURE == status){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption] Cannot encrypt the session key " );
-        return AXIS2_FAILURE;
-    }
+            return AXIS2_FAILURE;
+        }
+        /*Now we have en EncryptedKey Node*/
+        encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
 
-    /*Get the asym key Id*/
-    encrypted_key_node = oxs_axiom_get_node_by_local_name(
-                             env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
-    if(!encrypted_key_node)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+        /*Get the asym key Id*/
+        if(!encrypted_key_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
-        return AXIS2_FAILURE;
-    }
-    asym_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
-    if(asym_key_id)
-    {
-        oxs_axiom_add_attribute(env, encrypted_key_node, NULL,
+            return AXIS2_FAILURE;
+        }
+        asym_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
+        if(asym_key_id)
+        {
+            oxs_axiom_add_attribute(env, encrypted_key_node, NULL,
                                 NULL, OXS_ATTR_ID, asym_key_id);
+        }
+    }else{
+        /*OK Buddy we have already created EncryptedKey node. Get the Id */
+        asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
     }
-  
     /*Add used <wsc:DerivedKeyToken> elements to the header*/
     for(j=0 ; j < axutil_array_list_size(dk_list, env); j++){
         oxs_key_t *dk = NULL;
