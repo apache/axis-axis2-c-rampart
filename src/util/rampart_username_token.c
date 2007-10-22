@@ -145,7 +145,7 @@ rampart_username_token_build(
             axis2_char_t *created_val = NULL;
             axis2_char_t *digest_val = NULL;
 
-            nonce_val = rampart_generate_nonce(env) ;
+            nonce_val = rampart_generate_nonce(env, 24) ;
             created_val = rampart_generate_time(env, 0);
             digest_val = rampart_crypto_sha1(env, nonce_val, created_val, password);
 

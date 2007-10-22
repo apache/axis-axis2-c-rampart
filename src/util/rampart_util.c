@@ -212,7 +212,7 @@ rampart_callback_password(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-rampart_generate_nonce(const axutil_env_t *env)
+rampart_generate_nonce(const axutil_env_t *env, int length)
 {
     oxs_buffer_t *buffer = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -220,7 +220,7 @@ rampart_generate_nonce(const axutil_env_t *env)
     axis2_char_t* encoded_str = NULL;
 
     buffer = oxs_buffer_create(env);
-    status = generate_random_data(env, buffer, 16);
+    status = generate_random_data(env, buffer, length);
     rand_str = (char*)oxs_buffer_get_data(buffer, env);
     encoded_str = AXIS2_MALLOC(env->allocator, sizeof(char) * (SIZE_NONCE+1));
     axutil_base64_encode(encoded_str, rand_str, oxs_buffer_get_size(buffer, env));

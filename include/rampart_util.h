@@ -157,7 +157,7 @@ extern "C" {
      * @return generated nonce
      */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_generate_nonce(const axutil_env_t *env);
+    rampart_generate_nonce(const axutil_env_t *env, int length);
 
     /**
      * Generates the nonce. Nonce is a base64 encoded random string.
