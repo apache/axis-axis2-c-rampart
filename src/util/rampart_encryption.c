@@ -223,6 +223,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_char_t *enc_sym_algo = NULL;
     axis2_char_t *asym_key_id = NULL;
     axiom_node_t *encrypted_key_node = NULL;
+    axis2_bool_t use_derived_keys = AXIS2_TRUE;
     int i = 0;
     int j = 0;
 
@@ -269,9 +270,12 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     id_list = axutil_array_list_create(env, 5);
     dk_list = axutil_array_list_create(env, 5);
     /* For each and every encryption part.
-        1. Derive a new key
+        1. Derive a new key if key derivation is enabled. Or else use the same session key
         2. Encrypt using that key       
      */
+   
+    /*TODO: We need to take the decision whether to use derived keys or not*/
+    /*use_derived_keys = rampart_context_check_is_derived_keys (env, token??);*/
 
     /*Repeat until all encryption parts are encrypted*/
     for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
@@ -287,19 +291,27 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         node_to_enc = (axiom_node_t *)axutil_array_list_get
                       (nodes_to_encrypt, env, i);
     
-        /*Derive a new key*/
-        derived_key = oxs_key_create(env);
-        status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key); 
-
         /*Create the encryption context for OMXMLSEC*/
         enc_ctx = oxs_ctx_create(env);
 
-        /*Set the derived key for the encryption*/
-        oxs_ctx_set_key(enc_ctx, env, derived_key);
+        if(AXIS2_TRUE == use_derived_keys){
+            /*Derive a new key*/
+            derived_key = oxs_key_create(env);
+            status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key); 
 
-        /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
-        oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
+            /*Set the derived key for the encryption*/
+            oxs_ctx_set_key(enc_ctx, env, derived_key);
 
+            /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
+            oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
+            
+            /*Add derived key to the list. We will create tokens*/
+            axutil_array_list_add(dk_list, env, derived_key);
+        }else{
+            /*No key derivation. We use the same session key*/
+            oxs_ctx_set_key(enc_ctx, env, session_key);
+            oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(session_key, env));
+        }
         /*Set the algorithm*/
         oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);  
 
@@ -316,8 +328,6 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             /*Add Ids to the list. We will create reference list*/
             axutil_array_list_add(id_list, env, enc_data_id);
 
-            /*Add derived key to the list. We will create tokens*/
-            axutil_array_list_add(dk_list, env, derived_key);
             if(AXIS2_FAILURE == status)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,

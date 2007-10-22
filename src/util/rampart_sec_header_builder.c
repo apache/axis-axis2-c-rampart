@@ -95,7 +95,25 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     {
         is_encrypt_before_sign = AXIS2_TRUE;
         /*TODO encrypt before sign. Complicated stuff...*/
-
+        /**
+         * 1. encrypt parts to be encrypted
+         * 2. sign parts to be signed
+         * 3. encrypt signature if required
+         */
+        status = rampart_enc_dk_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if (status == AXIS2_FAILURE)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Sym binding, Encryption failed in Symmetric binding. ERROR");
+            return AXIS2_FAILURE;
+        }
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if(status != AXIS2_SUCCESS)
+        {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Signing failed. ERROR");
+                return AXIS2_FAILURE;
+        }
+         
     }else{ /*Sign before encrypt*/
         is_encrypt_before_sign = AXIS2_FALSE;
 
