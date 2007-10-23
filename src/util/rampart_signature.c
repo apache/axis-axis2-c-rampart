@@ -148,10 +148,11 @@ rampart_sig_prepare_key_info_for_asym_binding(const axutil_env_t *env,
                 oxs_sign_ctx_t *sign_ctx,
         		axiom_node_t *sig_node,
                 axis2_char_t *cert_id,
-                axis2_char_t *eki)
+                axis2_char_t *eki,
+				axis2_bool_t is_direct_reference)
 {
     axiom_node_t *key_info_node = NULL;
-    axis2_bool_t is_direct_reference = AXIS2_TRUE;
+    /*axis2_bool_t is_direct_reference = AXIS2_TRUE;*/
     axis2_status_t status = AXIS2_FAILURE;
 
     /*Now we must build the Key Info element*/
@@ -638,7 +639,7 @@ rampart_sig_sign_message(
         return AXIS2_FAILURE;
     }
     if(RP_PROPERTY_ASYMMETRIC_BINDING == binding_type){
-    	rampart_sig_prepare_key_info_for_asym_binding(env, rampart_context, sign_ctx, sig_node , cert_id, eki);
+    	rampart_sig_prepare_key_info_for_asym_binding(env, rampart_context, sign_ctx, sig_node , cert_id, eki, is_direct_reference);
     }else if(RP_PROPERTY_SYMMETRIC_BINDING == binding_type){
         axiom_node_t *encrypted_key_node = NULL;
         oxs_key_t *signed_key = NULL;
