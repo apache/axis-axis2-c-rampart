@@ -38,7 +38,7 @@ AXIS2_MODS = $(AXIS2_BIN_DIR)\modules
 ##################### compiler options
 
 CC = @cl.exe 
-CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"  $(CRUNTIME) \
+CFLAGS = /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "AXIS2_DECLARE_EXPORT"   \
 	 /D "AXIS2_SVR_MULTI_THREADED" /w /nologo $(AXIS2_INCLUDE_PATH) 
 
 ################### linker options
@@ -55,13 +55,26 @@ LIBS = $(LIBS) libeay32MTd.lib ssleay32MTd.lib
 LIBS = $(LIBS) libeay32MT.lib ssleay32MT.lib
 !endif
 
+####################
+MT=mt.exe
+MT="$(MT)"
+
+!if "$(VC_VERSION_2005_OR_ABOVE)" == "0"
+_VC_MANIFEST_EMBED_EXE=
+_VC_MANIFEST_EMBED_DLL=
+!else
+_VC_MANIFEST_EMBED_EXE= if exist $@.manifest $(MT) -nologo -manifest $@.manifest -outputresource:$@;1
+_VC_MANIFEST_EMBED_DLL= if exist $@.manifest $(MT) -nologo -manifest $@.manifest -outputresource:$@;2
+!endif
+
+
 #################### debug symbol
 
 !if "$(DEBUG)" == "1"
-CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7
+CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7 $(CRUNTIME)d
 LDFLAGS = $(LDFLAGS) /DEBUG
 !else
-CFLAGS = $(CFLAGS) /D "NDEBUG" /O2
+CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 $(CRUNTIME)
 LDFLAGS = $(LDFLAGS)
 !endif
 
@@ -98,63 +111,89 @@ intdirs:
 mod_rampart_sample_data:
 	copy $(RAMPART_SOURCE_DIR)\samples\data\passwords.txt $(RAMPART_DISTDIR)\bin\samples\data
 
-mod_rampart:
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj \
-	      $(LIBS) axutil.lib axiom.lib axis2_parser.lib axis2_engine.lib neethi.lib\
-              /DLL /OUT:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll /IMPLIB:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.lib
-	
+$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) \
+	$(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj $(LIBS) axutil.lib axiom.lib \
+	axis2_parser.lib axis2_engine.lib neethi.lib /DLL /OUT:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll \
+	/IMPLIB:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.lib
+	-@$(_VC_MANIFEST_EMBED_DLL)
 	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\modules\rampart
 
+mod_rampart : $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll
 
-mod_rampart_pwcb:
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c /Fo$(RAMPART_INTDIR)\samples\callback\ /c
-	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\*.obj /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll \
-	      /IMPLIB:$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.lib
+$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c \
+	/Fo$(RAMPART_INTDIR)\samples\callback\ /c
+	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\*.obj \
+	/DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll /IMPLIB:$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.lib
+	-@$(_VC_MANIFEST_EMBED_DLL)
+
+mod_rampart_pwcb: $(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll
 
 
-mod_rampart_authn: 
+$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll : 
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c \
-	      /Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
-	      /OUT:$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
+	/Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib \
+	axutil.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
+	/OUT:$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
 
-mod_rampart_rd:
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\replay_detector\rampart_replay_detector_flat_file.c \
-		  /Fo$(RAMPART_INTDIR)\samples\replay_detector\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\replay_detector\*.obj mod_rampart.lib axutil.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
-		  /OUT:$(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll
+mod_rampart_authn : $(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
 
-mod_rampart_services_sec_echo:
+$(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\replay_detector\*.c \
+	/Fo$(RAMPART_INTDIR)\samples\replay_detector\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\replay_detector\*.obj mod_rampart.lib \
+	axutil.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
+	/OUT:$(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+
+mod_rampart_rd: $(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll
+
+
+$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll :
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
-	      $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c \
-	      /Fo$(RAMPART_INTDIR)\samples\services\sec_echo\ /c
+	$(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c /Fo$(RAMPART_INTDIR)\samples\services\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\sec_echo\*.obj \
-	      axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
-	      axis2_http_receiver.lib axis2_http_sender.lib \
-              /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
+	axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
+	axis2_http_receiver.lib axis2_http_sender.lib \
+        /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
 	
 	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\services.xml $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\
 
 	copy $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\server_axis2.xml $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\
 
-mod_rampart_samples_sec_echo:
+mod_rampart_services_sec_echo: $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
+
+
+$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe :
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
-	      $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
-	      /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\*.obj axutil.lib axiom.lib neethi.lib \
-	      axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
-		
-	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\data\client.axis2.xml $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data\
-	
-mod_rampart_samples_credential_provider:
+        $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
+        /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib neethi.lib \
+        axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
+	-@$(_VC_MANIFEST_EMBED_EXE)
+			
+	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\data\client.axis2.xml \
+	$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data\
+
+mod_rampart_samples_sec_echo: $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
+
+
+$(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll :
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
-	      $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c \
-	      /Fo$(RAMPART_INTDIR)\samples\credential_provider\ /c
+        $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c \
+        /Fo$(RAMPART_INTDIR)\samples\credential_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\credential_provider\cred_provider.obj \
-	      axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
-	      axis2_http_receiver.lib axis2_http_sender.lib \
-              /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll
+        axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
+        axis2_http_receiver.lib axis2_http_sender.lib \
+        /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+
+mod_rampart_samples_credential_provider: $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll
 
 mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
 
