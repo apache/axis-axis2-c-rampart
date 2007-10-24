@@ -85,14 +85,9 @@ oxs_derivation_derive_key(const axutil_env_t *env,
         dk_id,
         oxs_key_get_size(secret, env),
         oxs_key_get_usage(secret, env));
-        /*status = oxs_key_populate_with_buf(derived_key, env, 
-            oxs_key_get_buffer(secret, env), 
-            1,
-            2);
-            oxs_key_get_size(secret, env), 
-            oxs_key_get_usage(secret, env));
-    oxs_key_set_name(derived_key, env, dk_id);    */
- 
+    
+    oxs_key_set_nonce(derived_key, env, oxs_util_generate_nonce(env, 16)); /*Nonce length*/ 
+    oxs_key_set_offset(derived_key, env, 0); /*Default ??*/ 
 
     return status;
 }

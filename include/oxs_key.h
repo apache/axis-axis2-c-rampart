@@ -103,6 +103,10 @@ extern "C"
         const oxs_key_t *key,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN int AXIS2_CALL
+    oxs_key_get_offset(
+        const oxs_key_t *key,
+        const axutil_env_t *env);
     /**
     * Gets the offset of the key.
     * @param key oxs_key ptr to key
@@ -141,6 +145,17 @@ extern "C"
         const axutil_env_t *env,
         int usage);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_key_set_nonce(
+        oxs_key_t *key,
+        const axutil_env_t *env,
+        axis2_char_t *nonce); 
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_key_set_offset(
+        oxs_key_t *key,
+        const axutil_env_t *env,
+        int offset);
     /**
     * Free function for key.
     * @param key oxs_key ptr to key

@@ -302,7 +302,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             /*Derive a new key*/
             derived_key = oxs_key_create(env);
             status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key); 
-
+            
             /*Set the derived key for the encryption*/
             oxs_ctx_set_key(enc_ctx, env, derived_key);
 

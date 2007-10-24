@@ -94,6 +94,16 @@ oxs_key_get_usage(
     return key->usage;
 }
 
+AXIS2_EXTERN int AXIS2_CALL
+oxs_key_get_offset(
+    const oxs_key_t *key,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    return key->offset;
+}
+
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_set_name(
@@ -145,7 +155,18 @@ oxs_key_set_usage(
 
     key->usage = usage;
     return AXIS2_SUCCESS;
+}
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_key_set_offset(
+    oxs_key_t *key,
+    const axutil_env_t *env,
+    int offset)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    key->offset = offset;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN oxs_key_t *AXIS2_CALL
@@ -305,7 +326,7 @@ oxs_key_for_algo(oxs_key_t *key,
 
     key_buf = oxs_buffer_create(env);
     /*The actual key generation happens here*/
-    ret = generate_random_data(env, key_buf, size);
+    ret = openssl_generate_random_data(env, key_buf, size);
     if (ret == AXIS2_FAILURE)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
