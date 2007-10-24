@@ -37,6 +37,15 @@
 extern "C"
 {
 #endif
+    
+    /**
+     * Generate a nonce or a random text for a given length
+     * @param env pointer to environment struct
+     * @param length the length of the nonce 
+     * @return the generated nonce
+     **/
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_util_generate_nonce(const axutil_env_t *env, int length);
 
     /**
      * Generates an id for an element.

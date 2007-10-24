@@ -27,7 +27,7 @@
 
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-generate_random_data(const axutil_env_t *env, oxs_buffer_t *buffer, int size)
+openssl_generate_random_data(const axutil_env_t *env, oxs_buffer_t *buffer, int size)
 {
     axis2_status_t status =  AXIS2_FAILURE;
     int ret;

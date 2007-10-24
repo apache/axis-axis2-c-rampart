@@ -24,13 +24,13 @@
 #include <axutil_base64.h>
 #include <axutil_property.h>
 #include <time.h>
-#include <oxs_buffer.h>
-#include <openssl_util.h>
 #include <axis2_msg_ctx.h>
 #include <rampart_constants.h>
 #include <rampart_callback.h>
 #include <rampart_credentials.h>
 #include <rampart_replay_detector.h>
+#include <oxs_buffer.h>
+#include <oxs_utility.h>
 
 /*Calculate the hash of concatenated string of
  * nonce, created and the password.
@@ -214,7 +214,7 @@ rampart_callback_password(const axutil_env_t *env,
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_generate_nonce(const axutil_env_t *env, int length)
 {
-    oxs_buffer_t *buffer = NULL;
+    /*oxs_buffer_t *buffer = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     char *rand_str = NULL;
     axis2_char_t* encoded_str = NULL;
@@ -225,8 +225,8 @@ rampart_generate_nonce(const axutil_env_t *env, int length)
     encoded_str = AXIS2_MALLOC(env->allocator, sizeof(char) * (axutil_base64_encode_len(length)+1));
     axutil_base64_encode(encoded_str, rand_str, oxs_buffer_get_size(buffer, env));
     oxs_buffer_free(buffer, env);
-
-    return encoded_str;
+    */
+    return oxs_util_generate_nonce(env, length);
 }
 
 

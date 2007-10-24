@@ -19,7 +19,29 @@
 #include <axis2_util.h>
 #include <oxs_utility.h>
 #include <oxs_error.h>
+#include <oxs_buffer.h>
 #include <oxs_asym_ctx.h>
+#include <openssl_util.h>
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+oxs_util_generate_nonce(const axutil_env_t *env, int length)
+{
+    oxs_buffer_t *buffer = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
+    char *rand_str = NULL;
+    axis2_char_t* encoded_str = NULL;
+
+    buffer = oxs_buffer_create(env);
+    status = openssl_generate_random_data(env, buffer, length);
+    rand_str = (char*)oxs_buffer_get_data(buffer, env);
+    encoded_str = AXIS2_MALLOC(env->allocator, sizeof(char) * (axutil_base64_encode_len(length)+1));
+    axutil_base64_encode(encoded_str, rand_str, oxs_buffer_get_size(buffer, env));
+    oxs_buffer_free(buffer, env);
+
+    return encoded_str;
+}
+
+
 
 /* Generates an id for an element.
  * Specially used in xml encryption and signature references.

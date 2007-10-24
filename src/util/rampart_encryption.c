@@ -224,6 +224,8 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_char_t *asym_key_id = NULL;
     axiom_node_t *encrypted_key_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
+    axis2_bool_t server_side = AXIS2_FALSE;
+    rp_property_t *token = NULL;
     int i = 0;
     int j = 0;
 
@@ -274,8 +276,10 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         2. Encrypt using that key       
      */
    
-    /*TODO: We need to take the decision whether to use derived keys or not*/
-    /*use_derived_keys = rampart_context_check_is_derived_keys (env, token??);*/
+    /*We need to take the decision whether to use derived keys or not*/
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
+    use_derived_keys = rampart_context_check_is_derived_keys (env, token);
 
     /*Repeat until all encryption parts are encrypted*/
     for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
