@@ -59,7 +59,7 @@ oxs_token_build_offset_element(const axutil_env_t *env,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_OFFSET);
         return NULL;
     }
-    if(offset > 0){
+    if(offset > -1){
         offset_val = (axis2_char_t *) AXIS2_MALLOC(env->allocator, sizeof(axis2_char_t) * 32);
         sprintf(offset_val, "%d", offset );
     }

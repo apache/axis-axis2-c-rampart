@@ -22,7 +22,6 @@
 #include <axiom_element.h>
 #include <oxs_axiom.h>
 
-
 AXIS2_EXTERN int AXIS2_CALL
 oxs_token_get_length_value(const axutil_env_t *env,
                            axiom_node_t *length_node)

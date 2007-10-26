@@ -41,7 +41,7 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     
     axis2_char_t *dk_id = NULL;
     axis2_char_t *nonce = NULL;
-    int offset = 0;
+    int offset = -1;
     int length = 0; 
 
     dk_token = oxs_token_build_derived_key_token_element(env, parent, dk_id, NULL);
@@ -49,14 +49,17 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     ref_token = oxs_token_build_reference_element(env, dk_token, stref_uri, stref_val_type);
 
     /*Create offset*/
-    if(offset > 0){
+    offset = oxs_key_get_offset(derived_key, env);
+    if(offset > -1){
         offset_token = oxs_token_build_offset_element(env, dk_token, offset);
     }
     /*Create length*/
+    length = oxs_key_get_size(derived_key, env);
     if(length > 0){
         length_token = oxs_token_build_length_element(env, dk_token, length);
     }
     /*Create nonce*/
+    nonce = oxs_key_get_nonce(derived_key, env);
     if(nonce){
         nonce_token = oxs_token_build_nonce_element(env, dk_token, nonce);
     }
