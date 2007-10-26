@@ -410,12 +410,20 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         
         dk = (oxs_key_t *)axutil_array_list_get(dk_list, env, j);
         
-        /*TODO build the <wsc:DerivedKeyToken> element*/
+        /*Build the <wsc:DerivedKeyToken> element*/
         if(dk){
             oxs_derivation_build_derived_key_token(env, dk, sec_node, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, asym_key_id);
         }
+        /*Do we need derived keys? Can we free 'em here?*/
+        oxs_key_free(dk, env);
+        dk = NULL;
+    
     }/*End of For loop of dk_list iteration*/
-
+    
+    /*Free derrived key list*/
+    axutil_array_list_free(dk_list, env);
+    dk_list = NULL;
+ 
     /*Add ReferenceList element to the Security header*/
     status = oxs_token_build_data_reference_list(env, sec_node, id_list);
 

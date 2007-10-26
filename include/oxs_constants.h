@@ -64,7 +64,7 @@ extern "C"
 #define OXS_SIG_ID "SigID"
 #define OXS_CERT_ID "CertID"
 #define OXS_EMBEDDED_ID "EmbeddedID"
-#define OXS_DERIVED_ID "DerivedID"
+#define OXS_DERIVED_ID "DKID"
 
     /****************************************************************
        Global namespaces 

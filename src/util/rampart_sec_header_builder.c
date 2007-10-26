@@ -46,16 +46,13 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
 
-    /*TODO Symmetric binding*/
 
     if(rampart_context_is_include_timestamp(rampart_context,env))
     {
         int ttl = -1;
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, building Timestamp Token");
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, Using default timeToLive value %d",
-                       RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
         /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
         ttl = rampart_context_get_ttl(rampart_context,env);
+        AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, building Timestamp Token using  timeToLive value %d", ttl);
 
         status = rampart_timestamp_token_build(env,
                                                sec_node, sec_ns_obj, ttl);
@@ -117,6 +114,13 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
                 return AXIS2_FAILURE;
         }
         /*3. Encrypt signature*/
+        status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if(status != AXIS2_SUCCESS)
+        {
+             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Encrypt signature failed. ERROR");
+                    return AXIS2_FAILURE;
+        }
+ 
         
     }else{ /*Sign before encrypt*/
         is_encrypt_before_sign = AXIS2_FALSE;
@@ -298,7 +302,6 @@ rampart_shb_build_message(
                 }
 
                 /*Then encrypt the signature */
-                printf("\n>>>>> We need to encrypt signature with derived keys\n");
                 status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {

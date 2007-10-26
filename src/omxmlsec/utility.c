@@ -56,8 +56,8 @@ oxs_util_generate_id(const axutil_env_t *env,
 	axis2_char_t *uuid = NULL;
 
 	uuid = axutil_uuid_gen(env);
-    random =  axutil_strndup(env, uuid,18);
-    sprintf(_id, "%s-%s",prefix,random);
+    random =  axutil_strndup(env, uuid, 18);
+    sprintf(_id, "%s-%s", prefix, random);
     id = (axis2_char_t*)axutil_strdup(env, _id);
 	AXIS2_FREE(env->allocator, uuid);
     AXIS2_FREE(env->allocator, random);

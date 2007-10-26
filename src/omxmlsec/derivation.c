@@ -44,6 +44,8 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     int offset = -1;
     int length = 0; 
 
+    dk_id = oxs_key_get_name(derived_key, env);
+
     dk_token = oxs_token_build_derived_key_token_element(env, parent, dk_id, NULL);
     str_token = oxs_token_build_security_token_reference_element(env, dk_token); 
     ref_token = oxs_token_build_reference_element(env, dk_token, stref_uri, stref_val_type);
