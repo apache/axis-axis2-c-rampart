@@ -100,12 +100,15 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
          * 2. sign parts to be signed
          * 3. encrypt signature if required
          */
+        /*1. Encrypt*/
         status = rampart_enc_dk_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if (status == AXIS2_FAILURE)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Sym binding, Encryption failed in Symmetric binding. ERROR");
             return AXIS2_FAILURE;
         }
+        
+        /*2. Sign*/
         status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if(status != AXIS2_SUCCESS)
         {
@@ -113,7 +116,8 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
                                 "[rampart][shb] Signing failed. ERROR");
                 return AXIS2_FAILURE;
         }
-         
+        /*3. Encrypt signature*/
+        
     }else{ /*Sign before encrypt*/
         is_encrypt_before_sign = AXIS2_FALSE;
 
@@ -294,6 +298,7 @@ rampart_shb_build_message(
                 }
 
                 /*Then encrypt the signature */
+                printf("\n>>>>> We need to encrypt signature with derived keys\n");
                 status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
                 if(status != AXIS2_SUCCESS)
                 {

@@ -223,9 +223,11 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_char_t *enc_sym_algo = NULL;
     axis2_char_t *asym_key_id = NULL;
     axiom_node_t *encrypted_key_node = NULL;
+    axiom_node_t *sig_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
+    axis2_bool_t signature_protection = AXIS2_FALSE;
     int i = 0;
     int j = 0;
 
@@ -242,7 +244,27 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         nodes_to_encrypt = NULL;
         return AXIS2_FAILURE;
     }
+    
+    /*If the sp:EncryptSignature is ON  &&  We sign before the encryption, we need to add signature node too. */
+    signature_protection = rampart_context_is_encrypt_signature(
+                               rampart_context, env);
+    if(signature_protection)
+    {
+        if(!(rampart_context_is_encrypt_before_sign(rampart_context, env)))
+        {
+            /*Sign->Encrypt. Easy. just add the signature node to the list*/
+            sig_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
+            if(!sig_node)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption]Encrypting signature, Sigature Not found");
+                return AXIS2_FAILURE;
+            }
+            axutil_array_list_add(nodes_to_encrypt, env, sig_node);
+        }
+    }
 
+    
     /*Get the symmetric encryption algorithm*/
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
 
@@ -725,6 +747,7 @@ rampart_enc_encrypt_signature(
 {
 
     oxs_key_t *session_key = NULL;
+    oxs_key_t *derived_key = NULL;
     axiom_node_t *node_to_enc = NULL;
     axiom_node_t *enc_data_node = NULL;
     oxs_ctx_t *enc_ctx = NULL;
@@ -735,6 +758,10 @@ rampart_enc_encrypt_signature(
     axiom_node_t *encrypted_key_node = NULL;
     axiom_node_t *temp_node = NULL;
     axiom_node_t *node_to_move = NULL;
+    axis2_bool_t use_derived_keys = AXIS2_TRUE;
+    axis2_bool_t server_side = AXIS2_FALSE;
+    rp_property_t *token = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
 
     session_key = rampart_context_get_session_key(rampart_context, env);
 
@@ -744,7 +771,7 @@ rampart_enc_encrypt_signature(
                         "[rampart][rampart_encryption]Encrypting Signature.Session key not found");
         return AXIS2_FAILURE;
     }
-
+    /*Get <ds:Signature> node*/
     node_to_enc = oxs_axiom_get_node_by_local_name(
                       env, sec_node, OXS_NODE_SIGNATURE);
 
@@ -765,8 +792,25 @@ rampart_enc_encrypt_signature(
     }
 
     enc_ctx = oxs_ctx_create(env);
-    oxs_ctx_set_key(enc_ctx, env, session_key);
 
+    /*We need to take the decision whether to use derived keys or not*/
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
+    use_derived_keys = rampart_context_check_is_derived_keys (env, token);
+    if(AXIS2_TRUE == use_derived_keys){
+            /*Derive a new key*/
+            derived_key = oxs_key_create(env);
+            status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key);
+
+            /*Set the derived key for the encryption*/
+            oxs_ctx_set_key(enc_ctx, env, derived_key);
+
+            /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
+            oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
+    }else{
+        /*No Key derivation is needed we will proceed with the same session key*/
+        oxs_ctx_set_key(enc_ctx, env, session_key);
+    }
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
 
     oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);
@@ -787,6 +831,13 @@ rampart_enc_encrypt_signature(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption] Encrypting node failed");
         return AXIS2_FAILURE;
+    }
+    /*If we have used a derrived key, we need to attach it to the Securuty Header*/
+    if(AXIS2_TRUE == use_derived_keys){
+        axis2_char_t *asym_key_id = NULL;
+ 
+        asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
+        oxs_derivation_build_derived_key_token(env, derived_key, sec_node, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, asym_key_id);  
     }
 
     node_to_move = oxs_axiom_get_node_by_local_name(
