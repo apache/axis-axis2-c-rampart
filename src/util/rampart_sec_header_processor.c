@@ -31,6 +31,7 @@
 #include <oxs_axiom.h>
 #include <oxs_asym_ctx.h>
 #include <oxs_tokens.h>
+#include <oxs_derivation.h>
 #include <axutil_utils.h>
 #include <axutil_array_list.h>
 #include <axis2_key_type.h>
@@ -575,13 +576,20 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
             key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node, OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
             if(key_info_node){
                 axiom_node_t *ki_ref_node = NULL;
+                axis2_char_t *ki_ref_node_name = NULL;
+
                 /*We have KeyInfo node. Explore it and get the key*/
                 ki_ref_node = rampart_shp_process_key_info_for_ref(env, key_info_node, envelope_node);
-                
+                ki_ref_node_name = axiom_util_get_localname(ki_ref_node, env);
 
-
-                /*Now derive the key to decrypt using information available in the DerivedKeyToken*/
-
+                /*If the refered node is a DerivedKeyToken*/
+                if(0 == axutil_strcmp(ki_ref_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){ 
+                    /*Now derive the key to decrypt using information available in the DerivedKeyToken*/
+                     
+                }else{
+                    /*Something that we do not process right now. Let the key_to_decrypt==NULL so that the sesison key will be in use*/
+                    key_to_decrypt = NULL;
+                }
             }
             if(!key_to_decrypt){
                 /*We have NO key information. Use the same session key for the decryption*/

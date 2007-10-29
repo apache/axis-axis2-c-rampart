@@ -242,6 +242,7 @@ oxs_key_create(const axutil_env_t *env)
     key->buf = NULL;
     key->name = NULL;
     key->nonce = NULL;
+    key->label = NULL;
     key->usage = -1;
     key->offset = 0;
 
