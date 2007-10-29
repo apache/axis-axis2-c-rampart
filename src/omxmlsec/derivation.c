@@ -23,7 +23,7 @@
 #include <oxs_utility.h>
 #include <oxs_asym_ctx.h>
 #include <oxs_tokens.h>
-
+#include <openssl_hmac.h>
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 oxs_derivation_build_derived_key_token(const axutil_env_t *env,
