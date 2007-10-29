@@ -82,6 +82,18 @@ extern "C"
     oxs_key_get_nonce(
         const oxs_key_t *key,
         const axutil_env_t *env);
+
+    /**
+    * Gets the label of the key.
+    * @param key oxs_key ptr to key
+    * @param env pointer to environment struct
+    * @return label of the key
+    */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    oxs_key_get_label(
+        const oxs_key_t *key,
+        const axutil_env_t *env);
+
     /**
     * Gets the size of the key.
     * @param key oxs_key ptr to key
@@ -150,6 +162,12 @@ extern "C"
         oxs_key_t *key,
         const axutil_env_t *env,
         axis2_char_t *nonce); 
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_key_set_label(
+        oxs_key_t *key,
+        const axutil_env_t *env,
+        axis2_char_t *label); 
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_key_set_offset(

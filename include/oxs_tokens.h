@@ -542,6 +542,20 @@ extern "C"
     oxs_token_get_nonce_value(const axutil_env_t *env,
                            axiom_node_t *nonce_node);
 
+	/**
+	 * Creates <wsc:Label> element
+	 */
+	AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+	oxs_token_build_label_element(const axutil_env_t *env,
+										axiom_node_t *parent,
+										axis2_char_t* label);
+	/**
+	 * Gets value from <wsc:Label> element
+	 */
+    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+    oxs_token_get_label_value(const axutil_env_t *env,
+                           axiom_node_t *label_node);
+
 
 
     /**

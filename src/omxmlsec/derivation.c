@@ -38,9 +38,11 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     axiom_node_t *nonce_token = NULL;
     axiom_node_t *offset_token = NULL;
     axiom_node_t *length_token = NULL;
+	axiom_node_t *label_token = NULL;
     
     axis2_char_t *dk_id = NULL;
     axis2_char_t *nonce = NULL;
+	axis2_char_t *label = NULL;
     int offset = -1;
     int length = 0; 
 
@@ -65,6 +67,11 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     if(nonce){
         nonce_token = oxs_token_build_nonce_element(env, dk_token, nonce);
     }
+    /*Create label*/
+    label = oxs_key_get_label(derived_key, env);
+    if(label){
+        label_token = oxs_token_build_label_element(env, dk_token, label);
+    }
    
     return dk_token; 
 }
@@ -78,22 +85,10 @@ oxs_derivation_derive_key(const axutil_env_t *env,
                          )
 {
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_char_t *dk_id = NULL;
-    /*TODO Concatenate the seed and label*/
+    /*TODO check for derivation algorithm*/
 
-    /*TODO P_SHA1 (secret, label + seed)*/
-    
-    /*TODO Populate the derived key. What we do here is fake. We use the same key ;-)*/
-    dk_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
-    status = oxs_key_populate(derived_key, env,
-        oxs_key_get_data(secret, env),
-        dk_id,
-        oxs_key_get_size(secret, env),
-        oxs_key_get_usage(secret, env));
-    
-    oxs_key_set_nonce(derived_key, env, oxs_util_generate_nonce(env, 16)); /*Nonce length*/ 
-    oxs_key_set_offset(derived_key, env, 0); /*Default ??*/ 
-
+	status = openssl_p_sha1(env, secret, label, seed, OPENSSL_DEFAULT_KEY_LEN_FOR_PSHA1, 
+					OPENSSL_DEFAULT_KEY_OFFSET_FOR_PSHA1, derived_key);
     return status;
 }
 

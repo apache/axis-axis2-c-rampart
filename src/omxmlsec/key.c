@@ -31,6 +31,7 @@ struct oxs_key_t
     int           usage;
     
     axis2_char_t *nonce;  /*Specially added for WS-Secure Conversation*/
+    axis2_char_t *label;  /*Specially added for WS-Secure Conversation*/
     int           offset; /*Specially added for WS-Secure Conversation*/
 };
 
@@ -64,6 +65,16 @@ oxs_key_get_nonce(
     AXIS2_ENV_CHECK(env, NULL);
 
     return key->nonce;
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+oxs_key_get_label(
+    const oxs_key_t *key,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, NULL);
+
+    return key->label;
 }
 
 AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
@@ -144,6 +155,24 @@ oxs_key_set_nonce(
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_key_set_label(
+    oxs_key_t *key,
+    const axutil_env_t *env,
+    axis2_char_t *label)
+{
+
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error, label, AXIS2_FAILURE);
+
+    if (key->label)
+    {
+        AXIS2_FREE(env->allocator, key->label);
+        key->label = NULL;
+    }
+    key->label = axutil_strdup(env, label);
+    return AXIS2_SUCCESS;
+}
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_set_usage(
