@@ -41,6 +41,39 @@
 #include <rampart_replay_detector.h>
 
 /*Private functions*/
+static axiom_node_t*
+rampart_shp_process_key_info_for_ref(const axutil_env_t *env,
+                            axiom_node_t *key_info_node,
+                            axiom_node_t *envelope_node)
+{
+    axiom_node_t *str_node = NULL;
+    axiom_node_t *ref_node = NULL;
+    axiom_node_t *refed_node = NULL;
+    axis2_char_t *ref_val = NULL;
+    axis2_char_t *id = NULL;
+
+    /*Get the STR*/ 
+    str_node = oxs_axiom_get_first_child_node_by_name(env, key_info_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
+
+    /*Get Reference element*/
+    if(str_node){
+        ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
+
+        /*Get the reference value in the @URI*/
+        if(ref_node){
+            ref_val = oxs_token_get_reference(env, ref_node);
+
+            /*Need to remove # sign from the ID*/
+            id = axutil_string_substring_starting_at(ref_val, 1);
+
+            /*Search for an element with the val(@Id)=@URI*/
+            refed_node =  oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id, NULL);
+        }
+    }
+    
+    return refed_node;
+}
+
 static axis2_bool_t
 rampart_shp_validate_qnames(const axutil_env_t *env,
                             axiom_node_t *node)
@@ -433,10 +466,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
     if(AXIS2_FAILURE == status)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][shp] Cannot decrypt the EncryptedKey");
-        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                      "Key decryption failed", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Cannot decrypt the EncryptedKey");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Key decryption failed", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
         oxs_asym_ctx_free(asym_ctx, env);
         asym_ctx = NULL;
         return AXIS2_FAILURE;
@@ -447,7 +478,6 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
     /*Before decrypt we should get the symmetric algo from policy.
       So for each encrypted element we can compare the algo. */
-
     enc_sym_algo_in_pol = rampart_context_get_enc_sym_algo(rampart_context, env);
     if(!enc_sym_algo_in_pol)
     {
@@ -473,29 +503,24 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         axiom_soap_body_t *soap_body = NULL;
 
         /*This need to be done in order to build the soap body.Do not remove.*/
-
         soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
 
         /*Get the i-th element and decrypt it */
-
         id = (axis2_char_t*)axutil_array_list_get(reference_list, env, i);
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Decrypting node, ID=%s", id);
 
         /*Need to remove # sign from the ID*/
-
         id2 = axutil_string_substring_starting_at(id, 1);
         envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
 
         /*Search for the node by its ID*/
-
         enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id2, NULL);
         if(!enc_data_node)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][shp] Node with ID=%s cannot be found", id);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Node with ID=%s cannot be found", id);
 
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Cannot find EncryptedData element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Cannot find EncryptedData element", 
+                                        RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             oxs_asym_ctx_free(asym_ctx, env);
             asym_ctx = NULL;
             return AXIS2_FAILURE;
@@ -506,10 +531,9 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
         if(!mtd_node)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "Cannot find EncryptionMethod Element");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot find EncryptionMethod Element");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Cannot find EncryptionMethod Element", 
+                                    RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             oxs_asym_ctx_free(asym_ctx, env);
             asym_ctx = NULL;
             return AXIS2_FAILURE;
@@ -518,16 +542,15 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         sym_algo = oxs_token_get_encryption_method(env, mtd_node);
         if(!sym_algo)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "Cannot get the Symmetric Algorithm from Soap message.");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Cannot find EncryptionMethod Element", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot get the Symmetric Algorithm from Soap message.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Cannot find EncryptionMethod Element", 
+                            RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             oxs_asym_ctx_free(asym_ctx, env);
             asym_ctx = NULL;
 
             return AXIS2_FAILURE;
         }
-
+        /*Would the encryption method tally with the policy?*/
         if(axutil_strcmp(sym_algo, enc_sym_algo_in_pol)!=0)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -540,10 +563,32 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
             return AXIS2_FAILURE;
 
         }
-
+        /*Get ready for the decryption. Create an encryption ctx*/
         ctx = oxs_ctx_create(env);
-        oxs_ctx_set_key(ctx, env, decrypted_sym_key);
+       
+        /*Now we should chk for the key ref. Who knows if keys were derived?*/
+        if(decrypted_sym_key){
+            oxs_key_t *key_to_decrypt = NULL;
+            axiom_node_t *key_info_node = NULL;
 
+            /*Chk the EncryptedDataNode for KeyInfo.*/
+            key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node, OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
+            if(key_info_node){
+                axiom_node_t *ki_ref_node = NULL;
+                /*We have KeyInfo node. Explore it and get the key*/
+                ki_ref_node = rampart_shp_process_key_info_for_ref(env, key_info_node, envelope_node);
+                
+
+
+                /*Now derive the key to decrypt using information available in the DerivedKeyToken*/
+
+            }
+            if(!key_to_decrypt){
+                /*We have NO key information. Use the same session key for the decryption*/
+                key_to_decrypt = decrypted_sym_key;
+            }
+            oxs_ctx_set_key(ctx, env, key_to_decrypt);
+        }
         status = oxs_xml_enc_decrypt_node(env, ctx, enc_data_node, &decrypted_node);
 
         if(AXIS2_FAILURE == status)
@@ -558,10 +603,6 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
-
-        /*AXIS2_FREE(env->allocator, id);
-        id = NULL;
-        */
 
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
     }/*end of For loop*/
