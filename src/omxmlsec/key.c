@@ -33,6 +33,8 @@ struct oxs_key_t
     axis2_char_t *nonce;  /*Specially added for WS-Secure Conversation*/
     axis2_char_t *label;  /*Specially added for WS-Secure Conversation*/
     int           offset; /*Specially added for WS-Secure Conversation*/
+    int           length; /*Specially added for WS-Secure Conversation. used to pass the derived key length for processing.*/
+							/*size is used when building and length is used when processing*/
 };
 
 /******************** end of function headers *****************/
@@ -113,6 +115,16 @@ oxs_key_get_offset(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     return key->offset;
+}
+
+AXIS2_EXTERN int AXIS2_CALL
+oxs_key_get_length(
+    const oxs_key_t *key,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    return key->length;
 }
 
 
@@ -198,6 +210,18 @@ oxs_key_set_offset(
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_key_set_length(
+    oxs_key_t *key,
+    const axutil_env_t *env,
+    int length)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    key->length = length;
+    return AXIS2_SUCCESS;
+}
+
 AXIS2_EXTERN oxs_key_t *AXIS2_CALL
 oxs_key_dup(oxs_key_t *key,
             const axutil_env_t *env)
@@ -245,6 +269,7 @@ oxs_key_create(const axutil_env_t *env)
     key->label = NULL;
     key->usage = -1;
     key->offset = 0;
+    key->length = 0;
 
     /*additionally we need to create a buffer to keep data*/
     key->buf = oxs_buffer_create(env);
@@ -265,6 +290,8 @@ oxs_key_free(oxs_key_t *key,
     key->name = NULL;
     AXIS2_FREE(env->allocator,  key->nonce);
     key->nonce = NULL;
+    AXIS2_FREE(env->allocator, key->label);
+    key->label = NULL;
 
     AXIS2_FREE(env->allocator,  key);
     key = NULL;

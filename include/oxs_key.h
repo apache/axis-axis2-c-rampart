@@ -115,10 +115,6 @@ extern "C"
         const oxs_key_t *key,
         const axutil_env_t *env);
 
-    AXIS2_EXTERN int AXIS2_CALL
-    oxs_key_get_offset(
-        const oxs_key_t *key,
-        const axutil_env_t *env);
     /**
     * Gets the offset of the key.
     * @param key oxs_key ptr to key
@@ -127,6 +123,17 @@ extern "C"
     */
     AXIS2_EXTERN int AXIS2_CALL
     oxs_key_get_offset(
+        const oxs_key_t *key,
+        const axutil_env_t *env);
+
+    /**
+    * Gets the length of the key.
+    * @param key oxs_key ptr to key
+    * @param env pointer to environment struct
+    * @return length of the key
+    */
+    AXIS2_EXTERN int AXIS2_CALL
+    oxs_key_get_length(
         const oxs_key_t *key,
         const axutil_env_t *env);
 
@@ -174,6 +181,12 @@ extern "C"
         oxs_key_t *key,
         const axutil_env_t *env,
         int offset);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_key_set_length(
+        oxs_key_t *key,
+        const axutil_env_t *env,
+        int length);
     /**
     * Free function for key.
     * @param key oxs_key ptr to key
