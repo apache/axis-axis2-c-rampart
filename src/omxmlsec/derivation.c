@@ -135,8 +135,7 @@ oxs_derivation_derive_key(const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     /*TODO check for derivation algorithm*/
 
-	status = openssl_p_sha1(env, secret, label, seed, oxs_key_get_length(derived_key, env), 
-					oxs_key_get_offset(derived_key, env), derived_key);
+	status = openssl_p_sha1(env, secret, label, seed, derived_key);
     return status;
 }
 

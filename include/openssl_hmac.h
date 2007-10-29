@@ -50,8 +50,6 @@ extern "C" {
 			 oxs_key_t *secret,
 			 oxs_buffer_t *label,
 			 oxs_buffer_t *seed,
-			 unsigned int length,
-			 unsigned int offset,
 			 oxs_key_t *derived_key);
 
     /* @} */

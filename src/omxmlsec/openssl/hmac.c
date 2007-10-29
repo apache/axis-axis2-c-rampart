@@ -144,8 +144,6 @@ openssl_p_sha1(const axutil_env_t *env,
 			oxs_key_t *secret,
 			oxs_buffer_t *label,
 			oxs_buffer_t *seed, 
-			unsigned int length, 
-			unsigned int offset,
 			oxs_key_t *derived_key)
 {
 	oxs_buffer_t *label_and_seed = NULL;
@@ -153,6 +151,8 @@ openssl_p_sha1(const axutil_env_t *env,
 	unsigned char *output = NULL;
 	axis2_char_t *dk_id = NULL;
 	axis2_status_t status = AXIS2_FAILURE;
+	unsigned int length;
+	unsigned int offset;
 
 	if(!derived_key)
 	{
@@ -165,6 +165,9 @@ openssl_p_sha1(const axutil_env_t *env,
 		oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] secret is not valid ");
 		return status;
 	}
+
+	length = oxs_key_get_length(derived_key, env);
+	offset = oxs_key_get_offset(derived_key, env);
 
 	if (!length)
 	{
