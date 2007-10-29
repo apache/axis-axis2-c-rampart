@@ -36,6 +36,35 @@
 /*Private functions*/
 
 axis2_status_t AXIS2_CALL
+rampart_enc_get_nodes_to_encrypt(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axiom_soap_envelope_t *soap_envelope,
+    axutil_array_list_t *nodes_to_encrypt)
+{
+
+    axis2_status_t status1 = AXIS2_SUCCESS;
+    axis2_status_t status2 = AXIS2_SUCCESS;
+
+    status1 = rampart_context_get_nodes_to_encrypt(
+                  rampart_context, env, soap_envelope, nodes_to_encrypt);
+
+    status2 = rampart_context_get_elements_to_encrypt(
+                  rampart_context, env, soap_envelope, nodes_to_encrypt);
+
+    if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS)
+    {
+        return AXIS2_SUCCESS;
+    }
+    else
+    {
+        return AXIS2_FAILURE;
+    }
+}
+
+
+/*Public functions*/
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_enc_encrypt_session_key(const axutil_env_t *env,
     oxs_key_t *session_key,
     axis2_msg_ctx_t *msg_ctx,
@@ -179,35 +208,6 @@ rampart_enc_encrypt_session_key(const axutil_env_t *env,
 
 }
 
-axis2_status_t AXIS2_CALL
-rampart_enc_get_nodes_to_encrypt(
-    rampart_context_t *rampart_context,
-    const axutil_env_t *env,
-    axiom_soap_envelope_t *soap_envelope,
-    axutil_array_list_t *nodes_to_encrypt)
-{
-
-    axis2_status_t status1 = AXIS2_SUCCESS;
-    axis2_status_t status2 = AXIS2_SUCCESS;
-
-    status1 = rampart_context_get_nodes_to_encrypt(
-                  rampart_context, env, soap_envelope, nodes_to_encrypt);
-
-    status2 = rampart_context_get_elements_to_encrypt(
-                  rampart_context, env, soap_envelope, nodes_to_encrypt);
-
-    if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS)
-    {
-        return AXIS2_SUCCESS;
-    }
-    else
-    {
-        return AXIS2_FAILURE;
-    }
-}
-
-
-/*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,

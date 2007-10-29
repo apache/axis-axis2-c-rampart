@@ -16,6 +16,7 @@
  */
 
 #include <rampart_signature.h>
+#include <rampart_encryption.h>
 #include <stdio.h>
 #include <axutil_utils.h>
 #include <oxs_ctx.h>

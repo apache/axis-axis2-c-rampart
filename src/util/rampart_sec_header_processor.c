@@ -307,6 +307,11 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     void *key_buf = NULL;
 
     /*Get EncryptedData references */
+    /*E.g. <xenc:ReferenceList xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
+              <xenc:DataReference URI="#EncDataID-a78c09c6-85e3-1dc1"/>
+              <xenc:DataReference URI="#EncDataID-a78c1128-85e3-1dc1"/>
+           </xenc:ReferenceList>
+    */
     ref_list_node = oxs_axiom_get_first_child_node_by_name(
                         env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
@@ -322,7 +327,6 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                    axutil_array_list_size(reference_list, env));
 
     /*Get the algorithm to decrypt the sesison key*/
-
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(
                        env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
     enc_asym_algo = oxs_token_get_encryption_method(env, enc_mtd_node);
@@ -335,23 +339,21 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     enc_asym_algo_in_pol = rampart_context_get_enc_asym_algo(rampart_context, env);
     if(!enc_asym_algo_in_pol)
     {
-        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                      "Error in the policy. No asym algo", RAMPART_FAULT_IN_POLICY, msg_ctx);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][shp] Assymetric enc algorithm not specified in policy.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Error in the policy. No asym algo", RAMPART_FAULT_IN_POLICY, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Assymetric enc algorithm not specified in policy.");
         return AXIS2_FAILURE;
     }
+
+    /*If the algo tally with the policy?*/
     if(axutil_strcmp(enc_asym_algo_in_pol, enc_asym_algo) != 0)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "The key is encrypted with the wrong algorithm");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "The key is encrypted with the wrong algorithm");
         rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
                                       "The key is encrypted with the wrong algorithm", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
         return AXIS2_FAILURE;
     }
-
+    
     asym_ctx = oxs_asym_ctx_create(env);
-
     oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
 
     key_buf = rampart_context_get_prv_key(rampart_context, env);
@@ -422,10 +424,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     }
     oxs_asym_ctx_set_operation(asym_ctx, env, OXS_ASYM_CTX_OPERATION_PRV_DECRYPT);
 
-    /*oxs_asym_ctx_set_format(asym_ctx, env, OXS_ASYM_CTX_FORMAT_PKCS12);*/
-
     /*Create an empty key*/
-
     decrypted_sym_key = oxs_key_create(env);
 
     /*Call decrypt for the EncryptedKey*/
@@ -1105,29 +1104,27 @@ rampart_shp_process_message(const axutil_env_t *env,
 
     AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing security header");
 
-
-
     if((rampart_context_get_binding_type(rampart_context, env)) ==
             RP_PROPERTY_ASYMMETRIC_BINDING)
     {
-
+        /*If the signature should be encrypted?*/
         signature_protection = rampart_context_is_encrypt_signature(
                                    rampart_context, env);
-
+        
+        /*If the encrypttion occured before the signature. */
         if(rampart_context_is_encrypt_before_sign(rampart_context, env))
         {
+            /*If enc -> sig -> enc(sig)*/
             if(signature_protection)
             {
                 axiom_node_t *ref_list_node = NULL;
 
-                cur_node = oxs_axiom_get_node_by_local_name(
-                               env, sec_node, OXS_NODE_ENCRYPTED_KEY);
+                cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);
 
                 if(!cur_node)
                 {
 
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shp] No Encrypted Key element.");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] No Encrypted Key element.");
 
                     rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                                   "Signature is not encrypted.", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
@@ -1163,7 +1160,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                 ref_list_node = NULL;
 
             }
-            /*First we should verify signature.*/
+            /*If enc -> sig AND signature is not encrypted.  First we should verify signature.*/
             if(rampart_context_check_whether_to_sign(rampart_context, env))
             {
                 cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
@@ -1210,13 +1207,11 @@ rampart_shp_process_message(const axutil_env_t *env,
                 cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
                 if(cur_node)
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shp] policy does not specify signature");
-                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
-                                                  "Policy does not specify signature ", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] policy does not specify signature");
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Policy does not specify signature ", 
+                                                    RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
 
                     return AXIS2_FAILURE;
-
                 }
                 else
                 {

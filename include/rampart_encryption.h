@@ -78,7 +78,14 @@ extern "C" {
         axiom_soap_envelope_t *soap_envelope,
         axiom_node_t *sec_node);
 
-
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_enc_encrypt_session_key(const axutil_env_t *env,
+    oxs_key_t *session_key,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node,
+    axutil_array_list_t *id_list);
 
 
     /* @} */
