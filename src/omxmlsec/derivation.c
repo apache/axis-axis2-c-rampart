@@ -25,14 +25,14 @@
 #include <oxs_tokens.h>
 #include <openssl_hmac.h>
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
+AXIS2_EXTERN oxs_key_t* AXIS2_CALL
 oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     axiom_node_t *dk_token_node,
     axiom_node_t *root_node,
-    oxs_key_t *session_key,
-    oxs_key_t *derived_key)
+    oxs_key_t *session_key)
 {
     oxs_key_t *base_key = NULL;
+    oxs_key_t *derived_key = NULL;
     axiom_node_t *nonce_node = NULL;
     axiom_node_t *length_node = NULL;
     axiom_node_t *offset_node = NULL;
@@ -41,6 +41,7 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     /*Default values*/
     int offset = -1;
     int length = 0;
+
 
     /*If the session_key is NULL then extract it form the refered EncryptedKey. Otherwise use it*/
     if(!session_key){
@@ -67,10 +68,21 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
         nonce = oxs_token_get_nonce_value(env, nonce_node);
     }
 
+
+    /*Create a new(empty) key as the derived key*/
+    derived_key = oxs_key_create(env);
+    oxs_key_set_offset(derived_key, env, offset);
+    oxs_key_set_nonce(derived_key, env, nonce);
+    oxs_key_set_length(derived_key, env, length);
+
     /*Now derive the key using the base_key and other parematers*/
     status = oxs_derivation_derive_key(env, base_key, NULL, NULL, derived_key);     
-    
-    return AXIS2_SUCCESS;
+    if(AXIS2_FAILURE == status){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot derive the key from given element");
+        oxs_key_free(derived_key, env);
+        derived_key = NULL;
+    }
+    return derived_key;
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL

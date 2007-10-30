@@ -68,12 +68,11 @@ extern "C"
 
     /* If the (optional) session_key is NULL then extract it form the refered EncryptedKey. Otherwise use it
      * to Derive a new key using information available in the dk_token*/
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN oxs_key_t * AXIS2_CALL
     oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     axiom_node_t *dk_token,
     axiom_node_t *root_node,
-    oxs_key_t *session_key,
-    oxs_key_t *derived_key);
+    oxs_key_t *session_key);
     /** @} */
 #ifdef __cplusplus
 }

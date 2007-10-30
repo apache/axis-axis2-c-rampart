@@ -42,6 +42,9 @@
 #include <rampart_replay_detector.h>
 
 /*Private functions*/
+
+/*Process a KeyInfo and return the referred node*/
+#if 1
 static axiom_node_t*
 rampart_shp_process_key_info_for_ref(const axutil_env_t *env,
                             axiom_node_t *key_info_node,
@@ -69,11 +72,16 @@ rampart_shp_process_key_info_for_ref(const axutil_env_t *env,
 
             /*Search for an element with the val(@Id)=@URI*/
             refed_node =  oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id, NULL);
+            if(!refed_node){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Node cannot be found with the Id=%s.", id);
+                return NULL;
+            }
         }
     }
     
     return refed_node;
 }
+#endif
 
 static axis2_bool_t
 rampart_shp_validate_qnames(const axutil_env_t *env,
@@ -341,11 +349,6 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     void *key_buf = NULL;
 
     /*Get EncryptedData references */
-    /*E.g. <xenc:ReferenceList xmlns:xenc="http://www.w3.org/2001/04/xmlenc#">
-              <xenc:DataReference URI="#EncDataID-a78c09c6-85e3-1dc1"/>
-              <xenc:DataReference URI="#EncDataID-a78c1128-85e3-1dc1"/>
-           </xenc:ReferenceList>
-    */
     ref_list_node = oxs_axiom_get_first_child_node_by_name(
                         env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
@@ -566,37 +569,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         }
         /*Get ready for the decryption. Create an encryption ctx*/
         ctx = oxs_ctx_create(env);
-       
-        /*Now we should chk for the key ref. Who knows if keys were derived?*/
-        if(decrypted_sym_key){
-            oxs_key_t *key_to_decrypt = NULL;
-            axiom_node_t *key_info_node = NULL;
-
-            /*Chk the EncryptedDataNode for KeyInfo.*/
-            key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node, OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
-            if(key_info_node){
-                axiom_node_t *ki_ref_node = NULL;
-                axis2_char_t *ki_ref_node_name = NULL;
-
-                /*We have KeyInfo node. Explore it and get the key*/
-                ki_ref_node = rampart_shp_process_key_info_for_ref(env, key_info_node, envelope_node);
-                ki_ref_node_name = axiom_util_get_localname(ki_ref_node, env);
-
-                /*If the refered node is a DerivedKeyToken*/
-                if(0 == axutil_strcmp(ki_ref_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){ 
-                    /*Now derive the key to decrypt using information available in the DerivedKeyToken*/
-                     
-                }else{
-                    /*Something that we do not process right now. Let the key_to_decrypt==NULL so that the sesison key will be in use*/
-                    key_to_decrypt = NULL;
-                }
-            }
-            if(!key_to_decrypt){
-                /*We have NO key information. Use the same session key for the decryption*/
-                key_to_decrypt = decrypted_sym_key;
-            }
-            oxs_ctx_set_key(ctx, env, key_to_decrypt);
-        }
+        oxs_ctx_set_key(ctx, env, decrypted_sym_key);
         status = oxs_xml_enc_decrypt_node(env, ctx, enc_data_node, &decrypted_node);
 
         if(AXIS2_FAILURE == status)
@@ -666,7 +639,7 @@ rampart_shp_process_reference_list(
                        "[rampart][shp] Nothing Encrypted Outside security header");
         return AXIS2_SUCCESS;
     }
-
+    /*Go thru each and every element in the ReferenceList*/
     for(i=0 ; i < axutil_array_list_size(reference_list, env); i++ )
     {
         axis2_char_t *id = NULL;
@@ -675,7 +648,6 @@ rampart_shp_process_reference_list(
         axiom_node_t *envelope_node = NULL;
         axiom_soap_body_t *soap_body = NULL;
         axiom_node_t *key_info_node = NULL;
-        axiom_node_t *str_node = NULL;
 
         soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
 
@@ -706,8 +678,10 @@ rampart_shp_process_reference_list(
         key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node,
                         OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
 
+#if 0
         if(key_info_node)
         {
+            axiom_node_t *str_node = NULL;
             str_node = oxs_axiom_get_first_child_node_by_name(env, key_info_node,
                        OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
 
@@ -724,27 +698,98 @@ rampart_shp_process_reference_list(
                     {
                         axis2_char_t *ref = NULL;
                         axis2_char_t *ref_id = NULL;
-                        axiom_node_t *encrypted_key_node = NULL;
+                        axiom_node_t *reffed_node = NULL;
 
                         ref = oxs_token_get_reference(env, str_child_node);
                         ref_id = axutil_string_substring_starting_at(axutil_strdup(env, ref), 1);
-
-                        encrypted_key_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id, NULL);
+                        reffed_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id, NULL);
                         AXIS2_FREE(env->allocator, ref_id);
                         ref_id = NULL;
-                        if(encrypted_key_node)
+                        if(reffed_node)
                         {
                             ref_list_node = axiom_node_detach(ref_list_node, env);
-                            axiom_node_add_child(encrypted_key_node, env, ref_list_node);
+                            axiom_node_add_child(reffed_node, env, ref_list_node);
 
                             status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context,
-                                     soap_envelope, sec_node, encrypted_key_node);
+                                     soap_envelope, sec_node, reffed_node);
                             break;
                         }
+
                     }
                 }
             }
         }
+#else
+       if(key_info_node){
+            axiom_node_t *reffed_node = NULL;
+            axis2_char_t *reffed_node_name = NULL;
+
+            /*This can be a derrived key or an EncryptedKey*/
+            reffed_node = rampart_shp_process_key_info_for_ref(env, key_info_node, envelope_node);
+            if(!reffed_node){
+                /*Error*/
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Reffered node cannot be found");
+                return AXIS2_FAILURE;
+            }
+            reffed_node_name = axiom_util_get_localname(reffed_node, env);
+            if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){
+                /*Encrypted by a DerivedKey*/
+                oxs_key_t *key_to_decrypt = NULL;
+                oxs_key_t *session_key = NULL;
+                 
+                /*Get the session key. This is for the performance. Assuming we have only one session key, which is the common usage*/
+                session_key = rampart_context_get_session_key(rampart_context, env);
+                if(!session_key){
+                    /*Sesison key is not in the context. Need to find the session key. This wil lbe happened in the following method.
+                      So we log this and pass the NULL session key*/
+                    AXIS2_LOG_INFO(env->log,  "[rampart][shp] On processing ReferenceList, failed to get the session key");
+                }
+                key_to_decrypt = oxs_derivation_extract_derived_key_from_token(env, reffed_node, envelope_node, session_key);
+                
+                if(!key_to_decrypt){
+                    /*Error cannot find the key to decrypt. We will use the session key. Just in case.*/
+                    key_to_decrypt = session_key;
+                }
+                if(key_to_decrypt){
+                    /*Now if everything is fine we need to decrypt*/
+                    oxs_ctx_t *ctx = NULL;
+                    axiom_node_t *decrypted_node = NULL;
+
+                    ctx = oxs_ctx_create(env);
+                    oxs_ctx_set_key(ctx, env, key_to_decrypt);
+                    status = oxs_xml_enc_decrypt_node(env, ctx, enc_data_node, &decrypted_node);
+
+                    if(AXIS2_FAILURE == status)
+                    {
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                                          "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
+                        return AXIS2_FAILURE;
+                    }
+            
+                    /*Free*/
+                    oxs_ctx_free(ctx, env);
+                    ctx = NULL;
+
+                    break;
+                }else{
+                    /*Can't help. Error retrieving the key to decrypt the reference. */
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  "[rampart][shp] On processing ReferenceList, failed to get the key to decrypt");
+                    return AXIS2_FAILURE;
+                }
+            }else if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_ENCRYPTED_KEY)){
+                /*Encrypted by the session key*/
+                ref_list_node = axiom_node_detach(ref_list_node, env);
+                axiom_node_add_child(reffed_node, env, ref_list_node);
+
+                status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context,
+                                             soap_envelope, sec_node, reffed_node);
+                break;
+            }else{
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Reffered node is not supported %s", reffed_node_name);
+                return AXIS2_FAILURE;
+            }
+       }
+#endif                        
     }
 
     axutil_array_list_free(reference_list, env);
@@ -879,7 +924,7 @@ rampart_shp_process_signature(
             /*we do not need to process at this moment*/
         }
         cur_node = axiom_node_get_next_sibling(cur_node, env);
-    }
+    }/*Eof While*/
 
     /*Get the key identifiers and build the certificate*/
     /*First we should verify with policy*/
@@ -1153,8 +1198,8 @@ rampart_shp_process_message(const axutil_env_t *env,
 
     AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing security header");
 
-    if((rampart_context_get_binding_type(rampart_context, env)) ==
-            RP_PROPERTY_ASYMMETRIC_BINDING)
+    if(((rampart_context_get_binding_type(rampart_context, env)) == RP_PROPERTY_ASYMMETRIC_BINDING) || 
+        ((rampart_context_get_binding_type(rampart_context, env)) == RP_PROPERTY_SYMMETRIC_BINDING)    )
     {
         /*If the signature should be encrypted?*/
         signature_protection = rampart_context_is_encrypt_signature(
@@ -1334,11 +1379,11 @@ rampart_shp_process_message(const axutil_env_t *env,
                     if(status != AXIS2_SUCCESS)
                     {
                         rampart_create_fault_envelope(
-                            env, RAMPART_FAULT_INVALID_SECURITY, "Error in decrypting the signature. ",
+                            env, RAMPART_FAULT_INVALID_SECURITY, "Error in processing ref list. ",
                             RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
 
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                        "[rampart][shp] Error in decrypting the Signature.");
+                                        "[rampart][shp] Error in processing ref list.");
                         return status;
                     }
                 }
@@ -1356,7 +1401,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                     status = AXIS2_SUCCESS;
             }
         }
-        else
+        else /*Sign -> Enc. The easy way*/
         {
             /*We should decrypt the message first*/
             if(rampart_context_check_whether_to_encrypt(rampart_context,env))
@@ -1497,7 +1542,7 @@ rampart_shp_process_message(const axutil_env_t *env,
             need_replay_detection = AXIS2_TRUE;
         }
         if(AXIS2_TRUE == need_replay_detection)
-		{/*TODO Chk for the policy configuration*/
+		{
 			axis2_char_t* replay_detector_name = rampart_context_get_replay_detector_name(rampart_context, env);
 			if (replay_detector_name)
 			{
@@ -1555,7 +1600,7 @@ rampart_shp_process_message(const axutil_env_t *env,
         /*Do the action accordingly*/
         return AXIS2_SUCCESS;
     }
-
+/*
     else if((rampart_context_get_binding_type(rampart_context, env))
             == RP_PROPERTY_SYMMETRIC_BINDING)
     {
@@ -1565,7 +1610,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                         "Symmetric binding is not supported");
         return AXIS2_FAILURE;
     }
-
+*/
     else if((rampart_context_get_binding_type(rampart_context, env)) ==
             RP_PROPERTY_TRANSPORT_BINDING)
     {
