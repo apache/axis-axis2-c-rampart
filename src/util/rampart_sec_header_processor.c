@@ -354,15 +354,17 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
 
     /*If there are no references. Nothing to do. Return success*/
+/* 
     if((!reference_list) || (0 == axutil_array_list_size(reference_list, env)))
     {
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List is empty");
         return AXIS2_SUCCESS;
     }
+    
     AXIS2_LOG_INFO(env->log,
                    "[rampart][shp] Reference List has %d node reference(s)",
                    axutil_array_list_size(reference_list, env));
-
+*/
     /*Get the algorithm to decrypt the sesison key*/
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(
                        env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
@@ -493,9 +495,9 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         asym_ctx = NULL;
         return AXIS2_FAILURE;
     }
-
-    for(i=0 ; i < axutil_array_list_size(reference_list, env); i++ )
-    {
+    if(reference_list){
+      for(i=0 ; i < axutil_array_list_size(reference_list, env); i++ )
+      {
         axis2_char_t *id = NULL;
         axis2_char_t *id2 = NULL;
         axiom_node_t *enc_data_node = NULL;
@@ -586,16 +588,18 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         ctx = NULL;
 
         AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
-    }/*end of For loop*/
-
+      }/*end of For loop*/
+    }
 
     /*Set the security processed result*/
     rampart_set_security_processed_result(
         env, msg_ctx, RAMPART_SPR_ENC_CHECKED, RAMPART_YES);
 
     /*Free*/
-    oxs_asym_ctx_free(asym_ctx, env);
-    asym_ctx = NULL;
+    if(asym_ctx){
+        oxs_asym_ctx_free(asym_ctx, env);
+        asym_ctx = NULL;
+    }
 
     if(decrypted_sym_key)
     {
@@ -603,9 +607,10 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         decrypted_sym_key = NULL;
     }
 
-    axutil_array_list_free(reference_list, env);
-    reference_list = NULL;
-
+    if(reference_list){
+        axutil_array_list_free(reference_list, env);
+        reference_list = NULL;
+    }
     return AXIS2_SUCCESS;
 }
 
@@ -934,8 +939,7 @@ rampart_shp_process_signature(
 
     if(!token)
     {
-        AXIS2_LOG_INFO(env->log,
-                       "[rampart][shp] Signature Token is not specified");
+        AXIS2_LOG_INFO(env->log,  "[rampart][shp] Signature Token is not specified");
         return AXIS2_SUCCESS;
     }
     token_type = rp_property_get_type(token, env);

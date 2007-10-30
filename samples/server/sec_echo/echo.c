@@ -30,7 +30,7 @@ axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node)
     AXIS2_ENV_CHECK(env, NULL);
     
     name = axiom_util_get_localname(node, env);
-     
+    AXIS2_LOG_INFO(env->log, "[rampart][sec_echo_service] Recieved node %s", name);     
     ret_node = build_om_programatically(env, name);
     return ret_node;
 }
