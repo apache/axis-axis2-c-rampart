@@ -76,7 +76,7 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     oxs_key_set_length(derived_key, env, length);
 
     /*Now derive the key using the base_key and other parematers*/
-    status = oxs_derivation_derive_key(env, base_key, NULL, NULL, derived_key);     
+    status = oxs_derivation_derive_key(env, base_key, derived_key, AXIS2_FALSE);     
     if(AXIS2_FAILURE == status){
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot derive the key from given element");
         oxs_key_free(derived_key, env);
@@ -98,19 +98,23 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     axiom_node_t *nonce_token = NULL;
     axiom_node_t *offset_token = NULL;
     axiom_node_t *length_token = NULL;
+	axis2_char_t *uri = NULL;
 	/*axiom_node_t *label_token = NULL;*/
     
     axis2_char_t *dk_id = NULL;
+    axis2_char_t *dk_name = NULL;
     axis2_char_t *nonce = NULL;
 	axis2_char_t *label = NULL;
     int offset = -1;
     int length = 0; 
 
-    dk_id = oxs_key_get_name(derived_key, env);
+    dk_name = oxs_key_get_name(derived_key, env);
+    dk_id = axutil_string_substring_starting_at(dk_name, 1);
 
+	uri = axutil_stracat(env, "#", stref_uri);
     dk_token = oxs_token_build_derived_key_token_element(env, parent, dk_id, NULL);
     str_token = oxs_token_build_security_token_reference_element(env, dk_token); 
-    ref_token = oxs_token_build_reference_element(env, dk_token, stref_uri, stref_val_type);
+    ref_token = oxs_token_build_reference_element(env, str_token, uri, stref_val_type);
 
     /*Create offset*/
     offset = oxs_key_get_offset(derived_key, env);
@@ -139,15 +143,21 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_derivation_derive_key(const axutil_env_t *env,
                          oxs_key_t *secret,
-                         oxs_buffer_t *label,
-                         oxs_buffer_t *seed,
-                         oxs_key_t *derived_key
+                         oxs_key_t *derived_key,
+						 axis2_bool_t build
                          )
 {
     axis2_status_t status = AXIS2_FAILURE;
     /*TODO check for derivation algorithm*/
 
-	status = openssl_p_sha1(env, secret, label, seed, derived_key);
+	if (build)
+	{
+		status = openssl_p_sha1(env, secret, NULL, NULL, derived_key);
+	}
+	else
+	{
+		status = openssl_p_sha1(env, secret, oxs_key_get_label(derived_key, env), oxs_key_get_nonce(derived_key, env), derived_key);
+	}
     return status;
 }
 

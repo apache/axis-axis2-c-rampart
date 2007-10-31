@@ -48,8 +48,8 @@ extern "C" {
 		AXIS2_EXTERN axis2_status_t AXIS2_CALL
 		openssl_p_sha1(const axutil_env_t *env,
 			 oxs_key_t *secret,
-			 oxs_buffer_t *label,
-			 oxs_buffer_t *seed,
+			 axis2_char_t *label,
+			 axis2_char_t *seed,
 			 oxs_key_t *derived_key);
 
     /* @} */

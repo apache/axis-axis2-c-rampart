@@ -46,17 +46,15 @@ extern "C"
      * @param env pointer to environment struct
      * @param secret The secret is the shared secret that is exchanged (note that if two secrets were securely exchanged,\
      * possible as part of an initial exchange, they are concatenated in the order they were sent/received)
-     * @param label The label is the concatenation of the client's label and the service's label
-     * @param seed  The seed is the concatenation of nonce values (if multiple were exchanged) that were exchanged (initiator + receiver)
      * @param derived_key The derived key. Caller must create and free
+	 * @param build_fresh Whether to build fresh or build using details in derived key(in case of recovering the derive key from xml)
      * @return status 
      **/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_derivation_derive_key(const axutil_env_t *env,
                          oxs_key_t *secret,
-                         oxs_buffer_t *label,
-                         oxs_buffer_t *seed,
-                         oxs_key_t *derived_key
+                         oxs_key_t *derived_key,
+						 axis2_bool_t build_fresh
                          );
 
     AXIS2_EXTERN axiom_node_t * AXIS2_CALL

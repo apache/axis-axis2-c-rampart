@@ -323,7 +323,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         if(AXIS2_TRUE == use_derived_keys){
             /*Derive a new key*/
             derived_key = oxs_key_create(env);
-            status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key); 
+            status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE); 
             
             /*Set the derived key for the encryption*/
             oxs_ctx_set_key(enc_ctx, env, derived_key);
@@ -412,7 +412,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         
         /*Build the <wsc:DerivedKeyToken> element*/
         if(dk){
-            oxs_derivation_build_derived_key_token(env, dk, sec_node, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, asym_key_id);
+            oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
         }
         /*Do we need derived keys? Can we free 'em here?*/
         oxs_key_free(dk, env);
@@ -808,7 +808,7 @@ rampart_enc_encrypt_signature(
     if(AXIS2_TRUE == use_derived_keys){
             /*Derive a new key*/
             derived_key = oxs_key_create(env);
-            status = oxs_derivation_derive_key(env, session_key, NULL, NULL, derived_key);
+            status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE);
 
             /*Set the derived key for the encryption*/
             oxs_ctx_set_key(enc_ctx, env, derived_key);
@@ -845,7 +845,7 @@ rampart_enc_encrypt_signature(
         axis2_char_t *asym_key_id = NULL;
  
         asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
-        oxs_derivation_build_derived_key_token(env, derived_key, sec_node, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, asym_key_id);  
+        oxs_derivation_build_derived_key_token(env, derived_key, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);  
     }
 
     node_to_move = oxs_axiom_get_node_by_local_name(

@@ -142,14 +142,15 @@ openssl_p_hash(const axutil_env_t *env,
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_p_sha1(const axutil_env_t *env,
 			oxs_key_t *secret,
-			oxs_buffer_t *label,
-			oxs_buffer_t *seed, 
+			axis2_char_t *label,
+			axis2_char_t *seed,
 			oxs_key_t *derived_key)
 {
 	oxs_buffer_t *label_and_seed = NULL;
 	unsigned int key_len = 0;
 	unsigned char *output = NULL;
 	axis2_char_t *dk_id = NULL;
+	axis2_char_t *dk_name = NULL;
 	axis2_status_t status = AXIS2_FAILURE;
 	unsigned int length;
 	unsigned int offset;
@@ -176,38 +177,45 @@ openssl_p_sha1(const axutil_env_t *env,
 
 	label_and_seed = oxs_buffer_create(env);
 
-	if((!label) || (!oxs_buffer_get_size(label, env)))
+	if((!label) || (!axutil_strlen(label)))
 	{
 		oxs_buffer_append(label_and_seed, env, (unsigned char*)OPENSSL_DEFAULT_LABEL_FOR_PSHA1, axutil_strlen(OPENSSL_DEFAULT_LABEL_FOR_PSHA1));
 		oxs_key_set_label(derived_key, env, OPENSSL_DEFAULT_LABEL_FOR_PSHA1);
 	}
 	else
 	{
-		oxs_buffer_append(label_and_seed, env, oxs_buffer_get_data(label, env), oxs_buffer_get_size(label, env));
-		oxs_key_set_label(derived_key, env, (axis2_char_t*)oxs_buffer_get_data(label, env));
+		oxs_buffer_append(label_and_seed, env, (unsigned char*)label, axutil_strlen(label));
 	}
 
-	if ((!seed) || (!oxs_buffer_get_size(seed, env)))
+	/*
+	 * if seed is not needed, can pass empty. if have to be created, then pass NULL
+	 */
+	if (!seed)
 	{
-		 oxs_key_set_nonce(derived_key, env, (axis2_char_t*)oxs_util_generate_nonce(env, 16));
-		 oxs_buffer_append(label_and_seed, env,  (unsigned char*)oxs_key_get_nonce(derived_key, env), axutil_base64_encode_len(16));
+		seed = oxs_util_generate_nonce(env, 16);
+		oxs_key_set_nonce(derived_key, env, seed);
+		oxs_buffer_append(label_and_seed, env,  (unsigned char*)seed, axutil_strlen(seed));
+		AXIS2_FREE(env->allocator, seed);
+		seed = NULL;
 	}
 	else
 	{
-		oxs_buffer_append(label_and_seed, env, oxs_buffer_get_data(seed, env), oxs_buffer_get_size(seed, env));
-		oxs_key_set_nonce(derived_key, env, (axis2_char_t*)oxs_buffer_get_data(seed, env));
+		oxs_buffer_append(label_and_seed, env, (unsigned char*)seed, axutil_strlen(seed));
 	}
+	
+	
 	oxs_key_set_offset(derived_key, env, offset);
-
 	key_len = length + offset;
 	output = (unsigned char*)AXIS2_MALLOC(env->allocator, key_len + 1);
 	status = openssl_p_hash(env, secret, oxs_buffer_get_data(label_and_seed, env), oxs_buffer_get_size(label_and_seed, env), output, key_len);
 	output = (unsigned char*)axutil_string_substring_starting_at((axis2_char_t*)output, offset);
 	dk_id = (axis2_char_t*)oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
+	dk_name = axutil_stracat(env, "#", dk_id);
 
-	status = status && oxs_key_populate(derived_key, env, (unsigned char*)output, dk_id, length, oxs_key_get_usage(secret, env));
+	status = status && oxs_key_populate(derived_key, env, (unsigned char*)output, dk_name, length, oxs_key_get_usage(secret, env));
 	AXIS2_FREE(env->allocator, output);
 	AXIS2_FREE(env->allocator, dk_id);
+	AXIS2_FREE(env->allocator, dk_name);
 	oxs_buffer_free(label_and_seed, env);
 
 	return status;

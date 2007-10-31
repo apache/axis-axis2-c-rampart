@@ -28,8 +28,9 @@
 #include <oxs_error.h>
 #include <oxs_encryption.h>
 #include <oxs_xml_encryption.h>
-#include <oxs_token_encrypted_data.h>
+#include <oxs_tokens.h>
 #include <oxs_x509_cert.h>
+#include <oxs_derivation.h>
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
@@ -61,9 +62,24 @@ load_sample_xml(const axutil_env_t *env,
 oxs_key_t *create_key(axutil_env_t *env)
 {
     oxs_key_t *key = NULL;
+	oxs_key_t *derived_key = NULL;
     key = oxs_key_create(env);
-    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_DECRYPT);
-    return key;
+    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_SESSION);
+	derived_key = oxs_key_create(env);
+	oxs_derivation_derive_key(env, key, derived_key, AXIS2_TRUE);
+
+    return derived_key;
+}
+
+oxs_key_t *get_key(axutil_env_t *env, axiom_node_t *dk_token_node)
+{
+    oxs_key_t *key = NULL;
+	oxs_key_t *derived_key = NULL;
+    key = oxs_key_create(env);
+    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_SESSION);
+	derived_key = oxs_derivation_extract_derived_key_from_token(env, dk_token_node, NULL, key);
+
+    return derived_key;
 }
 
 axis2_status_t 
@@ -73,6 +89,7 @@ decrypt(axutil_env_t *env,  axis2_char_t *filename)
     axiom_node_t *tmpl = NULL;
     axiom_node_t *enc_data_node = NULL;
     axiom_node_t *decrypted_node = NULL;
+	axiom_node_t *derived_key = NULL;
     oxs_key_t *key = NULL;
 
     tmpl = load_sample_xml(env , tmpl, filename);
@@ -80,8 +97,9 @@ decrypt(axutil_env_t *env,  axis2_char_t *filename)
     axis2_char_t *serialized_data = NULL;
     FILE *outf;
 
+	derived_key = axiom_node_get_last_child(tmpl, env);
     /*Create key*/
-    key = create_key(env);
+    key = get_key (env, derived_key);
 
     /*Create ctx*/
     ctx = oxs_ctx_create(env);
@@ -96,6 +114,10 @@ decrypt(axutil_env_t *env,  axis2_char_t *filename)
     }else{
         printf("\noxs_xml_enc_decrypt_node FAILURE\n");
     }
+
+	axiom_node_detach(derived_key, env);
+	axiom_node_free_tree(derived_key, env);
+
     serialized_data = axiom_node_to_string(tmpl, env);
     outf = fopen("decrypted-result.xml", "wb");
     fwrite(serialized_data, 1, axutil_strlen(serialized_data), outf);
@@ -135,6 +157,7 @@ encrypt(axutil_env_t *env,  axis2_char_t *filename)
     enc_data_node =  oxs_token_build_encrypted_data_element(env, tmpl, OXS_TYPE_ENC_ELEMENT, id); 
 
     temp_status = oxs_xml_enc_encrypt_node(env, ctx,  enc_node, &enc_data_node);
+	oxs_derivation_build_derived_key_token(env, key, tmpl, "A", "A");
 
     oxs_ctx_free( ctx, env);
 
