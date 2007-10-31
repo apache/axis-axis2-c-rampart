@@ -70,7 +70,7 @@ int main(int argc, char** argv)
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_action(options, env,
-            "http://xmlsoap.org/Ping");
+            "http://example.com/ws/2004/09/policy/Test/EchoRequest");
     /*axis2_options_set_action(options, env,
             "urn:echo");*/
 
@@ -202,13 +202,12 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
     axiom_namespace_t *ns1 = NULL;
     axis2_char_t *om_str = NULL;
 
-    ns1 = axiom_namespace_create(env, "http://xmlsoap.org/Ping", "ns0");
-    echo_om_ele = axiom_element_create(env, NULL, "Ping", ns1, &echo_om_node);
+    ns1 = axiom_namespace_create(env, "http://ws.apache.org/rampart/c/samples", "ns1");
+    echo_om_ele = axiom_element_create(env, NULL, "echoIn", ns1, &echo_om_node);
     
     
-    /*text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
-	  */
-    axiom_element_set_text(text_om_ele, env, "Hello", echo_om_ele);
+    text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
+    axiom_element_set_text(text_om_ele, env, "Hello", text_om_node);
 
     om_str = axiom_node_to_string(echo_om_node, env);
     if (om_str){
