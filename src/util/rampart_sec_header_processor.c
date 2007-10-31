@@ -470,6 +470,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     status = oxs_xml_enc_decrypt_key(env, asym_ctx,
                                      sec_node, encrypted_key_node,  decrypted_sym_key);
 
+
     if(AXIS2_FAILURE == status)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Cannot decrypt the EncryptedKey");
@@ -478,6 +479,9 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         asym_ctx = NULL;
         return AXIS2_FAILURE;
     }
+    
+    /*Now we need to set this to the rampart context for future use*/
+    rampart_context_set_session_key(rampart_context, env, decrypted_sym_key);
 
     /*Alright now we have the key used to encrypt the elements in the reference_list*/
     /*Go thru each and every node in the list and decrypt them*/
@@ -495,6 +499,9 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         asym_ctx = NULL;
         return AXIS2_FAILURE;
     }
+    
+    /* In some cases there might not be any references in the list. For example when the derived keys are in use. 
+     * If there are references, that means those references are encrypted using the session key. So we need to decrypt 'em*/
     if(reference_list){
       for(i=0 ; i < axutil_array_list_size(reference_list, env); i++ )
       {
@@ -1218,45 +1225,35 @@ rampart_shp_process_message(const axutil_env_t *env,
                 axiom_node_t *ref_list_node = NULL;
 
                 cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);
-
                 if(!cur_node)
                 {
-
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] No Encrypted Key element.");
-
                     rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                                   "Signature is not encrypted.", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
                     return AXIS2_FAILURE;
-
                 }
 
                 if(!rampart_shp_validate_qnames(env, cur_node))
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shp] Error in the Encrypted key element");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Error in the Encrypted key element");
                     rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                                   "Error in the Encrypted key element ", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
                     return AXIS2_FAILURE;
                 }
 
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Process EncryptedKey");
-
                 status = rampart_shp_process_encrypted_key(
                              env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
                 if(status != AXIS2_SUCCESS)
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shp] Encrypted key processing failed.");
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Encrypted key processing failed.");
                     return status;
                 }
                 ref_list_node = oxs_axiom_get_first_child_node_by_name(
                                     env, cur_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
-
                 axiom_node_detach(ref_list_node, env);
-
                 axiom_node_free_tree(ref_list_node, env);
                 ref_list_node = NULL;
-
             }
             /*If enc -> sig AND signature is not encrypted.  First we should verify signature.*/
             if(rampart_context_check_whether_to_sign(rampart_context, env))
@@ -1317,11 +1314,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                 }
             }
 
-            /*This verification is a quick hack.This should be cganged in the future
-              with a proper verification method before message processing
-              Because we need to compare the protected nodes in the message
-              with the nodes to protect in policy. */
-
+            /*Check if we need to decrypt*/
             if(rampart_context_check_whether_to_encrypt(rampart_context, env))
             {
                 if(!signature_protection)
@@ -1331,9 +1324,7 @@ rampart_shp_process_message(const axutil_env_t *env,
 
                     if(!cur_node)
                     {
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                        "[rampart][shp] No Encrypted Key element.");
-
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] No Encrypted Key element.");
                         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                                       "Signature is not encrypted.", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
                         return AXIS2_FAILURE;
@@ -1341,15 +1332,13 @@ rampart_shp_process_message(const axutil_env_t *env,
 
                     if(!rampart_shp_validate_qnames(env, cur_node))
                     {
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                        "[rampart][shp] Error in the Encrypted key element");
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Error in the Encrypted key element");
                         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                                       "Error in the Encrypted key element ", RAMPART_FAULT_IN_ENCRYPTED_KEY, msg_ctx);
                         return AXIS2_FAILURE;
                     }
 
                     AXIS2_LOG_INFO(env->log, "[rampart][shp] Process EncryptedKey");
-
                     status = rampart_shp_process_encrypted_key(
                                  env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
 
