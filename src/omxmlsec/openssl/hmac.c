@@ -83,6 +83,13 @@ openssl_p_hash(const axutil_env_t *env,
 	unsigned char A1[EVP_MAX_MD_SIZE];
 	unsigned int A1_len;
 
+	/*
+	char a[5000];
+	printf("seed_len %d\n", seed_len);
+	axutil_base64_encode(a, (const char*)seed, seed_len);
+	printf("seed is %s\n", a);
+	*/
+
     if(!secret)
 	{
        oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] No key to derive ");
@@ -151,6 +158,8 @@ openssl_p_sha1(const axutil_env_t *env,
 	unsigned char *output = NULL;
 	axis2_char_t *dk_id = NULL;
 	axis2_char_t *dk_name = NULL;
+	axis2_char_t *decoded_seed = NULL;
+	unsigned int decoded_seed_len = 0;
 	axis2_status_t status = AXIS2_FAILURE;
 	unsigned int length;
 	unsigned int offset;
@@ -179,28 +188,40 @@ openssl_p_sha1(const axutil_env_t *env,
 
 	if((!label) || (!axutil_strlen(label)))
 	{
-		oxs_buffer_append(label_and_seed, env, (unsigned char*)OPENSSL_DEFAULT_LABEL_FOR_PSHA1, axutil_strlen(OPENSSL_DEFAULT_LABEL_FOR_PSHA1));
-		oxs_key_set_label(derived_key, env, OPENSSL_DEFAULT_LABEL_FOR_PSHA1);
+		label = axutil_stracat(env, OPENSSL_DEFAULT_LABEL_FOR_PSHA1, OPENSSL_DEFAULT_LABEL_FOR_PSHA1);
+		oxs_key_set_label(derived_key, env, label);
+		oxs_buffer_append(label_and_seed, env, (unsigned char*)label, axutil_strlen(label));
+		AXIS2_FREE(env->allocator, label);
+		label = NULL;
 	}
 	else
 	{
 		oxs_buffer_append(label_and_seed, env, (unsigned char*)label, axutil_strlen(label));
 	}
+	
 
-	/*
-	 * if seed is not needed, can pass empty. if have to be created, then pass NULL
-	 */
-	if (!seed)
+	if ((!seed) || (!axutil_strlen(seed)))
 	{
 		seed = oxs_util_generate_nonce(env, 16);
 		oxs_key_set_nonce(derived_key, env, seed);
-		oxs_buffer_append(label_and_seed, env,  (unsigned char*)seed, axutil_strlen(seed));
+		decoded_seed_len = axutil_base64_decode_len(seed);
+		decoded_seed = AXIS2_MALLOC(env->allocator, decoded_seed_len);
+		axutil_base64_decode(decoded_seed, seed);
 		AXIS2_FREE(env->allocator, seed);
 		seed = NULL;
 	}
 	else
 	{
-		oxs_buffer_append(label_and_seed, env, (unsigned char*)seed, axutil_strlen(seed));
+		decoded_seed_len = axutil_base64_decode_len(seed);
+		decoded_seed = AXIS2_MALLOC(env->allocator, decoded_seed_len);
+		axutil_base64_decode(decoded_seed, seed);
+	}
+
+	if(decoded_seed)
+	{
+		oxs_buffer_append(label_and_seed, env,  (unsigned char*)decoded_seed, decoded_seed_len);
+		AXIS2_FREE(env->allocator, decoded_seed);
+		decoded_seed = NULL;
 	}
 	
 	
