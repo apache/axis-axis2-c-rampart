@@ -254,7 +254,7 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     /*Remove the node from the parent*/
     if(AXIS2_SUCCESS == ret){
         axiom_node_detach(node, env);
-        /*axiom_node_free_tree(node, env);*/
+        axiom_node_free_tree(node, env);
         node = NULL;
     }
     /*Free*/
