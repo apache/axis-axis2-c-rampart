@@ -30,7 +30,7 @@
 #include <oxs_key.h>
 #include <oxs_key_mgr.h>
 #include <openssl_pkey.h>
-#include <oxs_error.h>
+#include <oxs_axiom.h>
 #include <oxs_transform.h>
 #include <oxs_transforms_factory.h>
 #include <oxs_sign_ctx.h>
@@ -660,6 +660,8 @@ rampart_sig_sign_message(
             /*Add Id attribute*/
             enc_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
             oxs_axiom_add_attribute(env, encrypted_key_node, NULL, NULL, OXS_ATTR_ID, enc_key_id);
+            /*And we have to make sure that we place this newly generated EncryptedKey node above the Signature node*/
+            oxs_axiom_interchange_nodes(env, encrypted_key_node, sig_node);
         }else{
             /*There is the encrypted key. May be used by the encryption process. So get the Id and use it*/
             enc_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);

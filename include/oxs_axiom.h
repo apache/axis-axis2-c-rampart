@@ -144,6 +144,11 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_axiom_check_node_name(const axutil_env_t *env, axiom_node_t* node, axis2_char_t* name, axis2_char_t* ns);
 
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_axiom_interchange_nodes(const axutil_env_t *env,
+                          axiom_node_t *node_to_move,
+                          axiom_node_t *node_before); 
     /** @} */
 #ifdef __cplusplus
 }
