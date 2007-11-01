@@ -35,6 +35,45 @@
 #include <rampart_signature.h>
 
 /*Private functions*/
+
+axis2_status_t AXIS2_CALL
+rampart_shb_make_enc_key_the_first_child(const axutil_env_t *env,
+    axiom_node_t *sec_node)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+    axiom_node_t *enc_key_node = NULL;
+    axiom_node_t *first_child_node = NULL;
+
+    /*return AXIS2_SUCCESS;*/
+
+    enc_key_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY , OXS_ENC_NS, NULL);
+    if(!enc_key_node){
+        /*Fine!!! There is no ENCRYPTED_KEY*/
+        return AXIS2_SUCCESS;
+    }
+    enc_key_node = axiom_node_detach(enc_key_node, env);
+    first_child_node = axiom_node_get_first_child(sec_node, env);
+
+    status = axiom_node_insert_sibling_before(first_child_node, env, enc_key_node);
+
+    return status;
+}
+
+axis2_status_t AXIS2_CALL
+rampart_interchange_nodes(const axutil_env_t *env,
+                          axiom_node_t *node_to_move,
+                          axiom_node_t *node_before)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+
+    axiom_node_t *temp_node = NULL;
+
+    temp_node = axiom_node_detach(node_to_move,env);
+    status = axiom_node_insert_sibling_before(node_before,env,temp_node);
+
+    return status;
+}
+
 axis2_status_t AXIS2_CALL
 rampart_shb_do_symmetric_binding( const axutil_env_t *env,
                                   axis2_msg_ctx_t *msg_ctx,
@@ -142,25 +181,14 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
             return AXIS2_FAILURE;
         }
     }
+    /*If there is an EncryptedKey attache it as the first child*/
+    status = rampart_shb_make_enc_key_the_first_child(env, sec_node);
+
     status = AXIS2_SUCCESS;
 
     return status;
 }
 
-axis2_status_t AXIS2_CALL
-rampart_interchange_nodes(const axutil_env_t *env,
-                          axiom_node_t *node_to_move,
-                          axiom_node_t *node_before)
-{
-    axis2_status_t status = AXIS2_FAILURE;
-
-    axiom_node_t *temp_node = NULL;
-
-    temp_node = axiom_node_detach(node_to_move,env);
-    status = axiom_node_insert_sibling_before(node_before,env,temp_node);
-
-    return status;
-}
 
 
 
@@ -374,9 +402,7 @@ rampart_shb_build_message(
                     return status;
                 }
             }
-        }
-
-        else if(enc_key_node && signature_protection)
+        }else if(enc_key_node && signature_protection)
         {
             if(!is_encrypt_before_sign)
             {
