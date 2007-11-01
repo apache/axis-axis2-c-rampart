@@ -23,6 +23,7 @@
 #include <oxs_error.h>
 #include <openssl_cipher_property.h>
 #include <openssl_util.h>
+#include <openssl_constants.h>
 
 struct oxs_key_t
 {
@@ -369,17 +370,23 @@ oxs_key_for_algo(oxs_key_t *key,
     axis2_status_t ret = AXIS2_FAILURE;
     int size;
 
-    cprop = (openssl_cipher_property_t *)oxs_get_cipher_property_for_url(env, key_algo);
-    if (!cprop)
-    {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
-                  "openssl_get_cipher_property failed");
-        return AXIS2_FAILURE;
-    }
+    /*We need to make an special entry for the HMAC-Sha1 as we do not need a cipher property for it.*/
+    if(0 == axutil_strcmp(key_algo, OXS_HREF_HMAC_SHA1)){
+        size = OPENSSL_HMAC_SHA1_KEY_LEN;
+    }else{
 
-    size = openssl_cipher_property_get_key_size(cprop, env);
-	openssl_cipher_property_free(cprop, env);
-	cprop = NULL;
+        cprop = (openssl_cipher_property_t *)oxs_get_cipher_property_for_url(env, key_algo);
+        if (!cprop)
+        {
+            oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+                  "openssl_get_cipher_property failed");
+            return AXIS2_FAILURE;
+        }
+
+        size = openssl_cipher_property_get_key_size(cprop, env);
+	    openssl_cipher_property_free(cprop, env);
+	    cprop = NULL;
+    }
 
     key_buf = oxs_buffer_create(env);
     /*The actual key generation happens here*/

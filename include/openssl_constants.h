@@ -45,6 +45,9 @@ extern "C" {
 #define OPENSSL_EVP_aes_192_cbc      "EVP_aes_192_cbc"
 #define OPENSSL_EVP_aes_256_cbc      "EVP_aes_256_cbc"
 
+#define OPENSSL_HMAC_SHA1            "HmacSha1"
+#define OPENSSL_HMAC_SHA1_KEY_LEN     32
+
 #define OPENSSL_RSA_ENCRYPTION      "rsaEncryption"
 #define OPENSSL_RSA_PKCS1_PADDING    "RSA_PKCS1_PADDING"
 #define OPENSSL_RSA_PKCS1_OAEP_PADDING     "RSA_PKCS1_OAEP_PADDING"

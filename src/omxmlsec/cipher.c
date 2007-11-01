@@ -66,22 +66,22 @@ oxs_get_cipher_name_for_url(const axutil_env_t *env,
     if (0 == axutil_strcmp(url, (axis2_char_t*)OXS_HREF_DES3_CBC))
     {
         cipher_name = OPENSSL_EVP_des_ede3_cbc;
-
     }
     else if (0 == axutil_strcmp(url, (axis2_char_t*)OXS_HREF_AES_128_CBC))
     {
         cipher_name = OPENSSL_EVP_aes_128_cbc;
-
     }
     else if (0 == axutil_strcmp(url, (axis2_char_t*)OXS_HREF_AES_192_CBC))
     {
         cipher_name = OPENSSL_EVP_aes_192_cbc;
-
     }
     else if (0 == axutil_strcmp(url, (axis2_char_t*)OXS_HREF_AES_256_CBC))
     {
         cipher_name = OPENSSL_EVP_aes_256_cbc;
-
+    }
+    else if (0 == axutil_strcmp(url, (axis2_char_t*)OXS_HREF_HMAC_SHA1))
+    {
+        cipher_name = OPENSSL_HMAC_SHA1;
     }
     else
     {

@@ -417,7 +417,6 @@ oxs_axiom_interchange_nodes(const axutil_env_t *env,
                           axiom_node_t *node_before)
 {
     axis2_status_t status = AXIS2_FAILURE;
-
     axiom_node_t *temp_node = NULL;
 
     temp_node = axiom_node_detach(node_to_move,env);

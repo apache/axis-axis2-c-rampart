@@ -281,16 +281,9 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         /*Generate the  session key*/
         session_key = oxs_key_create(env);
         rampart_context_set_session_key(rampart_context, env, session_key);
+        status = oxs_key_for_algo(session_key, env, enc_sym_algo);
     }
  
-    status = oxs_key_for_algo(session_key, env, enc_sym_algo);
-    if(AXIS2_FAILURE == status)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] Cannot generate the key for the algorithm %s, ", enc_sym_algo);
-        return AXIS2_FAILURE;
-    }
-
     id_list = axutil_array_list_create(env, 5);
     dk_list = axutil_array_list_create(env, 5);
     /* For each and every encryption part.
@@ -820,11 +813,8 @@ rampart_enc_encrypt_signature(
         oxs_ctx_set_key(enc_ctx, env, session_key);
     }
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
-
     oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);
-
     id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
-
     enc_data_node = oxs_token_build_encrypted_data_element(
                         env, sec_node, OXS_TYPE_ENC_ELEMENT, id );
     enc_status = oxs_xml_enc_encrypt_node(
