@@ -91,8 +91,8 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     /*Check the encryption and signature order*/
     if(rampart_context_is_encrypt_before_sign(rampart_context, env))
     {
-        is_encrypt_before_sign = AXIS2_TRUE;
         /*Encrypt before sign. Complicated stuff...*/
+        is_encrypt_before_sign = AXIS2_TRUE;
         /**
          * 1. encrypt parts to be encrypted
          * 2. sign parts to be signed
@@ -357,7 +357,7 @@ rampart_shb_build_message(
             }
             else /*Sign before encryption*/
             {
-                status = oxa_axiom_interchange_nodes(env, enc_key_node, sig_node);
+                status = oxs_axiom_interchange_nodes(env, enc_key_node, sig_node);
                 if(status!=AXIS2_SUCCESS)
                 {
                     AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
