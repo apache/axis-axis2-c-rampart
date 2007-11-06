@@ -210,7 +210,7 @@ int main(int argc, char *argv[])
     axis2_char_t *operation = NULL;
     openssl_pkey_t *prvkey = NULL;
     oxs_x509_cert_t *cert = NULL;
-
+    int s =-1;
 
     if (argc > 2){
         filename = argv[1];
@@ -236,7 +236,9 @@ int main(int argc, char *argv[])
     if(!cert){
          printf("Cannot load certificate");
     }
-    
+   
+    s = oxs_x509_cert_get_serial_number(cert, env);
+    printf("\n%d\n", s);
     if(0 == axutil_strcmp(operation, "S")){
         sign(env, filename, prvkey, cert);
     }else{

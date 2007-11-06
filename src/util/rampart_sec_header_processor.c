@@ -810,11 +810,22 @@ rampart_shp_process_reference_list(
 }
 
 
+static axis2_status_t
+rampart_shp_process_sym_binding_signature(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node,
+    axiom_node_t *sig_node)
+{
+    axis2_status_t status = AXIS2_FAILURE;
 
-
+    return status;
+}
 
 static axis2_status_t
-rampart_shp_process_signature(
+rampart_shp_process_asym_binding_signature(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     rampart_context_t *rampart_context,
@@ -868,6 +879,7 @@ rampart_shp_process_signature(
     }
 
     cur_node = axiom_node_get_first_element(sign_info_node, env);
+#if 0
     while(cur_node)
     {
         axis2_char_t *localname =  NULL;
@@ -899,7 +911,7 @@ rampart_shp_process_signature(
                 return AXIS2_FAILURE;
             }
         }
-        else if(axutil_strcmp(localname, OXS_NODE_REFERENCE)==0)
+        else if(axutil_strcmp(localname, OXS_NODE_REFERENCE) == 0)
         {
             /*Verify each digest method with policy*/
             axiom_node_t *digest_mtd_node = NULL;
@@ -915,8 +927,7 @@ rampart_shp_process_signature(
                     {
                         rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
                                                       "Digest created with Invalid algorithm", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                        "[rampart][shp] Digest Created with Invalid algorithm");
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Digest Created with Invalid algorithm");
 
                         return AXIS2_FAILURE;
                     }
@@ -937,7 +948,7 @@ rampart_shp_process_signature(
         }
         cur_node = axiom_node_get_next_sibling(cur_node, env);
     }/*Eof While*/
-
+#endif
     /*Get the key identifiers and build the certificate*/
     /*First we should verify with policy*/
 
@@ -960,7 +971,7 @@ rampart_shp_process_signature(
 
         return  AXIS2_FAILURE;
     }
-
+#if 0
     if(rampart_context_check_is_derived_keys(env, token))
     {
         rampart_create_fault_envelope(env, RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN,
@@ -970,6 +981,7 @@ rampart_shp_process_signature(
 
         return AXIS2_FAILURE;
     }
+#endif    
     is_include_token = rampart_context_is_token_include(
                            rampart_context, token, token_type, server_side, AXIS2_TRUE, env);
 
@@ -1167,7 +1179,7 @@ rampart_shp_process_signature(
 
     /*Verify the signature*/
 
-    status = oxs_xml_sig_verify(env, sign_ctx, sig_node,envelope_node);
+    status = oxs_xml_sig_verify(env, sign_ctx, sig_node, envelope_node);
     if(status != AXIS2_SUCCESS)
     {
         if(!axis2_msg_ctx_get_fault_soap_envelope(msg_ctx, env))
@@ -1191,6 +1203,30 @@ rampart_shp_process_signature(
 
     return status;
 }
+
+static axis2_status_t
+rampart_shp_process_signature(
+const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node,
+    axiom_node_t *sig_node)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+    
+    if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING){
+        status = rampart_shp_process_asym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node);
+    }else if ((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING){
+        status = rampart_shp_process_sym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node);
+    }else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING){
+
+    }else{
+        /*Not supported*/
+    }
+    return status;
+}
+
 
 
 /*Public functions*/
