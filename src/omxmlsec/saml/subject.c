@@ -243,10 +243,7 @@ saml_subject_build(saml_subject_t *subject, axiom_node_t *node,
 	axiom_element_t *element = NULL;
 	axiom_node_t *cn = NULL, *ccn = NULL;
 	axiom_element_t *ce = NULL, *cce = NULL;
-	saml_auth_binding_t *auth_bind = NULL;
-	char *child_name = NULL;
 	axiom_child_element_iterator_t *ci = NULL, *cci = NULL;
-	short is_named_id = AXIS2_FALSE;
 	if (axiom_node_get_node_type(node, env) != AXIOM_ELEMENT || (element = (axiom_element_t *)axiom_node_get_data_element(node, env)) == NULL)
 	{
 		return AXIS2_FAILURE;

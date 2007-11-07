@@ -465,9 +465,8 @@ AXIS2_EXTERN int AXIS2_CALL
 saml_auth_binding_build(saml_auth_binding_t *auth_bind, axiom_node_t *node, 
 						axutil_env_t *env)
 {
-	axutil_hash_t *attr_hash = NULL;
 	axiom_element_t *element = NULL;
-	axutil_hash_index_t *hi = NULL;		
+	
 	if (axiom_node_get_node_type(node, env) != AXIOM_ELEMENT || (element = (axiom_element_t *)axiom_node_get_data_element(node, env)) == NULL)
 	{
 		return AXIS2_FAILURE;
@@ -567,3 +566,4 @@ saml_auth_binding_set_location(saml_auth_binding_t *auth_binding,
 	auth_binding->location = axutil_strdup(env, location);
 	return AXIS2_SUCCESS;	
 }
+

@@ -60,7 +60,7 @@ saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, axutil_env_t *env)
 {
 	axis2_char_t *locname = NULL;
 	axiom_element_t *element = NULL;	
-	axiom_child_element_iterator_t *ci = NULL;
+	
 	if (axiom_node_get_node_type(node, env) != AXIOM_ELEMENT || (element = (axiom_element_t *)axiom_node_get_data_element(node, env)) == NULL)
 	{
 		return AXIS2_FAILURE;
@@ -158,3 +158,4 @@ saml_stmt_set_stmt(saml_stmt_t *stmt, axutil_env_t *env,
 	stmt->type = type;
 	return AXIS2_SUCCESS;
 }
+

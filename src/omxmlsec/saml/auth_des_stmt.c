@@ -218,7 +218,6 @@ saml_evidence_to_om(saml_evidence_t *evidence,
 	axiom_element_t *e = NULL, *ce = NULL;
 	axiom_node_t *n = NULL, *cn = NULL;	
 	axiom_namespace_t *ns = NULL;
-	axiom_attribute_t *attr = NULL;
 	saml_assertion_t *assertion = NULL;
 	ns = axiom_namespace_create(env, SAML_NMSP_URI, SAML_PREFIX);
 	e = axiom_element_create(env, parent, SAML_EVIDENCE, ns, &n);
@@ -656,3 +655,4 @@ saml_auth_desicion_stmt_set_subject(saml_auth_desicion_stmt_t *auth_des_stmt,
 	auth_des_stmt->subject = subject;
 	return AXIS2_SUCCESS;
 }
+

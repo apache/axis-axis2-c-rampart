@@ -56,9 +56,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_status_build(saml_status_t *status,
 {
 	
 	axiom_element_t *element = NULL;
-	axiom_element_t *sub_element = NULL;
 	axiom_child_element_iterator_t *iterator = NULL;
-	axiom_child_element_iterator_t *child_iterator = NULL;
 	axiom_node_t *child_node;
 	axis2_char_t *qname = NULL;
 
@@ -109,7 +107,6 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_status_to_om(saml_status_t *status,
 														axiom_node_t *parent, 
 														axutil_env_t *env)
 {	
-	int size = 0, i = 0;
 	axiom_element_t *e = NULL, *ce = NULL;
 	axiom_node_t *n = NULL, *cn = NULL;	
 	axiom_namespace_t *ns = NULL;
@@ -390,8 +387,8 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_response_to_om(saml_response_t *respo
 														  axutil_env_t *env)
 {
 	int size = 0, i = 0;
-	axiom_element_t *e = NULL, *ce = NULL;
-	axiom_node_t *n = NULL, *cn = NULL;	
+	axiom_element_t *e = NULL;
+	axiom_node_t *n = NULL;	
 	axiom_namespace_t *ns = NULL;
 	axiom_attribute_t *attr = NULL;
 	saml_assertion_t *assertion = NULL;
@@ -628,7 +625,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_response_unset_signature(saml_response_t *respo
 }
 AXIS2_EXTERN int AXIS2_CALL saml_response_sign(saml_response_t *response, axiom_node_t *node, axutil_env_t *env)
 {
-	 axiom_node_t *n= NULL, *sig_node = NULL;
+	 axiom_node_t *n= NULL;
 	 axis2_char_t *id = NULL;	 
 	 oxs_sign_part_t* sig_part = NULL;
 	 axutil_array_list_t *sig_parts = NULL;

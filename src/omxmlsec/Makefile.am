@@ -1,4 +1,4 @@
-SUBDIRS = tokens openssl c14n
+SUBDIRS = tokens openssl c14n saml
 lib_LTLIBRARIES = libomxmlsec.la
 
 libomxmlsec_la_SOURCES = ctx.c  buffer.c key.c cipher.c error.c axis2_utils.c axiom.c \

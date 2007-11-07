@@ -220,8 +220,6 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_subject_query_to_om(saml_subject_quer
 	axiom_element_t *e = NULL;
 	axiom_node_t *n = NULL;	
 	axiom_namespace_t *ns = NULL;
-	axiom_attribute_t *attr = NULL;
-	saml_assertion_t *assertion = NULL;
 
 	ns = axiom_namespace_create(env, SAML_PROTOCOL_NMSP, SAML_PROTOCOL_PREFIX);
 	e = axiom_element_create(env, parent, SAML_SUBJECT_QUERY, ns, &n);
@@ -306,9 +304,8 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_authentication_query_to_om(saml_authe
 																	  axiom_node_t *parent, 
 																	  axutil_env_t *env)
 {
-	int size = 0, i = 0;
-	axiom_element_t *e = NULL, *ce = NULL;
-	axiom_node_t *n = NULL, *cn = NULL;	
+	axiom_element_t *e = NULL;
+	axiom_node_t *n = NULL;	
 	axiom_namespace_t *ns = NULL;
 	axiom_attribute_t *attr = NULL;
 		
@@ -424,8 +421,8 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_autho_decision_query_to_om(saml_autho
 																	  axutil_env_t *env)
 {
 	int size = 0, i = 0;
-	axiom_element_t *e = NULL, *ce = NULL;
-	axiom_node_t *n = NULL, *cn = NULL;	
+	axiom_element_t *e = NULL;
+	axiom_node_t *n = NULL;	
 	axiom_namespace_t *ns = NULL;
 	axiom_attribute_t *attr = NULL;
 	saml_action_t *action;
@@ -447,7 +444,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_autho_decision_query_to_om(saml_autho
 		{
 			size = axutil_array_list_size(autho_decision_query->saml_actions, env);
 
-			for( i ; i < size ; i++)
+			for(i = 0 ; i < size ; i++)
 			{
 				action = (saml_action_t*)axutil_array_list_get(autho_decision_query->saml_actions, env, i);
 				saml_action_to_om(action, n, env);
@@ -550,8 +547,8 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_attr_query_to_om(saml_attr_query_t *a
 															axutil_env_t *env)
 {
 	int size = 0, i = 0;
-	axiom_element_t *e = NULL, *ce = NULL;
-	axiom_node_t *n = NULL, *cn = NULL;	
+	axiom_element_t *e = NULL;
+	axiom_node_t *n = NULL;	
 	axiom_namespace_t *ns = NULL;
 	axiom_attribute_t *attr = NULL;
 	saml_attr_desig_t *attr_desig = NULL;
@@ -573,7 +570,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_attr_query_to_om(saml_attr_query_t *a
 		{
 			size = axutil_array_list_size(attribute_query->attr_desigs, env);
 
-			for( i ; i < size ; i++)
+			for( i=0 ; i < size ; i++)
 			{
 				attr_desig = (saml_attr_desig_t*)axutil_array_list_get(attribute_query->attr_desigs, env, i);
 				saml_attr_desig_to_om(attr_desig, n, env);

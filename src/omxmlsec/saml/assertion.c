@@ -145,7 +145,6 @@ saml_assertion_build(saml_assertion_t *assertion,
 	{
 		axiom_element_t *ce = NULL;
 		axiom_node_t *cn = NULL;
-		axiom_element_t *cce = NULL;
 		axiom_node_t *ccn = NULL;
 		axiom_child_element_iterator_t *cci = NULL;
 		while(AXIS2_TRUE == axiom_child_element_iterator_has_next(ci, env))
@@ -224,8 +223,8 @@ saml_assertion_to_om(saml_assertion_t *assertion,
 					 axiom_node_t *parent, axutil_env_t *env)
 {
 	int i = 0, size = 0;
-	axiom_element_t *e = NULL, *ce = NULL, *cce = NULL;
-	axiom_node_t *n = NULL, *cn = NULL, *ccn = NULL;
+	axiom_element_t *e = NULL, *ce = NULL;
+	axiom_node_t *n = NULL, *cn = NULL;
 	axiom_attribute_t *attr = NULL;
 	axiom_namespace_t *ns = NULL;	
 	saml_condition_t *cond = NULL;
@@ -542,9 +541,7 @@ saml_assertion_unsign(saml_assertion_t *a, axutil_env_t *env)
 AXIS2_EXTERN int AXIS2_CALL
 saml_assertion_sign(saml_assertion_t *a, axutil_env_t *env, oxs_sign_ctx_t *sign_ctx, axiom_node_t **node)
 {
-	 axiom_node_t *n= NULL, *sig_node = NULL;
-	 axis2_char_t *id = NULL;
-	 axis2_char_t *om_str = NULL;	
+	 axiom_node_t *n= NULL;
 	 oxs_sign_part_t* sig_part = NULL;
 	 axutil_array_list_t *sig_parts = NULL;
 	 int size = 0, i = 0;

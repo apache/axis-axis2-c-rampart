@@ -159,7 +159,6 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_build(saml_request_t *request,
 	axutil_hash_index_t *hi = NULL;
 	axiom_child_element_iterator_t *iterator = NULL;
 	axiom_node_t *child_node = NULL;
-	axutil_qname_t *qname = NULL;
 	axis2_char_t *element_local_name = NULL;
 	saml_artifact_t *artifact = NULL;
 
@@ -203,7 +202,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_build(saml_request_t *request,
 			}
 		}
 	}
-	// Request elements
+	/* Request elements*/
 	iterator = axiom_element_get_child_elements(element, env, node);
 	if(iterator)
 	{
@@ -295,7 +294,6 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_request_to_om(saml_request_t *request
 	axiom_node_t *n = NULL, *cn = NULL;	
 	axiom_namespace_t *ns1 = NULL, *ns2 = NULL;
 	axiom_attribute_t *attr = NULL;
-	saml_assertion_t *assertion = NULL;
 	axutil_qname_t *qname = NULL;
 	saml_artifact_t *artifact = NULL;
 	axis2_char_t *id_reference = NULL, *t = NULL;
@@ -393,7 +391,6 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_request_to_om(saml_request_t *request
 		}
 		if(request->sig_ctx)
 		{
-			axis2_char_t *t = axiom_node_to_string(n,env);
 			saml_request_sign(request, &n, env);
 		}
 
@@ -670,8 +667,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_unset_signature(saml_request_t *request
 }
 AXIS2_EXTERN int AXIS2_CALL saml_request_sign(saml_request_t *request, axiom_node_t **node, axutil_env_t *env)
 {
-	axiom_node_t *n= NULL, *sig_node = NULL;
-	axis2_char_t *id = NULL;
+	axiom_node_t *n= NULL;
 	oxs_sign_part_t* sig_part = NULL;
 	axutil_array_list_t *sig_parts = NULL;
 	int size = 0, i = 0;

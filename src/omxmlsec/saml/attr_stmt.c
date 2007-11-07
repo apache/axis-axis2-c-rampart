@@ -50,8 +50,7 @@ saml_attr_desig_build(saml_attr_desig_t *attr_desig,
 	axutil_hash_t *attr_hash = NULL;
 	axutil_hash_index_t *hi = NULL;
 	axiom_element_t *element = NULL;
-	axiom_element_t *fce = NULL;
-	axiom_node_t *fcn = NULL;
+	
 	if (axiom_node_get_node_type(node, env) != AXIOM_ELEMENT || (element = (axiom_element_t *)axiom_node_get_data_element(node, env)) == NULL)
 	{
 		return AXIS2_FAILURE;
@@ -158,8 +157,8 @@ saml_attr_create(axutil_env_t *env)
 AXIS2_EXTERN void AXIS2_CALL 
 saml_attr_free(saml_attr_t *attr, axutil_env_t *env)
 {
-	int i = 0;
-	char *val = NULL;
+	/*int i = 0;
+	char *val = NULL;*/
 	if (attr->attr_name)
 	{
 		AXIS2_FREE(env->allocator, attr->attr_name);
@@ -312,8 +311,8 @@ AXIS2_EXTERN int AXIS2_CALL
 saml_attr_set_values(saml_attr_t *attr, 
 						  axutil_env_t *env, axutil_array_list_t *list)
 {
-	int i = 0, size = 0;
-	axis2_char_t *val = NULL;
+	/*int i = 0, size = 0;
+	axis2_char_t *val = NULL;*/
 	if (attr->attr_value)
 	{
 		/*size = axutil_array_list_size(attr->attr_value, env);
