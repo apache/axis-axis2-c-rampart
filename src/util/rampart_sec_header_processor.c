@@ -48,7 +48,7 @@
 static axiom_node_t*
 rampart_shp_process_key_info_for_ref(const axutil_env_t *env,
                             axiom_node_t *key_info_node,
-                            axiom_node_t *envelope_node)
+                            axiom_node_t *root_node)
 {
     axiom_node_t *str_node = NULL;
     axiom_node_t *ref_node = NULL;
@@ -71,7 +71,7 @@ rampart_shp_process_key_info_for_ref(const axutil_env_t *env,
             id = axutil_string_substring_starting_at(ref_val, 1);
 
             /*Search for an element with the val(@Id)=@URI*/
-            refed_node =  oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id, NULL);
+            refed_node =  oxs_axiom_get_node_by_id(env, root_node, OXS_ATTR_ID, id, OXS_WSU_XMLNS);
             if(!refed_node){
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shp] Node cannot be found with the Id=%s.", id);
                 return NULL;
@@ -820,7 +820,67 @@ rampart_shp_process_sym_binding_signature(
     axiom_node_t *sig_node)
 {
     axis2_status_t status = AXIS2_FAILURE;
+    oxs_sign_ctx_t *sign_ctx = NULL;
+    axiom_node_t *envelope_node = NULL;
+    axiom_node_t *key_info_node = NULL;
+    oxs_key_t *key_to_verify = NULL;
+    oxs_key_t *session_key = NULL;
 
+    /*Get the session key*/
+    session_key = rampart_context_get_session_key(rampart_context, env);
+    
+    /*Get the envelope node*/
+    envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);
+   
+    /*Get the KeyInfo node*/
+    key_info_node = oxs_axiom_get_first_child_node_by_name(env, sig_node,
+                            OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
+    if(key_info_node){
+        axiom_node_t *reffed_node = NULL;
+        axis2_char_t *reffed_node_name = NULL;
+        
+        /*This can be a derrived key or an EncryptedKey. Whatever it is, it should be within the Security header*/
+        reffed_node = rampart_shp_process_key_info_for_ref(env, key_info_node, sec_node);
+        if(!reffed_node){
+                /*Error*/
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Reffered node cannot be found");
+                return AXIS2_FAILURE;
+        }
+        reffed_node_name = axiom_util_get_localname(reffed_node, env);
+        if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){      
+            /*Signed by a DerivedKey*/
+            key_to_verify = oxs_derivation_extract_derived_key_from_token(env, reffed_node, envelope_node, session_key);
+            if(!key_to_verify){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Derived key cannot be taken for the signature verification");
+                return AXIS2_FAILURE;
+            }
+        }else if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_ENCRYPTED_KEY)){
+            /*TODO: Now we need to decrypt the EncryptedKey and get the session key.
+             *      But for the most common scenario we will assume that this is the session key. 
+             *      Q: Would the session key is guranteed to be set in the ramart_context?*/
+             key_to_verify = session_key; 
+        }
+    }else{
+        key_to_verify = session_key;
+    }
+    /*Create sign context*/
+    sign_ctx = oxs_sign_ctx_create(env);
+    oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_VERIFY);
+    oxs_sign_ctx_set_secret(sign_ctx, env, key_to_verify);
+    status = oxs_xml_sig_verify(env, sign_ctx, sig_node, envelope_node);
+    if(status != AXIS2_SUCCESS)
+    {
+        if(!axis2_msg_ctx_get_fault_soap_envelope(msg_ctx, env))
+        {
+            rampart_create_fault_envelope( env, RAMPART_FAULT_INVALID_SECURITY,
+                "Signature Verification failed.", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+        }
+
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[Rampart][shp]Signature Verification failed.");
+
+        return AXIS2_FAILURE;
+    }
+ 
     return status;
 }
 
@@ -879,7 +939,6 @@ rampart_shp_process_asym_binding_signature(
     }
 
     cur_node = axiom_node_get_first_element(sign_info_node, env);
-#if 0
     while(cur_node)
     {
         axis2_char_t *localname =  NULL;
@@ -948,7 +1007,6 @@ rampart_shp_process_asym_binding_signature(
         }
         cur_node = axiom_node_get_next_sibling(cur_node, env);
     }/*Eof While*/
-#endif
     /*Get the key identifiers and build the certificate*/
     /*First we should verify with policy*/
 
@@ -971,7 +1029,6 @@ rampart_shp_process_asym_binding_signature(
 
         return  AXIS2_FAILURE;
     }
-#if 0
     if(rampart_context_check_is_derived_keys(env, token))
     {
         rampart_create_fault_envelope(env, RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN,
@@ -981,7 +1038,6 @@ rampart_shp_process_asym_binding_signature(
 
         return AXIS2_FAILURE;
     }
-#endif    
     is_include_token = rampart_context_is_token_include(
                            rampart_context, token, token_type, server_side, AXIS2_TRUE, env);
 
@@ -1220,7 +1276,7 @@ const axutil_env_t *env,
     }else if ((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING){
         status = rampart_shp_process_sym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node);
     }else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING){
-
+        /*Not supported*/
     }else{
         /*Not supported*/
     }

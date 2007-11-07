@@ -38,6 +38,7 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     axiom_node_t *offset_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *nonce = NULL;
+    axis2_char_t *id = NULL;
     /*Default values*/
     int offset = -1;
     int length = 0;
@@ -45,7 +46,7 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
 
     /*If the session_key is NULL then extract it form the refered EncryptedKey. Otherwise use it*/
     if(!session_key){
-        /*TODO Lots of work including decrypting the EncryotedKey*/
+        /*TODO Lots of work including decrypting the EncryptedKey*/
     }else{
         base_key = session_key;
     }
@@ -82,6 +83,9 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
         oxs_key_free(derived_key, env);
         derived_key = NULL;
     }
+    /*We need to set the name of the derived key*/
+    id = oxs_axiom_get_attribute_value_of_node_by_name(env, dk_token_node, OXS_ATTR_ID, OXS_WSU_XMLNS); 
+    oxs_key_set_name(derived_key, env, id);
     return derived_key;
 }
 

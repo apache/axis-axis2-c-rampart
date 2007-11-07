@@ -47,6 +47,10 @@ oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
 
     /*Get the shared secret form the sig_ctx*/
     secret = oxs_sign_ctx_get_secret(sign_ctx, env);
+    if(!secret){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"Signature failed. using HMAC-SHA1. No secret key is set");
+        return AXIS2_FAILURE;
+    }
     /*Sign using HMAC-SHA1*/
     status = openssl_hmac_sha1(env, secret, input, signed_result_buf);
     if(AXIS2_FAILURE == status){
@@ -149,7 +153,64 @@ oxs_sig_sign(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_sig_verify_hmac_sha1(const axutil_env_t *env,
+               oxs_sign_ctx_t *sign_ctx,
+               axis2_char_t *content,
+               axis2_char_t *signature)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+    oxs_buffer_t *input_buf = NULL;
+    oxs_buffer_t *output_buf = NULL;
+    axis2_char_t *signed_val = NULL;
+
+    /*Make the input and out put buffers*/
+    input_buf = oxs_buffer_create(env);
+    output_buf = oxs_buffer_create(env);
+
+    oxs_buffer_populate(input_buf, env, (unsigned char *)content, axutil_strlen(content));
+    /*Sign the content and get the output*/
+    status = oxs_sig_sign_hmac_sha1(env, sign_ctx, input_buf, output_buf); 
+
+    signed_val = (axis2_char_t*)oxs_buffer_get_data(output_buf, env);
+    /*Compare the output with the signature. If tally; SUCCESS*/
+    if(axutil_strcmp(signature, signed_val)){
+        return AXIS2_SUCCESS;
+    }else{
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED, "Signature verification failed using HMAC-SHA1");
+        return AXIS2_FAILURE;
+    }
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_verify(const axutil_env_t *env,
+               oxs_sign_ctx_t *sign_ctx,
+               axis2_char_t *content,
+               axis2_char_t *signature)
+{
+    axis2_char_t *sign_algo = NULL;
+
+    /*Get algo. To check whether we support*/
+    sign_algo = oxs_sign_ctx_get_sign_mtd_algo(sign_ctx, env);
+
+    /*Prepare content and verify*/
+    if ((axutil_strcmp(sign_algo, OXS_HREF_RSA_SHA1)) == 0)
+    {
+        oxs_sig_verify_rsa_sha1(env, sign_ctx, content, signature);
+    }
+    else if ((axutil_strcmp(sign_algo, OXS_HREF_HMAC_SHA1)) == 0)
+    {
+        oxs_sig_verify_hmac_sha1(env, sign_ctx,  content, signature);
+    }
+    else
+    {
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,  "Cannot support cipher %s for verification", sign_algo);
+        return AXIS2_FAILURE;
+    }
+
+    return AXIS2_SUCCESS;
+}
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_sig_verify_rsa_sha1(const axutil_env_t *env,
                oxs_sign_ctx_t *sign_ctx,
                axis2_char_t *content,
                axis2_char_t *signature)
