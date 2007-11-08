@@ -200,9 +200,8 @@ rampart_shp_process_timestamptoken(const axutil_env_t *env,
 {
     axis2_status_t valid_ts = AXIS2_FAILURE;
     axiom_node_t *ts_node = NULL;
-
-    ts_node = oxs_axiom_get_node_by_local_name(env,
-              sec_node, RAMPART_SECURITY_TIMESTAMP);
+    ts_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, RAMPART_SECURITY_TIMESTAMP, OXS_WSU_XMLNS, NULL);
+    /*ts_node = oxs_axiom_get_node_by_local_name(env, sec_node, RAMPART_SECURITY_TIMESTAMP);*/
     if(!ts_node)
     {
         if(rampart_context_is_include_timestamp(rampart_context, env))
@@ -265,9 +264,8 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
 {
     axis2_status_t valid_user = AXIS2_FAILURE;
     axiom_node_t *ut_node = NULL;
-
-    ut_node = oxs_axiom_get_node_by_local_name(
-                  env, sec_node, RAMPART_SECURITY_USERNAMETOKEN);
+    ut_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, RAMPART_SECURITY_USERNAMETOKEN, OXS_WSSE_XMLNS, NULL);
+    /*ut_node = oxs_axiom_get_node_by_local_name( env, sec_node, RAMPART_SECURITY_USERNAMETOKEN);*/
     if(!ut_node)
     {
         if(rampart_context_is_include_username_token(rampart_context, env))
@@ -1278,7 +1276,8 @@ rampart_shp_process_message(const axutil_env_t *env,
             {
                 axiom_node_t *ref_list_node = NULL;
                 /*Get EncryptedKey node*/
-                cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);
+                cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);*/
                 if(!cur_node)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] No Encrypted Key element.");
@@ -1364,7 +1363,9 @@ rampart_shp_process_message(const axutil_env_t *env,
             {
                 if(!signature_protection)
                 {
-                    cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);
+
+                    cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+                    /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);*/
                     if(!cur_node)
                     {
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] No Encrypted Key element.");
@@ -1395,7 +1396,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                         return status;
                     }
                 }else{
-                    cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, OXS_XENC);
+                    cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
                     /*oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_REFERENCE_LIST);*/
                     if(!cur_node)
                     {
@@ -1424,8 +1425,9 @@ rampart_shp_process_message(const axutil_env_t *env,
             }
             else
             {
-                cur_node = oxs_axiom_get_node_by_local_name(
-                               env, sec_node, OXS_NODE_ENCRYPTED_KEY);
+                cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);*/
+
                 if(cur_node)
                 {
                     AXIS2_LOG_INFO(env->log, "[rampart][shp] policy does not specify encryption.");
@@ -1439,7 +1441,8 @@ rampart_shp_process_message(const axutil_env_t *env,
             /*We should decrypt the message first*/
             if(rampart_context_check_whether_to_encrypt(rampart_context,env))
             {
-                cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);
+                cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);*/
                 if(!cur_node)
                 {
                     AXIS2_LOG_INFO(env->log, "[rampart][shp] No Encrypted Key element");
@@ -1450,7 +1453,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                     AXIS2_LOG_INFO(env->log, "[rampart][shp] Error in the security header");
                     return AXIS2_FAILURE;
                 }
-                /*If the signature to be encrypted*/
+                /*If the signature is encrypted*/
                 if(signature_protection)
                 {
                     if(oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE))
@@ -1468,7 +1471,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                 
                 /*Now process the Reference List. if any*/
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Process ReferenceList");
-                cur_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, OXS_XENC);
+                cur_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
                 /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_REFERENCE_LIST);*/
                 if(cur_node)
                 {
@@ -1481,7 +1484,8 @@ rampart_shp_process_message(const axutil_env_t *env,
                 }
 
             }else{/*No decryption needed*/
-                cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);
+                cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY);*/
                 if(cur_node)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] policy does not specify Encryption");

@@ -122,6 +122,9 @@ extern "C"
             axiom_node_t *node,
             axutil_qname_t *qname);
 
+    /**
+     * Note: You may pass the prefix=NULL as the prefix may be different depending on the impl
+     */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
                                            axiom_node_t* parent,
