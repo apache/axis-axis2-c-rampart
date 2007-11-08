@@ -18,7 +18,13 @@ Scenario    Summary
 2.          UsernameToken
 3.          Encryption
 4.          Signature
-5.          A complete scenario to show: Timestamp, UsernameToken, Encrypt, Sign
+5.          A complete scenario to show: Timestamp, UsernameToken, Encrypt,
+            The protection order is Sign->Encrypt
+            Signature is Encrypted
+6.          A complete scenario to show: Timestamp, UsernameToken, Encrypt,
+            The protection order is Encrypt->Sign
+            Signature is Encrypted
+7.          Replay detection           
 
 FAQ:
 ---

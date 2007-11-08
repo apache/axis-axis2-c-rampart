@@ -695,48 +695,6 @@ rampart_shp_process_reference_list(
         key_info_node = oxs_axiom_get_first_child_node_by_name(env, enc_data_node,
                         OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
 
-#if 0
-        if(key_info_node)
-        {
-            axiom_node_t *str_node = NULL;
-            str_node = oxs_axiom_get_first_child_node_by_name(env, key_info_node,
-                       OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
-
-            if(str_node)
-            {
-                axiom_node_t *str_child_node = NULL;
-                axis2_char_t *str_child_name = NULL;
-
-                str_child_node = axiom_node_get_first_element(str_node, env);
-                str_child_name = axiom_util_get_localname(str_child_node, env);
-                if(str_child_name)
-                {
-                    if(axutil_strcmp(str_child_name, OXS_NODE_REFERENCE) == 0)
-                    {
-                        axis2_char_t *ref = NULL;
-                        axis2_char_t *ref_id = NULL;
-                        axiom_node_t *reffed_node = NULL;
-
-                        ref = oxs_token_get_reference(env, str_child_node);
-                        ref_id = axutil_string_substring_starting_at(axutil_strdup(env, ref), 1);
-                        reffed_node = oxs_axiom_get_node_by_id(env, sec_node, "Id", ref_id, NULL);
-                        AXIS2_FREE(env->allocator, ref_id);
-                        ref_id = NULL;
-                        if(reffed_node)
-                        {
-                            ref_list_node = axiom_node_detach(ref_list_node, env);
-                            axiom_node_add_child(reffed_node, env, ref_list_node);
-
-                            status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context,
-                                     soap_envelope, sec_node, reffed_node);
-                            break;
-                        }
-
-                    }
-                }
-            }
-        }
-#else
        if(key_info_node){
             axiom_node_t *reffed_node = NULL;
             axis2_char_t *reffed_node_name = NULL;
@@ -806,7 +764,6 @@ rampart_shp_process_reference_list(
                 return AXIS2_FAILURE;
             }
        }
-#endif                        
     }
 
     axutil_array_list_free(reference_list, env);
@@ -1360,8 +1317,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                 if(!cur_node)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] No Signature element");
-                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
-                                                  "Message is not signed ", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY, "Message is not signed ", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
                     return AXIS2_FAILURE;
                 }
 
@@ -1439,7 +1395,8 @@ rampart_shp_process_message(const axutil_env_t *env,
                         return status;
                     }
                 }else{
-                    cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_REFERENCE_LIST);
+                    cur_node =  oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, OXS_XENC);
+                    /*oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_REFERENCE_LIST);*/
                     if(!cur_node)
                     {
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -1493,7 +1450,7 @@ rampart_shp_process_message(const axutil_env_t *env,
                     AXIS2_LOG_INFO(env->log, "[rampart][shp] Error in the security header");
                     return AXIS2_FAILURE;
                 }
-
+                /*If the signature to be encrypted*/
                 if(signature_protection)
                 {
                     if(oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE))
@@ -1511,7 +1468,8 @@ rampart_shp_process_message(const axutil_env_t *env,
                 
                 /*Now process the Reference List. if any*/
                 AXIS2_LOG_INFO(env->log, "[rampart][shp] Process ReferenceList");
-                cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_REFERENCE_LIST);
+                cur_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, OXS_XENC);
+                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_REFERENCE_LIST);*/
                 if(cur_node)
                 {
                     status = rampart_shp_process_reference_list(env, msg_ctx,
