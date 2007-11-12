@@ -20,8 +20,7 @@ RAMPART_DISTDIR = $(RAMPART_DIST_NAME)
 OMXMLSEC_SRC = $(RAMPART_SOURCE_DIR)\src\omxmlsec\*.c \
     	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\tokens\*.c \
     	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\c14n\*.c \
-    	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\openssl\*.c $(RAMPART_SOURCE_DIR)\src\omxmlsec\saml\*.c
- 
+    	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\openssl\*.c 
 
 MOD_RAMPART_SRC = $(RAMPART_SOURCE_DIR)\src\core\*.c \
 		  $(RAMPART_SOURCE_DIR)\src\handlers\*.c \
