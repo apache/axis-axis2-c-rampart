@@ -838,7 +838,7 @@ rampart_shp_process_sym_binding_signature(
 
         return AXIS2_FAILURE;
     }
- 
+    /*TODO Free Sign Ctx*/ 
     return status;
 }
 
@@ -1239,6 +1239,19 @@ const axutil_env_t *env,
     }else{
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Binding type not supported");
         /*Not supported*/
+    }
+    /*We need to set the Signature Value in the Security Processed Resultsi. This is required for the Signature Confirmation support*/
+    if(AXIS2_SUCCESS == status){
+      axis2_char_t *sig_val = NULL; 
+      axiom_node_t *sig_val_node = NULL;
+
+      sig_val_node = oxs_axiom_get_first_child_node_by_name(env, sig_node, OXS_NODE_SIGNATURE_VALUE, OXS_DSIG_NS, OXS_DS );
+      sig_val = oxs_token_get_signature_value(env, sig_val_node);
+
+      rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_VERIFIED, RAMPART_YES);
+      rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_VALUE, sig_val);
+    }else{
+      rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_VERIFIED, RAMPART_NO);
     }
     return status;
 }
