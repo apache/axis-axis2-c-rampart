@@ -47,7 +47,7 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
 
-
+#if 0
     if(rampart_context_is_include_timestamp(rampart_context,env))
     {
         int ttl = -1;
@@ -87,15 +87,7 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
             }
         }
     }
-
-    /*Signature Confirmation support. Only in the server side*/
-    if(axis2_msg_ctx_get_server_side(msg_ctx,env)){
-        axis2_bool_t sign_conf_reqd = AXIS2_TRUE;
-        /*TODO sign_conf_reqd <- Get from context <- policy*/
-        if(sign_conf_reqd){
-            status = rampart_sig_confirm_signature(env, msg_ctx, rampart_context, sec_node);
-        }
-    }
+#endif
 
     /*Check the encryption and signature order*/
     if(rampart_context_is_encrypt_before_sign(rampart_context, env))
@@ -212,57 +204,68 @@ rampart_shb_build_message(
     sec_ele = (axiom_element_t *)
               axiom_node_get_data_element(sec_node, env);
 
+
+    /*Timestamp Inclusion*/
+    if(rampart_context_is_include_timestamp(rampart_context,env))
+    {
+        int ttl = -1;
+        AXIS2_LOG_INFO(env->log, "[rampart][shb] Building Timestamp Token");
+        AXIS2_LOG_INFO(env->log, "[rampart][shb] Using default timeToLive value %d",
+                       RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
+        /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
+        ttl = rampart_context_get_ttl(rampart_context,env);
+
+        status = rampart_timestamp_token_build(env,
+                                               sec_node, sec_ns_obj, ttl);
+        if (status == AXIS2_FAILURE)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Timestamp Token build failed. ERROR");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    /*Check whether we need username token*/
+    /*User name tokens includes in messages sent from client to server*/
+    if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
+    {
+        if(rampart_context_is_include_username_token(rampart_context,env))
+        {
+
+            /*Now we are passing rampart_context here so inside this method
+            relevant parameters are extracted. */
+
+            AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
+            status =rampart_username_token_build(
+                        env,
+                        rampart_context,
+                        sec_node,
+                        sec_ns_obj);
+            if (status == AXIS2_FAILURE)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] UsernmaeToken build failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+        }
+    }
+
+    /*Signature Confirmation support. Only in the server side*/
+    if(axis2_msg_ctx_get_server_side(msg_ctx,env)){
+        axis2_bool_t sign_conf_reqd = AXIS2_FALSE;
+        /*TODO sign_conf_reqd <- Get from context <- policy*/
+        if(sign_conf_reqd){
+            status = rampart_sig_confirm_signature(env, msg_ctx, rampart_context, sec_node);
+        }
+    }
+
+
     /*check the binding*/
     if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
         /*Do Asymmetric Binding specific things*/
         AXIS2_LOG_INFO(env->log, "[rampart][shb] Using asymmetric binding");
-
-        /*Timestamp Inclusion*/
-        if(rampart_context_is_include_timestamp(rampart_context,env))
-        {
-            int ttl = -1;
-            AXIS2_LOG_INFO(env->log, "[rampart][shb] Building Timestamp Token");
-            AXIS2_LOG_INFO(env->log, "[rampart][shb] Using default timeToLive value %d",
-                           RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
-            /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
-            ttl = rampart_context_get_ttl(rampart_context,env);
-
-            status = rampart_timestamp_token_build(env,
-                                                   sec_node, sec_ns_obj, ttl);
-            if (status == AXIS2_FAILURE)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][shb] Timestamp Token build failed. ERROR");
-                return AXIS2_FAILURE;
-            }
-        }
-
-        /*Check whether we need username token*/
-        /*User name tokens includes in messages sent from client to server*/
-        if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
-        {
-            if(rampart_context_is_include_username_token(rampart_context,env))
-            {
-
-                /*Now we are passing rampart_context here so inside this method
-                relevant parameters are extracted. */
-
-                AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
-                status =rampart_username_token_build(
-                            env,
-                            rampart_context,
-                            sec_node,
-                            sec_ns_obj);
-                if (status == AXIS2_FAILURE)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] UsernmaeToken build failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-            }
-        }
-
+    
         signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
 
         /*Check the encryption and signature order*/
@@ -415,53 +418,8 @@ rampart_shb_build_message(
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using transport binding");
-        /*Timestamp Inclusion*/
-
-        if(rampart_context_is_include_timestamp(rampart_context,env))
-        {
-            int ttl = -1;
-            AXIS2_LOG_INFO(env->log, "[rampart][shb]  building Timestamp Token");
-            AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using default timeToLive value %d",
-                           RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
-            /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
-            ttl = rampart_context_get_ttl(rampart_context,env);
-
-            status = rampart_timestamp_token_build(env,
-                                                   sec_node, sec_ns_obj, ttl);
-            if (status == AXIS2_FAILURE)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Timestamp Token build failed. ERROR");
-                return AXIS2_FAILURE;
-            }
-        }
-
-        /*Check whether we need username token*/
-        /*User name tokens includes in messages sent from client to server*/
-        if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
-        {
-            if(rampart_context_is_include_username_token(rampart_context,env))
-            {
-
-                /*Now we are passing rampart_context here so inside this method
-                relevant parameters are extracted. */
-
-                AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
-                status =rampart_username_token_build(
-                            env,
-                            rampart_context,
-                            sec_node,
-                            sec_ns_obj);
-                if (status == AXIS2_FAILURE)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] UsernmaeToken build failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-            }
-            return status;
-        }
-        return status;
-    }
-    else{
+        return AXIS2_SUCCESS;
+    }else{
         return AXIS2_FAILURE;
     }
 }
