@@ -713,6 +713,31 @@ rampart_sig_sign_message(
     return status;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_sig_confirm_signature(const axutil_env_t *env,
+                             axis2_msg_ctx_t *msg_ctx,
+                             rampart_context_t *rampart_context,
+                             axiom_node_t *sec_node)
+{
+    axis2_char_t *id = NULL;
+    axis2_char_t *sig_val = NULL;
+    
+    /*Check whether the request was signed*/
 
+    /*If there is no signature. @Value is not present*/
+    /*If the request has signed, then the @Value = contents of <ds:SignatureValue>*/
+
+    /*Generate an Id*/
+    id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_CONF_ID);
+ 
+    /*TODO: Get the SignatureValue from the request*/
+    sig_val = "FAKE-SIG-VAL==";    
+
+    /*Build wsse11:SignatureConfirmation element */
+    oxs_token_build_signature_confirmation_element(env, sec_node, id, sig_val);
+
+    return AXIS2_SUCCESS;
+
+}
 
 

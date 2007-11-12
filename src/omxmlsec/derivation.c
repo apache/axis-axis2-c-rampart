@@ -86,6 +86,8 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     /*We need to set the name of the derived key*/
     id = oxs_axiom_get_attribute_value_of_node_by_name(env, dk_token_node, OXS_ATTR_ID, OXS_WSU_XMLNS); 
     oxs_key_set_name(derived_key, env, id);
+    
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[oxs][derivation] DK=%s derived from Sk=%s ", id , oxs_key_get_name(base_key, env) );
     return derived_key;
 }
 

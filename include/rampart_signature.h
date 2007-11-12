@@ -37,7 +37,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_sig_confirm_signature(const axutil_env_t *env,
+                             axis2_msg_ctx_t *msg_ctx,
+                             rampart_context_t *rampart_context,
+                             axiom_node_t *sec_node);
+                
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_sig_sign_message(const axutil_env_t *env,
                              axis2_msg_ctx_t *msg_ctx,

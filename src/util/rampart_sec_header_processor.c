@@ -1234,10 +1234,10 @@ const axutil_env_t *env,
     }else if ((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING){
         status = rampart_shp_process_sym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node);
     }else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING){
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Transport Binding Not supported", );
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Transport Binding Not supported" );
         /*Not supported*/
     }else{
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Binding type not supported", );
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Binding type not supported");
         /*Not supported*/
     }
     return status;
