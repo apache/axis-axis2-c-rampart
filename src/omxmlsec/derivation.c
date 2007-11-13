@@ -26,6 +26,37 @@
 #include <openssl_hmac.h>
 
 AXIS2_EXTERN oxs_key_t* AXIS2_CALL
+oxs_derivation_get_the_referenced_base_key(const axutil_env_t *env,
+    axiom_node_t *dk_token_node,
+        axiom_node_t *root_node)
+{
+    axiom_node_t *str_node = NULL;
+    axiom_node_t *ref_node = NULL;
+    axiom_node_t *refed_node = NULL;
+    axis2_char_t *ref_val = NULL;
+    axis2_char_t *id = NULL;
+
+    str_node = oxs_axiom_get_first_child_node_by_name(env, dk_token_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
+    ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
+    if(!ref_node) {return NULL ;}
+
+    ref_val  = oxs_token_get_reference(env, ref_node);
+    if(!ref_val) {return NULL ;}
+ 
+    /*Need to remove # sign from the ID*/
+    id = axutil_string_substring_starting_at(ref_val, 1);
+
+    /*Search for an element with the val(@Id)=@URI*/
+    refed_node =  oxs_axiom_get_node_by_id(env, root_node, OXS_ATTR_ID, id, NULL);
+    if(!refed_node){
+      oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot find the referenced key for the derived key");    
+      return NULL;
+    }
+    
+    return NULL;
+}
+
+AXIS2_EXTERN oxs_key_t* AXIS2_CALL
 oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     axiom_node_t *dk_token_node,
     axiom_node_t *root_node,

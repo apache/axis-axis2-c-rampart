@@ -70,10 +70,10 @@ rampart_shp_process_key_info_for_ref(const axutil_env_t *env,
             /*Need to remove # sign from the ID*/
             id = axutil_string_substring_starting_at(ref_val, 1);
 
-            /*Search for an element with the val(@Id)=@URI*/
+            /*Search for an element with the val(@wsu:Id)=@URI*/
             refed_node =  oxs_axiom_get_node_by_id(env, root_node, OXS_ATTR_ID, id, OXS_WSU_XMLNS);
             if(!refed_node){
-                /*Search for an element with the val(@wsu:Id)=@URI*/
+                /*Search for an element with the val(@Id)=@URI*/
                 refed_node =  oxs_axiom_get_node_by_id(env, root_node, OXS_ATTR_ID, id, NULL);
                 /*If we still cannot find its an error*/
                 if(!refed_node){
@@ -354,18 +354,6 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
                         env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
     reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
 
-    /*If there are no references. Nothing to do. Return success*/
-/* 
-    if((!reference_list) || (0 == axutil_array_list_size(reference_list, env)))
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Reference List is empty");
-        return AXIS2_SUCCESS;
-    }
-    
-    AXIS2_LOG_INFO(env->log,
-                   "[rampart][shp] Reference List has %d node reference(s)",
-                   axutil_array_list_size(reference_list, env));
-*/
     /*Get the algorithm to decrypt the sesison key*/
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(
                        env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD, OXS_ENC_NS, NULL);
@@ -797,6 +785,15 @@ rampart_shp_process_sym_binding_signature(
         axiom_node_t *reffed_node = NULL;
         axis2_char_t *reffed_node_name = NULL;
         
+        /*Now we need to decrypt the EncryptedKey if not done already*/
+        if(!session_key){
+            axiom_node_t *encrypted_key_node = NULL;
+
+            encrypted_key_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+            status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context, soap_envelope, sec_node, encrypted_key_node);                     
+            session_key = rampart_context_get_session_key(rampart_context, env);
+        }
+
         /*This can be a derrived key or an EncryptedKey. Whatever it is, it should be within the Security header*/
         reffed_node = rampart_shp_process_key_info_for_ref(env, key_info_node, sec_node);
         if(!reffed_node){
@@ -807,6 +804,7 @@ rampart_shp_process_sym_binding_signature(
         reffed_node_name = axiom_util_get_localname(reffed_node, env);
         if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){      
             /*Signed by a DerivedKey*/
+
             key_to_verify = oxs_derivation_extract_derived_key_from_token(env, reffed_node, envelope_node, session_key);
             if(!key_to_verify){
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Derived key cannot be taken for the signature verification");

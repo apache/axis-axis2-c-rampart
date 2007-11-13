@@ -252,7 +252,7 @@ rampart_shb_build_message(
 
     /*Signature Confirmation support. Only in the server side*/
     if(axis2_msg_ctx_get_server_side(msg_ctx,env)){
-        axis2_bool_t sign_conf_reqd = AXIS2_FALSE;
+        axis2_bool_t sign_conf_reqd = AXIS2_TRUE;
         /*TODO sign_conf_reqd <- Get from context <- policy*/
         if(sign_conf_reqd){
             status = rampart_sig_confirm_signature(env, msg_ctx, rampart_context, sec_node);

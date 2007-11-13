@@ -731,7 +731,9 @@ rampart_sig_confirm_signature(const axutil_env_t *env,
     id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_CONF_ID);
  
     /*TODO: Get the SignatureValue from the request*/
-    sig_val = "FAKE-SIG-VAL==";    
+    
+    /*Get SPR*/
+    sig_val = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_VALUE);
 
     /*Build wsse11:SignatureConfirmation element */
     oxs_token_build_signature_confirmation_element(env, sec_node, id, sig_val);
