@@ -373,7 +373,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
 		return AXIS2_FAILURE;
     /*Find the node refered by this ref_id2 and set to the sign part*/
 	if(ns)
-		ns_uri = axiom_namespace_get_uri(ns, env, ns);
+		ns_uri = axiom_namespace_get_uri(ns, env);
 	else
 		ns_uri = "";
 
