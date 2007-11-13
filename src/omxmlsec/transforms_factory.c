@@ -51,6 +51,48 @@ oxs_transforms_exc_c14n(const axutil_env_t *env,
     return output_dtype;
 }
 
+oxs_tr_dtype_t AXIS2_CALL
+oxs_transforms_enveloped_xmldsig(const axutil_env_t *env,
+                        axiom_node_t *input,
+                        oxs_tr_dtype_t input_dtype,
+                        axis2_char_t **output)
+{
+    axiom_document_t *doc = NULL;
+    axis2_char_t *algo = NULL;
+    axis2_char_t *c14nized = NULL;
+    oxs_tr_dtype_t output_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;
+	axiom_node_t *sig_node = NULL, *child_node = NULL;
+
+	child_node = axiom_node_get_first_element(input, env);
+	
+	while(child_node)
+	{
+		axis2_char_t *node_local_name = NULL;
+		node_local_name = axiom_util_get_localname(child_node, env);
+		if(!(axutil_strcmp(node_local_name, OXS_NODE_SIGNATURE)))
+		{	
+			sig_node = axiom_node_detach(child_node, env);
+			break;
+		}
+		child_node = axiom_node_get_next_sibling(child_node, env);
+	}
+	
+    if(input_dtype != OXS_TRANSFORM_TYPE_NODE){
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Transform expects a NODE.");
+        return OXS_TRANSFORM_TYPE_UNKNOWN;
+    }
+
+    doc = axiom_node_get_document(input, env);
+    algo = OXS_HREF_TRANSFORM_XML_EXC_C14N;
+    oxs_c14n_apply_algo(env, doc, &c14nized, NULL, input, algo);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][c14n-OutPut] is\n\n%s\n\n",c14nized);
+	
+	axiom_node_add_child(input, env, sig_node);
+
+    *output= c14nized;
+    output_dtype = OXS_TRANSFORM_TYPE_CHAR;
+    return output_dtype;
+}
 /*Public functions*/
 AXIS2_EXTERN oxs_transform_t *AXIS2_CALL
 oxs_transforms_factory_produce_transform(const axutil_env_t *env,
@@ -66,9 +108,17 @@ oxs_transforms_factory_produce_transform(const axutil_env_t *env,
         oxs_transform_set_output_data_type(tr, env, OXS_TRANSFORM_TYPE_CHAR);
         oxs_transform_set_transform_func(tr, env, (oxs_transform_tr_func)oxs_transforms_exc_c14n);
         return tr;
-    }else{
-        /*Error we do not support*/
-        return NULL;
+
+    }else if(0== axutil_strcmp(id, OXS_HREF_TRANSFORM_ENVELOPED_SIGNATURE)){
+       tr = oxs_transform_create(env);
+        oxs_transform_set_id(tr, env, id);
+        oxs_transform_set_input_data_type(tr, env, OXS_TRANSFORM_TYPE_NODE);
+        oxs_transform_set_output_data_type(tr, env, OXS_TRANSFORM_TYPE_CHAR);
+        oxs_transform_set_transform_func(tr, env, (oxs_transform_tr_func)oxs_transforms_enveloped_xmldsig);
+        return tr; 
     }
+	else
+		return NULL;
 }
+
 

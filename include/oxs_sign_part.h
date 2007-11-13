@@ -32,6 +32,7 @@
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>
+#include <axiom_namespace.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -77,6 +78,17 @@ extern "C"
         const oxs_sign_part_t *sign_part,
         const axutil_env_t *env);
 
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	oxs_sign_part_get_id_name(
+		const oxs_sign_part_t *sign_part,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axiom_namespace_t *AXIS2_CALL
+	oxs_sign_part_get_sign_namespace(
+		const oxs_sign_part_t *sign_part,
+		const axutil_env_t *env);
+
+
     /**********************Setter functions******************************************/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sign_part_set_id(
@@ -108,7 +120,17 @@ extern "C"
         const axutil_env_t *env,
         axutil_array_list_t *transforms);
 
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_sign_part_set_id_name(
+		oxs_sign_part_t *sign_part,
+		const axutil_env_t *env,
+		axis2_char_t *id_name);		
 
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_sign_part_set_sign_namespace(
+		oxs_sign_part_t *sign_part,
+		const axutil_env_t *env,
+		axiom_namespace_t *sig_ns);
 
     /** @} */
 #ifdef __cplusplus

@@ -26,8 +26,11 @@ struct oxs_sign_part_t
     axis2_char_t *id;
     axis2_char_t *digest_mtd;
     axis2_char_t *digest_val;
+	axiom_namespace_t *sig_ns;
+	axis2_char_t *id_name;
     axiom_node_t *node ; /*Shallow copies*/
     axutil_array_list_t *transforms; /*Shallow copies*/
+
 };
 
 
@@ -165,7 +168,8 @@ oxs_sign_part_create(const axutil_env_t *env)
     sign_part->digest_val = NULL;
     sign_part->node = NULL;
     sign_part->transforms = NULL;
-
+	sign_part->id_name = NULL;
+	sign_part->sig_ns = NULL;
     return sign_part;
 }
 
@@ -195,6 +199,18 @@ oxs_sign_part_free(oxs_sign_part_t *sign_part,
         sign_part->digest_val = NULL;
     }
 
+	if (sign_part->id_name)
+    {
+        AXIS2_FREE(env->allocator, sign_part->id_name);
+        sign_part->id_name = NULL;
+    }
+
+	if (sign_part->sig_ns)
+    {
+        axiom_namespace_free(sign_part->sig_ns, env);
+        sign_part->sig_ns = NULL;
+    }
+
     sign_part->node = NULL;
 
     if(sign_part->transforms){
@@ -219,5 +235,54 @@ oxs_sign_part_free(oxs_sign_part_t *sign_part,
 
     return AXIS2_SUCCESS;
 }
+
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+oxs_sign_part_get_id_name(
+    const oxs_sign_part_t *sign_part,
+    const axutil_env_t *env)
+{
+    return sign_part->id_name;
+}
+
+AXIS2_EXTERN axiom_namespace_t *AXIS2_CALL
+oxs_sign_part_get_sign_namespace(
+    const oxs_sign_part_t *sign_part,
+    const axutil_env_t *env)
+{
+    return sign_part->sig_ns;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_sign_part_set_id_name(
+    oxs_sign_part_t *sign_part,
+    const axutil_env_t *env,
+	axis2_char_t *id_name)
+{
+     if (sign_part->id_name)
+    {
+        AXIS2_FREE(env->allocator, sign_part->id_name);
+        sign_part->id_name = NULL;
+    }
+    sign_part->id_name = axutil_strdup(env, id_name);
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_sign_part_set_sign_namespace(
+    oxs_sign_part_t *sign_part,
+    const axutil_env_t *env,
+	axiom_namespace_t *sig_ns)
+{
+	 if (sign_part->sig_ns)
+    {
+        axiom_namespace_free(sign_part->sig_ns, env);
+        sign_part->sig_ns = NULL;
+    }
+    sign_part->sig_ns = sig_ns;
+    return AXIS2_SUCCESS;
+}
+
+
 
 
