@@ -131,7 +131,7 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     axis2_char_t *digest = NULL;
     axis2_char_t *digest_mtd = NULL;
     axis2_char_t *ref_id = NULL;
-    axis2_char_t *id = NULL;
+    axis2_char_t *id = NULL, *id_name = NULL;
 	axiom_namespace_t *ns = NULL;
 	axis2_char_t *ns_uri = NULL;
     axutil_array_list_t *transforms = NULL;
@@ -139,18 +139,24 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     axiom_node_t *reference_node = NULL;
     axiom_node_t *digest_value_node = NULL;
     axiom_node_t *digest_mtd_node = NULL;
-    int i=0;
+    int i = 0;
 
     /*Get the node to digest*/
     node = oxs_sign_part_get_node(sign_part, env);
 
+	id_name = oxs_sign_part_get_id_name(sign_part, env);
+	if(!id_name)
+		id_name = axutil_strdup(env, OXS_ATTR_ID);
+
 	ns = oxs_sign_part_get_sign_namespace(sign_part, env);
+
 	if(ns)
 		ns_uri = axiom_namespace_get_uri(ns, env);
-	else
-		ns_uri = "";
+	else 
+		ns_uri = axutil_strdup(env, OXS_WSU_XMLNS);
+
     /*Get the reference ID from the node and hence to the ds:Reference node*/
-    id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, oxs_sign_part_get_id_name(sign_part, env),
+    id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, id_name,
 													ns_uri);
 
     ref_id = axutil_stracat(env, "#", id);/* <ds:Reference URI="#id">*/
@@ -315,74 +321,105 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     axis2_char_t *ref_id2 = NULL;
     axis2_char_t *child_node_name = NULL;
     axiom_node_t *reffed_node = NULL;
-    axiom_node_t *child_node = NULL;
-
-	axiom_node_t *next_node = NULL;
+    axiom_node_t *child_node = NULL, *cn = NULL;
+	
 	axis2_char_t *id_name = NULL;
 	axiom_namespace_t *ns = NULL;
 	axis2_char_t *ns_uri = NULL;
 	axiom_attribute_t *attr = NULL;
 	axutil_hash_t *attr_hash = NULL;
 	axutil_hash_index_t *hi = NULL;
-	axiom_element_t *element = NULL;
-
+	axiom_element_t *element = NULL, *ce = NULL;
+	axiom_child_element_iterator_t *ci = NULL;
     ref_id =  oxs_token_get_ds_reference(env, ref_node);
     oxs_sign_part_set_id(sign_part, env, ref_id);
 	
     /*Remove the # from the id*/
-    ref_id2 =  axutil_string_substring_starting_at(axutil_strdup(env, ref_id), 1);
-	next_node = scope_node;
+    ref_id2 =  axutil_string_substring_starting_at(axutil_strdup(env, ref_id), 1);	
 	/*Look for the attribute with the Reference URI value*/
-	while(next_node)
+	if(scope_node)
 	{
-		element = axiom_node_get_data_element(next_node, env);
+		element = axiom_node_get_data_element(scope_node, env);
 		if(element)
 			attr_hash = axiom_element_get_all_attributes(element, env);	
-
-		for (hi = axutil_hash_first(attr_hash, env); hi; hi = axutil_hash_next(env, hi))
+		
+		if (attr_hash)
 		{
-			void *v = NULL;
-			axutil_hash_this(hi, NULL, NULL, &v);
-			if (v)
+			for (hi = axutil_hash_first(attr_hash, env); hi; hi = axutil_hash_next(env, hi))
 			{
-				axis2_char_t *attr_val = NULL;
-				axiom_attribute_t *attribute = (axiom_attribute_t*)v;			
-				attr_val = axiom_attribute_get_value(attribute, env);
-				if(!axutil_strcmp(attr_val, ref_id2))
+				void *v = NULL;
+				axutil_hash_this(hi, NULL, NULL, &v);
+				if (v)
 				{
-					attr = attribute;
-					break;
+					axis2_char_t *attr_val = NULL;
+					axiom_attribute_t *attribute = (axiom_attribute_t*)v;			
+					attr_val = axiom_attribute_get_value(attribute, env);
+					if(!axutil_strcmp(attr_val, ref_id2))
+					{
+						attr = attribute;
+						break;
+					}
 				}
 			}
 		}
-		if(!attr &&  (scope_node == next_node))
-			next_node = axiom_node_get_first_element(scope_node, env); /* Check the Id in child nodes*/
-		else if(!attr)
-			next_node = axiom_node_get_next_sibling(next_node, env);
-		else
-			break;
-
+	}
+	/* if we cannot find the Id in the scope node proceed to childs*/
+	if (!attr)
+	{
+		element = axiom_node_get_data_element(scope_node, env);		
+		if (element)
+		{
+			ci = axiom_element_get_child_elements(element, env, scope_node);
+			if (ci)
+			{
+				while (AXIS2_TRUE == axiom_child_element_iterator_has_next(ci, env))
+				{
+					cn = axiom_child_element_iterator_next(ci, env);
+					ce = axiom_node_get_data_element(cn, env);
+					if(ce)
+						attr_hash = axiom_element_get_all_attributes(ce, env);	
+					
+					if (attr_hash)
+					{
+						for (hi = axutil_hash_first(attr_hash, env); hi; hi = axutil_hash_next(env, hi))
+						{
+							void *v = NULL;
+							axutil_hash_this(hi, NULL, NULL, &v);
+							if (v)
+							{
+								axis2_char_t *attr_val = NULL;
+								axiom_attribute_t *attribute = (axiom_attribute_t*)v;			
+								attr_val = axiom_attribute_get_value(attribute, env);
+								if(!axutil_strcmp(attr_val, ref_id2))
+								{
+									attr = attribute;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if(attr)
 	{	
-		oxs_sign_part_set_id_name(sign_part, env, axiom_attribute_get_localname(attr, env));
+		id_name = axiom_attribute_get_localname(attr, env);		
 		ns = axiom_attribute_get_namespace(attr, env);
+		if(ns)
+			ns_uri = axiom_namespace_get_uri(ns, env);
+		else
+			ns_uri = "";
+		reffed_node = oxs_axiom_get_node_by_id(env, scope_node, id_name, ref_id2, ns_uri);
 	}
 	else
-		return AXIS2_FAILURE;
+	{
+		reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id2, OXS_WSU_XMLNS );		
+
+	}
     /*Find the node refered by this ref_id2 and set to the sign part*/
-	if(ns)
-		ns_uri = axiom_namespace_get_uri(ns, env);
-	else
-		ns_uri = "";
-
-	if((id_name = oxs_sign_part_get_id_name(sign_part, env)))
-		reffed_node = oxs_axiom_get_node_by_id(env, scope_node, 
-			id_name, ref_id2, ns_uri);
-	else
-		return AXIS2_FAILURE;
-
+	
     if(reffed_node){
         oxs_sign_part_set_node(sign_part, env, reffed_node);
     }else{
