@@ -38,6 +38,7 @@
 #include <axis2_key_type.h>
 #include <axis2_msg_ctx.h>
 #include <oxs_key.h>
+#include <axutil_array_list.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -203,7 +204,10 @@ extern "C"
             const axutil_env_t *env,
             axis2_char_t *reciever_certificate_file);
 
-
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_add_derived_key(rampart_context_t *rampart_context,
+                                const axutil_env_t *env,
+                                oxs_key_t *derived_key);
 
     /**********************************************************8*/
 
@@ -289,6 +293,15 @@ extern "C"
     rampart_context_get_password_type(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+    AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
+    rampart_context_get_derived_keys(rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN oxs_key_t* AXIS2_CALL
+    rampart_context_get_derived_key(rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axis2_char_t* dk_id);
 
     /*End of Getters */
 

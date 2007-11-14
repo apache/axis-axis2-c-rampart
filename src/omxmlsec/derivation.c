@@ -25,6 +25,7 @@
 #include <oxs_tokens.h>
 #include <openssl_hmac.h>
 
+/*Remove this funciton if not in use*/
 AXIS2_EXTERN oxs_key_t* AXIS2_CALL
 oxs_derivation_get_the_referenced_base_key(const axutil_env_t *env,
     axiom_node_t *dk_token_node,

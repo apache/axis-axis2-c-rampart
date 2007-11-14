@@ -57,10 +57,11 @@ struct rampart_context_t
     axis2_bool_t require_timestamp;
     axis2_bool_t require_ut;
 
+    oxs_key_t *session_key;
+    axutil_array_list_t *dk_list;
     /*This is used in callback functions.*/
     void *ctx;
-    oxs_key_t *session_key;
-
+    
 };
 
 /*void rampart_context_set_callback_fn(axutil_env_t *env,
@@ -182,6 +183,8 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->ref = 0;
     rampart_context->session_key = NULL;
 
+    rampart_context->dk_list = axutil_array_list_create(env, 2);
+
     return rampart_context;
 }
 
@@ -243,6 +246,8 @@ rampart_context_free(rampart_context_t *rampart_context,
             oxs_key_free(rampart_context->session_key, env);
             rampart_context->session_key = NULL;
         }
+
+        /*TODO Free derived key list*/
 
         if(rampart_context->certificate){
             oxs_x509_cert_free(rampart_context->certificate, env);
@@ -828,6 +833,51 @@ rampart_context_set_session_key(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_add_derived_key(rampart_context_t *rampart_context,
+                                const axutil_env_t *env,
+                                oxs_key_t *derived_key)
+{
+    if(rampart_context->dk_list){
+        axutil_array_list_add(rampart_context->dk_list, env, derived_key);
+    }else{
+        return AXIS2_FALSE;
+    }
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
+rampart_context_get_derived_keys(rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+    return rampart_context->dk_list;
+}
+
+AXIS2_EXTERN oxs_key_t* AXIS2_CALL
+rampart_context_get_derived_key(rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axis2_char_t* dk_id)
+{   
+    oxs_key_t* dk = NULL;
+    int i = 0;
+
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+
+    /*Repeat thru all the derived keys and find the matching one*/
+    for(i=0 ; i < axutil_array_list_size(rampart_context->dk_list, env); i++)
+    {
+        axis2_char_t *key_name = NULL;
+
+        dk = (oxs_key_t*)axutil_array_list_get(rampart_context->dk_list, env, i);
+        key_name = oxs_key_get_name(dk, env);
+        if(0 == axutil_strcmp(key_name, dk_id)){
+            return dk;
+        }        
+    }
+    
+    return NULL;
+}
 
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
