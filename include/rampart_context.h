@@ -582,6 +582,9 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_is_sig_confirmation_reqd(rampart_context_t *rampart_context,
+        const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

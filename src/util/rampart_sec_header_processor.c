@@ -1359,6 +1359,7 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
     return AXIS2_SUCCESS; 
 }
 
+
 /*Public functions*/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL

@@ -1271,6 +1271,26 @@ rampart_context_get_algorithmsuite(
     return rp_binding_commons_get_algorithmsuite(binding_commons,env);
 }
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_is_sig_confirmation_reqd(rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_property_t *wss = NULL;
+    rp_wss11_t *wss11 = NULL;
+
+    wss = rp_secpolicy_get_wss(rampart_context->secpolicy,env);
+    if(!wss){
+        return AXIS2_FALSE;
+    }
+
+    wss11 = rp_property_get_value(wss,env);
+    if(wss11){
+        return rp_wss11_get_require_signature_confirmation(wss11, env);
+    }else{
+        return AXIS2_FALSE;
+    }
+}
+
 axis2_char_t *AXIS2_CALL
 rampart_context_get_key_identifier_from_wss(
     rampart_context_t *rampart_context,
