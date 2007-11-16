@@ -597,7 +597,10 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
             asym_ctx = NULL;
             return AXIS2_FAILURE;
         }
-
+        /*Check if the signture is encrypted*/
+        if(0 == axutil_strcmp( OXS_NODE_SIGNATURE , axiom_util_get_localname(decrypted_node, env))){
+            rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED, RAMPART_YES);
+        }
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
@@ -798,6 +801,10 @@ rampart_shp_process_reference_list(
                         rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
                         return AXIS2_FAILURE;
+                }
+                /*Check if the signture is encrypted*/
+                if(0 == axutil_strcmp( OXS_NODE_SIGNATURE , axiom_util_get_localname(decrypted_node, env))){
+                    rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED, RAMPART_YES);
                 }
 
                 /*Free*/
