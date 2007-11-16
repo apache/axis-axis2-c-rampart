@@ -354,8 +354,10 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
 
     /*Replace the encrypted node with the de-serialized node*/
     parent_of_enc_node = axiom_node_get_parent(enc_type_node, env);
-    axiom_node_add_child(parent_of_enc_node, env, deserialized_node);
+
+    axiom_node_insert_sibling_after(enc_type_node, env, deserialized_node);
     axiom_node_detach(enc_type_node, env);
+
 
     axiom_node_free_tree(enc_type_node, env);
     enc_type_node = NULL;

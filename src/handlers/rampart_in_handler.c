@@ -134,8 +134,10 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
             "[rampart][rampart_in_handler] Unable to set the security processed results");
     }
 
-    status = rampart_shp_process_message(env, msg_ctx, rampart_context,
-                                         soap_envelope, sec_node);
+    /*status = rampart_shp_process_message(env, msg_ctx, rampart_context,
+                                         soap_envelope, sec_node);*/
+    status = rampart_shp_strict_process_message(env, msg_ctx, rampart_context,
+                                             soap_envelope, sec_node);                                         
 
     if(status!=AXIS2_SUCCESS)
     {
