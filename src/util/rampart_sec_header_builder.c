@@ -104,6 +104,14 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
         }
     }
 
+    /*Finaly we need to make sure that our security header elements are in order*/
+     status = rampart_shb_ensure_sec_header_order(env, msg_ctx, rampart_context, sec_node);
+     if(status != AXIS2_SUCCESS)
+     {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb] Security header ordering failed.");
+                return AXIS2_FAILURE;
+     }
+
     status = AXIS2_SUCCESS;
 
     return status;
@@ -113,7 +121,62 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
 
 
 /*Public functions*/
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_node_t* sec_node)
+{
+    axis2_bool_t signature_protection = AXIS2_FALSE;
+    axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
+    axiom_node_t *sig_node = NULL;
+    axiom_node_t *enc_key_node = NULL;
+    axiom_node_t *ref_list_node = NULL;
+    /*axiom_node_t *ts_node = NULL;
+    axiom_node_t *un_node = NULL;*/
+    axiom_node_t *h_node = NULL;
+    axutil_array_list_t *dk_list = NULL;
+    int i = 0;
 
+    signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
+    is_encrypt_before_sign = rampart_context_is_encrypt_before_sign(rampart_context, env);
+    enc_key_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+    ref_list_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
+    sig_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_SIGNATURE, OXS_DSIG_NS, NULL);
+
+    /*Ensure the protection order in the header*/
+    if(sig_node && ref_list_node){
+        if(is_encrypt_before_sign){
+            /*Encrypt->Sig         <Sig><RefList>*/
+            oxs_axiom_interchange_nodes(env,  sig_node, ref_list_node );    
+        }else{
+            /*Sig->Encrypt         <RefList> <Sig>*/
+            oxs_axiom_interchange_nodes(env, ref_list_node, sig_node );             
+        }
+    }
+
+    /*If there are derived keys, make sure they come after the EncryptedKey
+        1. First we get all the derived keys
+        2. Then we attach after the EncryptedKey (hidden sessionkey)
+    */
+    dk_list = axutil_array_list_create(env, 5);
+    h_node = axiom_node_get_first_child(sec_node, env);
+    while(h_node){
+        if(0 == axutil_strcmp(OXS_NODE_DERIVED_KEY_TOKEN, axiom_util_get_localname(h_node, env))){
+            axutil_array_list_add(dk_list, env, h_node); 
+        }
+        h_node = axiom_node_get_next_sibling(h_node, env);
+    }
+    for(i = 0; i < axutil_array_list_size(dk_list, env); i++){
+        axiom_node_t *dk_node = NULL;
+        axiom_node_t *tmp_node = NULL;
+
+        dk_node = (axiom_node_t*)axutil_array_list_get(dk_list, env, i);
+        tmp_node = axiom_node_detach(dk_node, env);
+        axiom_node_insert_sibling_after(enc_key_node, env, tmp_node);
+    }
+    return AXIS2_SUCCESS;
+}
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_shb_build_message(

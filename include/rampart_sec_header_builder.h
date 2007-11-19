@@ -53,6 +53,11 @@ extern "C" {
                               rampart_context_t *context,
                               axiom_soap_envelope_t *soap_envelope);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_node_t* sec_node);
 
     /* @} */
 #ifdef __cplusplus
