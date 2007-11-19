@@ -160,7 +160,7 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
         offset_token = oxs_token_build_offset_element(env, dk_token, offset);
     }
     /*Create length*/
-    length = oxs_key_get_size(derived_key, env);
+    length = oxs_key_get_length(derived_key, env);
     if(length > 0){
         length_token = oxs_token_build_length_element(env, dk_token, length);
     }

@@ -152,6 +152,12 @@ extern "C"
     oxs_axiom_interchange_nodes(const axutil_env_t *env,
                           axiom_node_t *node_to_move,
                           axiom_node_t *node_before); 
+    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_axiom_add_as_the_first_child(const axutil_env_t *env,
+                          axiom_node_t *parent,
+                          axiom_node_t *child);
+                          
     /** @} */
 #ifdef __cplusplus
 }

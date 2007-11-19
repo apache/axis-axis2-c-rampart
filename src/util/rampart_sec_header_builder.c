@@ -47,47 +47,6 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
 
-#if 0
-    if(rampart_context_is_include_timestamp(rampart_context,env))
-    {
-        int ttl = -1;
-        /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
-        ttl = rampart_context_get_ttl(rampart_context,env);
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, building Timestamp Token using  timeToLive value %d", ttl);
-
-        status = rampart_timestamp_token_build(env,
-                                               sec_node, sec_ns_obj, ttl);
-        if (status == AXIS2_FAILURE)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Sym binding, Timestamp Token build failed. ERROR");
-            return AXIS2_FAILURE;
-        }
-    }
-
-    /*User name tokens includes in messages sent from client to server*/
-    if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
-    {
-        if(rampart_context_is_include_username_token(rampart_context,env))
-        {
-
-            /*Now we are passing rampart_context here so inside this method
-            relevant parameters are extracted. */
-
-            AXIS2_LOG_INFO(env->log, "[rampart][shb] Sym binding, building UsernmaeToken");
-            status =rampart_username_token_build(
-                        env,
-                        rampart_context,
-                        sec_node,
-                        sec_ns_obj);
-            if (status == AXIS2_FAILURE)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][shb] Sym binding, UsernmaeToken build failed. ERROR");
-                return AXIS2_FAILURE;
-            }
-        }
-    }
-#endif
 
     /*Check the encryption and signature order*/
     if(rampart_context_is_encrypt_before_sign(rampart_context, env))
@@ -127,7 +86,7 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     }else{ /*Sign before encrypt*/
         is_encrypt_before_sign = AXIS2_FALSE;
 
-        /*TODO First do signature specific stuff using Symmetric key*/
+        /*First do signature specific stuff using Symmetric key*/
         status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if(status != AXIS2_SUCCESS)
         {
@@ -144,8 +103,6 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
             return AXIS2_FAILURE;
         }
     }
-    /*If there is an EncryptedKey attache it as the first child*/
-    /*status = rampart_shb_make_enc_key_the_first_child(env, sec_node);*/
 
     status = AXIS2_SUCCESS;
 

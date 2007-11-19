@@ -224,6 +224,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_char_t *asym_key_id = NULL;
     axiom_node_t *encrypted_key_node = NULL;
     axiom_node_t *sig_node = NULL;
+    axiom_node_t *data_ref_list_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
@@ -397,6 +398,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         /*OK Buddy we have already created EncryptedKey node. Get the Id */
         asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
     }
+
     /*Add used <wsc:DerivedKeyToken> elements to the header*/
     for(j=0 ; j < axutil_array_list_size(dk_list, env); j++){
         oxs_key_t *dk = NULL;
@@ -405,21 +407,23 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         
         /*Build the <wsc:DerivedKeyToken> element*/
         if(dk){
-            oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
+            axiom_node_t *dk_node = NULL;
+            dk_node = oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
         }
-        /*Do we need derived keys? Can we free 'em here?*/
+        /*We will free DK here*/
         oxs_key_free(dk, env);
         dk = NULL;
     
     }/*End of For loop of dk_list iteration*/
     
+    /*Add ReferenceList element to the Security header*/
+    data_ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
+    
     /*Free derrived key list*/
     axutil_array_list_free(dk_list, env);
     dk_list = NULL;
  
-    /*Add ReferenceList element to the Security header*/
-    status = oxs_token_build_data_reference_list(env, sec_node, id_list);
-
+    
     return status;
 }
 
@@ -759,6 +763,7 @@ rampart_enc_encrypt_signature(
     axiom_node_t *encrypted_key_node = NULL;
     axiom_node_t *temp_node = NULL;
     axiom_node_t *node_to_move = NULL;
+    axiom_node_t *ref_list_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
@@ -861,9 +866,9 @@ rampart_enc_encrypt_signature(
 
     axutil_array_list_add(id_list, env, id);
 
-    enc_status = oxs_token_build_data_reference_list(
+    ref_list_node = oxs_token_build_data_reference_list(
                      env, encrypted_key_node, id_list);
-    if(enc_status != AXIS2_SUCCESS)
+    if(!ref_list_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption]Encrypting signature,Building reference list failed");

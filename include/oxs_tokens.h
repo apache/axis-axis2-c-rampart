@@ -291,7 +291,7 @@ extern "C"
 	/**
 	 * Creates <xenc:DataReference> elements under <xenc:ReferenceList> element
 	 */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
     oxs_token_build_data_reference_list(
 		const axutil_env_t * env, 
 		axiom_node_t * parent, 

@@ -182,6 +182,7 @@ openssl_p_sha1(const axutil_env_t *env,
 	if (!length)
 	{
 		length = OPENSSL_DEFAULT_KEY_LEN_FOR_PSHA1;
+        oxs_key_set_length(derived_key, env, length);
 	}
 
 	label_and_seed = oxs_buffer_create(env);

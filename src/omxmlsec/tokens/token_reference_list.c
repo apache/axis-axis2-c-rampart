@@ -47,18 +47,18 @@ oxs_token_build_reference_list_element(const axutil_env_t *env,
     return reference_list_node;
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 oxs_token_build_data_reference_list(const axutil_env_t *env, axiom_node_t *parent, axutil_array_list_t *id_list)
 {
     axiom_node_t *ref_list_node = NULL;
     int i=0;
 
     if(!id_list){
-        return AXIS2_SUCCESS;
+        return NULL;
     }
     /*Build the ReferenceList element*/
     ref_list_node = oxs_token_build_reference_list_element(env, parent);
-    if(!ref_list_node) {return AXIS2_FAILURE;}
+    if(!ref_list_node) {return NULL;}
 
     /*Build the list*/
     for(i=0 ; i < axutil_array_list_size(id_list, env); i++){
@@ -70,11 +70,11 @@ oxs_token_build_data_reference_list(const axutil_env_t *env, axiom_node_t *paren
         data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, id);
 		AXIS2_FREE(env->allocator, id);
 
-        if(!data_ref_node) {return AXIS2_FAILURE;}
+        if(!data_ref_node) {return NULL;}
 
 
     }
-    return AXIS2_SUCCESS;
+    return ref_list_node;
 }
 
 AXIS2_EXTERN axutil_array_list_t *AXIS2_CALL

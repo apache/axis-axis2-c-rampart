@@ -425,3 +425,16 @@ oxs_axiom_interchange_nodes(const axutil_env_t *env,
     return status;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_axiom_add_as_the_first_child(const axutil_env_t *env,
+                          axiom_node_t *parent,
+                          axiom_node_t *child)
+{
+    axis2_status_t status = AXIS2_FAILURE;
+    axiom_node_t *first_child = NULL;
+    
+    first_child = axiom_node_get_first_child(parent, env);
+    status = axiom_node_insert_sibling_before(first_child, env, child);
+
+    return status;
+}
