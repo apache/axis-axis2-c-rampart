@@ -132,6 +132,7 @@ extern "C"
 #define RAMPART_SPR_SIG_VALUE "SPR_Sig_Val"
 #define RAMPART_SPR_SIG_VERIFIED "SPR_Sig_Verified"
 #define RAMPART_SPR_SIG_ENCRYPTED "SPR_Sig_Encrypted"
+#define RAMPART_SPR_SIG_CONFIRM_FOUND "SPR_Sig_Confirmation_Found"
 
 #define RAMPART_YES "YES"
 #define RAMPART_NO "NO"

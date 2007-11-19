@@ -1,0 +1,106 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ *
+ */
+#include <stdio.h>
+#include <rampart_util.h>
+#include <axis2_util.h>
+#include <rampart_constants.h>
+#include <oxs_constants.h>
+#include <oxs_axiom.h>
+#include <oxs_utility.h>
+
+
+
+/*Private functions*/
+static axis2_status_t
+rampiart_pv_validate_signature_confirmation(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_bool_t sig_conf_reqd = AXIS2_FALSE;
+    
+    sig_conf_reqd = rampart_context_is_sig_confirmation_reqd(rampart_context, env);
+    
+    if(AXIS2_TRUE == sig_conf_reqd){
+        axis2_char_t* sig_conf_found = NULL;
+        sig_conf_found = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_CONFIRM_FOUND);
+        if(0 == axutil_strcmp(RAMPART_YES, sig_conf_found)){
+            return AXIS2_SUCCESS;
+        }else{
+            /*Error*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Signature confirmation required.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "SignatureConfirmation is not found",
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }else{
+        return AXIS2_SUCCESS;
+    } 
+}
+
+static axis2_status_t
+rampiart_pv_validate_signature_encryption(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_bool_t signature_protection = AXIS2_FALSE;
+
+    signature_protection = rampart_context_is_encrypt_signature(
+                                   rampart_context, env);
+    if(AXIS2_TRUE == signature_protection){
+        axis2_char_t* sig_encrypted = NULL;
+        sig_encrypted = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED);
+        if(0 == axutil_strcmp(RAMPART_YES, sig_encrypted)){
+            return AXIS2_SUCCESS;
+        }else{
+            /*Error*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Signature need to be encrypted.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Signature need to be encrypted", 
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }else{
+        return AXIS2_SUCCESS;
+    }
+}
+
+/*Public functions*/
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampiart_pv_validate_sec_header(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axiom_node_t *sec_node,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    
+    /*Check if the signature needed to be encrypted*/ 
+    if(!rampiart_pv_validate_signature_encryption(env, rampart_context, msg_ctx)){
+        return AXIS2_FAILURE;
+    } 
+    /*Check if the Signature Confirmation is set*/
+    if(!rampiart_pv_validate_signature_confirmation(env, rampart_context, msg_ctx)){
+        return AXIS2_FAILURE;
+    }
+
+    /*NOTE: Uusername tokens and Timestamps policies are checked, while security header processing*/
+    /*All the policy reqmnts are met. We are good to go*/
+    return AXIS2_SUCCESS;
+}
+
+

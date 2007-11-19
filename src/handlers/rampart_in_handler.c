@@ -136,7 +136,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
 
     /*status = rampart_shp_process_message(env, msg_ctx, rampart_context,
                                          soap_envelope, sec_node);*/
-    status = rampart_shp_strict_process_message(env, msg_ctx, rampart_context,
+    status = rampart_shp_process_sec_header(env, msg_ctx, rampart_context,
                                              soap_envelope, sec_node);                                         
 
     if(status!=AXIS2_SUCCESS)

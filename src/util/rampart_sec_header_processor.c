@@ -24,6 +24,8 @@
 #include <rampart_util.h>
 #include <rampart_sec_processed_result.h>
 #include <rampart_handler_util.h>
+#include <rampart_token_processor.h>
+#include <rampart_policy_validator.h>
 #include <oxs_ctx.h>
 #include <oxs_error.h>
 #include <oxs_utility.h>
@@ -35,7 +37,6 @@
 #include <axutil_utils.h>
 #include <axutil_array_list.h>
 #include <axis2_key_type.h>
-#include <rampart_token_processor.h>
 #include <oxs_sign_ctx.h>
 #include <oxs_xml_signature.h>
 #include <oxs_key_mgr.h>
@@ -200,6 +201,15 @@ static oxs_x509_cert_t *get_receiver_x509_cert(
     }
 }
 
+static axis2_status_t
+rampart_shp_process_signature_confirmation(const axutil_env_t *env,
+                                   axis2_msg_ctx_t *msg_ctx,
+                                   rampart_context_t *rampart_context,
+                                   axiom_node_t *cur_node)
+{
+    rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_CONFIRM_FOUND, RAMPART_YES);
+    return AXIS2_SUCCESS;
+}
 
 static axis2_status_t
 rampart_shp_process_timestamptoken(const axutil_env_t *env,
@@ -1458,7 +1468,7 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
 /*Public functions*/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_shp_strict_process_message(const axutil_env_t *env,
+rampart_shp_process_sec_header(const axutil_env_t *env,
                             axis2_msg_ctx_t *msg_ctx,
                             rampart_context_t *rampart_context,
                             axiom_soap_envelope_t *soap_envelope,
@@ -1498,11 +1508,11 @@ rampart_shp_strict_process_message(const axutil_env_t *env,
             status = rampart_shp_process_derived_key(env, msg_ctx,  rampart_context, sec_node, cur_node);
 
         }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_DATA)){
-            /*TODO: When a security header is Encrypted*/
+            /*We do nothing. But this is possible when a security header is Encrypted. But it would be decrypted thru a ref list*/
             status = AXIS2_SUCCESS;
         }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE_CONFIRMATION)){
-            /*TODO*/
-            status = AXIS2_SUCCESS;
+            status = rampart_shp_process_signature_confirmation(env, msg_ctx,  rampart_context,  cur_node);
+        
         }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_BINARY_SECURITY_TOKEN)){
             /*We do nothing.*/
             status = AXIS2_SUCCESS;
@@ -1526,9 +1536,17 @@ rampart_shp_strict_process_message(const axutil_env_t *env,
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] A replay detected");
         return AXIS2_FAILURE;
     }
+
+    /*Now validate security policies, those cannot be checked on the fly*/
+    status = rampiart_pv_validate_sec_header(env, rampart_context, sec_node, msg_ctx);
+    if(status != AXIS2_SUCCESS){
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Security policy validation failed");
+        return AXIS2_FAILURE;
+    }
     return AXIS2_SUCCESS;
 }
 
+#if 0
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_shp_process_message(const axutil_env_t *env,
                             axis2_msg_ctx_t *msg_ctx,
@@ -1777,7 +1795,6 @@ rampart_shp_process_message(const axutil_env_t *env,
             if(rampart_context_check_whether_to_sign(rampart_context, env))
             {
                 cur_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_SIGNATURE, OXS_DSIG_NS, NULL);
-                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);*/
                 if(!cur_node)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -1821,7 +1838,6 @@ rampart_shp_process_message(const axutil_env_t *env,
             else
             {
                 cur_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_SIGNATURE, OXS_DSIG_NS, NULL);
-                /*cur_node = oxs_axiom_get_node_by_local_name(env, sec_node,OXS_NODE_SIGNATURE);*/
                 if(cur_node)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -1918,6 +1934,6 @@ rampart_shp_process_message(const axutil_env_t *env,
     }
 
 }
-
+#endif
 
 

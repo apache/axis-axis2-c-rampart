@@ -17,46 +17,39 @@
 #include <axutil_utils_defines.h>
 #include <axis2_defines.h>
 #include <axutil_env.h>
-#include <axiom_soap.h>
 #include <axis2_msg_ctx.h>
-#include <oxs_asym_ctx.h>
-#include <oxs_xml_encryption.h>
 #include <rampart_context.h>
 /**
-  * @file rampart_sec_header_processor.h
-  * @brief Processes a message depending on it's security related claims 
+  * @file rampart_policy_validator.h
+  * @brief Verifies whether the message complies with the security policy reqmnt
   */
 
 /**
-* @defgroup sec_header_processor Security Header Processor
+* @defgroup rampart_policy_validator PolicyValidator
 * @ingroup rampart_utils
 * @{
 */
 
-#ifndef RAMPART_SEC_HEADER_PROCESSOR_H
-#define RAMPART_SEC_HEADER_PROCESSOR_H
+#ifndef RAMPART_POLICY_VALIDATOR_H
+#define RAMPART_POLICY_VALIDATOR_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
     /**
-    * Processes a message depending on it's security related claims.
-    * This is the main module in the infow of a message if rampart is enabled.
-    * Processing is depending on the order of tokens apear in the @sec_node
-    * Also the module will check for security policy settings	
+    * Validate security policies, those cannot be checked on the fly
     * @param env pointer to environment struct
-    * @param msg_ctx message context
-    * @param soap_envelope the SOAP envelope
+    * @param rampart_context the Rampart Context
     * @param sec_node The security element
+    * @param msg_ctx message context
     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_shp_process_sec_header(const axutil_env_t *env,
-                                axis2_msg_ctx_t *msg_ctx,
-                                rampart_context_t *rampart_context,
-                                axiom_soap_envelope_t *soap_envelope,
-                                axiom_node_t *sec_node);
+    rampiart_pv_validate_sec_header(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axiom_node_t *sec_node,
+        axis2_msg_ctx_t *msg_ctx);
 
 
     /* @} */
@@ -64,4 +57,4 @@ extern "C" {
 }
 #endif
 
-#endif    /* !RAMPART_SEC_HEADER_PROCESSOR_H */
+#endif    /* !RAMPART_POLICY_VALIDATOR_H */

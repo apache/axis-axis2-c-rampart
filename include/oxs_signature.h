@@ -104,13 +104,30 @@ extern "C"
                    oxs_sign_ctx_t *sign_ctx,
                    axis2_char_t *content,
                    axis2_char_t *signature);
-
+    /**
+     * Verifies @signature with @content using the information
+     * available in the signature content @sign_ctx as per the HMA-SHA1 algorithm
+     * @env pointer to environment struct
+     * @sign_ctx the signature context
+     * @content the content that's signed
+     * @signature the signature value
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sig_verify_hmac_sha1(const axutil_env_t *env,
                oxs_sign_ctx_t *sign_ctx,
                axis2_char_t *content,
                axis2_char_t *signature);
 
+    /**
+     * Verifies @signature with @content using the information
+     * available in the signature content @sign_ctx as per the RSA-SHA1 algorithm
+     * @env pointer to environment struct
+     * @sign_ctx the signature context
+     * @content the content that's signed
+     * @signature the signature value
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_sig_verify_rsa_sha1(const axutil_env_t *env,
                oxs_sign_ctx_t *sign_ctx,

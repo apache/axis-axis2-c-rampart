@@ -37,12 +37,29 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+    /**
+    * Build the signature confirmation element in the security header
+    * @param env pointer to environment struct
+    * @param msg_ctx message context
+    * @param rampart_context The rampart context
+    * @param sec_node The security element
+    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+    */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_sig_confirm_signature(const axutil_env_t *env,
                              axis2_msg_ctx_t *msg_ctx,
                              rampart_context_t *rampart_context,
                              axiom_node_t *sec_node);
                 
+    /**
+    * Sign a message depending on the security policies
+    * @param env pointer to environment struct
+    * @param msg_ctx message context
+    * @param rampart_context The rampart context
+    * @param soap_envelope The SOAP envelope
+    * @param sec_node The security element
+    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+    */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_sig_sign_message(const axutil_env_t *env,
                              axis2_msg_ctx_t *msg_ctx,

@@ -490,14 +490,7 @@ extern "C"
         axis2_bool_t server_side,
         axis2_bool_t is_inpath,
         const axutil_env_t *env);
-    /*
-        AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-        rampart_context_get_enc_key_identifier(
-                rampart_context_t *rampart_context,
-                rp_property_t *token,
-                axis2_bool_t server_side,
-                const axutil_env_t *env);
-    */
+    
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_key_identifier(
         rampart_context_t *rampart_context,
@@ -583,7 +576,8 @@ extern "C"
         const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    rampart_context_is_sig_confirmation_reqd(rampart_context_t *rampart_context,
+    rampart_context_is_sig_confirmation_reqd(
+        rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
 #ifdef __cplusplus

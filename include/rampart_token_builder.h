@@ -58,6 +58,11 @@ extern "C" {
      * certificate @cert.
      * Note that this method will internally call other token building methods specified in this header
      * depending on the @pattern. 
+     * @param env pointer to environment struct
+     * @param parent The parent node
+     * @param cert The X509 certificate
+     * @param pattern The build pattern
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_token_build_security_token_reference(const axutil_env_t *env,
@@ -72,6 +77,10 @@ extern "C" {
      *                <BinarySecurityToken>UYISDjsdaousdWEqswOIUsd</BinarySecurityToken>
      *            </Embedded>
      *        </SecurityTokenReference>
+     * @param env pointer to environment struct
+     * @param parent The parent node
+     * @param cert The X509 certificate
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -84,6 +93,10 @@ extern "C" {
      *            <KeyIdentifier>WEqswOIUsd</KeyIdentifier>
      *        </SecurityTokenReference>
      * 
+     * @param env pointer to environment struct
+     * @param parent The parent node
+     * @param cert The X509 certificate
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -101,6 +114,10 @@ extern "C" {
      *                </X509IssuerSerial>
      *            </x509Data>
      *        </SecurityTokenReference>
+     * @param env pointer to environment struct
+     * @param parent The parent node
+     * @param cert The X509 certificate
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -116,6 +133,10 @@ extern "C" {
      *              </ds:X509Certificate>
      *          <ds:X509Data>
      *          </SecurityTokenReference>
+     * @param env pointer to environment struct
+     * @param parent The parent node
+     * @param cert The X509 certificate
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_token_build_x509_data_issuer_serial(const axutil_env_t *env,

@@ -48,19 +48,33 @@ extern "C" {
     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_enc_encrypt_message(const axutil_env_t *env,
-                                axis2_msg_ctx_t *msg_ctx,
-                                rampart_context_t *rampart_context,
-                                axiom_soap_envelope_t *soap_envelope,
-                                axiom_node_t *sec_node);
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_soap_envelope_t *soap_envelope,
+        axiom_node_t *sec_node);
 
+    /**
+    * @param env pointer to environment struct
+    * @param msg_ctx message context
+    * @param soap_envelope the SOAP envelope
+    * @param sec_node The security element
+    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+    */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_enc_dk_encrypt_message(const axutil_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    rampart_context_t *rampart_context,
-    axiom_soap_envelope_t *soap_envelope,
-    axiom_node_t *sec_node);
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_soap_envelope_t *soap_envelope,
+        axiom_node_t *sec_node);
  
 
+    /**
+    * @param env pointer to environment struct
+    * @param msg_ctx message context
+    * @param soap_envelope the SOAP envelope
+    * @param sec_node The security element
+    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+    */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_enc_add_key_info(
         const axutil_env_t *env,
@@ -70,6 +84,13 @@ extern "C" {
         axiom_node_t *sec_node);
 
 
+    /**
+    * @param env pointer to environment struct
+    * @param msg_ctx message context
+    * @param soap_envelope the SOAP envelope
+    * @param sec_node The security element
+    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+    */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_enc_encrypt_signature(
         const axutil_env_t *env,
@@ -78,14 +99,23 @@ extern "C" {
         axiom_soap_envelope_t *soap_envelope,
         axiom_node_t *sec_node);
 
+    /**
+    * @param env pointer to environment struct
+    * @param session_key the session key to be encrypted
+    * @param msg_ctx message context
+    * @param rampart_context the rampart context
+    * @param soap_envelope the SOAP envelope
+    * @param sec_node The security element
+    * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+    */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_enc_encrypt_session_key(const axutil_env_t *env,
-    oxs_key_t *session_key,
-    axis2_msg_ctx_t *msg_ctx,
-    rampart_context_t *rampart_context,
-    axiom_soap_envelope_t *soap_envelope,
-    axiom_node_t *sec_node,
-    axutil_array_list_t *id_list);
+        oxs_key_t *session_key,
+        axis2_msg_ctx_t *msg_ctx,
+        rampart_context_t *rampart_context,
+        axiom_soap_envelope_t *soap_envelope,
+        axiom_node_t *sec_node,
+        axutil_array_list_t *id_list);
 
 
     /* @} */

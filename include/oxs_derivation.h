@@ -41,14 +41,15 @@ extern "C"
 
 
     /**
-     * Derive Keys 
-     * Caller must free memory
+     * Derive Key depending on the secret key @secret 
+     * Caller must free memory for derived key
      * @param env pointer to environment struct
      * @param secret The secret is the shared secret that is exchanged (note that if two secrets were securely exchanged,\
      * possible as part of an initial exchange, they are concatenated in the order they were sent/received)
      * @param derived_key The derived key. Caller must create and free
 	 * @param build_fresh Whether to build fresh or build using details in derived key(in case of recovering the derive key from xml)
-     * @return status 
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     *
      **/
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_derivation_derive_key(const axutil_env_t *env,
@@ -56,7 +57,16 @@ extern "C"
                          oxs_key_t *derived_key,
 						 axis2_bool_t build_fresh
                          );
-
+    /**
+     * Build the <wsse:DerivedKeyToken> depending a given derived key @derived_key
+     * The token will be attached to the parent @parent
+     * @param env pointer to environment struct
+     * @derived_key The derived key to be used to get information
+     * @parent The parent node to be attached to
+     * @stref_uri Security Toekn Reference URI
+     * @stref_val_type Security Token Reference Valut Type
+     * @return the built axiom node
+     */
     AXIS2_EXTERN axiom_node_t * AXIS2_CALL
     oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     oxs_key_t *derived_key,
@@ -64,8 +74,16 @@ extern "C"
     axis2_char_t *stref_uri,
     axis2_char_t *stref_val_type);
 
-    /* If the (optional) session_key is NULL then extract it form the refered EncryptedKey. Otherwise use it
-     * to Derive a new key using information available in the dk_token*/
+    /**
+     * Extract information from an AXIOM node of typ <wsse:DerivedKeyToken> and build a key
+     * If the (optional) session_key is NULL then extract it form the refered EncryptedKey. Otherwise use it
+     * to Derive a new key using information available in the dk_token.
+     * @param env pointer to environment struct
+     * @dk_token The <wsse:DerivedKeyToken> axiom node
+     * @root_node The root node, which the search scope limited to
+     * @session_key The session key, which is the base for the key derivation.
+     * @return the derived key on SUCCESS or NULL on failure
+     * */
     AXIS2_EXTERN oxs_key_t * AXIS2_CALL
     oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     axiom_node_t *dk_token,
