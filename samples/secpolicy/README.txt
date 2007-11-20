@@ -25,6 +25,15 @@ Scenario    Summary
             The protection order is Encrypt->Sign
             Signature is Encrypted
 7.          Replay detection           
+8.          Symmetric binding. Encryption using derived keys.
+9.          Symmetric binding. Signature
+10.         Symmetric binding. Both encryption and sign. 
+            The protection order is Encrypt->Sign
+11.         Symmetric binding. Both encryption and sign.
+            The protection order is Sign->Encrypt
+12.         Symmetric binding. Both encryption and sign.
+            The protection order is Sign->Encrypt
+            Signature is Encrypted
 
 FAQ:
 ---
