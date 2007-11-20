@@ -37,7 +37,6 @@
                     </sp:Layout>
                     <sp:IncludeTimestamp/>
                     <sp:EncryptBeforeSigning/>
-                    <!--sp:EncryptSignature/-->
                     <sp:OnlySignEntireHeadersAndBody/>
                 </wsp:Policy>
             </sp:SymmetricBinding> 

@@ -25,7 +25,6 @@
                         </wsp:Policy>
                     </sp:Layout>
                     <sp:IncludeTimestamp/>
-                    <!--sp:EncryptSignature/-->
                     <sp:OnlySignEntireHeadersAndBody/>
                 </wsp:Policy>
             </sp:SymmetricBinding>
@@ -46,20 +45,9 @@
                     <sp:MustSupportRefEncryptedKey/>
                 </wsp:Policy>
             </sp:Wss11>
-            <!--sp:Trust10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-                <wsp:Policy>
-                    <sp:MustSupportIssuedTokens/>
-                    <sp:RequireClientEntropy/>
-                    <sp:RequireServerEntropy/>
-                </wsp:Policy>
-            </sp:Trust10--> 
             <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
                 <sp:Body/>
             </sp:EncryptedParts>
-            <!--sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-                <sp:Body/>
-                <sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
-            </sp:SignedParts-->
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                 <rampc:User>Alice</rampc:User>
                 <rampc:TimeToLive>360</rampc:TimeToLive>
