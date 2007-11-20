@@ -21,12 +21,12 @@
 #include <stdio.h>
 #include <rampart_util.h>
 #include <axis2_util.h>
+#include <rampart_handler_util.h>
 #include <rampart_constants.h>
 #include <oxs_constants.h>
 #include <oxs_axiom.h>
 #include <oxs_utility.h>
-
-
+#include <rampart_sec_processed_result.h>
 
 /*Private functions*/
 static axis2_status_t

@@ -40,7 +40,7 @@
 #include <axis2_key_type.h>
 #include <rampart_token_builder.h>
 #include <rampart_util.h>
-
+#include <rampart_sec_processed_result.h>
 /*Private functions*/
 
 oxs_x509_cert_t *AXIS2_CALL
