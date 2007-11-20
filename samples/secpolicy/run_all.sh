@@ -4,7 +4,7 @@ _SMPL_DIR="$PWD"
 _PORT=9090
 _SLEEP=3
 #You may change these to scenarios u need to run
-_LST="1 2 3 4 5 6 7"
+_LST="1 2 3 4 5 6 7 8 9 10 11"
 
 if [ $# -eq 1 ]
 then
