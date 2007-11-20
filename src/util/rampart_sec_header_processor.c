@@ -712,75 +712,6 @@ rampart_shp_process_reference_list(
                         OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
 
        if(key_info_node){
-#if 0            
-            axiom_node_t *reffed_node = NULL;
-            axis2_char_t *reffed_node_name = NULL;
-
-            /*This can be a derrived key or an EncryptedKey*/
-            reffed_node = rampart_shp_process_key_info_for_ref(env, key_info_node, envelope_node);
-            if(!reffed_node){
-                /*Error*/
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Reffered node cannot be found");
-                return AXIS2_FAILURE;
-            }
-            reffed_node_name = axiom_util_get_localname(reffed_node, env);
-            if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){
-                /*Encrypted by a DerivedKey*/
-                oxs_key_t *key_to_decrypt = NULL;
-                oxs_key_t *session_key = NULL;
-                 
-                /*Get the session key. This is for the performance. Assuming we have only one session key, which is the common usage*/
-                session_key = rampart_context_get_session_key(rampart_context, env);
-                if(!session_key){
-                    /*Sesison key is not in the context. Need to find the session key. This wil lbe happened in the following method.
-                      So we log this and pass the NULL session key*/
-                    AXIS2_LOG_INFO(env->log,  "[rampart][shp] On processing ReferenceList, failed to get the session key");
-                }
-                key_to_decrypt = oxs_derivation_extract_derived_key_from_token(env, reffed_node, envelope_node, session_key);
-                
-                if(!key_to_decrypt){
-                    /*Error cannot find the key to decrypt. We will use the session key. Just in case.*/
-                    key_to_decrypt = session_key;
-                }
-                if(key_to_decrypt){
-                    /*Now if everything is fine we need to decrypt*/
-                    oxs_ctx_t *ctx = NULL;
-                    axiom_node_t *decrypted_node = NULL;
-
-                    ctx = oxs_ctx_create(env);
-                    oxs_ctx_set_key(ctx, env, key_to_decrypt);
-                    status = oxs_xml_enc_decrypt_node(env, ctx, enc_data_node, &decrypted_node);
-
-                    if(AXIS2_FAILURE == status)
-                    {
-                        rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
-                        return AXIS2_FAILURE;
-                    }
-            
-                    /*Free*/
-                    oxs_ctx_free(ctx, env);
-                    ctx = NULL;
-
-                    break;
-                }else{
-                    /*Can't help. Error retrieving the key to decrypt the reference. */
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  "[rampart][shp] On processing ReferenceList, failed to get the key to decrypt");
-                    return AXIS2_FAILURE;
-                }
-            }else if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_ENCRYPTED_KEY)){
-                /*Encrypted by the session key*/
-                ref_list_node = axiom_node_detach(ref_list_node, env);
-                axiom_node_add_child(reffed_node, env, ref_list_node);
-
-                status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context,
-                                             soap_envelope, sec_node, reffed_node);
-                break;
-            }else{
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Reffered node is not supported %s", reffed_node_name);
-                return AXIS2_FAILURE;
-            }
-#endif
             axis2_char_t *key_name = NULL;
             oxs_key_t *session_key = NULL;
             oxs_key_t *key_to_decrypt = NULL;
@@ -821,7 +752,6 @@ rampart_shp_process_reference_list(
                 oxs_ctx_free(ctx, env);
                 ctx = NULL;
 
-                break;
             }else{
                 /*Can't help. Error retrieving the key to decrypt the reference. */
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  "[rampart][shp] On processing ReferenceList, failed to get the key to decrypt");
@@ -874,33 +804,6 @@ rampart_shp_process_sym_binding_signature(
             status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context, soap_envelope, sec_node, encrypted_key_node);                     
             session_key = rampart_context_get_session_key(rampart_context, env);
         }
-#if 0
-        /*This can be a derrived key or an EncryptedKey. Whatever it is, it should be within the Security header*/
-        reffed_node = rampart_shp_process_key_info_for_ref(env, key_info_node, sec_node);
-        if(!reffed_node){
-                /*Error*/
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Reffered node cannot be found");
-                return AXIS2_FAILURE;
-        }
-        reffed_node_name = axiom_util_get_localname(reffed_node, env);
-        if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_DERIVED_KEY_TOKEN)){      
-            /*Signed by a DerivedKey*/
-
-            key_to_verify = oxs_derivation_extract_derived_key_from_token(env, reffed_node, envelope_node, session_key);
-            if(!key_to_verify){
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Derived key cannot be taken for the signature verification");
-                return AXIS2_FAILURE;
-            }
-        }else if(0 == axutil_strcmp(reffed_node_name, OXS_NODE_ENCRYPTED_KEY)){
-            /*TODO: Now we need to decrypt the EncryptedKey and get the session key.
-             *      But for the most common scenario we will assume that this is the session key. 
-             *      Q: Would the session key is guranteed to be set in the ramart_context?*/
-             key_to_verify = session_key; 
-        }
-    }else{
-        key_to_verify = session_key;
-    }
-#endif
     }
     if(session_key){
         axis2_char_t *key_name = NULL;
