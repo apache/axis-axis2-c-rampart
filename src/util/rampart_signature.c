@@ -675,7 +675,7 @@ rampart_sig_sign_message(
         encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY); 
         if(!encrypted_key_node){
             /*There is no EncryptedKey so generate one*/
-            status = rampart_enc_encrypt_session_key(env, signed_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+            status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
             if(AXIS2_FAILURE == status){
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Cannot encrypt the session key " );
                 return AXIS2_FAILURE;

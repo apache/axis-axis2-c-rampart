@@ -281,8 +281,8 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     if(!session_key){
         /*Generate the  session key*/
         session_key = oxs_key_create(env);
-        rampart_context_set_session_key(rampart_context, env, session_key);
         status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+        rampart_context_set_session_key(rampart_context, env, session_key);
     }
  
     id_list = axutil_array_list_create(env, 5);
@@ -866,14 +866,17 @@ rampart_enc_encrypt_signature(
 
     axutil_array_list_add(id_list, env, id);
 
-    ref_list_node = oxs_token_build_data_reference_list(
-                     env, encrypted_key_node, id_list);
-    if(!ref_list_node)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
-        return AXIS2_FAILURE;
-    }
+	if(!use_derived_keys)
+	{
+		ref_list_node = oxs_token_build_data_reference_list(
+						 env, encrypted_key_node, id_list);
+		if(!ref_list_node)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+							"[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
+			return AXIS2_FAILURE;
+		}
+	}
 
     if(id_list){
         /*TODO need to free data of the list*/
