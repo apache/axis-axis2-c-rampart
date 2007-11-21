@@ -230,11 +230,11 @@ openssl_p_sha1(const axutil_env_t *env,
 	key_len = length + offset;
 	output = (unsigned char*)AXIS2_MALLOC(env->allocator, key_len + 1);
 	status = openssl_p_hash(env, secret, oxs_buffer_get_data(label_and_seed, env), oxs_buffer_get_size(label_and_seed, env), output, key_len);
-	output = (unsigned char*)axutil_string_substring_starting_at((axis2_char_t*)output, offset);
+	/*output = (unsigned char*)axutil_string_substring_starting_at((axis2_char_t*)output, offset);*/
 	dk_id = (axis2_char_t*)oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
 	dk_name = axutil_stracat(env, "#", dk_id);
 
-	status = status && oxs_key_populate(derived_key, env, (unsigned char*)output, dk_name, length, oxs_key_get_usage(secret, env));
+	status = status && oxs_key_populate(derived_key, env, (unsigned char*)(output+offset), dk_name, length, oxs_key_get_usage(secret, env));
 	AXIS2_FREE(env->allocator, output);
 	AXIS2_FREE(env->allocator, dk_id);
 	AXIS2_FREE(env->allocator, dk_name);
