@@ -630,7 +630,8 @@ rampart_sig_sign_message(
             id = NULL;
         }
     }
-
+    
+    /*Free array list*/
     axutil_array_list_free(nodes_to_sign, env);
     nodes_to_sign = NULL;
 
@@ -707,9 +708,18 @@ rampart_sig_sign_message(
         }
     }
 
+    /*If we have used derived keys, then we need to free the key in sign_ctx*/
+    if(rampart_context_check_is_derived_keys (env, token)){
+        oxs_key_t *sig_ctx_dk = NULL;
+
+        sig_ctx_dk = oxs_sign_ctx_get_secret(sign_ctx, env);
+        oxs_key_free(sig_ctx_dk, env);
+        sig_ctx_dk = NULL;
+    }
     /*Free sig ctx*/
     oxs_sign_ctx_free(sign_ctx, env);
-    
+    sign_ctx = NULL;
+
     return status;
 }
 
