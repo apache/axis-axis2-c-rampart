@@ -34,6 +34,9 @@ Scenario    Summary
 12.         Symmetric binding. Both encryption and sign.
             The protection order is Sign->Encrypt
             Signature is Encrypted
+13.         Symmetric binding. Both encryption and sign.
+            The protection order is Encrypt->Sign
+            Signature is Encrypted
 
 FAQ:
 ---

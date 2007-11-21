@@ -763,7 +763,6 @@ rampart_enc_encrypt_signature(
     axiom_node_t *encrypted_key_node = NULL;
     axiom_node_t *temp_node = NULL;
     axiom_node_t *node_to_move = NULL;
-    axiom_node_t *ref_list_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
@@ -868,6 +867,7 @@ rampart_enc_encrypt_signature(
 
 	if(!use_derived_keys)
 	{
+        axiom_node_t *ref_list_node = NULL;
 		ref_list_node = oxs_token_build_data_reference_list(
 						 env, encrypted_key_node, id_list);
 		if(!ref_list_node)
@@ -876,10 +876,27 @@ rampart_enc_encrypt_signature(
 							"[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
 			return AXIS2_FAILURE;
 		}
-	}
+	}else{
+        /*Now we are using derived keys*/
+        axiom_node_t *ref_list_node = NULL;
+        
+        /*Check if the RefList is already exist*/
+        ref_list_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
+        if(ref_list_node){
+            axis2_char_t *mod_id = NULL;
+            axiom_node_t *data_ref_node = NULL;
+
+            /*Append ID to the list*/
+            mod_id = axutil_stracat(env, "#",id);
+            data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, mod_id);
+        }else{
+            /*Create a fresh node*/
+            ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
+        }
+    }
 
     if(id_list){
-        /*TODO need to free data of the list*/
+        /*Need to free data of the list*/
         int size = 0;
         int j = 0;
         size = axutil_array_list_size(id_list, env);
