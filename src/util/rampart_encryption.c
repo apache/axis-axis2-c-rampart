@@ -819,6 +819,55 @@ rampart_enc_encrypt_signature(
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
     oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);
     id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCDATA_ID);
+
+    /*Manage the reference list*/
+    id_list = axutil_array_list_create(env, 0);
+    axutil_array_list_add(id_list, env, id);
+    if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING){
+        /*We append IDs to the EncryptedKey node*/
+        axiom_node_t *ref_list_node = NULL;
+        ref_list_node = oxs_token_build_data_reference_list(
+                         env, encrypted_key_node, id_list);
+        if(!ref_list_node){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_encryption]Asym Encrypting signature,"
+                    "Building reference list failed");
+            return AXIS2_FAILURE;
+        } 
+    }else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING){
+        if(AXIS2_TRUE == use_derived_keys){
+            /*We need to create a new reference list and then attach it before the EncryptedData(signature)*/
+            axiom_node_t *ref_list_node = NULL;
+
+            ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
+            if(!ref_list_node){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_encryption]Sym Encrypting signature,"
+                                    "Building reference list failed");
+                return AXIS2_FAILURE;
+            } 
+        }else{
+            /*The session key is in use. Add a ref to the EncryptedKey's ref list*/
+            axiom_node_t *ref_list_node = NULL;
+            ref_list_node = oxs_axiom_get_first_child_node_by_name(
+                        env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
+            if(ref_list_node){
+                /*There is a ref list node in EncryptedKey. So append*/
+                axiom_node_t *data_ref_node = NULL;
+                axis2_char_t *mod_id = NULL;
+
+                /*We need to prepend # to the id in the list to create the reference*/
+                mod_id = axutil_stracat(env, "#",id);
+                data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, mod_id);
+
+            }else{
+                /*There is NO ref list node in EncryptedKey. So create a new one */
+                ref_list_node = oxs_token_build_data_reference_list(env, encrypted_key_node, id_list);
+            }
+        }       
+    }else{
+        /*Nothing to do*/
+    }
+    
+    /*Encrypt the signature*/
     enc_data_node = oxs_token_build_encrypted_data_element(
                         env, sec_node, OXS_TYPE_ENC_ELEMENT, id );
     enc_status = oxs_xml_enc_encrypt_node(
@@ -861,39 +910,6 @@ rampart_enc_encrypt_signature(
         }
     }
 
-    id_list = axutil_array_list_create(env, 0);
-
-    axutil_array_list_add(id_list, env, id);
-
-	if(!use_derived_keys)
-	{
-        axiom_node_t *ref_list_node = NULL;
-		ref_list_node = oxs_token_build_data_reference_list(
-						 env, encrypted_key_node, id_list);
-		if(!ref_list_node)
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-							"[rampart][rampart_encryption]Encrypting signature,Building reference list failed");
-			return AXIS2_FAILURE;
-		}
-	}else{
-        /*Now we are using derived keys*/
-        axiom_node_t *ref_list_node = NULL;
-        
-        /*Check if the RefList is already exist*/
-        ref_list_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
-        if(ref_list_node){
-            axis2_char_t *mod_id = NULL;
-            axiom_node_t *data_ref_node = NULL;
-
-            /*Append ID to the list*/
-            mod_id = axutil_stracat(env, "#",id);
-            data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, mod_id);
-        }else{
-            /*Create a fresh node*/
-            ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
-        }
-    }
 
     if(id_list){
         /*Need to free data of the list*/
