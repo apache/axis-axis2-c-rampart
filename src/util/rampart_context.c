@@ -1283,12 +1283,18 @@ rampart_context_is_sig_confirmation_reqd(rampart_context_t *rampart_context,
         return AXIS2_FALSE;
     }
 
+    if(rp_property_get_type(wss,env) == RP_PROPERTY_WSS11)
+{		    
     wss11 = rp_property_get_value(wss,env);
     if(wss11){
         return rp_wss11_get_require_signature_confirmation(wss11, env);
     }else{
         return AXIS2_FALSE;
     }
+}
+else
+	return AXIS2_FALSE;
+
 }
 
 axis2_char_t *AXIS2_CALL
