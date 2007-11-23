@@ -234,7 +234,7 @@ openssl_p_sha1(const axutil_env_t *env,
 	dk_id = (axis2_char_t*)oxs_util_generate_id(env, (axis2_char_t*)OXS_DERIVED_ID);
 	dk_name = axutil_stracat(env, "#", dk_id);
 
-	status = status && oxs_key_populate(derived_key, env, (unsigned char*)(output+offset), dk_name, length, oxs_key_get_usage(secret, env));
+	status = status && oxs_key_populate(derived_key, env, (unsigned char*)(output+offset), dk_name, length, OXS_KEY_USAGE_DERIVED);
 	AXIS2_FREE(env->allocator, output);
 	AXIS2_FREE(env->allocator, dk_id);
 	AXIS2_FREE(env->allocator, dk_name);

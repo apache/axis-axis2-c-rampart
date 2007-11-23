@@ -966,7 +966,7 @@ rampart_shp_process_asym_binding_signature(
 
         return  AXIS2_FAILURE;
     }
-    if(rampart_context_check_is_derived_keys(env, token))
+    /*if(rampart_context_check_is_derived_keys(env, token))
     {
         rampart_create_fault_envelope(env, RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN,
                                       "Derived Keys are not supported.", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
@@ -974,7 +974,7 @@ rampart_shp_process_asym_binding_signature(
                         "[rampart][shp] Derived Keys are not supported.");
 
         return AXIS2_FAILURE;
-    }
+    }*/
     is_include_token = rampart_context_is_token_include(
                            rampart_context, token, token_type, server_side, AXIS2_TRUE, env);
 
