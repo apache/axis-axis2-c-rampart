@@ -713,8 +713,8 @@ rampart_sig_sign_message(
         oxs_key_t *sig_ctx_dk = NULL;
 
         sig_ctx_dk = oxs_sign_ctx_get_secret(sign_ctx, env);
-        oxs_key_free(sig_ctx_dk, env);
-        sig_ctx_dk = NULL;
+        /*oxs_key_free(sig_ctx_dk, env);
+        sig_ctx_dk = NULL;*/
     }
     /*Free sig ctx*/
     oxs_sign_ctx_free(sign_ctx, env);
