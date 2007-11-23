@@ -37,6 +37,156 @@
 /*Private functions*/
 
 axis2_status_t AXIS2_CALL
+rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
+                                   axis2_msg_ctx_t *msg_ctx,
+                                   rampart_context_t *rampart_context,
+                                   axiom_soap_envelope_t *soap_envelope,
+                                   axiom_node_t *sec_node,
+                                   axiom_namespace_t *sec_ns_obj)
+{
+    axis2_bool_t signature_protection = AXIS2_FALSE;
+    axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
+    axis2_status_t status = AXIS2_SUCCESS;
+    axiom_node_t *sig_node = NULL;
+    axiom_node_t *enc_key_node = NULL;
+    /*Do Asymmetric Binding specific things*/
+    signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
+
+    /*Check the encryption and signature order*/
+    if(rampart_context_is_encrypt_before_sign(rampart_context, env))
+    {
+        is_encrypt_before_sign = AXIS2_TRUE;
+
+        /*If signature_protection=> <sp:EncryptSignature/> is ON*/
+        if(signature_protection)
+        {
+            /*First Encrypt the parts specified in encrypted parts*/
+            status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Encryption failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+
+            /*Add a key reference in Encrypted Data in the Body*/
+
+            status = rampart_enc_add_key_info(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Cannot add Key information");
+                return AXIS2_FAILURE;
+            }
+            /*Then Sign the message*/
+            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Signing failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+
+            /*Then encrypt the signature */
+            status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Encrypt signature failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+
+        }
+        else /*No Signature protection*/
+        {
+            status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Encryption failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+            /*Then do signature specific things*/
+            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS){
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][shb] Signature failed. ERROR");
+                return AXIS2_FAILURE;
+            }
+        }
+
+        /*Then Handle Supporting token stuff  */
+    }
+    else /*Sign before encrypt*/
+    {
+        is_encrypt_before_sign = AXIS2_FALSE;
+        /*First do signature specific stuff*/
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if(status != AXIS2_SUCCESS){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Signing failed. ERROR");
+            return AXIS2_FAILURE;
+        }
+        /*Then Handle Encryption stuff*/
+
+        status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        if(status!=AXIS2_SUCCESS ){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Encryption failed. ERROR");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    /*If both encryption and signature is done we should interchange them.
+     * because the action done last should appear first in the header. */
+    sig_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_SIGNATURE);
+    enc_key_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_ENCRYPTED_KEY);
+    if(sig_node && enc_key_node)
+    {
+        if(is_encrypt_before_sign)
+        {
+            status = oxs_axiom_interchange_nodes(env, sig_node, enc_key_node);
+            if(status!=AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
+                return status;
+            }
+        }
+        else /*Sign before encryption*/
+        {
+            status = oxs_axiom_interchange_nodes(env, enc_key_node, sig_node);
+            if(status!=AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
+                return status;
+            }
+        }
+    }else if(enc_key_node && signature_protection)
+    {
+        if(!is_encrypt_before_sign)
+        {
+            axiom_node_t *enc_data_node = NULL;
+            enc_data_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_DATA);
+            if(!enc_data_node)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb]Signature is not encrypted,");
+                return AXIS2_FAILURE;
+            }
+            else
+            {
+                status = oxs_axiom_interchange_nodes(env, enc_key_node, enc_data_node);
+                if(status != AXIS2_SUCCESS)
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb]Cannot interchange enc_key and enc_data nodes");
+                    return AXIS2_FAILURE;
+                }
+            }
+        }
+    }
+
+    return AXIS2_SUCCESS;
+}
+
+axis2_status_t AXIS2_CALL
 rampart_shb_do_symmetric_binding( const axutil_env_t *env,
                                   axis2_msg_ctx_t *msg_ctx,
                                   rampart_context_t *rampart_context,
@@ -65,24 +215,24 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Sym binding, Encryption failed in Symmetric binding. ERROR");
             return AXIS2_FAILURE;
         }
-        
+
         /*2. Sign*/
         status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if(status != AXIS2_SUCCESS)
         {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][shb] Signing failed. ERROR");
-                return AXIS2_FAILURE;
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Signing failed. ERROR");
+            return AXIS2_FAILURE;
         }
         /*3. Encrypt signature*/
         status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if(status != AXIS2_SUCCESS)
         {
-             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Encrypt signature failed. ERROR");
-                    return AXIS2_FAILURE;
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Encrypt signature failed. ERROR");
+            return AXIS2_FAILURE;
         }
- 
-        
+
+
     }else{ /*Sign before encrypt*/
         is_encrypt_before_sign = AXIS2_FALSE;
 
@@ -90,9 +240,9 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
         status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if(status != AXIS2_SUCCESS)
         {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][shb] Signing failed. ERROR");
-                return AXIS2_FAILURE;
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Signing failed. ERROR");
+            return AXIS2_FAILURE;
         }
 
         /*Then Handle Encryption stuff*/
@@ -105,12 +255,12 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     }
 
     /*Finaly we need to make sure that our security header elements are in order*/
-     status = rampart_shb_ensure_sec_header_order(env, msg_ctx, rampart_context, sec_node);
-     if(status != AXIS2_SUCCESS)
-     {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb] Security header ordering failed.");
-                return AXIS2_FAILURE;
-     }
+    status = rampart_shb_ensure_sec_header_order(env, msg_ctx, rampart_context, sec_node);
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb] Security header ordering failed.");
+        return AXIS2_FAILURE;
+    }
 
     status = AXIS2_SUCCESS;
 
@@ -123,9 +273,9 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
-    axis2_msg_ctx_t *msg_ctx,
-    rampart_context_t *rampart_context,
-    axiom_node_t* sec_node)
+                                    axis2_msg_ctx_t *msg_ctx,
+                                    rampart_context_t *rampart_context,
+                                    axiom_node_t* sec_node)
 {
     axis2_bool_t signature_protection = AXIS2_FALSE;
     axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
@@ -148,22 +298,23 @@ rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
     if(sig_node && ref_list_node){
         if(is_encrypt_before_sign){
             /*Encrypt->Sig         <Sig><RefList>*/
-            oxs_axiom_interchange_nodes(env,  sig_node, ref_list_node );    
+            oxs_axiom_interchange_nodes(env,  sig_node, ref_list_node );
         }else{
             /*Sig->Encrypt         <RefList> <Sig>*/
-            oxs_axiom_interchange_nodes(env, ref_list_node, sig_node );             
+            oxs_axiom_interchange_nodes(env, ref_list_node, sig_node );
         }
     }
 
-    /*If there are derived keys, make sure they come after the EncryptedKey
+    /*
+     * If there are derived keys, make sure they come after the EncryptedKey
         1. First we get all the derived keys
         2. Then we attach after the EncryptedKey (hidden sessionkey)
-    */
+     */
     dk_list = axutil_array_list_create(env, 5);
     h_node = axiom_node_get_first_child(sec_node, env);
     while(h_node){
         if(0 == axutil_strcmp(OXS_NODE_DERIVED_KEY_TOKEN, axiom_util_get_localname(h_node, env))){
-            axutil_array_list_add(dk_list, env, h_node); 
+            axutil_array_list_add(dk_list, env, h_node);
         }
         h_node = axiom_node_get_next_sibling(h_node, env);
     }
@@ -193,10 +344,6 @@ rampart_shb_build_message(
     axiom_namespace_t *sec_ns_obj = NULL;
     axiom_node_t *sec_node =  NULL;
     axiom_element_t *sec_ele = NULL;
-    axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
-    axis2_bool_t signature_protection = AXIS2_FALSE;
-    axiom_node_t *sig_node = NULL;
-    axiom_node_t *enc_key_node = NULL;
 
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
     soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
@@ -232,7 +379,6 @@ rampart_shb_build_message(
         AXIS2_LOG_INFO(env->log, "[rampart][shb] Building Timestamp Token");
         AXIS2_LOG_INFO(env->log, "[rampart][shb] Using default timeToLive value %d",
                        RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
-        /*ttl = RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE;*/
         ttl = rampart_context_get_ttl(rampart_context,env);
 
         status = rampart_timestamp_token_build(env,
@@ -284,150 +430,24 @@ rampart_shb_build_message(
     /*check the binding*/
     if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING)
     {
-        /*Do Asymmetric Binding specific things*/
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Using asymmetric binding");
-    
-        signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
+        axis2_status_t status = AXIS2_FAILURE;
 
-        /*Check the encryption and signature order*/
-        if(rampart_context_is_encrypt_before_sign(rampart_context, env))
-        {
-            is_encrypt_before_sign = AXIS2_TRUE;
-
-            /*If signature_protection=> <sp:EncryptSignature/> is ON*/
-            if(signature_protection)
-            {
-                /*First Encrypt the parts specified in encrypted parts*/
-                status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] Encryption failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-
-                /*Add a key reference in Encrypted Data in the Body*/
-
-                status = rampart_enc_add_key_info(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] Cannot add Key information");
-                    return AXIS2_FAILURE;
-                }
-                /*Then Sign the message*/
-                status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] Signing failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-
-                /*Then encrypt the signature */
-                status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] Encrypt signature failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-
-            }
-            else /*No Signature protection*/
-            {
-                status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS){
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] Encryption failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-                /*Then do signature specific things*/
-                status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-                if(status != AXIS2_SUCCESS){
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][shb] Signature failed. ERROR");
-                    return AXIS2_FAILURE;
-                }
-            }
-
-            /*Then Handle Supporting token stuff  */
-        }
-        else /*Sign before encrypt*/
-        {
-            is_encrypt_before_sign = AXIS2_FALSE;
-            /*First do signature specific stuff*/
-            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-            if(status != AXIS2_SUCCESS){
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][shb] Signing failed. ERROR");
-                return AXIS2_FAILURE;
-            }
-            /*Then Handle Encryption stuff*/
-
-            status = rampart_enc_encrypt_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-            if(status!=AXIS2_SUCCESS ){
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][shb] Encryption failed. ERROR");
-                return AXIS2_FAILURE;
-            }
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Asymmetric Binding. ");
+        status = rampart_shb_do_asymmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj);
+        if(AXIS2_FAILURE == status){
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Asymmetric Binding failed");
+            return AXIS2_FAILURE;
+        }else{
+            return AXIS2_SUCCESS;
         }
 
-        /*If both encryption and signature is done we should interchange them.
-         * because the action done last should appear first in the header. */
-        sig_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_SIGNATURE);
-        enc_key_node = oxs_axiom_get_node_by_local_name(env,sec_node,OXS_NODE_ENCRYPTED_KEY);
-        if(sig_node && enc_key_node)
-        {
-            if(is_encrypt_before_sign)
-            {
-                status = oxs_axiom_interchange_nodes(env, sig_node, enc_key_node);
-                if(status!=AXIS2_SUCCESS)
-                {
-                    AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
-                    return status;
-                }
-            }
-            else /*Sign before encryption*/
-            {
-                status = oxs_axiom_interchange_nodes(env, enc_key_node, sig_node);
-                if(status!=AXIS2_SUCCESS)
-                {
-                    AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
-                    return status;
-                }
-            }
-        }else if(enc_key_node && signature_protection)
-        {
-            if(!is_encrypt_before_sign)
-            {
-                axiom_node_t *enc_data_node = NULL;
-                enc_data_node = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_ENCRYPTED_DATA);
-                if(!enc_data_node)
-                {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb]Signature is not encrypted,");
-                    return AXIS2_FAILURE;
-                }
-                else
-                {
-                    status = oxs_axiom_interchange_nodes(env, enc_key_node, enc_data_node);
-                    if(status != AXIS2_SUCCESS)
-                    {
-                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][shb]Cannot interchange enc_key and enc_data nodes");
-                        return AXIS2_FAILURE;
-                    }
-                }
-            }
-        }
-
-        return AXIS2_SUCCESS;
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         axis2_status_t status = AXIS2_FAILURE;
 
         /*Do Symmetric_binding specific things*/
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. We do not support yet");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. ");
         status = rampart_shb_do_symmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj);
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding failed");

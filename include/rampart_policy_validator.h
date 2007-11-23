@@ -46,7 +46,7 @@ extern "C" {
     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampiart_pv_validate_sec_header(const axutil_env_t *env,
+    rampart_pv_validate_sec_header(const axutil_env_t *env,
         rampart_context_t *rampart_context,
         axiom_node_t *sec_node,
         axis2_msg_ctx_t *msg_ctx);

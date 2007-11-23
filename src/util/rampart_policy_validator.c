@@ -30,7 +30,29 @@
 
 /*Private functions*/
 static axis2_status_t
-rampiart_pv_validate_signature_confirmation(const axutil_env_t *env,
+rampart_pv_validate_ut(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    if(rampart_context_is_include_username_token(rampart_context, env)){
+        axis2_char_t *ut_found = NULL;
+        ut_found = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_UT_CHECKED);
+        if(0 == axutil_strcmp(RAMPART_YES, ut_found)){
+            return AXIS2_SUCCESS;
+        }else{
+            /*Error*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Username token required. Not found");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Username token required. Cannot find in the security header",
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }else{
+        return AXIS2_SUCCESS;
+    }
+}
+
+static axis2_status_t
+rampart_pv_validate_signature_confirmation(const axutil_env_t *env,
         rampart_context_t *rampart_context,
         axis2_msg_ctx_t *msg_ctx)
 {
@@ -56,7 +78,7 @@ rampiart_pv_validate_signature_confirmation(const axutil_env_t *env,
 }
 
 static axis2_status_t
-rampiart_pv_validate_signature_encryption(const axutil_env_t *env,
+rampart_pv_validate_signature_encryption(const axutil_env_t *env,
         rampart_context_t *rampart_context,
         axis2_msg_ctx_t *msg_ctx)
 {
@@ -83,22 +105,24 @@ rampiart_pv_validate_signature_encryption(const axutil_env_t *env,
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampiart_pv_validate_sec_header(const axutil_env_t *env,
+rampart_pv_validate_sec_header(const axutil_env_t *env,
         rampart_context_t *rampart_context,
         axiom_node_t *sec_node,
         axis2_msg_ctx_t *msg_ctx)
 {
     
     /*Check if the signature needed to be encrypted*/ 
-    if(!rampiart_pv_validate_signature_encryption(env, rampart_context, msg_ctx)){
+    if(!rampart_pv_validate_signature_encryption(env, rampart_context, msg_ctx)){
         return AXIS2_FAILURE;
     } 
     /*Check if the Signature Confirmation is set*/
-    if(!rampiart_pv_validate_signature_confirmation(env, rampart_context, msg_ctx)){
+    if(!rampart_pv_validate_signature_confirmation(env, rampart_context, msg_ctx)){
         return AXIS2_FAILURE;
     }
-
-    /*NOTE: Uusername tokens and Timestamps policies are checked, while security header processing*/
+    /*Check if Usernametoken found*/
+    if(!rampart_pv_validate_ut(env, rampart_context, msg_ctx)){
+        return AXIS2_FAILURE;
+    }
     /*All the policy reqmnts are met. We are good to go*/
     return AXIS2_SUCCESS;
 }

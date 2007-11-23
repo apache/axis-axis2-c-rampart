@@ -1414,7 +1414,7 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
     }
 
     /*Now validate security policies, those cannot be checked on the fly*/
-    status = rampiart_pv_validate_sec_header(env, rampart_context, sec_node, msg_ctx);
+    status = rampart_pv_validate_sec_header(env, rampart_context, sec_node, msg_ctx);
     if(status != AXIS2_SUCCESS){
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Security policy validation failed");
         return AXIS2_FAILURE;

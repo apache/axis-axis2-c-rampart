@@ -416,7 +416,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     
     }/*End of For loop of dk_list iteration*/
     
-    /*Add ReferenceList element to the Security header*/
+    /*Add ReferenceList element to the Security header. Note that we pass the sec_node. Not the EncryptedKey*/
     data_ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
     
     /*Free derrived key list*/

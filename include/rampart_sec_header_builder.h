@@ -52,7 +52,15 @@ extern "C" {
                               axis2_msg_ctx_t *msg_ctx,
                               rampart_context_t *context,
                               axiom_soap_envelope_t *soap_envelope);
-
+    /**
+     * After building the SOPA message as per the policy,
+     * this function will re-order the header elements of the SOAP message 
+     * to make sure that the processing doesnt fail.
+     * @param env pointer to environment struct
+     * @param msg_ctx message context
+     * @param rampart_context The Rampart Context
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx,
