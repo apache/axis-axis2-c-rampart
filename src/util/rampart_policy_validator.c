@@ -29,6 +29,29 @@
 #include <rampart_sec_processed_result.h>
 
 /*Private functions*/
+
+static axis2_status_t
+rampart_pv_validate_ts(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    if(rampart_context_is_include_timestamp(rampart_context, env)){
+        axis2_char_t *ts_found = NULL;
+        ts_found = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_TS_CHECKED);
+        if(0 == axutil_strcmp(RAMPART_YES, ts_found)){
+            return AXIS2_SUCCESS;
+        }else{
+            /*Error*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Timestamp token required. Not found");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Timestamp token required. Cannot find in the security header",
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }else{
+        return AXIS2_SUCCESS;
+    }
+}
+
 static axis2_status_t
 rampart_pv_validate_ut(const axutil_env_t *env,
         rampart_context_t *rampart_context,
@@ -121,6 +144,10 @@ rampart_pv_validate_sec_header(const axutil_env_t *env,
     }
     /*Check if Usernametoken found*/
     if(!rampart_pv_validate_ut(env, rampart_context, msg_ctx)){
+        return AXIS2_FAILURE;
+    }
+    /*Check if Timestamp found*/
+    if(!rampart_pv_validate_ts(env, rampart_context, msg_ctx)){
         return AXIS2_FAILURE;
     }
     /*All the policy reqmnts are met. We are good to go*/
