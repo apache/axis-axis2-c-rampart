@@ -90,24 +90,52 @@ extern "C" {
         openssl_cipher_ctx_t *ctx,
         const axutil_env_t *env);
 
+    /**
+     * Set the Cipher for the cipher context.
+     * @param ctx to the openssl cipher ctx struct
+     * @param env pointer to environment struct
+     * @param EVP_CIPHER The pointer for the Cipher to be set in the cipher context
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_cipher(
         openssl_cipher_ctx_t *ctx,
         const axutil_env_t *env,
         const EVP_CIPHER*);
 
+    /**
+     * Set the Key for the cipher context.
+     * @param ctx to the openssl cipher ctx struct
+     * @param env pointer to environment struct
+     * @param key The key to be set in the cipher context 
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_key(
         openssl_cipher_ctx_t *ctx,
         const axutil_env_t *env,
         oxs_key_t *key);
 
+    /**
+     * Set the Initial Value for the cipher context.
+     * @param ctx to the openssl cipher ctx struct
+     * @param env pointer to environment struct
+     * @param iv The Initial Value to be set in the cipher context
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_iv(
         openssl_cipher_ctx_t *ctx,
         const axutil_env_t *env,
         axis2_char_t *iv);
 
+    /**
+     * Set the pad for the cipher context.
+     * @param ctx to the openssl cipher ctx struct
+     * @param env pointer to environment struct
+     * @param pad the pad to be set in the cipher context 
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
     axis2_status_t AXIS2_CALL
     openssl_cipher_ctx_set_pad(
         openssl_cipher_ctx_t *ctx,
@@ -115,7 +143,11 @@ extern "C" {
         axis2_char_t *pad);
 
 
-    /*Create function*/
+    /**
+     * Create a new cipher context. All the fields carry NULL values at the begining.
+     * @param env pointer to environment struct
+     * @return Fresh Cipher Context
+     */
     AXIS2_EXTERN openssl_cipher_ctx_t *AXIS2_CALL
     openssl_cipher_ctx_create(const axutil_env_t *env);
 
