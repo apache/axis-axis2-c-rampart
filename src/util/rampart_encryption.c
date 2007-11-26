@@ -422,7 +422,10 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     /*Free derrived key list*/
     axutil_array_list_free(dk_list, env);
     dk_list = NULL;
- 
+
+    /*Free derrived Id list*/
+    axutil_array_list_free(id_list, env);
+    id_list = NULL; 
     
     return status;
 }
