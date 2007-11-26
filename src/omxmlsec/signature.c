@@ -67,10 +67,15 @@ oxs_sig_sign_hmac_sha1(const axutil_env_t *env,
     status = oxs_buffer_populate(output, env, (unsigned char*)encoded_str,
                                  encodedlen);
 
+
     /*Free signed_result_buf*/
     oxs_buffer_free(signed_result_buf, env);
     signed_result_buf = NULL;
 
+    /*Free encoded_str*/
+    AXIS2_FREE(env->allocator, encoded_str);
+    encoded_str = NULL;
+    
     return AXIS2_SUCCESS;
 }
 
