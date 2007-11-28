@@ -257,6 +257,25 @@ rampart_context_free(rampart_context_t *rampart_context,
             oxs_x509_cert_free(rampart_context->receiver_certificate, env);
             rampart_context->receiver_certificate = NULL;
         }
+
+        if(rampart_context->dk_list){
+            /*Need to free data of the list*/
+            int size = 0;
+            int j = 0;
+            size = axutil_array_list_size(rampart_context->dk_list, env);
+            for (j = 0; j < size; j++)
+            {
+                oxs_key_t *dk = NULL;
+
+                dk = axutil_array_list_get(rampart_context->dk_list, env, j);
+                oxs_key_free(dk , env);
+                dk = NULL;
+            }
+
+            axutil_array_list_free(rampart_context->dk_list, env);
+            rampart_context->dk_list = NULL;
+        }
+
         AXIS2_FREE(env->allocator,rampart_context);
         rampart_context = NULL;
     }

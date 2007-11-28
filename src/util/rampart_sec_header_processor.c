@@ -817,7 +817,10 @@ rampart_shp_process_sym_binding_signature(
 
         return AXIS2_FAILURE;
     }
-    /*TODO Free Sign Ctx*/ 
+    /*Free Sign Ctx*/ 
+    oxs_sign_ctx_free(sign_ctx, env);
+    sign_ctx = NULL;
+
     return status;
 }
 
