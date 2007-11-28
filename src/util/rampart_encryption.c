@@ -445,6 +445,7 @@ rampart_enc_encrypt_message(
     axis2_char_t *enc_sym_algo = NULL;
     oxs_key_t *session_key = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
+	axis2_bool_t free_session_key = AXIS2_FALSE;
     rp_property_type_t token_type;
     rp_property_t *token = NULL;
     int i = 0;
@@ -478,6 +479,8 @@ rampart_enc_encrypt_message(
         {
             AXIS2_LOG_INFO(env->log,
                            "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
+			axutil_array_list_free(nodes_to_encrypt, env);
+			nodes_to_encrypt = NULL;
             return AXIS2_SUCCESS;
         }
     }
@@ -491,6 +494,8 @@ rampart_enc_encrypt_message(
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption]Encrypting signature, Sigature Not found");
+				axutil_array_list_free(nodes_to_encrypt, env);
+				nodes_to_encrypt = NULL;
                 return AXIS2_FAILURE;
             }
             axutil_array_list_add(nodes_to_encrypt, env, sig_node);
@@ -504,6 +509,8 @@ rampart_enc_encrypt_message(
     {
         AXIS2_LOG_INFO(env->log,
                        "[rampart][rampart_encryption]Encryption Token is not specified");
+		axutil_array_list_free(nodes_to_encrypt, env);
+		nodes_to_encrypt = NULL;
         return AXIS2_SUCCESS;
     }
     token_type = rp_property_get_type(token, env);
@@ -512,12 +519,16 @@ rampart_enc_encrypt_message(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption]Specified token type not supported.");
+		axutil_array_list_free(nodes_to_encrypt, env);
+		nodes_to_encrypt = NULL;
         return AXIS2_FAILURE;
     }
     if(rampart_context_check_is_derived_keys(env,token))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption]We still do not support derived keys");
+		axutil_array_list_free(nodes_to_encrypt, env);
+		nodes_to_encrypt = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -538,20 +549,28 @@ rampart_enc_encrypt_message(
          session_key = oxs_key_create(env);
          status = oxs_key_for_algo(session_key, env, enc_sym_algo);
          rampart_context_set_session_key(rampart_context, env, session_key);
+		 free_session_key = AXIS2_TRUE;
     }
     if(AXIS2_FAILURE == status)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption] Cannot generate the key for the algorithm %s, ", enc_sym_algo);
+		axutil_array_list_free(nodes_to_encrypt, env);
+		nodes_to_encrypt = NULL;
+		if (free_session_key)
+		{
+			oxs_key_free(session_key, env);
+			session_key = NULL;
+		}
         return AXIS2_FAILURE;
     }
 
     /*Key will be duplicated inside the function. So no worries freeing it here*/
-    if(rampart_context_is_encrypt_before_sign(rampart_context, env)
+    /*if(rampart_context_is_encrypt_before_sign(rampart_context, env)
             && signature_protection)
     {
         rampart_context_set_session_key(rampart_context, env, session_key);
-    }
+    }*/
 
     /*Create a list to store EncDataIds. This will be used in building the ReferenceList*/
 
@@ -574,6 +593,13 @@ rampart_enc_encrypt_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_encryption] Cannot get the node from the list to encrypt");
+			axutil_array_list_free(nodes_to_encrypt, env);
+			nodes_to_encrypt = NULL;
+			if (free_session_key)
+			{
+				oxs_key_free(session_key, env);
+				session_key = NULL;
+			}
             return AXIS2_FAILURE;
         }
         /*Create the encryption context for OMXMLSEC*/
@@ -597,6 +623,13 @@ rampart_enc_encrypt_message(
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption] Cannot encrypt the node " );
+				axutil_array_list_free(nodes_to_encrypt, env);
+				nodes_to_encrypt = NULL;
+				if (free_session_key)
+				{
+					oxs_key_free(session_key, env);
+					session_key = NULL;
+				}
                 return AXIS2_FAILURE;
             }
         }
@@ -605,12 +638,18 @@ rampart_enc_encrypt_message(
 
     }/*Eof For loop*/
 
-    /*TODO free list*/
+    /*free nodes_to_encrypt list*/
     axutil_array_list_free(nodes_to_encrypt, env);
     nodes_to_encrypt = NULL;
 
     /*We need to encrypt the session key.*/
     status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, id_list);
+	if (free_session_key)
+	{
+		oxs_key_free(session_key, env);
+		session_key = NULL;
+	}
+
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
@@ -631,11 +670,6 @@ rampart_enc_encrypt_message(
         axutil_array_list_free(id_list, env);
         id_list = NULL;
     }
-
-
-
-    /*oxs_key_free(session_key, env);
-    session_key = NULL;*/
 
     return AXIS2_SUCCESS;
 }
@@ -892,6 +926,9 @@ rampart_enc_encrypt_signature(
  
         asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
         oxs_derivation_build_derived_key_token(env, derived_key, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);  
+		/*now we can free the derived key*/
+		oxs_key_free(derived_key, env);
+		derived_key = NULL;
     }
 
     node_to_move = oxs_axiom_get_node_by_local_name(

@@ -358,7 +358,8 @@ openssl_x509_get_info(const axutil_env_t *env,
             
             encoded_str = AXIS2_MALLOC(env->allocator, axutil_base64_encode_len(_n));
             axutil_base64_encode(encoded_str, (char*)md, SHA_DIGEST_LENGTH);
-            BIO_printf(out, "%s", encoded_str);  
+            BIO_printf(out, "%s", encoded_str); 
+			AXIS2_FREE(env->allocator, encoded_str);
         }
     }else if(OPENSSL_X509_INFO_SIGNATURE == type){
         int i = 0;

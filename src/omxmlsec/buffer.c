@@ -61,6 +61,7 @@ oxs_buffer_create(const axutil_env_t *env)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "oxs_buffer_set_max_size");
+		AXIS2_FREE(env->allocator, buffer);
         return NULL;
     }
 

@@ -177,11 +177,14 @@ oxs_sig_verify_hmac_sha1(const axutil_env_t *env,
     status = oxs_sig_sign_hmac_sha1(env, sign_ctx, input_buf, output_buf); 
 
     signed_val = (axis2_char_t*)oxs_buffer_get_data(output_buf, env);
+	oxs_buffer_free(input_buf, env);
     /*Compare the output with the signature. If tally; SUCCESS*/
     if(axutil_strcmp(signature, signed_val)){
+		oxs_buffer_free(output_buf, env);
         return AXIS2_SUCCESS;
     }else{
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED, "Signature verification failed using HMAC-SHA1");
+		oxs_buffer_free(output_buf, env);
         return AXIS2_FAILURE;
     }
 }

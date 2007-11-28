@@ -67,6 +67,7 @@ oxs_token_build_offset_element(const axutil_env_t *env,
     if (offset_val)
     {
         ret  = axiom_element_set_text(offset_ele, env, offset_val, offset_node);
+		AXIS2_FREE(env->allocator, offset_val);
     }
 
     return offset_node;

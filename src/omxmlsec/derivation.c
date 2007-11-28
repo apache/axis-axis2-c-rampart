@@ -153,6 +153,7 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     dk_token = oxs_token_build_derived_key_token_element(env, parent, dk_id, NULL);
     str_token = oxs_token_build_security_token_reference_element(env, dk_token); 
     ref_token = oxs_token_build_reference_element(env, str_token, uri, stref_val_type);
+	AXIS2_FREE(env->allocator, uri);
 
     /*Create offset*/
     offset = oxs_key_get_offset(derived_key, env);

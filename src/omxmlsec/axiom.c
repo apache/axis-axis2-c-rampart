@@ -293,15 +293,14 @@ oxs_axiom_get_first_child_node_by_name(const axutil_env_t *env,
     axutil_qname_free(qname, env);
     qname = NULL;
 
-    parent_name = axiom_node_to_string(parent, env);
     if (!node)
     {
+		parent_name = axiom_node_to_string(parent, env);
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Cannot find child %s of %s", local_name, parent_name);
+		AXIS2_FREE(env->allocator, parent_name);
         return NULL;
     }
-    AXIS2_FREE(env->allocator, parent_name);
-    parent_name = NULL;
     return node;
 }
 
@@ -365,10 +364,14 @@ oxs_axiom_deserialize_node(const axutil_env_t *env,  axis2_char_t* buffer)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Building node failed");
+		axiom_document_free(doc, env);
         return NULL;
     }
     axiom_stax_builder_free_self(builder, env);
     builder = NULL;
+
+	axiom_document_free_self(doc, env);
+	doc = NULL;
 
     /*The stax builder will free the reader.*/
     /*axiom_xml_reader_free(reader, env);

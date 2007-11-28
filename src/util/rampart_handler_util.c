@@ -174,6 +174,7 @@ rampart_create_fault_envelope(const axutil_env_t *env,
 
     axis2_msg_ctx_set_fault_soap_envelope(msg_ctx, env, envelope);
     /*free sub codes*/
+	axutil_array_list_free(sub_codes, env);
     return;
 }
 

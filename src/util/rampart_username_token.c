@@ -111,7 +111,6 @@ rampart_username_token_build(
     }
 
     axiom_namespace_increment_ref(sec_ns_obj, env);
-    axiom_namespace_increment_ref(sec_ns_obj, env);
     ut_ele = axiom_element_create(env, sec_node,
                                   RAMPART_SECURITY_USERNAMETOKEN,
                                   sec_ns_obj,
@@ -150,7 +149,6 @@ rampart_username_token_build(
             digest_val = rampart_crypto_sha1(env, nonce_val, created_val, password);
 
             axiom_namespace_increment_ref(sec_ns_obj, env);
-
             pw_ele = axiom_element_create(env, ut_node,
                                           RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, sec_ns_obj, &pw_node);
             if (pw_ele)
@@ -165,6 +163,7 @@ rampart_username_token_build(
 
             }
 
+			axiom_namespace_increment_ref(sec_ns_obj, env);
             nonce_ele = axiom_element_create(env, ut_node,
                                              RAMPART_SECURITY_USERNAMETOKEN_NONCE, sec_ns_obj, &nonce_node);
             if (nonce_ele)
@@ -197,6 +196,7 @@ rampart_username_token_build(
 
         else /*default is passwordText*/
         {
+			axiom_namespace_increment_ref(sec_ns_obj, env);
             pw_ele = axiom_element_create(env, ut_node,
                                           RAMPART_SECURITY_USERNAMETOKEN_PASSWORD, sec_ns_obj, &pw_node);
             if (pw_ele)

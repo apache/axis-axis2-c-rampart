@@ -273,6 +273,7 @@ oxs_sign_ctx_create(const axutil_env_t *env)
     sign_ctx->prv_key = NULL;
     sign_ctx->pub_key = NULL;
     sign_ctx->operation = OXS_SIGN_OPERATION_NONE;
+	sign_ctx->secret=NULL;
     return sign_ctx;
 }
 

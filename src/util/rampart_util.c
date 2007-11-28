@@ -158,7 +158,7 @@ rampart_load_pwcb_module(const axutil_env_t *env,
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the callback module %s. ERROR", callback_module_name);
         if (param)
         {
-            AXIS2_FREE(env->allocator, param);
+			axutil_param_free(param, env);
             param = NULL;
         }
         return AXIS2_FAILURE;

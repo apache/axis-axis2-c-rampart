@@ -146,14 +146,14 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
 
 	id_name = oxs_sign_part_get_id_name(sign_part, env);
 	if(!id_name)
-		id_name = axutil_strdup(env, OXS_ATTR_ID);
+		id_name = OXS_ATTR_ID;
 
 	ns = oxs_sign_part_get_sign_namespace(sign_part, env);
 
 	if(ns)
 		ns_uri = axiom_namespace_get_uri(ns, env);
 	else 
-		ns_uri = axutil_strdup(env, OXS_WSU_XMLNS);
+		ns_uri = OXS_WSU_XMLNS;
 
     /*Get the reference ID from the node and hence to the ds:Reference node*/
     id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, id_name,
@@ -303,7 +303,7 @@ oxs_xml_sig_sign(const axutil_env_t *env,
     }
     /*At this point we have a complete <SignedInfo> node. Now we need to sign it*/
     status = oxs_xml_sig_sign_signed_info(env, signature_node, signed_info_node, sign_ctx);
-	sig_id = axiom_node_to_string(parent, env);
+	/*sig_id = axiom_node_to_string(parent, env);*/
     *sig_node = signature_node;
     return status;
 }
@@ -393,6 +393,8 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
 								if(!axutil_strcmp(attr_val, ref_id2))
 								{
 									attr = attribute;
+									if (env)
+										AXIS2_FREE(env->allocator, hi);
 									break;
 								}
 							}

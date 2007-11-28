@@ -29,6 +29,8 @@ axis2_status_t AXIS2_CALL
 my_free_function(rampart_callback_t *rcb,
         const axutil_env_t *env)
 {
+	AXIS2_FREE(env->allocator, rcb->ops);
+	AXIS2_FREE(env->allocator, rcb);
     return AXIS2_SUCCESS;
 }
 
@@ -128,7 +130,7 @@ axis2_remove_instance(rampart_callback_t *inst,
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)
     {
-        status = AXIS2_SVC_SKELETON_FREE(inst, env);
+        status = my_free_function(inst, env);
     }
     return status;
 }

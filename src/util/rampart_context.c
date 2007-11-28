@@ -213,16 +213,17 @@ rampart_context_free(rampart_context_t *rampart_context,
         {
             axutil_param_t *param = NULL;
             param = rampart_context->password_callback_module->param;
+			/*User specific free logic*/
+            RAMPART_CALLBACK_FREE(rampart_context->password_callback_module , env);
+            rampart_context->password_callback_module = NULL;
             if(param){
                 /*We actually free the dll_desc, which is set as the value of the axutil parameter.*/
-                axutil_dll_desc_t *dll_desc_l = NULL;
+				axutil_param_free(param, env);
+                /*axutil_dll_desc_t *dll_desc_l = NULL;
                 dll_desc_l = axutil_param_get_value(param, env);
                 status = axutil_class_loader_delete_dll(env, dll_desc_l);
-                dll_desc_l = NULL;
+                dll_desc_l = NULL;*/
             }
-            /*User specific free logic*/
-            /*RAMPART_CALLBACK_FREE(rampart_context->password_callback_module , env);*/
-            rampart_context->password_callback_module = NULL;
         }
 
         if(rampart_context->authn_provider)
@@ -248,6 +249,18 @@ rampart_context_free(rampart_context_t *rampart_context,
         }
 
         /*TODO Free derived key list*/
+		if (rampart_context->dk_list)
+		{
+			int i;
+			for(i=0 ; i < axutil_array_list_size(rampart_context->dk_list, env); i++)
+			{
+				oxs_key_t* dk = NULL;
+				dk = (oxs_key_t*)axutil_array_list_get(rampart_context->dk_list, env, i);
+				oxs_key_free(dk, env);
+			}
+			axutil_array_list_free(rampart_context->dk_list, env);
+			rampart_context->dk_list = NULL;
+		}
 
         if(rampart_context->certificate){
             oxs_x509_cert_free(rampart_context->certificate, env);

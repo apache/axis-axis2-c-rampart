@@ -63,6 +63,7 @@ oxs_token_build_length_element(const axutil_env_t *env,
     if (length_val)
     {
         ret  = axiom_element_set_text(length_ele, env, length_val, length_node);
+		AXIS2_FREE(env->allocator, length_val);
     }
 
     return length_node;
