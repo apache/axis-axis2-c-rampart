@@ -230,16 +230,17 @@ rampart_context_free(rampart_context_t *rampart_context,
         {
             axutil_param_t *param = NULL;
             param = rampart_context->authn_provider->param;
+			/*User specific free logic*/
+            RAMPART_AUTHN_PROVIDER_FREE(rampart_context->authn_provider, env);
+            rampart_context->authn_provider = NULL;
             if(param){
                 /*We actually free the dll_desc, which is set as the value of the axutil parameter.*/
-                axutil_dll_desc_t *dll_desc_l = NULL;
+				axutil_param_free(param, env);
+                /*axutil_dll_desc_t *dll_desc_l = NULL;
                 dll_desc_l = axutil_param_get_value(param, env);
                 status = axutil_class_loader_delete_dll(env, dll_desc_l);
-                dll_desc_l = NULL;
+                dll_desc_l = NULL;*/
             }
-            /*User specific free logic*/
-            /*RAMPART_AUTHN_PROVIDER_FREE(rampart_context->authn_provider, env);*/
-            rampart_context->authn_provider = NULL;
         }
 
         if(rampart_context->session_key)

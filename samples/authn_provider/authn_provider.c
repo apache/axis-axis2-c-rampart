@@ -168,11 +168,11 @@ AXIS2_EXPORT int
 axis2_remove_instance(rampart_authn_provider_t *inst,
         const axutil_env_t *env)
 {
-    axis2_status_t status = AXIS2_FAILURE;
     if (inst)
     {
-        status = AXIS2_SVC_SKELETON_FREE(inst, env);
+        AXIS2_FREE(env->allocator, inst->ops);
+		AXIS2_FREE(env->allocator, inst);
     }
-    return status;
+    return AXIS2_SUCCESS;
 }
 

@@ -49,8 +49,11 @@ oxs_axiom_add_attribute(const axutil_env_t *env,
 
     ele =  axiom_node_get_data_element(node, env);
     attr =  axiom_attribute_create(env, attribute , value, ns);
+	if(!attr && ns)
+	{
+		axiom_namespace_free(ns, env);
+	}
     status = axiom_element_add_attribute(ele, env, attr, node);
-
     return status;
 }
 

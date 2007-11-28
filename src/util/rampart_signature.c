@@ -246,6 +246,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
     rp_property_t *token = NULL;
     axis2_bool_t use_derived_keys = AXIS2_FALSE;
     axis2_bool_t server_side = AXIS2_FALSE;
+	axis2_bool_t free_session_key = AXIS2_FALSE;
  
     /*We are trying to reuse the same session key which is used for encryption*/
     session_key = rampart_context_get_session_key(rampart_context, env);
@@ -254,6 +255,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
         session_key = oxs_key_create(env);
         oxs_key_for_algo(session_key, env, OXS_HREF_HMAC_SHA1);
         rampart_context_set_session_key(rampart_context, env, session_key);
+		free_session_key = AXIS2_TRUE;
     }
     /*If we need to use derrived keys, we must sign using a derived key of the session key*/
     server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
@@ -274,6 +276,10 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
     oxs_sign_ctx_set_c14n_mtd(sign_ctx, env, OXS_HREF_XML_EXC_C14N);
     oxs_sign_ctx_set_operation(sign_ctx, env, OXS_SIGN_OPERATION_SIGN);
     
+	if(free_session_key)
+	{
+		oxs_key_free(session_key, env);
+	}
     return AXIS2_SUCCESS;
 }
 
@@ -668,6 +674,7 @@ rampart_sig_sign_message(
         oxs_key_t *signed_key = NULL;
         oxs_key_t *session_key = NULL;
         axis2_char_t *enc_key_id = NULL;
+		axis2_bool_t free_enc_key_id = AXIS2_FALSE;
 
         signed_key = oxs_sign_ctx_get_secret(sign_ctx, env);    
         session_key = rampart_context_get_session_key(rampart_context, env);
@@ -684,6 +691,7 @@ rampart_sig_sign_message(
             encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
             /*Add Id attribute*/
             enc_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
+			free_enc_key_id = AXIS2_TRUE;
             oxs_axiom_add_attribute(env, encrypted_key_node, NULL, NULL, OXS_ATTR_ID, enc_key_id);
             /*And we have to make sure that we place this newly generated EncryptedKey node above the Signature node*/
             oxs_axiom_interchange_nodes(env, encrypted_key_node, sig_node);
@@ -706,6 +714,10 @@ rampart_sig_sign_message(
             /*We need to make DerivedKeyToken to appear before the sginature node*/
             oxs_axiom_interchange_nodes(env, dk_token, sig_node);
         }
+		if (free_enc_key_id)
+		{
+			AXIS2_FREE(env->allocator, enc_key_id);
+		}
     }
 
     /*If we have used derived keys, then we need to free the key in sign_ctx*/

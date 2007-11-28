@@ -222,10 +222,12 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axutil_array_list_t *dk_list = NULL;
     axis2_char_t *enc_sym_algo = NULL;
     axis2_char_t *asym_key_id = NULL;
+	axis2_bool_t free_asym_key_id = AXIS2_FALSE;
     axiom_node_t *encrypted_key_node = NULL;
     axiom_node_t *sig_node = NULL;
     axiom_node_t *data_ref_list_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
+	axis2_bool_t free_session_key = AXIS2_FALSE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
     axis2_bool_t signature_protection = AXIS2_FALSE;
@@ -283,6 +285,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         session_key = oxs_key_create(env);
         status = oxs_key_for_algo(session_key, env, enc_sym_algo);
         rampart_context_set_session_key(rampart_context, env, session_key);
+		free_session_key = AXIS2_TRUE;
     }
  
     id_list = axutil_array_list_create(env, 5);
@@ -352,6 +355,20 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption] Cannot encrypt the node " );
+				if(free_session_key)
+				{
+					oxs_key_free(session_key, env);
+					session_key = NULL;
+				}
+				for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+				{
+					axis2_char_t *id = NULL;
+					id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+					AXIS2_FREE(env->allocator, id);
+				}
+				axutil_array_list_free(id_list, env);
+				id_list = NULL; 
+
                 return AXIS2_FAILURE;
             }
 
@@ -376,6 +393,19 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption] Cannot encrypt the session key " );
+			if(free_session_key)
+			{
+				oxs_key_free(session_key, env);
+				session_key = NULL;
+			}
+			for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+			{
+				axis2_char_t *id = NULL;
+				id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+				AXIS2_FREE(env->allocator, id);
+			}
+			axutil_array_list_free(id_list, env);
+			id_list = NULL;
             return AXIS2_FAILURE;
         }
         /*Now we have en EncryptedKey Node*/
@@ -386,9 +416,23 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
+			if(free_session_key)
+			{
+				oxs_key_free(session_key, env);
+				session_key = NULL;
+			}
+			for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+			{
+				axis2_char_t *id = NULL;
+				id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+				AXIS2_FREE(env->allocator, id);
+			}
+			axutil_array_list_free(id_list, env);
+			id_list = NULL;
             return AXIS2_FAILURE;
         }
         asym_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
+		free_asym_key_id = AXIS2_TRUE;
         if(asym_key_id)
         {
             oxs_axiom_add_attribute(env, encrypted_key_node, NULL,
@@ -424,9 +468,26 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     dk_list = NULL;
 
     /*Free derrived Id list*/
+	for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+	{
+		axis2_char_t *id = NULL;
+		id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+		AXIS2_FREE(env->allocator, id);
+	}
     axutil_array_list_free(id_list, env);
     id_list = NULL; 
     
+	if(free_session_key && session_key)
+	{
+		oxs_key_free(session_key, env);
+		session_key = NULL;
+	}
+
+	if(free_asym_key_id && asym_key_id)
+	{
+		AXIS2_FREE(env->allocator, asym_key_id);
+	}
+
     return status;
 }
 

@@ -326,6 +326,7 @@ rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
         tmp_node = axiom_node_detach(dk_node, env);
         axiom_node_insert_sibling_after(enc_key_node, env, tmp_node);
     }
+	axutil_array_list_free(dk_list, env);
     return AXIS2_SUCCESS;
 }
 

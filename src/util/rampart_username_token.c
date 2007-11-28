@@ -230,6 +230,7 @@ rampart_username_token_validate(
     rampart_authn_provider_t *authn_provider = NULL;
     axis2_char_t *password_from_svr = NULL;
     axis2_char_t *password_to_compare = NULL;
+	axis2_bool_t free_password_to_compare = AXIS2_FALSE;
     axis2_ctx_t *ctx = NULL;
     rampart_authn_provider_status_t auth_status= RAMPART_AUTHN_PROVIDER_GENERAL_ERROR ;
     axiom_element_t *ut_ele = NULL;
@@ -541,6 +542,7 @@ rampart_username_token_validate(
                                   created, password_from_svr);
             rampart_set_security_processed_result(env, msg_ctx,
                                                   RAMPART_SPR_UT_PASSWORD_TYPE, RAMPART_PASSWORD_DIGEST_URI);
+			free_password_to_compare = AXIS2_TRUE;
         }
         else
         {
@@ -556,6 +558,10 @@ rampart_username_token_validate(
                            "[rampart][rampart_usernametoken] Password comparison SUCCESS");
             rampart_set_security_processed_result(env, msg_ctx,
                                                   RAMPART_SPR_UT_CHECKED, RAMPART_YES);
+			if(free_password_to_compare)
+			{
+				AXIS2_FREE(env->allocator, password_to_compare);
+			}
             return AXIS2_SUCCESS;
         }
         else
@@ -563,6 +569,10 @@ rampart_username_token_validate(
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_usernametoken] Password is not valid for user %s",
                             username);
+			if(free_password_to_compare)
+			{
+				AXIS2_FREE(env->allocator, password_to_compare);
+			}
             return AXIS2_FAILURE;
         }
     }
