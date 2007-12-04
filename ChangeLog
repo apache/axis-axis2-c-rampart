@@ -1,3 +1,18 @@
+Rampart/C 1.1.0
+
+ * MAC support with HMAC-SHA1
+ * Derrived key encryption
+ * Derived key signing
+ * Symmetric policy bindings
+ * New security header processor based on SOAP header layout
+ * Security policy validator
+ * Extensible Replay detection module
+ * Signature confirmation support
+ * Support for thumb prints
+ * Easy to use deployment scripts
+ * Memory leak fixes
+ * Many bug fixes
+
 Rampart/C 1.0.0
 
   * WS-Security Policy (spec 1.1) based configurations

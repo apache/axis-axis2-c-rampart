@@ -244,7 +244,8 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     axis2_status_t ret = AXIS2_FAILURE;
 
     /*Serialize node*/
-    serialized_data = axiom_node_to_string(node, env);
+    /*serialized_data = axiom_node_to_string(node, env);*/
+    serialized_data = axiom_node_to_string_non_optimized(node, env);
     serialized_buf = oxs_buffer_create(env);
     ret =  oxs_buffer_populate(serialized_buf, env, (unsigned char *)serialized_data, axutil_strlen(serialized_data));
 

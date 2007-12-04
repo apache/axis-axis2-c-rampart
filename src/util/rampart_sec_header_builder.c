@@ -49,6 +49,8 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
     axis2_status_t status = AXIS2_SUCCESS;
     axiom_node_t *sig_node = NULL;
     axiom_node_t *enc_key_node = NULL;
+
+
     /*Do Asymmetric Binding specific things*/
     signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
 
