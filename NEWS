@@ -4,25 +4,58 @@ You can get the latest svn checkout from https://svn.apache.org/repos/asf/webser
 
 Key features
 -------------
-1. Ability to send and verify UsernameTokens with 
-    1. PlainText password
-    2. Digested password
-
+1. Ability to send and verify UsernameTokens with
+    - Username and PlainText password
+    - Username and Digested password
 2. Ability to send Timestamp tokens
-3. SOAP message encryption 
+3. SOAP message encryption
+    - With derived key support for improved security
+    - Symmetric and Asymmetric modes of operations
+    - Support for AES and Tripple DES encryption
+    - Signature encryption
+    - Keys encryption
 4. SOAP message signature
+    - XML signature with RSA-SHA1
+    - Message authentication with HMAC-SHA1
+    - Signature confirmation support
+    - SOAP Header signing
+5. WS-Security Policy (spec 1.1) based configurations
+    - Support for both Symmetric as well as Asymmetric policy bindings
+    - Support for different modes of key identifiers
+    - Support for different algorithm suites
+        [Basic128, Basic 192, Basic256, TrippleDES, Basic128Rsa15, Basic192Rsa15,Basic256Rsa15, TripleDesRsa15]
+6. Replay detection support
+    - Easy to use built-in replay detection module
+    - Ability to deploy a customized replay detection module
+7. Different protection orders
+    - Encrypt before signing
+    - Sign before encrypting
+8. Extensible modules
+    - Password callback module
+    - Authentication module
+    - Credentials module
+9. Keys management
+    - Support for X509 token profile
+    - Support for Key identifiers, Thumb prints, Issuer/Serial pairs, Embedded and Direct references
+10. Other
+    - Easy to use deployment scripts
+    - A comprehensive set of samples
+
 
 Major Changes Since Last Release
 --------------------------------
-1. WS-Security Policy (spec 1.1) based configurations 
-2. Replay detection support
-3. Improvements to the context model
-4. Authentication module implementation
-5. Credentials module implementation
-6. Improvements to Key/Certificate loading mechanisms
-7. Easy to use deployment scripts 
-8. Memory leak fixes
-9. Many bug fixes
+1. MAC support with HMAC-SHA1
+2. Derrived key encryption
+3. Derived key signing
+4. Symmetric policy bindings
+5. New security header processor based on SOAP header layout
+6. Security policy validator
+7. Extensible Replay detection module
+8. Signature confirmation support
+9. Support for thumb prints
+10. Easy to use deployment scripts
+11. Memory leak fixes
+12. Many bug fixes
 
 
 Un-Implemented Architecture Features 
@@ -30,7 +63,7 @@ Un-Implemented Architecture Features
 1. SAML support 
 2. WS-Secure conversation
 3. WS-Trust
-4. WS-Security 1.1 support
+4. Some WS-Security 1.1 features
 
 
 We welcome your early feedback on this implementation.
