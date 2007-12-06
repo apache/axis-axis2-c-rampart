@@ -2,7 +2,7 @@ SUBDIRS = data
 prgbindir=$(prefix)/bin/samples/rampart/client/sec_echo
 prgbin_PROGRAMS = echo 
 datadir=$(prefix)/bin/samples/rampart/client/sec_echo
-data_DATA= README.txt update_n_run.sh deploy_client_repo.sh
+data_DATA= README update_n_run.sh deploy_client_repo.sh
 #samplesdir=$(prefix)/samples/client/echo
 #samples_DATA=echo.c README.txt Makefile.am Makefile.in
 echo_SOURCES = echo.c 
@@ -24,4 +24,4 @@ INCLUDES = @AXIS2INC@ \
 		   -I$(AXIS2C_HOME)/include \
             -I ../../../include 
 
-EXTRA_DIST = README.txt deploy_client_repo.sh update_n_run.sh update_n_run.bat deploy_client_repo.bat
+EXTRA_DIST = README deploy_client_repo.sh update_n_run.sh update_n_run.bat deploy_client_repo.bat
