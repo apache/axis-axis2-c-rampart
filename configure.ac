@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(rampartc-src, 1.0.0)
+AC_INIT(rampartc-src, 1.1.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 dnl AM_INIT_AUTOMAKE([tar-ustar])
@@ -80,8 +80,8 @@ AC_ARG_WITH(axis2,
     if test -d $withval; then
         axis2inc="-I$withval"
     dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.1'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.1"
+    elif test -d '$(AXIS2C_HOME)/include/axis2-1.2'; then
+        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.2"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi

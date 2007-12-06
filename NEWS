@@ -52,7 +52,7 @@ Major Changes Since Last Release
 6. Security policy validator
 7. Extensible Replay detection module
 8. Signature confirmation support
-9. Support for thumb prints
+9. Support for X509 thumb prints
 10. Easy to use deployment scripts
 11. Memory leak fixes
 12. Many bug fixes
