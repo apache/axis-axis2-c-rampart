@@ -6,14 +6,17 @@ E.g. %sh deploy.sh scenario1
 Windows users please use the "deploy.bat".
 Once policy files are deployed,  Windows user must change path names and file extension appropriately.
 
-Make sure you have run the "deploy_client_repo.sh".
+Make sure you have run the 
+samples/client/sec_echo/deploy_client_repo.sh on Linux or
+samples\client\sec_echo\deploy_client_repo.bat in Windows.
+
 These scenarios will only copy the security policy (XML) files. 
 
 Then go to $AXIS2C_HOME/bin and start the server.
 
 To run the client, use the script 
 "samples/client/sec_echo/update_n_run.sh" on Linux or
-"samples/client/sec_echo/update_n_run.bat" on Windows.
+"samples\client\sec_echo\update_n_run.bat" on Windows.
 
 
 Following is a summary of scenarios available.
