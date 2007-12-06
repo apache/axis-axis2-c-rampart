@@ -45,8 +45,6 @@
                 <sp:Header Namespace="http://www.w3.org/2005/08/addressing"/>
             </sp:SignedParts>
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
-                <rampc:User>Alice</rampc:User>
-                <rampc:EncryptionUser>a</rampc:EncryptionUser>
                 <rampc:PasswordType>Digest</rampc:PasswordType>
                 <rampc:PasswordCallbackClass>AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>
                 <rampc:ReceiverCertificate>AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert</rampc:ReceiverCertificate>
