@@ -64,7 +64,7 @@ oxs_key_t *create_key(axutil_env_t *env)
     oxs_key_t *key = NULL;
 	oxs_key_t *derived_key = NULL;
     key = oxs_key_create(env);
-    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_SESSION);
+    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234444", "session_key",  32, OXS_KEY_USAGE_SESSION);
 	derived_key = oxs_key_create(env);
 	oxs_derivation_derive_key(env, key, derived_key, AXIS2_TRUE);
 
@@ -76,7 +76,7 @@ oxs_key_t *get_key(axutil_env_t *env, axiom_node_t *dk_token_node)
     oxs_key_t *key = NULL;
 	oxs_key_t *derived_key = NULL;
     key = oxs_key_create(env);
-    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234567", "session_key",  32, OXS_KEY_USAGE_SESSION);
+    oxs_key_populate(key, env, (unsigned char*)"012345670123456701234444", "session_key",  32, OXS_KEY_USAGE_SESSION);
 	derived_key = oxs_derivation_extract_derived_key_from_token(env, dk_token_node, NULL, key);
 
     return derived_key;
