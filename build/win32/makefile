@@ -59,7 +59,7 @@ LIBS = $(LIBS) libeay32MT.lib ssleay32MT.lib
 MT=mt.exe
 MT="$(MT)"
 
-!if "$(VC_VERSION_2005_OR_ABOVE)" == "0"
+!if "$(EMBED_MANIFEST)" == "0"
 _VC_MANIFEST_EMBED_EXE=
 _VC_MANIFEST_EMBED_DLL=
 !else
