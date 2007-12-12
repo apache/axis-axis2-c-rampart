@@ -63,7 +63,8 @@ cp -d $AXIS2C_HOME/lib/libomopenssl.* $BIN_DIR/lib
 
 echo "Copy samples"
 #copy samples
-cp -r samples/secpolicy/* $BIN_DIR/bin/samples/secpolicy/
+#cp -r samples/secpolicy/* $BIN_DIR/bin/samples/secpolicy/
+cp -r $AXIS2C_HOME/bin/samples/rampart/secpolicy/* $BIN_DIR/bin/samples/secpolicy/
 cp -r $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/bin/samples
 cp -r $AXIS2C_HOME/services/sec_echo $BIN_DIR/bin/samples/server/
 cp samples/server/sec_echo/services.xml $BIN_DIR/bin/samples/server/sec_echo/services.xml
