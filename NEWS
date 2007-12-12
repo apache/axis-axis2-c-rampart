@@ -63,7 +63,6 @@ Un-Implemented Architecture Features
 1. SAML support 
 2. WS-Secure conversation
 3. WS-Trust
-4. Some WS-Security 1.1 features
 
 
 We welcome your early feedback on this implementation.

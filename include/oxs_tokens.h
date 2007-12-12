@@ -322,6 +322,15 @@ extern "C"
 		axiom_node_t * parent,
 		axis2_char_t * id);
 
+    /**
+    * Creates <wss11:EncryptedHeader> element
+    */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_token_build_enc_header_element(
+		const axutil_env_t * env,
+		axiom_node_t * parent,
+		axis2_char_t * id);
+
 	/**
 	 * Creates <ds:SignatureMethod> element
 	 */

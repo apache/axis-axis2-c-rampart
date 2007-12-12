@@ -386,7 +386,7 @@ extern "C"
         WS Security 1.1
     ****************************************************************/
 #define OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY "http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKey"
-
+#define OXS_NODE_ENCRYPTED_HEADER "EncryptedHeader"
     /*************************************************************************/
 
 
