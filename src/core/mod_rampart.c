@@ -61,6 +61,8 @@ rampart_mod_init(axis2_module_t *module,
     /* Any initialization stuff of Rampart module goes here. At the moment we have NONE. 
      * Intialization happens in handlers depending on the message flow and policies
      * */
+    rampart_error_init();
+    
     AXIS2_LOG_INFO(env->log,"[rampart][rampart_mod] rampart_mod initialized");
     return AXIS2_SUCCESS;
 }

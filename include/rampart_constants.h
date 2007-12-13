@@ -29,6 +29,7 @@
 * @{
 */
 #include <oxs_constants.h>
+#include <rampart_error.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -133,6 +134,7 @@ extern "C"
 #define RAMPART_SPR_SIG_VERIFIED "SPR_Sig_Verified"
 #define RAMPART_SPR_SIG_ENCRYPTED "SPR_Sig_Encrypted"
 #define RAMPART_SPR_SIG_CONFIRM_FOUND "SPR_Sig_Confirmation_Found"
+#define RAMPART_SPR_BODY_ENCRYPTED "SPR_Body_Encrypted"
 
 #define RAMPART_YES "YES"
 #define RAMPART_NO "NO"
@@ -148,6 +150,7 @@ extern "C"
 #define RAMPART_RD_DB_PROP "Rampart_RD_DB_Prop"
 #define RAMPART_RD_DEF_VALID_DURATION 60
 #define RAMPART_RD_DEF_MAX_RCDS 5
+
 #ifdef __cplusplus
 }
 #endif

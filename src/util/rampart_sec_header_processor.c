@@ -584,6 +584,11 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         if(0 == axutil_strcmp( OXS_NODE_SIGNATURE , axiom_util_get_localname(decrypted_node, env))){
             rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED, RAMPART_YES);
         }
+        /*Check if the body is encrypted*/
+        if(0 == axutil_strcmp(OXS_NODE_BODY , axiom_util_get_localname(decrypted_node, env))){
+             rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_BODY_ENCRYPTED, RAMPART_YES);
+        }
+
         /*Free*/
         oxs_ctx_free(ctx, env);
         ctx = NULL;
@@ -719,6 +724,10 @@ rampart_shp_process_reference_list(
                 /*Check if the signture is encrypted*/
                 if(0 == axutil_strcmp( OXS_NODE_SIGNATURE , axiom_util_get_localname(decrypted_node, env))){
                     rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED, RAMPART_YES);
+                }
+                /*Check if the body is encrypted*/
+                if(0 == axutil_strcmp(OXS_NODE_BODY , axiom_util_get_localname(decrypted_node, env))){
+                    rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_BODY_ENCRYPTED, RAMPART_YES);
                 }
 
                 /*Free*/

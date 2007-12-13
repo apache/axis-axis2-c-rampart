@@ -65,6 +65,7 @@ rampart_pv_validate_ut(const axutil_env_t *env,
         }else{
             /*Error*/
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Username token required. Not found");
+            AXIS2_ERROR_SET(env->error, RAMPART_ERROR_INVALID_SECURITY , AXIS2_FAILURE);
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Username token required. Cannot find in the security header",
                         RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
             return AXIS2_FAILURE;
@@ -125,6 +126,65 @@ rampart_pv_validate_signature_encryption(const axutil_env_t *env,
         return AXIS2_SUCCESS;
     }
 }
+/*We validate only the body encryption*/
+static axis2_status_t
+rampart_pv_validate_encryption(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_bool_t body_encryption = AXIS2_FALSE;
+    axis2_status_t status = AXIS2_SUCCESS;
+    axutil_array_list_t *nodes_to_encrypt = NULL;
+    axiom_soap_envelope_t *soap_envelope = NULL;
+    int i = 0;
+
+    nodes_to_encrypt = axutil_array_list_create(env, 0);
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+   
+    status = rampart_context_get_nodes_to_encrypt(
+                  rampart_context, env, soap_envelope, nodes_to_encrypt);
+
+    status = rampart_context_get_elements_to_encrypt(
+                  rampart_context, env, soap_envelope, nodes_to_encrypt);
+
+    /*See if the body need to be encrypted*/
+    if(nodes_to_encrypt && (axutil_array_list_size(nodes_to_encrypt, env) > 0)){
+        for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
+        {
+            axiom_node_t *node_to_enc = NULL;
+            
+            /*Get the node to be encrypted*/
+            node_to_enc = (axiom_node_t *)axutil_array_list_get
+                      (nodes_to_encrypt, env, i);
+            if(node_to_enc){
+                if(0 == axutil_strcmp( OXS_NODE_BODY , axiom_util_get_localname(node_to_enc, env))){
+                    body_encryption = AXIS2_TRUE;
+                    break;
+                }
+            }
+        }/*Eof loop*/
+    }else{
+        return AXIS2_SUCCESS;
+    }
+    
+    if(AXIS2_TRUE == body_encryption){
+        axis2_char_t* body_encrypted = NULL;
+        body_encrypted = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_BODY_ENCRYPTED);
+        if(0 == axutil_strcmp(RAMPART_YES, body_encrypted)){
+            return AXIS2_SUCCESS;
+        }else{
+            /*Error*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Body need to be encrypted.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Body need to be encrypted", 
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }else{
+        return AXIS2_SUCCESS;
+    }
+}
+
+
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -148,6 +208,10 @@ rampart_pv_validate_sec_header(const axutil_env_t *env,
     }
     /*Check if Timestamp found*/
     if(!rampart_pv_validate_ts(env, rampart_context, msg_ctx)){
+        return AXIS2_FAILURE;
+    }
+    /*Check if encryption is valid found*/
+    if(!rampart_pv_validate_encryption(env, rampart_context, msg_ctx)){
         return AXIS2_FAILURE;
     }
     /*All the policy reqmnts are met. We are good to go*/

@@ -45,7 +45,7 @@ rampart_enc_get_nodes_to_encrypt(
 
     axis2_status_t status1 = AXIS2_SUCCESS;
     axis2_status_t status2 = AXIS2_SUCCESS;
-
+    
     status1 = rampart_context_get_nodes_to_encrypt(
                   rampart_context, env, soap_envelope, nodes_to_encrypt);
 
