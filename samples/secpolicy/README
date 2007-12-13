@@ -49,7 +49,7 @@ Scenario    Summary
 
 FAQ:
 ---
-* I am NOT in LINUX. Are there any changes to be done in samples.
+* I am NOT on LINUX. Are there any changes to be done in samples.
 ----------------------------------------------------------------
 YES. You have to change file names accordingly. For example your password
 callback module might have "*.so" as the extension. This might be different in

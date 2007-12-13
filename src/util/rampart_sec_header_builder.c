@@ -439,11 +439,15 @@ rampart_shb_build_message(
     {
         axis2_status_t status = AXIS2_FAILURE;
 
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Asymmetric Binding. ");
+        AXIS2_LOG_INFO(env->log,  "[rampart][shb] Asymmetric Binding. ");
         status = rampart_shb_do_asymmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj);
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Asymmetric Binding failed");
+            if(axis2_msg_ctx_get_server_side(msg_ctx,env)){
+                rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                  " Asymmetric Binding failed. Check configurations ", RAMPART_FAULT_IN_POLICY, msg_ctx);
+            }
             return AXIS2_FAILURE;
         }else{
             return AXIS2_SUCCESS;
@@ -460,6 +464,10 @@ rampart_shb_build_message(
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding failed");
+            if(axis2_msg_ctx_get_server_side(msg_ctx,env)){
+                rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                  " Symmetric Binding failed. Check configurations ", RAMPART_FAULT_IN_POLICY, msg_ctx);
+            }
             return AXIS2_FAILURE;
         }else{
             return AXIS2_SUCCESS;
