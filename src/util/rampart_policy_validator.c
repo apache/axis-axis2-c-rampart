@@ -157,7 +157,7 @@ rampart_pv_validate_encryption(const axutil_env_t *env,
             node_to_enc = (axiom_node_t *)axutil_array_list_get
                       (nodes_to_encrypt, env, i);
             if(node_to_enc){
-                if(0 == axutil_strcmp( OXS_NODE_BODY , axiom_util_get_localname(node_to_enc, env))){
+                if(0 == axutil_strcmp( OXS_NODE_BODY , axiom_util_get_localname(axiom_node_get_parent(node_to_enc,env), env))){
                     body_encryption = AXIS2_TRUE;
                     break;
                 }

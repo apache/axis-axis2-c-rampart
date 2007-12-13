@@ -20,73 +20,39 @@
 
 AXIS2_IMPORT extern const axis2_char_t* axutil_error_messages[];
 
-/**
- *      RAMPART_ERROR_NONE = RAMPART_ERROR_CODES_START,
-        RAMPART_ERROR_UNSUPPORTED_SECURITY_TOKEN,
-        RAMPART_ERROR_INVALID_SECURITY,
-        RAMPART_ERROR_INVALID_SECURITY_TOKEN,
-        RAMPART_ERROR_FAILED_AUTHENTICATION,
-        RAMPART_ERROR_FAILED_CHECK,
-        RAMPART_ERROR_SECURITY_TOKEN_UNAVAILABLE,
-        RAMPART_ERROR_IN_TIMESTAMP,
-        RAMPART_ERROR_IN_USERNAMETOKEN ,
-        RAMPART_ERROR_IN_ENCRYPTED_KEY  ,
-        RAMPART_ERROR_IN_ENCRYPTED_DATA ,
-        RAMPART_ERROR_IN_SIGNATURE ,
-        RAMPART_ERROR_MSG_REPLAYED ,
-        RAMPART_ERROR_IN_POLICY ,
-        RAMPART_ERROR_LAST
-
- */
-
 axis2_status_t AXIS2_CALL
 rampart_error_init()
 {
     /* A namespace that is not supported by Sandesha2 */
-    axutil_error_messages[RAMPART_ERROR_NONE] = 
-        "Unidentified error in Rampart";
+    axutil_error_messages[RAMPART_ERROR_NONE] =  "Unidentified error in Rampart";
     
-    axutil_error_messages[RAMPART_ERROR_UNSUPPORTED_SECURITY_TOKEN] = 
-        "Unsupported security token";
+    axutil_error_messages[RAMPART_ERROR_UNSUPPORTED_SECURITY_TOKEN] = "Unsupported security token";
 
-    axutil_error_messages[RAMPART_ERROR_INVALID_SECURITY]=
-        "Invalid security";
+    axutil_error_messages[RAMPART_ERROR_INVALID_SECURITY]= "Invalid security";
 
-    axutil_error_messages[RAMPART_ERROR_INVALID_SECURITY_TOKEN]=
-        "Invalid security token";
+    axutil_error_messages[RAMPART_ERROR_INVALID_SECURITY_TOKEN]= "Invalid security token";
 
-    axutil_error_messages[RAMPART_ERROR_LAST]=
-        "Last error of the stack in rampart";
+    axutil_error_messages[RAMPART_ERROR_LAST]= "Last error of the stack in rampart";
 
-    axutil_error_messages[RAMPART_ERROR_FAILED_AUTHENTICATION]=
-        "Failed authentication";
+    axutil_error_messages[RAMPART_ERROR_FAILED_AUTHENTICATION]= "Failed authentication";
 
-    axutil_error_messages[RAMPART_ERROR_FAILED_CHECK]=
-        "Failed check";
+    axutil_error_messages[RAMPART_ERROR_FAILED_CHECK]=  "Failed check";
 
-    axutil_error_messages[RAMPART_ERROR_SECURITY_TOKEN_UNAVAILABLE]=
-        "Security token unavailable";
+    axutil_error_messages[RAMPART_ERROR_SECURITY_TOKEN_UNAVAILABLE]= "Security token unavailable";
 
-    axutil_error_messages[RAMPART_ERROR_IN_TIMESTAMP]=
-        "Error in timestamp";
+    axutil_error_messages[RAMPART_ERROR_IN_TIMESTAMP]= "Error in timestamp";
 
-    axutil_error_messages[RAMPART_ERROR_IN_USERNAMETOKEN]=
-        "Error in username token";
+    axutil_error_messages[RAMPART_ERROR_IN_USERNAMETOKEN]= "Error in username token";
     
-    axutil_error_messages[RAMPART_ERROR_IN_ENCRYPTED_KEY]=
-        "Error in Encrypted Key";
+    axutil_error_messages[RAMPART_ERROR_IN_ENCRYPTED_KEY]= "Error in Encrypted Key";
 
-    axutil_error_messages[RAMPART_ERROR_IN_ENCRYPTED_DATA]=
-        "Error in Encrypted Data";
+    axutil_error_messages[RAMPART_ERROR_IN_ENCRYPTED_DATA]= "Error in Encrypted Data";
 
-    axutil_error_messages[RAMPART_ERROR_IN_SIGNATURE]=
-        "Error in Signature";
+    axutil_error_messages[RAMPART_ERROR_IN_SIGNATURE]= "Error in Signature";
 
-    axutil_error_messages[RAMPART_ERROR_MSG_REPLAYED]=
-        "Message probarbly be replayed";
+    axutil_error_messages[RAMPART_ERROR_MSG_REPLAYED]=  "Message probarbly be replayed";
 
-    axutil_error_messages[RAMPART_ERROR_IN_POLICY]=
-        "Error in security policy";
+    axutil_error_messages[RAMPART_ERROR_IN_POLICY]= "Error in security policy";
 
     axutil_error_messages[RAMPART_ERROR_LAST]=
         "Error last";

@@ -585,7 +585,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
             rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED, RAMPART_YES);
         }
         /*Check if the body is encrypted*/
-        if(0 == axutil_strcmp(OXS_NODE_BODY , axiom_util_get_localname(decrypted_node, env))){
+        if(0 == axutil_strcmp(OXS_NODE_BODY , axiom_util_get_localname(axiom_node_get_parent(decrypted_node, env), env))){
              rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_BODY_ENCRYPTED, RAMPART_YES);
         }
 
@@ -726,7 +726,7 @@ rampart_shp_process_reference_list(
                     rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_ENCRYPTED, RAMPART_YES);
                 }
                 /*Check if the body is encrypted*/
-                if(0 == axutil_strcmp(OXS_NODE_BODY , axiom_util_get_localname(decrypted_node, env))){
+                if(0 == axutil_strcmp(OXS_NODE_BODY , axiom_util_get_localname(axiom_node_get_parent(decrypted_node, env), env))){
                     rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_BODY_ENCRYPTED, RAMPART_YES);
                 }
 

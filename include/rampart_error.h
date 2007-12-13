@@ -55,7 +55,8 @@ extern "C"
         RAMPART_ERROR_IN_POLICY ,
         RAMPART_ERROR_LAST
     };
-        
+      
+
 axis2_status_t AXIS2_CALL
 rampart_error_init();
 
