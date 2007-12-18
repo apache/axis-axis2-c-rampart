@@ -248,7 +248,7 @@ rampart_context_free(rampart_context_t *rampart_context,
             rampart_context->session_key = NULL;
         }
 
-        /*TODO Free derived key list*/
+        /*Free derived key list*/
 		if (rampart_context->dk_list)
 		{
 			int i;

@@ -25,8 +25,13 @@ extern "C"
 #endif
 
 /**
+  * @file rampart_error.h
+  * @brief Rampart specific error codes
+  */
+
+/**
  * @defgroup rampart_error
- * @ingroup rampart Error
+ * @ingroup rampart_utils
  * @{
  */
 	/**
