@@ -296,7 +296,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
                          axutil_base64_decode_len(
                              (char*)oxs_buffer_get_data(input, env)));
 
-        ret = axutil_base64_decode((char*)decoded_encrypted_str, 
+        ret = axutil_base64_decode_binary((char*)decoded_encrypted_str, 
                                    (char*)oxs_buffer_get_data(input, env));
 
         dec_enc_buf = oxs_buffer_create(env);

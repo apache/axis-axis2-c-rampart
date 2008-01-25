@@ -207,7 +207,7 @@ openssl_p_sha1(const axutil_env_t *env,
 		oxs_key_set_nonce(derived_key, env, seed);
 		decoded_seed_len = axutil_base64_decode_len(seed);
 		decoded_seed = AXIS2_MALLOC(env->allocator, decoded_seed_len);
-		axutil_base64_decode(decoded_seed, seed);
+		axutil_base64_decode_binary(decoded_seed, seed);
 		AXIS2_FREE(env->allocator, seed);
 		seed = NULL;
 	}
@@ -215,7 +215,7 @@ openssl_p_sha1(const axutil_env_t *env,
 	{
 		decoded_seed_len = axutil_base64_decode_len(seed);
 		decoded_seed = AXIS2_MALLOC(env->allocator, decoded_seed_len);
-		axutil_base64_decode(decoded_seed, seed);
+		axutil_base64_decode_binary(decoded_seed, seed);
 	}
 
 	if(decoded_seed)
