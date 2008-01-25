@@ -33,12 +33,12 @@ struct rampart_context_t
     axis2_key_type_t receiver_certificate_type;
     axis2_char_t *user;
     axis2_char_t *password;
+    axis2_char_t *password_type;
     axis2_char_t *prv_key_password;
     password_callback_fn pwcb_function;
     rampart_is_replayed_fn is_replayed_function;
     int ttl;
     axis2_char_t *rd_val;
-    axis2_char_t *password_type;
     axis2_char_t *private_key_file;
     axis2_char_t *certificate_file;
     axis2_char_t *reciever_certificate_file;

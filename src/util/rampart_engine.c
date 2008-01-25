@@ -71,6 +71,7 @@ rampart_engine_build_configuration(
 
     is_server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
 
+    /*Server, Outflow*/
     if(is_server_side || !is_inflow)
     {
         policy = build_policy(env, msg_ctx, is_inflow);
@@ -90,24 +91,16 @@ rampart_engine_build_configuration(
         {
             return (rampart_context_t *)axutil_property_get_value(property, env);
         }
-
         else
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                          "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][rampart_engine] Cannot get saved rampart_context");
             return NULL;
         }
     }
 
-    /*secpolicy = rp_secpolicy_builder_build(env, policy);
-    if(!secpolicy)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_engine] Cannot create security policy from policy.");
-        return NULL;
-    }
-    */
     value = rampart_get_rampart_configuration(env, msg_ctx, RAMPART_CONFIGURATION);
     if(value)
     {
@@ -119,7 +112,7 @@ rampart_engine_build_configuration(
             if(!secpolicy)
             {
                 rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                              "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                                              "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_engine] Cannot create security policy from policy.");
 
@@ -128,7 +121,6 @@ rampart_engine_build_configuration(
             rampart_context_set_secpolicy(rampart_context, env, secpolicy);
         }
     }
-
     else
     {
         rampart_context = rampart_context_create(env);
@@ -146,9 +138,7 @@ rampart_engine_build_configuration(
         }
 
         rampart_context_set_secpolicy(rampart_context, env, secpolicy);
-
         status = set_rampart_user_properties(env, rampart_context);
-
         if(status != AXIS2_SUCCESS)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
@@ -162,6 +152,7 @@ rampart_engine_build_configuration(
         }
     }
 
+    /*For the client side*/
     if(!is_server_side)
     {
         conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
