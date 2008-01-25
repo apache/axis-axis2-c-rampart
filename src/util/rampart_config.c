@@ -47,6 +47,7 @@ rampart_config_create(const axutil_env_t *env)
     rampart_config->username = NULL;
     rampart_config->password = NULL;
     rampart_config->password_type = NULL;
+    rampart_config->ttl = 0;
 
     return rampart_config;
 }

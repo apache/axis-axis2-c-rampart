@@ -33,6 +33,8 @@
 #include <axis2_msg.h>
 #include <axis2_conf_ctx.h>
 #include <rampart_handler_util.h>
+#include <rampart_config.h>
+#include <axis2_options.h>
 
 /*This method sets all the configurations
  loads required modules and start rampart.*/
@@ -155,6 +157,42 @@ rampart_engine_build_configuration(
     /*For the client side*/
     if(!is_server_side)
     {
+       /* axis2_options_t* options = NULL;
+        options = axis2_msg_ctx_get_options(msg_ctx, env);
+        value = axis2_options_get_property(options, env, RAMPART_CLIENT_CONFIGURATION);*/
+        value = axis2_msg_ctx_get_property_value(msg_ctx, env, RAMPART_CLIENT_CONFIGURATION);
+        if(value)
+        {
+            rampart_config_t *client_config = NULL;
+            axis2_char_t *config_value = NULL;
+            int ttl = 0;
+
+            client_config = (rampart_config_t*)value;
+            config_value = rampart_config_get_username(client_config, env);
+            if(config_value)
+            {
+                rampart_context_set_user(rampart_context, env, config_value);
+            }
+            
+            config_value = rampart_config_get_password(client_config, env);
+            if(config_value)
+            {
+                rampart_context_set_password(rampart_context, env, config_value);
+            }
+
+            config_value = rampart_config_get_password_type(client_config, env);
+            if(config_value)
+            {
+                rampart_context_set_password_type(rampart_context, env, config_value);
+            }
+
+            ttl = rampart_config_get_ttl(client_config, env);
+            if(ttl > 0)
+            {
+                rampart_context_set_ttl(rampart_context, env, ttl);
+            }
+        }
+
         conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
         if(!conf_ctx)
         {

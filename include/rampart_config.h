@@ -73,7 +73,7 @@ extern "C"
 
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_config_set_user(rampart_config_t *rampart_config,
+    rampart_config_set_username(rampart_config_t *rampart_config,
                              const axutil_env_t *env,
                              axis2_char_t *user);
 
@@ -94,7 +94,7 @@ extern "C"
 
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_config_get_user(
+    rampart_config_get_username(
         rampart_config_t *rampart_config,
         const axutil_env_t *env);
 

@@ -95,6 +95,7 @@ extern "C"
 #define RAMPART_PASSWORD_TEXT                       "plainText"
 #define RAMPART_PASSWORD_DIGEST                     "Digest"
 #define RAMPART_CONFIGURATION                       "RampartConfiguration"
+#define RAMPART_CLIENT_CONFIGURATION                "RampartClientConfiguration"
 
     /************fault codes***************/
 #define RAMPART_FAULT_UNSUPPORTED_SECURITY_TOKEN    "wsse:UnsupportedSecurityToken"
