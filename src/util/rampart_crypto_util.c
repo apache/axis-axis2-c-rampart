@@ -47,7 +47,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axutil_env_t *en
         int ret;
         decoded_nonce_length = axutil_base64_decode_len(nonce);
         decoded_nonce = AXIS2_MALLOC(env->allocator, decoded_nonce_length);
-        ret = axutil_base64_decode_binary(decoded_nonce, nonce);
+        ret = axutil_base64_decode_binary((unsigned char *)decoded_nonce, nonce);
     }
 
     if ((!nonce) && (!created))

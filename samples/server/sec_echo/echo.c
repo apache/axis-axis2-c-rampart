@@ -23,7 +23,7 @@ axiom_node_t *
 build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
 
 axiom_node_t *
-axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node)
+axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node, axis2_msg_ctx_t *msg_ctx)
 {
     axiom_node_t *ret_node = NULL;
     axis2_char_t *name = NULL;
@@ -31,6 +31,15 @@ axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node)
     
     name = axiom_util_get_localname(node, env);
     AXIS2_LOG_INFO(env->log, "[rampart][sec_echo_service] Recieved node %s", name);     
+/*
+ * This shows how to acces the security processed results from the message context
+    {
+    axis2_char_t *username = NULL;
+    
+    username = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, "SPR_UT_username");
+    printf("Username of the Token is = %s ", username);
+    }
+*/    
     ret_node = build_om_programatically(env, name);
     return ret_node;
 }

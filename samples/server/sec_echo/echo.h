@@ -25,6 +25,6 @@
 #include <axiom_node.h>
 #include <axiom_element.h>
 
-axiom_node_t *axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node);
+axiom_node_t *axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node, axis2_msg_ctx_t *msg_ctx);
 
 #endif /* CALC_H*/

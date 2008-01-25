@@ -100,7 +100,7 @@ echo_invoke(axis2_svc_skeleton_t *svc_skeleton,
      * math sample.
      */
 
-    return axis2_echo_echo(env, node);
+    return axis2_echo_echo(env, node, msg_ctx);
 }
 
 /* On fault, handle the fault */
