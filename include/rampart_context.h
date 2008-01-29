@@ -60,14 +60,16 @@ extern "C"
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
             auth_password_func)(const axutil_env_t* env,
                                 const axis2_char_t *username,
-                                const axis2_char_t *password);
+                                const axis2_char_t *password,
+                                void *ctx);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
             auth_digest_func)(const axutil_env_t* env,
                               const axis2_char_t *username,
                               const axis2_char_t *nonce,
                               const axis2_char_t *created,
-                              const char *digest);
+                              const char *digest,
+                              void *ctx);
 
 
 
