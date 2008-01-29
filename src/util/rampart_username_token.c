@@ -413,7 +413,7 @@ rampart_username_token_validate(
         if(authenticate_with_digest)
         {
             auth_status = authenticate_with_digest(env,
-                                                   username, nonce, created, password);
+                                                   username, nonce, created, password, NULL);
             if(RAMPART_AUTHN_PROVIDER_GRANTED == auth_status)
             {
                 AXIS2_LOG_INFO(env->log,
@@ -438,7 +438,7 @@ rampart_username_token_validate(
             rampart_context_get_auth_password_function(rampart_context, env);
         if(authenticate_with_password)
         {
-            auth_status = authenticate_with_password(env, username, password);
+            auth_status = authenticate_with_password(env, username, password, NULL);
             if(RAMPART_AUTHN_PROVIDER_GRANTED == auth_status)
             {
                 AXIS2_LOG_INFO(env->log,  "[rampart][rampart_usernametoken] User authenticated");
