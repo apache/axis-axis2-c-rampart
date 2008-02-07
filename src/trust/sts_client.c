@@ -134,7 +134,7 @@ trust_sts_client_request_security_token(
 
  
     /*Action Logic - RequestType - used for specify the requesting action*/
-    rst = trust_context_get_rst(env, trust_context);
+    rst = trust_context_get_rst(trust_context, env);
     if(NULL == rst)
     {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST is NULL: Created RST_CTX may not set to TrustContext");
@@ -161,7 +161,7 @@ trust_sts_client_request_security_token(
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy setting failed.");
         }
 		/*Building the RST */
-        rst_node = trust_context_build_rst_node(env, trust_context);
+        rst_node = trust_context_build_rst_node(trust_context, env);
         if(rst_node)
         {
             return_node = axis2_svc_client_send_receive(sts_client->svc_client, env, rst_node);
@@ -182,7 +182,7 @@ trust_sts_client_request_security_token(
 					
 					if(in_msg_ctx)
 					{
-						trust_context_process_rstr(env, trust_context, in_msg_ctx);
+						trust_context_process_rstr(trust_context, env, in_msg_ctx);
 						sts_client->received_in_msg_ctx = in_msg_ctx;	/*Store the in_msg_context for sec_header extentions in trust*/
 					}
 				}

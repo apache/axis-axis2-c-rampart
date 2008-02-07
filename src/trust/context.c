@@ -61,9 +61,9 @@ trust_context_create(
 
 /*Free Contexts*/
 AXIS2_EXTERN  void AXIS2_CALL
-trust_context_free(            
-    const axutil_env_t * env,
-    trust_context_t *trust_context)
+trust_context_free(
+	trust_context_t *trust_context,            
+    const axutil_env_t * env)
 {
     if (trust_context)
     {
@@ -75,8 +75,8 @@ trust_context_free(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 trust_context_process_rst(
-    const axutil_env_t * env,
-    trust_context_t *trust_context,
+	trust_context_t *trust_context,
+    const axutil_env_t * env,    
     axis2_msg_ctx_t * in_msg_ctx)
 {       
     axiom_soap_envelope_t *soap_env = NULL;
@@ -129,8 +129,8 @@ trust_context_process_rst(
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 trust_context_process_rstr(
+		trust_context_t *trust_context,
         const axutil_env_t * env,
-        trust_context_t *trust_context,
         axis2_msg_ctx_t * in_msg_ctx)
 {
     axiom_soap_envelope_t *soap_env = NULL;
@@ -184,8 +184,8 @@ trust_context_process_rstr(
 /*Build RST Node from created RST_CONTEXT */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 trust_context_build_rst_node(
-    const axutil_env_t * env,
-    trust_context_t *trust_context)
+	trust_context_t *trust_context,
+    const axutil_env_t * env)
 {
     if(trust_context->rst)
     {        
@@ -208,8 +208,8 @@ trust_context_build_rst_node(
 /*Build RSTR Node from created RSTR_CONTEXT */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 trust_context_build_rstr_node(
-    const axutil_env_t * env,
-    trust_context_t *trust_context)
+	trust_context_t *trust_context,
+    const axutil_env_t * env)
 {
     if(trust_context->rstr)
     {
@@ -225,8 +225,8 @@ trust_context_build_rstr_node(
 /*Get Populated RST_CONTEXT */
 AXIS2_EXTERN trust_rst_t* AXIS2_CALL
 trust_context_get_rst(
-    const axutil_env_t * env,
-    trust_context_t *trust_context)
+	trust_context_t *trust_context,
+    const axutil_env_t * env)
 {
     if(trust_context)
         return trust_context->rst;
@@ -235,9 +235,9 @@ trust_context_get_rst(
     
 /*Get Populated RSTR_CONTEXT */
 AXIS2_EXTERN trust_rstr_t* AXIS2_CALL
-    trust_context_get_rstr(
-        const axutil_env_t * env,
-        trust_context_t *trust_context)
+trust_context_get_rstr(
+	trust_context_t *trust_context,
+    const axutil_env_t * env)
 {
     if(trust_context)
     {
@@ -249,8 +249,8 @@ AXIS2_EXTERN trust_rstr_t* AXIS2_CALL
 /*Set RST_CONTEXT */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 trust_context_set_rst(
-    const axutil_env_t * env,
-    trust_context_t *trust_context,
+	trust_context_t *trust_context,
+    const axutil_env_t * env,    
     trust_rst_t *rst)
 {
     if(trust_context)
@@ -265,8 +265,8 @@ trust_context_set_rst(
 /*Set RSTR_CONTEXT */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 trust_context_set_rstr(
+	trust_context_t *trust_context,
     const axutil_env_t * env,
-    trust_context_t *trust_context,
     trust_rstr_t *rstr)
 {
     if(trust_context)
