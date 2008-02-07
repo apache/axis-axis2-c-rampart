@@ -112,9 +112,11 @@ AC_CONFIG_FILES([Makefile \
         credential_provider/Makefile \
         server/Makefile \
         server/sec_echo/Makefile \
+		server/saml_sts/Makefile \
         client/Makefile
         client/sec_echo/Makefile \
         client/sec_echo/data/Makefile \
+		client/sts_client/Makefile \
         keys/Makefile \
         keys/ahome/Makefile \
         keys/bhome/Makefile \

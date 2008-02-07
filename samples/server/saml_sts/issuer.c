@@ -70,8 +70,8 @@ axiom_node_t *axis2_saml_issuer_issue(
 				"http://schemas.xmlsoap.org/ws/2005/02/trust")
 			);
 
-	trust_context_set_rstr(env, trust_ctx, rstr);
-	rstr_node = trust_context_build_rstr_node(env, trust_ctx);
+	trust_context_set_rstr(trust_ctx, env, rstr);
+	rstr_node = trust_context_build_rstr_node(trust_ctx, env);
    	
     return rstr_node;
 }

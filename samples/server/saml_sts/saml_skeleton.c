@@ -108,7 +108,7 @@ saml_issuer_invoke(
 	
 
 	/*Populating RST*/
-	if(AXIS2_FAILURE == trust_context_process_rst(env, trust_ctx, in_msg_ctx))
+	if(AXIS2_FAILURE == trust_context_process_rst(trust_ctx, env, in_msg_ctx))
 	{
 		printf("RST Processing Failed!\n");
 	}

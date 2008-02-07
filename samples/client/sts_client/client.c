@@ -53,21 +53,21 @@ int main(
     trust_rst_set_appliesto(rst, env, appliesto);
     trust_rst_set_request_type(rst, env, request_type);
 
-    trust_context_set_rst(env, trust_ctx, rst);
+    trust_context_set_rst(trust_ctx, env, rst);
 
     trust_sts_client_request_security_token(sts_client, env, trust_ctx);
 
 
 	/*Acquire Sec Token*/
-	if(trust_context_get_rstr(env, trust_ctx))
+	if(trust_context_get_rstr(trust_ctx, env))
 	{
 		if(trust_rstr_get_requested_security_token(
-					trust_context_get_rstr(env, trust_ctx),
+					trust_context_get_rstr(trust_ctx, env),
 					env))
 		{
 			printf("\n\nReceived Sec Token : %s\n",
 					axiom_node_to_string(trust_rstr_get_requested_security_token(
-							trust_context_get_rstr(env, trust_ctx),
+							trust_context_get_rstr(trust_ctx, env),
 							env), env)
 					);
 		}
