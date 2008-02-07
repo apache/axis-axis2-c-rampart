@@ -327,21 +327,26 @@ trust_rstr_build_rstr(
         }
         if(rstr->requested_attached_ref)
         {
-            if(NULL == (axiom_node_t*)trust_util_create_req_attached_reference_element(env, rstr->wst_ns_uri, rstr_node));
+            axiom_node_t* attached_ref = NULL;
+            attached_ref = trust_util_create_req_attached_reference_element(env, rstr->wst_ns_uri, rstr_node);
+            if(NULL == attached_ref)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RSTR AttachedReference element creation failed.");
                 return NULL;   
             }
-            /* FIX : Attached Ref STR node*/
+            axiom_node_add_child(attached_ref, env, rstr->requested_attached_ref);
             
         }
         if(rstr->requested_unattached_ref)
         {
-            if(NULL == (axiom_node_t*)trust_util_create_req_unattached_reference_element(env, rstr->wst_ns_uri, rstr_node))
+            axiom_node_t* unattached_ref = NULL;
+            unattached_ref = trust_util_create_req_unattached_reference_element(env, rstr->wst_ns_uri, rstr_node);
+            if(NULL == unattached_ref)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RSTR UnattachedReference element creation failed.");
                 return NULL;   
             }
+            axiom_node_add_child(unattached_ref, env, rstr->requested_unattached_ref);
         }
         
         if(rstr->entropy)
