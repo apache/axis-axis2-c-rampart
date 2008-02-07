@@ -15,6 +15,7 @@
 * limitations under the License.
 */
 #include <trust_policy_util.h>
+#include <trust_constants.h>
 
 AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
 trust_policy_util_get_algorithmsuite(

@@ -19,6 +19,8 @@
 #ifndef TRUST_CONSTANTS_H
 #define TRUST_CONSTANTS_H
 
+
+#include <axutil_utils.h>
 /**
 * @file trust_constants.h
 * @brief Holds constants for trust implementation
@@ -29,14 +31,13 @@ extern "C"
 {
 #endif
 
+
+
 	/*Trust XML Element names */
 #define TRUST_RST_CONTEXT		"Context"
 #define TRUST_TOKEN_TYPE		"TokenType"
 #define TRUST_REQUEST_TYPE		"RequestType"
 #define TRUST_APPLIES_TO		"AppliesTo"
-
-#define TRUST_KEY_TYPE			"KeyType"
-#define TRUST_KEY_SIZE			"KeySize"
 
 #define TRUST_CLAIMS			"Claims"
 #define TRUST_CLAIMS_DIALECT    "Dialect"
@@ -54,7 +55,6 @@ extern "C"
 #define TRUST_REQUESTED_PROOF_TOKEN             "RequestedProofToken"
 #define TRUST_REQUEST_SECURITY_TOKEN_RESPONSE_COLLECTION "RequestSecurityTokenResponseCollection"
 #define TRUST_REQUESTED_TOKEN_CANCELED        	"RequestedTokenCancelled"
-#define TRUST_COMPUTED_KEY_ALGO               	"ComputedKeyAlgorithm"
 #define TRUST_COMPUTED_KEY                    	"ComputedKey"
 #define TRUST_REQUESTED_ATTACHED_REFERENCE    	"RequestedAttachedReference"
 #define TRUST_REQUESTED_UNATTACHED_REFERENCE  	"RequestedUnattachedReference"
@@ -101,6 +101,25 @@ extern "C"
 #define TRUST_KEY_TYPE_SYMM_KEY		"/SymmetricKey"
 #define TRUST_KEY_TYPE_PUBLIC_KEY	"/PublicKey"
 #define TRUST_KEY_TYPE_BEARER		"/Bearer"
+
+
+    /*Key and Token Parameter Extensions*/
+#define TRUST_AUTHENTICATION_TYPE       "AuthenticationType"
+#define TRUST_KEY_TYPE			"KeyType"
+#define TRUST_KEY_SIZE			"KeySize"
+#define TRUST_SIGNATURE_ALGO            "SignatureAlgorithm"
+#define TRUST_ENCRYPTION_ALGO           "EncryptionAlgorithm"
+#define TRUST_CANONICAL_ALGO            "CanonicalizationAlgorithm"
+#define TRUST_COMPUTED_KEY_ALGO         "ComputedKeyAlgorithm"
+#define TRUST_DESIRED_ENCRYPTION         "Encryption"
+#define TRUST_PROOF_ENCRYPTION           "ProofEncryption"
+#define TRUST_USE_KEY                    "UseKey"
+#define TRUST_SIGN_WITH                  "SignWith"
+#define TRUST_ENCRYPT_WITH               "EncryptWith"
+
+#define TRUST_ATTR_USE_KEY_SIG          "Sig"
+
+
 
 	/* Trust Namespace URIs and Namespace prefix */
 #define TRUST_S11        "S11"

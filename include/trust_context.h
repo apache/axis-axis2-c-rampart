@@ -34,6 +34,8 @@
 #include <axis2_msg_ctx.h>
 #include <axis2_addr.h>
 #include <trust_constants.h>
+#include <trust_rst.h>
+#include <trust_rstr.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -43,154 +45,71 @@ extern "C"
     typedef struct trust_context trust_context_t;
 
     AXIS2_EXTERN trust_context_t *AXIS2_CALL
-    trust_context_create(
-        const axutil_env_t * env,
-        axis2_msg_ctx_t * in_msg_ctx);
-
-    AXIS2_EXTERN void AXIS2_CALL
-    trust_context_free(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_applies_to(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-
-    trust_context_process_request_context(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_request_type(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_applies_to(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_life_time(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_claims(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_entorpy(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_token_type(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_entropy(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_key_type(
-        trust_context_t * data,
-        const axutil_env_t * env);
+            trust_context_create(
+            const axutil_env_t * env);
     
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_process_key_size(
-        trust_context_t * data,
-        const axutil_env_t * env);
-    
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_context_get_token_type(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-    
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_set_token_type(
-        trust_context_t * trust_context,
-        const axutil_env_t * env,
-        axis2_char_t *token_type);
-    
-    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-    trust_context_get_rst_node(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-    
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_set_rst_node(
-            trust_context_t * trust_context,
+    AXIS2_EXTERN  void AXIS2_CALL
+            trust_context_free(            
             const axutil_env_t * env,
-            axiom_node_t *rst_node);
+            trust_context_t *trust_context);
     
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_context_get_request_type(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
     
+    /*Populate RST_CONTEXT : Often used in STS/IP side */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_context_set_request_type(
-        trust_context_t * trust_context,
+            trust_context_process_rst(
+            const axutil_env_t * env,
+            trust_context_t *trust_context,
+            axis2_msg_ctx_t * in_msg_ctx);
+    
+    /*Populate RSTR_CONTEXT : Often used in Token Requestor side*/
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+            trust_context_process_rstr(
+            const axutil_env_t * env,
+            trust_context_t *trust_context,
+            axis2_msg_ctx_t * in_msg_ctx);
+    
+    /*Build RST Node from created RST_CONTEXT */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+            trust_context_build_rst_node(
+            const axutil_env_t * env,
+            trust_context_t *trust_context);
+    
+    /*Build RSTR Node from created RSTR_CONTEXT */
+    AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+            trust_context_build_rstr_node(
+            const axutil_env_t * env,
+            trust_context_t *trust_context);
+    
+    
+    /*Get Populated RST_CONTEXT */
+    AXIS2_EXTERN trust_rst_t* AXIS2_CALL
+        trust_context_get_rst(
         const axutil_env_t * env,
-        axis2_char_t *request_type);
-
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_context_get_soap_ns(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_context_get_wst_ns(
-        trust_context_t * trust_context,
-        const axutil_env_t * env);
+        trust_context_t *trust_context);
     
-    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-    trust_context_get_appliesto_address(
-            trust_context_t *trust_context,
-            const axutil_env_t *env);
+    /*Get Populated RSTR_CONTEXT */
+    AXIS2_EXTERN trust_rstr_t* AXIS2_CALL
+        trust_context_get_rstr(
+        const axutil_env_t * env,
+        trust_context_t *trust_context);
     
-    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-    trust_context_get_appliesto_epr_node(
+    /*Set RST_CONTEXT */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+            trust_context_set_rst(
+            const axutil_env_t * env,
             trust_context_t *trust_context,
-            const axutil_env_t *env);
-
-    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-    trust_context_get_rst_context_attr(
-            trust_context_t *trust_context,
-            const axutil_env_t *env);
+            trust_rst_t *rst);
     
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_context_get_key_type(
+    /*Set RSTR_CONTEXT */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+            trust_context_set_rstr(
+            const axutil_env_t * env,
             trust_context_t *trust_context,
-            const axutil_env_t *env);
-
-    AXIS2_EXTERN int AXIS2_CALL
-    trust_context_get_key_size(
-            trust_context_t *trust_context,
-            const axutil_env_t *env);
+            trust_rstr_t *rstr);
     
-    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-    trust_context_get_request_entropy(
-            trust_context_t *trust_context,
-            const axutil_env_t *env);
     
-    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-    trust_context_get_claims_node(
-            trust_context_t *trust_context,
-            const axutil_env_t *env);
+ 
     
-    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-    trust_context_get_claims_dialect(
-            trust_context_t * trust_context,
-            const axutil_env_t *env);
-
 #ifdef __cplusplus
 }
 #endif

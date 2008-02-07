@@ -39,6 +39,10 @@
 #include <trust_policy_util.h>
 #include <trust_token.h>
 
+#include <trust_rst.h>
+#include <trust_rstr.h>
+#include <trust_context.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -55,45 +59,14 @@ extern "C"
         trust_sts_client_t * sts_client,
         const axutil_env_t * env);
 
+    
+    /*Send RST to the specified STS/IP. RST Node that is built from RST_Context should be passed*/
     AXIS2_EXTERN void AXIS2_CALL
     trust_sts_client_request_security_token(
         trust_sts_client_t * sts_client,
         const axutil_env_t * env,
-        axis2_char_t * applies_to,
-        axis2_char_t * token_type);
+        trust_context_t *trust_context);
 
-    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
-    trust_sts_client_create_issue_request(
-        trust_sts_client_t * sts_client,
-        const axutil_env_t * env,
-        axis2_char_t * request_type,
-        axis2_char_t * applies_to,
-        axis2_char_t * token_type);
-    
-    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-    trust_sts_client_create_renew_request(
-        trust_sts_client_t *sts_client,
-        const axutil_env_t *env,
-        axis2_char_t *token_type,
-        axis2_char_t *request_type,
-        axiom_node_t *renew_target,
-        axis2_bool_t allow_postdating,
-        trust_allow_t renew_allow,
-        trust_ok_t ok_flag);
-    
-    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-    tust_sts_client_create_cancel_request(
-        trust_sts_client_t *sts_client,
-        const axutil_env_t *env,
-        axis2_char_t *request_type,
-        axiom_node_t *cancel_target);
-    
-    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-    trust_sts_client_create_validate_request(
-        trust_sts_client_t *sts_client,
-        const axutil_env_t *env,
-        axis2_char_t *token_type,
-        axis2_char_t *request_type);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     trust_sts_client_process_policies(
@@ -102,33 +75,14 @@ extern "C"
         neethi_policy_t * issuer_policy,
         neethi_policy_t * service_policy);
 
+
     AXIS2_EXTERN axis2_svc_client_t *AXIS2_CALL
     trust_sts_client_get_svc_client(
         trust_sts_client_t * sts_client,
         const axutil_env_t * env,
         axis2_char_t * action);
 
-    AXIS2_EXTERN trust_token_t *AXIS2_CALL
-    trust_sts_client_process_issue_response(
-        trust_sts_client_t * sts_client,
-        const axutil_env_t * env,
-        int wst_version,
-        axiom_node_t * response_node,
-        axiom_node_t * payload_sent);
 
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_sts_client_find_identifier(
-        trust_sts_client_t * sts_client,
-        axiom_node_t * req_att_ref_node,
-        axiom_node_t * req_unatt_ref_node,
-        axiom_node_t * sec_token_node,
-        const axutil_env_t * env);
-
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    trust_sts_client_get_id_from_str(
-        trust_sts_client_t * sts_client,
-        axiom_node_t * ref_node,
-        const axutil_env_t * env);
 
 #ifdef __cplusplus
 }

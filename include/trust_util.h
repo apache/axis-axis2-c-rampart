@@ -63,7 +63,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_rst_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axis2_char_t * context);
 
     /**
@@ -80,7 +80,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_rstr_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axis2_char_t * context);
 
     /**
@@ -96,7 +96,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_rstr_collection_element(
         const axutil_env_t * env,
-        int wst_version);
+        axis2_char_t *wst_ns_uri);
 
     /**
     * Create the RequestType Element for Issuance binding.
@@ -110,7 +110,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_request_type_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axis2_char_t * request_type);
 
@@ -126,7 +126,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_token_type_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axis2_char_t * token_type);
 
@@ -158,12 +158,11 @@ extern "C"
      *@Dialect	:URI to indicate the syntax of the claims
     **/
 
-    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
     trust_util_create_claims_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
-        axiom_node_t * claims_content,
         axis2_char_t * dialect_uri);
 
     /**
@@ -177,8 +176,10 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_requested_security_token_element(
         const axutil_env_t * env,
-        int wst_version,
-        axiom_node_t * parent_node);
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axiom_node_t * sec_token_node);
+
 
     /**
     * Create the RequestedProofToken Element for Issuance binding.
@@ -191,8 +192,9 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_requsted_proof_token_element(
         const axutil_env_t * env,
-        int wst_version,
-        axiom_node_t * parent_node);
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axiom_node_t *req_proof_token);
 
     /**
      * Create the Entropy Element for Issuance binding. User must set the content.
@@ -207,7 +209,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_entropy_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node);
 
     /**
@@ -222,7 +224,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_computed_key_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node);
 
     /**
@@ -238,7 +240,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_binary_secret_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axis2_char_t * enc_secret,
         axis2_char_t * bin_sec_type);
@@ -254,7 +256,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_computed_key_algo_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axis2_char_t * algo_id);
 
@@ -269,7 +271,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_key_size_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axis2_char_t * key_size);
 
@@ -284,10 +286,91 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_key_type_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axis2_char_t * key_type);
 
+    
+    /*AuthenticationType*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_authentication_type_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * authentication_type);
+
+   /*SignatureAlgorithm*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_signature_algo_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * signature_algo);
+    
+    /*EncryptionAlgorithm*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_encryption_algo_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * encryption_algo);
+        
+    /*CanonicalizationAlgorithm*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_canonicalization_algo_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * canonicalization_algo);
+
+    /*ComputedKeyAlgorithm*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_computedkey_algo_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * computedkey_algo);
+    
+   /*(Desired)Encryption*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_desired_encryption_element(
+        const axutil_env_t * env,
+        axis2_char_t * wst_ns_uri,
+        axiom_node_t * parent_node,
+        axiom_node_t * encryption_key); /*@param encryption_key - This can be either a key or a STR*/
+   
+   /*ProofEncryption*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_proof_encryption_element(
+        const axutil_env_t * env,
+        axis2_char_t * wst_ns_uri,
+        axiom_node_t * parent_node,
+        axiom_node_t * proof_encryption_key); /*@param encryption_key - This can be either a key or a STR*/
+
+    /*UseKey*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_usekey_element(
+        const axutil_env_t * env,
+        axis2_char_t * wst_ns_uri,
+        axiom_node_t * parent_node,
+        axiom_node_t * usekey_key); /*@param encryption_key - This can be either a key or a STR*/
+
+   /*SignWith*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_signwith_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * signwith);
+       
+   /*EncryptWith*/
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    trust_util_create_encryptwith_element(
+        const axutil_env_t * env,
+        axis2_char_t *wst_ns_uri,
+        axiom_node_t * parent_node,
+        axis2_char_t * encryptwith);
+ 
     /**
      * Create LifeTime element.
      *
@@ -300,7 +383,7 @@ extern "C"
     trust_util_create_life_time_element(
         const axutil_env_t * env,
         axiom_node_t * parent_node,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         int ttl);
 
     /**
@@ -313,7 +396,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_req_attached_reference_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node);
 
     /**
@@ -326,7 +409,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_req_unattached_reference_element(
         const axutil_env_t * env,
-        const int version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node);
 
     /**
@@ -340,7 +423,6 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_encrypted_data_element(
         const axutil_env_t * env,
-        int wst_version,
         axiom_node_t * parent_node,
         axis2_char_t * enc_data);
 
@@ -355,7 +437,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_renew_traget_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axiom_node_t * token_renew_pending_node);
 
@@ -369,7 +451,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_allow_postdating_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node);
 
     /**
@@ -384,7 +466,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_renewing_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         trust_allow_t allow_flag,
         trust_ok_t ok_flag);
@@ -400,7 +482,7 @@ extern "C"
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
     trust_util_create_cancel_target_element(
         const axutil_env_t * env,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axiom_node_t * parent_node,
         axiom_node_t * token_cancel_pending_node);
 
@@ -416,9 +498,15 @@ extern "C"
     trust_util_create_validation_response_element(
         const axutil_env_t * env,
         axiom_node_t * parent_node,
-        int wst_version,
+        axis2_char_t *wst_ns_uri,
         axis2_char_t * code,
         axis2_char_t * reason);
+
+	/* Generate random se*/
+	AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+	trust_util_create_random_session_key_proof_token_element(
+		const axutil_env_t * env,
+		axis2_char_t *wst_ns_uri);
 
     /**
      * Returns the namespace uri of WST according to the version.
