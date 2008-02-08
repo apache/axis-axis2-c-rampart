@@ -101,6 +101,28 @@ extern "C"
         trust_context_t *trust_context,
         neethi_policy_t *issuer_policy);
 
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	trust_sts_client_set_issuer_policy_location(
+    	trust_sts_client_t * sts_client,
+    	const axutil_env_t * env,
+    	axis2_char_t * file_path);
+
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	trust_sts_client_get_issuer_policy_location(
+    	trust_sts_client_t * sts_client,
+	    const axutil_env_t * env);
+
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	trust_sts_client_get_service_policy_location(
+	    trust_sts_client_t * sts_client,
+	    const axutil_env_t * env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	trust_sts_client_set_service_policy_location(
+    	trust_sts_client_t * sts_client,
+    	const axutil_env_t * env,
+	    axis2_char_t * file_path);
+
 
 
 #ifdef __cplusplus
