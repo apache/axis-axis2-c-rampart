@@ -350,3 +350,95 @@ trust_sts_client_get_service_policy_location(
 
     return sts_client->service_policy_location;
 }
+
+AXIS2_EXTERN void AXIS2_CALL
+trust_sts_client_request_security_token_using_policy(
+    trust_sts_client_t * sts_client,
+    const axutil_env_t * env,
+    trust_context_t *trust_context,
+    neethi_policy_t *issuer_policy)
+{
+    axis2_svc_client_t *svc_client = NULL;
+
+    axis2_status_t status = AXIS2_SUCCESS;
+    axiom_node_t *rst_node = NULL;
+    axiom_node_t *return_node = NULL;
+    axis2_op_client_t* op_client = NULL;
+	axis2_msg_ctx_t *in_msg_ctx = NULL;
+
+    
+    /*Action Logic*/
+    trust_rst_t *rst = NULL;
+    axis2_char_t *request_type = NULL;
+    
+    trust_sts_client_process_policies(sts_client, env, issuer_policy, issuer_policy);
+ 
+    /*Action Logic - RequestType - used for specify the requesting action*/
+    rst = trust_context_get_rst(trust_context, env);
+    if(NULL == rst)
+    {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST is NULL: Created RST_CTX may not set to TrustContest");
+            return;
+    }
+
+    request_type = trust_rst_get_request_type(rst, env);
+
+    if(NULL == request_type)
+    {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST-RequestType is NOT set. RST MUST have a RequestType");
+            return;
+    }
+
+    svc_client =
+    trust_sts_client_get_svc_client(sts_client, env, request_type);
+														  
+
+    if (svc_client)
+    {
+        status = axis2_svc_client_set_policy(svc_client, env, issuer_policy);
+
+        if (status == AXIS2_FAILURE)
+        {
+            axis2_svc_client_free(svc_client, env);
+            svc_client = NULL;
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy setting failed.");
+        }
+
+		/*Building the RST */
+        rst_node = trust_context_build_rst_node(trust_context, env);
+        if(rst_node)
+        {
+            return_node = axis2_svc_client_send_receive(svc_client, env, rst_node);
+			sts_client->sent_rst_node = return_node;
+
+			/*Processing Response*/
+			if(!return_node)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Return axiom node NULL");
+			}
+			else
+			{
+				/*Processing IN_MSG_CONTEXT*/
+				op_client = axis2_svc_client_get_op_client(svc_client, env);
+				if(op_client)
+				{
+					in_msg_ctx = (axis2_msg_ctx_t *)axis2_op_client_get_msg_ctx (op_client, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
+					
+					if(in_msg_ctx)
+					{
+						trust_context_process_rstr(trust_context, env, in_msg_ctx);
+						sts_client->received_in_msg_ctx = in_msg_ctx;	/*Store the in_msg_context for sec_header extentions in trust*/
+					}
+				}
+
+			}
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST-Not send -> RST Node building failed");
+            return;
+        }
+    }
+
+    return;
+}

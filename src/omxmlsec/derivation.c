@@ -130,53 +130,14 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
     axis2_char_t *stref_uri,
     axis2_char_t *stref_val_type)
 {
-    axiom_node_t *dk_token = NULL;
     axiom_node_t *str_token = NULL;
     axiom_node_t *ref_token = NULL;
-    axiom_node_t *nonce_token = NULL;
-    axiom_node_t *offset_token = NULL;
-    axiom_node_t *length_token = NULL;
-	axis2_char_t *uri = NULL;
-	/*axiom_node_t *label_token = NULL;*/
-    
-    axis2_char_t *dk_id = NULL;
-    axis2_char_t *dk_name = NULL;
-    axis2_char_t *nonce = NULL;
-	axis2_char_t *label = NULL;
-    int offset = -1;
-    int length = 0; 
+    axis2_char_t *uri = NULL;
 
-    dk_name = oxs_key_get_name(derived_key, env);
-    dk_id = axutil_string_substring_starting_at(dk_name, 1);
-
-	uri = axutil_stracat(env, "#", stref_uri);
-    dk_token = oxs_token_build_derived_key_token_element(env, parent, dk_id, NULL);
-    str_token = oxs_token_build_security_token_reference_element(env, dk_token); 
-    ref_token = oxs_token_build_reference_element(env, str_token, uri, stref_val_type);
-	AXIS2_FREE(env->allocator, uri);
-
-    /*Create offset*/
-    offset = oxs_key_get_offset(derived_key, env);
-    if(offset > -1){
-        offset_token = oxs_token_build_offset_element(env, dk_token, offset);
-    }
-    /*Create length*/
-    length = oxs_key_get_length(derived_key, env);
-    if(length > 0){
-        length_token = oxs_token_build_length_element(env, dk_token, length);
-    }
-    /*Create nonce*/
-    nonce = oxs_key_get_nonce(derived_key, env);
-    if(nonce){
-        nonce_token = oxs_token_build_nonce_element(env, dk_token, nonce);
-    }
-    /*Create label. Hmm we dont need to send the label. Use the default.*/
-    label = oxs_key_get_label(derived_key, env);
-    /*if(label){
-        label_token = oxs_token_build_label_element(env, dk_token, label);
-    }*/
-   
-    return dk_token; 
+    uri = axutil_stracat(env, "#", stref_uri);
+    str_token = oxs_token_build_security_token_reference_element(env, NULL); 
+    ref_token = oxs_token_build_reference_element(env, str_token, uri, stref_val_type);   
+    return oxs_derivation_build_derived_key_token_with_stre(env, derived_key, parent, str_token); 
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL

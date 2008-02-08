@@ -40,13 +40,15 @@ extern "C"
 #endif
 
     /*Key usage is not specified yet*/
-#define OXS_KEY_USAGE_NONE          0
+#define OXS_KEY_USAGE_NONE              0
     /*Key is a session key */
-#define OXS_KEY_USAGE_SESSION       1
+#define OXS_KEY_USAGE_SESSION           1
+    /*Key is a signature session key*/
+#define OXS_KEY_USAGE_SIGNATURE_SESSION 2
     /*Key is a derived key */
-#define OXS_KEY_USAGE_DERIVED       2 
+#define OXS_KEY_USAGE_DERIVED           3 
 
-#define OXS_KEY_DEFAULT_SIZE        64
+#define OXS_KEY_DEFAULT_SIZE            64
 
     /** Type name for struct  oxs_key */
     typedef struct oxs_key_t oxs_key_t;

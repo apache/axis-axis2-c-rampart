@@ -141,11 +141,13 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
             return AXIS2_FAILURE;
         }
         
-        if(serverside)
+        /*we don't need to clear the rampart context, since it is in the property map.
+        It will be freed when a new rampart context is assigned or when property map is freed*/
+       /* if(serverside)
         {
             rampart_context_free(rampart_context, env);
             rampart_context = NULL;
-        }
+        }*/
     }
 
     return status;

@@ -197,14 +197,13 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
                                   axiom_namespace_t *sec_ns_obj)
 {
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
-
 
     /*Check the encryption and signature order*/
     if(rampart_context_is_encrypt_before_sign(rampart_context, env))
     {
+        axis2_bool_t signature_protection = AXIS2_FALSE;
+        signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
         /*Encrypt before sign. Complicated stuff...*/
-        is_encrypt_before_sign = AXIS2_TRUE;
         /**
          * 1. encrypt parts to be encrypted
          * 2. sign parts to be signed
@@ -227,17 +226,19 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
             return AXIS2_FAILURE;
         }
         /*3. Encrypt signature*/
-        status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
-        if(status != AXIS2_SUCCESS)
+        if(signature_protection)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Encrypt signature failed. ERROR");
-            return AXIS2_FAILURE;
+            status = rampart_enc_encrypt_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            if(status != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Encrypt signature failed. ERROR");
+                return AXIS2_FAILURE;
+            }
         }
-
-
-    }else{ /*Sign before encrypt*/
-        is_encrypt_before_sign = AXIS2_FALSE;
-
+    }
+    else
+    { 
+        /*Sign before encrypt*/
         /*First do signature specific stuff using Symmetric key*/
         status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
         if(status != AXIS2_SUCCESS)
@@ -284,51 +285,109 @@ rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
     axiom_node_t *sig_node = NULL;
     axiom_node_t *enc_key_node = NULL;
     axiom_node_t *ref_list_node = NULL;
-    /*axiom_node_t *ts_node = NULL;
-    axiom_node_t *un_node = NULL;*/
     axiom_node_t *h_node = NULL;
     axutil_array_list_t *dk_list = NULL;
+    axutil_array_list_t *enc_key_list = NULL;
+    axiom_node_t* first_protection_item = NULL;
     int i = 0;
 
     signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
     is_encrypt_before_sign = rampart_context_is_encrypt_before_sign(rampart_context, env);
-    enc_key_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_ENCRYPTED_KEY, OXS_ENC_NS, NULL);
+
+    dk_list = axutil_array_list_create(env, 5);
+    enc_key_list = axutil_array_list_create(env, 2);
+
+    h_node = axiom_node_get_first_child(sec_node, env);
+    while(h_node)
+    {
+        if(0 == axutil_strcmp(OXS_NODE_DERIVED_KEY_TOKEN, axiom_util_get_localname(h_node, env)))
+        {
+            axutil_array_list_add(dk_list, env, h_node);
+        }
+        else if((0 == axutil_strcmp(OXS_NODE_ENCRYPTED_KEY, axiom_util_get_localname(h_node, env))) ||
+                (0 == axutil_strcmp(OXS_NODE_SECURITY_CONTEXT_TOKEN, axiom_util_get_localname(h_node, env))))
+        {
+            axutil_array_list_add(enc_key_list, env, h_node);
+        }
+        h_node = axiom_node_get_next_sibling(h_node, env);
+    }
+
     ref_list_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
     sig_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, OXS_NODE_SIGNATURE, OXS_DSIG_NS, NULL);
 
     /*Ensure the protection order in the header*/
-    if(sig_node && ref_list_node){
-        if(is_encrypt_before_sign){
+    if(sig_node && ref_list_node)
+    {
+        if(is_encrypt_before_sign)
+        {
             /*Encrypt->Sig         <Sig><RefList>*/
             oxs_axiom_interchange_nodes(env,  sig_node, ref_list_node );
-        }else{
+            first_protection_item = sig_node;
+        }
+        else
+        {
             /*Sig->Encrypt         <RefList> <Sig>*/
             oxs_axiom_interchange_nodes(env, ref_list_node, sig_node );
+            first_protection_item = ref_list_node;
+        }
+    }
+    else if(sig_node)
+    {
+        first_protection_item = sig_node;
+    }
+    else
+    {
+        first_protection_item = ref_list_node;
+    }
+
+    /*makesure enc_key_node is appearing before first protection item*/
+    if(first_protection_item)
+    {
+        for(i = 0; i < axutil_array_list_size(enc_key_list, env); i++)
+        {
+            axiom_node_t *tmp_node = NULL;
+            tmp_node = (axiom_node_t*)axutil_array_list_get(enc_key_list, env, i);
+            enc_key_node = axiom_node_detach(tmp_node, env);
+            axiom_node_insert_sibling_before(first_protection_item, env, enc_key_node);
         }
     }
 
     /*
-     * If there are derived keys, make sure they come after the EncryptedKey
+     * If there are derived keys, make sure they come after the EncryptedKey/security context token
         1. First we get all the derived keys
-        2. Then we attach after the EncryptedKey (hidden sessionkey)
+        2. Then we attach after the EncryptedKey(hidden sessionkey)/security context token 
+        3. If key is not available, then attach derived keys before sig_node and ref_list_node (whichever is first)
      */
-    dk_list = axutil_array_list_create(env, 5);
-    h_node = axiom_node_get_first_child(sec_node, env);
-    while(h_node){
-        if(0 == axutil_strcmp(OXS_NODE_DERIVED_KEY_TOKEN, axiom_util_get_localname(h_node, env))){
-            axutil_array_list_add(dk_list, env, h_node);
-        }
-        h_node = axiom_node_get_next_sibling(h_node, env);
-    }
-    for(i = 0; i < axutil_array_list_size(dk_list, env); i++){
-        axiom_node_t *dk_node = NULL;
-        axiom_node_t *tmp_node = NULL;
 
-        dk_node = (axiom_node_t*)axutil_array_list_get(dk_list, env, i);
-        tmp_node = axiom_node_detach(dk_node, env);
-        axiom_node_insert_sibling_after(enc_key_node, env, tmp_node);
+    if(enc_key_node)
+    {
+        for(i = 0; i < axutil_array_list_size(dk_list, env); i++)
+        {
+            axiom_node_t *dk_node = NULL;
+            axiom_node_t *tmp_node = NULL;
+
+            dk_node = (axiom_node_t*)axutil_array_list_get(dk_list, env, i);
+            tmp_node = axiom_node_detach(dk_node, env);
+            axiom_node_insert_sibling_after(enc_key_node, env, tmp_node);
+        }
     }
-	axutil_array_list_free(dk_list, env);
+    else
+    {
+        if(first_protection_item)
+        {
+            for(i = 0; i < axutil_array_list_size(dk_list, env); i++)
+            {
+                axiom_node_t *dk_node = NULL;
+                axiom_node_t *tmp_node = NULL;
+                dk_node = (axiom_node_t*)axutil_array_list_get(dk_list, env, i);
+                tmp_node = axiom_node_detach(dk_node, env);
+                axiom_node_insert_sibling_before(first_protection_item, env, tmp_node);
+            }
+        }
+    }
+    
+    axutil_array_list_free(dk_list, env);
+    axutil_array_list_free(enc_key_list, env);
     return AXIS2_SUCCESS;
 }
 

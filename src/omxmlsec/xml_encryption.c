@@ -237,7 +237,8 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_xml_enc_encrypt_node(const axutil_env_t *env,
                          oxs_ctx_t * enc_ctx,
                          axiom_node_t *node,
-                         axiom_node_t **enc_type_node)
+                         axiom_node_t **enc_type_node, 
+                         axiom_node_t *security_token_reference)
 {
     axis2_char_t *serialized_data = NULL;
     oxs_buffer_t *serialized_buf= NULL;
@@ -250,7 +251,7 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     ret =  oxs_buffer_populate(serialized_buf, env, (unsigned char *)serialized_data, axutil_strlen(serialized_data));
 
     /*We call encrypt_data*/
-    ret = oxs_xml_enc_encrypt_data(env, enc_ctx, serialized_buf, enc_type_node);
+    ret = oxs_xml_enc_encrypt_data(env, enc_ctx, serialized_buf, enc_type_node, security_token_reference);
 
     /*Remove the node from the parent*/
     if(AXIS2_SUCCESS == ret){
@@ -265,6 +266,8 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     AXIS2_FREE(env->allocator, serialized_data);
     serialized_data = NULL;
 
+    serialized_data = axiom_node_to_string_non_optimized(*enc_type_node, env);
+
     /*Return success*/
     return AXIS2_SUCCESS;
 }
@@ -274,7 +277,8 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_xml_enc_encrypt_data(const axutil_env_t *env,
                          oxs_ctx_t * enc_ctx,
                          oxs_buffer_t *content_buf,
-                         axiom_node_t **enc_type_node)
+                         axiom_node_t **enc_type_node, 
+                         axiom_node_t *security_token_reference_node)
 {
     oxs_buffer_t *result_buf= NULL;
     oxs_key_t *sym_key = NULL;
@@ -301,8 +305,18 @@ oxs_xml_enc_encrypt_data(const axutil_env_t *env,
     /*Create EncryptionMethod*/
     enc_mtd_node = oxs_token_build_encryption_method_element(env, *enc_type_node, sym_algo);
 
-    /*If the enc_ctx has a key name, then build the KeyInfo element*/
-    if(oxs_ctx_get_ref_key_name(enc_ctx, env)){
+    /*If security_token_reference_node is given, then use it to build the key info*/
+    /*if we are using any trust/sct related token, then the key reference is given with the token
+     *and we are suppose to use it */
+    if(security_token_reference_node)
+    {
+        axiom_node_t *key_info_node = NULL;
+        key_info_node = oxs_token_build_key_info_element(env, *enc_type_node);
+        axiom_node_add_child(key_info_node, env, security_token_reference_node);
+    }
+    /*If the enc_ctx has a key name, then build the KeyInfo element using key name*/
+    else if(oxs_ctx_get_ref_key_name(enc_ctx, env))
+    {
         axiom_node_t *key_info_node = NULL;
         axiom_node_t *str_node = NULL;
         axiom_node_t *ref_node = NULL;
@@ -311,6 +325,7 @@ oxs_xml_enc_encrypt_data(const axutil_env_t *env,
         str_node = oxs_token_build_security_token_reference_element(env, key_info_node);
         ref_node = oxs_token_build_reference_element(env, str_node, oxs_ctx_get_ref_key_name(enc_ctx, env), NULL);
     }
+
     /*Create CipherData element and populate*/
     cd_node = oxs_token_build_cipher_data_element(env, *enc_type_node);
     cv_node = oxs_token_build_cipher_value_element(env, cd_node, (axis2_char_t*)oxs_buffer_get_data(result_buf, env));

@@ -29,8 +29,10 @@
 #include <rampart_callback.h>
 #include <rampart_credentials.h>
 #include <rampart_replay_detector.h>
+#include <rampart_sct_provider.h>
 #include <oxs_buffer.h>
 #include <oxs_utility.h>
+#include <rampart_context.h>
 
 /*Calculate the hash of concatenated string of
  * nonce, created and the password.
@@ -143,6 +145,27 @@ rampart_load_replay_detector(const axutil_env_t *env,
     }
 
     return rd;
+}
+
+AXIS2_EXTERN rampart_sct_provider_t* AXIS2_CALL
+rampart_load_sct_provider(const axutil_env_t *env,
+                         axis2_char_t *sct_provider_name)
+{
+    rampart_sct_provider_t *sct_provider = NULL;
+    axutil_param_t *param = NULL;
+
+    sct_provider = (rampart_sct_provider_t*)rampart_load_module(env, sct_provider_name, &param);
+    if (!sct_provider)
+    {
+        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the security context token provider module %s. ERROR", sct_provider_name);
+        return AXIS2_FAILURE;
+    }
+    if(param)
+    {
+        sct_provider->param = param;
+    }
+
+    return sct_provider;
 }
 
 AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
@@ -282,5 +305,29 @@ rampart_print_info(const axutil_env_t *env, axis2_char_t* info)
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+is_different_session_key_for_encryption_and_signing(const axutil_env_t *env,
+                                                    rampart_context_t *rampart_context)
+{
+    rp_property_t *binding = NULL;
+    binding = rp_secpolicy_get_binding(rampart_context_get_secpolicy(rampart_context, env),env);
+    if(binding)
+    {
+        if(rp_property_get_type(binding,env) == RP_PROPERTY_SYMMETRIC_BINDING)
+        {
+            rp_symmetric_binding_t *sym_binding = NULL;
+            rp_property_t *token = NULL;
+            sym_binding = (rp_symmetric_binding_t *)rp_property_get_value(binding,env);
+            if(sym_binding)
+            {
+                /*check protection tokens have being specified. If not, use the different session key for 
+                  encryption and signature */
+                token = rp_symmetric_binding_get_protection_token(sym_binding,env);
+                if(!token)
+                    return AXIS2_TRUE;
+            }
+        }
+    }
 
-
+    return AXIS2_FALSE;
+}

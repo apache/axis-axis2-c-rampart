@@ -82,6 +82,25 @@ extern "C"
         const axutil_env_t * env,
         axis2_char_t * action);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    trust_sts_client_set_issuer_address(
+        trust_sts_client_t * sts_client,
+        const axutil_env_t * env,
+        axis2_char_t * address);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    trust_sts_client_set_home_dir(
+        trust_sts_client_t * sts_client,
+        const axutil_env_t * env,
+        axis2_char_t * directory);
+
+    AXIS2_EXTERN void AXIS2_CALL
+    trust_sts_client_request_security_token_using_policy(
+        trust_sts_client_t * sts_client,
+        const axutil_env_t * env,
+        trust_context_t *trust_context,
+        neethi_policy_t *issuer_policy);
+
 
 
 #ifdef __cplusplus

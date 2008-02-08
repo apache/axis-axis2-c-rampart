@@ -208,9 +208,9 @@ extern "C"
             axis2_char_t *reciever_certificate_file);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_add_derived_key(rampart_context_t *rampart_context,
+    rampart_context_add_key(rampart_context_t *rampart_context,
                                 const axutil_env_t *env,
-                                oxs_key_t *derived_key);
+                                oxs_key_t *key);
 
     /**********************************************************8*/
 
@@ -298,13 +298,13 @@ extern "C"
         const axutil_env_t *env);
 
     AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
-    rampart_context_get_derived_keys(rampart_context_t *rampart_context,
+    rampart_context_get_keys(rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
     AXIS2_EXTERN oxs_key_t* AXIS2_CALL
-    rampart_context_get_derived_key(rampart_context_t *rampart_context,
+    rampart_context_get_key(rampart_context_t *rampart_context,
         const axutil_env_t *env,
-        axis2_char_t* dk_id);
+        axis2_char_t* key_id);
 
     /*End of Getters */
 
@@ -359,15 +359,25 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN struct rampart_sct_provider_t *AXIS2_CALL
+    rampart_context_get_sct_provider(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_authn_provider(rampart_context_t *rampart_context,
-                                       const axutil_env_t *env,
-                                       rampart_authn_provider_t *authn_provider);
+       const axutil_env_t *env,
+       rampart_authn_provider_t *authn_provider);
 	
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	rampart_context_set_replay_detector(rampart_context_t *rampart_context,
-                                   const axutil_env_t *env,
-                                   struct rampart_replay_detector_t *replay_detector);
+       const axutil_env_t *env,
+       struct rampart_replay_detector_t *replay_detector);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_context_set_sct_provider(rampart_context_t *rampart_context,
+       const axutil_env_t *env,
+       struct rampart_sct_provider_t *sct_module);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_get_require_timestamp(
@@ -421,6 +431,11 @@ extern "C"
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_replay_detector_name(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_sct_provider_name(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
@@ -578,12 +593,23 @@ extern "C"
         const axutil_env_t *env);
 
     AXIS2_EXTERN oxs_key_t *AXIS2_CALL
-    rampart_context_get_session_key(
+    rampart_context_get_encryption_session_key(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_set_session_key(
+    rampart_context_set_encryption_session_key(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        oxs_key_t *session_key);
+
+    AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+    rampart_context_get_signature_session_key(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_signature_session_key(
         rampart_context_t *rampart_context,
         const axutil_env_t *env,
         oxs_key_t *session_key);
@@ -597,6 +623,28 @@ extern "C"
     rampart_context_is_sig_confirmation_reqd(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_encryption_sct_id(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_signature_sct_id(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_encryption_sct_id(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axis2_char_t *sct_id);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_signature_sct_id(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axis2_char_t *sct_id);
 
         /**
      * Set weather the issued token is aquired or not. When setting this to 

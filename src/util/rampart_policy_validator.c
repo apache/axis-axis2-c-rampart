@@ -184,7 +184,49 @@ rampart_pv_validate_encryption(const axutil_env_t *env,
     }
 }
 
+/*We validate only the body encryption*/
+static axis2_status_t
+rampart_pv_validate_signature(const axutil_env_t *env,
+        rampart_context_t *rampart_context,
+        axis2_msg_ctx_t *msg_ctx)
+{
+    axis2_status_t status = AXIS2_SUCCESS;
+    axutil_array_list_t *nodes_to_sign = NULL;
+    axiom_soap_envelope_t *soap_envelope = NULL;
+    axis2_char_t* signature_verified = NULL;
 
+    nodes_to_sign = axutil_array_list_create(env, 0);
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+   
+    status = rampart_context_get_nodes_to_sign(
+                  rampart_context, env, soap_envelope, nodes_to_sign);
+
+    status = rampart_context_get_elements_to_sign(
+                  rampart_context, env, soap_envelope, nodes_to_sign);
+
+    signature_verified = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_VERIFIED);
+    if(0 == axutil_strcmp(RAMPART_YES, signature_verified))
+    {
+        if(axutil_array_list_size(nodes_to_sign, env) <= 0)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Signature is not expected.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Signature is not expected", 
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }
+    else
+    {
+        if(axutil_array_list_size(nodes_to_sign, env) > 0)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Could not find signature.");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Could not find signature", 
+                        RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            return AXIS2_FAILURE;
+        }
+    }
+    return AXIS2_SUCCESS;
+}
 
 /*Public functions*/
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -212,6 +254,11 @@ rampart_pv_validate_sec_header(const axutil_env_t *env,
     }
     /*Check if encryption is valid found*/
     if(!rampart_pv_validate_encryption(env, rampart_context, msg_ctx)){
+        return AXIS2_FAILURE;
+    }
+    /*Check if signature is valid found*/
+    if(!rampart_pv_validate_signature(env, rampart_context, msg_ctx))
+    {
         return AXIS2_FAILURE;
     }
     /*All the policy reqmnts are met. We are good to go*/

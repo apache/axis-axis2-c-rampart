@@ -133,6 +133,9 @@ extern "C"
 #define OXS_NODE_LENGTH "Length"
 #define OXS_NODE_LABEL "Label"
 #define OXS_NODE_NONCE "Nonce"
+#define OXS_NODE_SECURITY_CONTEXT_TOKEN "SecurityContextToken"
+#define OXS_NODE_IDENTIFIER "Identifier"
+#define OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN "http://schemas.xmlsoap.org/ws/2005/02/sc/sct"
 
 /************************
     SAML nodes

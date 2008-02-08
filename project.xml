@@ -107,6 +107,12 @@
       <email>dushshantha AT wso2.com</email>
       <organization>WSO2</organization>
     </developer>
+    <developer>
+      <name>Selvaratnam Uthaiyashankar</name>
+      <id>shankar</id>
+      <email>shankar AT wso2.com</email>
+      <organization>WSO2</organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>

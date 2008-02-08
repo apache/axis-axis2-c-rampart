@@ -26,6 +26,7 @@
 #include <rampart_credentials.h>
 #include <rampart_callback.h>
 #include <rampart_replay_detector.h>
+#include <rampart_sct_provider.h>
 /**
   * @file rampart_util.h
   * @brief Utilities of rampart
@@ -101,11 +102,23 @@ extern "C" {
      * User MUST free memory
      * @param env pointer to environment struct
      * @param replay_detector_name name of the replay detection module
-     * @return creatd replay detection module
+     * @return created replay detection module
      */
     AXIS2_EXTERN rampart_replay_detector_t* AXIS2_CALL
     rampart_load_replay_detector(const axutil_env_t *env,
                              axis2_char_t *replay_detector_name);
+
+    /**
+     * Load security context token provider
+     * User MUST free memory
+     * @param env pointer to environment struct
+     * @param sct_provider_name name of the security context token provider 
+     * @return created security context token provider module
+     */
+    AXIS2_EXTERN rampart_sct_provider_t* AXIS2_CALL
+    rampart_load_sct_provider(const axutil_env_t *env,
+                             axis2_char_t *sct_provider_name);
+
     /**
      * Call auth module
      * @param env pointer to environment struct
@@ -184,6 +197,15 @@ extern "C" {
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_print_info(const axutil_env_t *env, axis2_char_t* info);
+
+    /**
+     * check whether different keys are needed for encryption and signature
+     * @param env pointer to environment struct
+     * @param rampart_context rampart context
+     */
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    is_different_session_key_for_encryption_and_signing(const axutil_env_t *env,
+        rampart_context_t *rampart_context);
 
     /* @} */
 #ifdef __cplusplus

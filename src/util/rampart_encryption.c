@@ -32,6 +32,8 @@
 #include <oxs_derivation.h>
 #include <axis2_key_type.h>
 #include <oxs_derivation.h>
+#include <rampart_sct_provider.h>
+
 
 /*Private functions*/
 
@@ -224,12 +226,14 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_char_t *asym_key_id = NULL;
 	axis2_bool_t free_asym_key_id = AXIS2_FALSE;
     axiom_node_t *encrypted_key_node = NULL;
+    axiom_node_t *key_reference_node = NULL;
     axiom_node_t *sig_node = NULL;
     axiom_node_t *data_ref_list_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
-	axis2_bool_t free_session_key = AXIS2_FALSE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
+    rp_property_type_t token_type;
+
     axis2_bool_t signature_protection = AXIS2_FALSE;
     int i = 0;
     int j = 0;
@@ -242,7 +246,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     if(status != AXIS2_SUCCESS)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_signature] Error occured in Adding Encrypted parts..");
+                        "[rampart][rampart_encryption] Error occured in Adding Encrypted parts..");
         axutil_array_list_free(nodes_to_encrypt, env);
         nodes_to_encrypt = NULL;
         return AXIS2_FAILURE;
@@ -251,6 +255,19 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     /*If the sp:EncryptSignature is ON  &&  We sign before the encryption, we need to add signature node too. */
     signature_protection = rampart_context_is_encrypt_signature(
                                rampart_context, env);
+
+    if((axutil_array_list_size(nodes_to_encrypt, env)==0))
+    {
+        if(!signature_protection)
+        {
+            AXIS2_LOG_INFO(env->log,
+                           "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
+			axutil_array_list_free(nodes_to_encrypt, env);
+			nodes_to_encrypt = NULL;
+            return AXIS2_SUCCESS;
+        }
+    }
+
     if(signature_protection)
     {
         if(!(rampart_context_is_encrypt_before_sign(rampart_context, env)))
@@ -279,26 +296,49 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
 
-    session_key = rampart_context_get_session_key(rampart_context, env);
-    if(!session_key){
-        /*Generate the  session key*/
+    /*We need to take the decision whether to use derived keys or not*/
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
+    token_type = rp_property_get_type(token, env);
+    use_derived_keys = rampart_context_check_is_derived_keys (env, token);
+
+    session_key = rampart_context_get_encryption_session_key(rampart_context, env);
+    if(!session_key)
+    {
+        /*Generate the  session key. if security context token, get the 
+        shared secret and create the session key.*/
         session_key = oxs_key_create(env);
-        status = oxs_key_for_algo(session_key, env, enc_sym_algo);
-        rampart_context_set_session_key(rampart_context, env, session_key);
-		free_session_key = AXIS2_TRUE;
+        if(token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+        {
+            oxs_buffer_t *key_buf = NULL;
+            key_buf = sct_provider_get_secret(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+            if(!key_buf)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption]Cannot get shared secret of security context token");
+                oxs_key_free(session_key, env);
+                return AXIS2_FAILURE;
+            }
+            oxs_key_populate(session_key, env,
+                   oxs_buffer_get_data(key_buf, env), "for-algo",
+                   oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
+        }
+        else
+        {
+            status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+        }
+        rampart_context_set_encryption_session_key(rampart_context, env, session_key);
     }
- 
+
     id_list = axutil_array_list_create(env, 5);
     dk_list = axutil_array_list_create(env, 5);
     /* For each and every encryption part.
         1. Derive a new key if key derivation is enabled. Or else use the same session key
         2. Encrypt using that key       
      */
-   
-    /*We need to take the decision whether to use derived keys or not*/
-    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
-    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
-    use_derived_keys = rampart_context_check_is_derived_keys (env, token);
+
+    /*Add ReferenceList element to the Security header. Note that we pass the sec_node. Not the EncryptedKey*/
+    data_ref_list_node = oxs_token_build_reference_list_element(env, sec_node);
 
     /*Repeat until all encryption parts are encrypted*/
     for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
@@ -317,7 +357,8 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         /*Create the encryption context for OMXMLSEC*/
         enc_ctx = oxs_ctx_create(env);
 
-        if(AXIS2_TRUE == use_derived_keys){
+        if(AXIS2_TRUE == use_derived_keys)
+        {
             /*Derive a new key*/
             derived_key = oxs_key_create(env);
             status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE); 
@@ -330,11 +371,34 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             
             /*Add derived key to the list. We will create tokens*/
             axutil_array_list_add(dk_list, env, derived_key);
-        }else{
+            key_reference_node = NULL;
+        }
+        else
+        {
             /*No key derivation. We use the same session key*/
             oxs_ctx_set_key(enc_ctx, env, session_key);
             oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(session_key, env));
+
+            if (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+            {
+                if(rampart_context_is_token_include(rampart_context,
+                                                token, token_type, server_side, AXIS2_FALSE, env))
+                {
+                    /*set the AttachedReference to key_reference_node*/
+                    key_reference_node = sct_provider_get_attached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+                }
+                else
+                {
+                    /*get the unattachedReference and set to key_reference_node*/
+                    key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+                }
+            }
+            else
+            {
+                key_reference_node = NULL;
+            }
         }
+
         /*Set the algorithm*/
         oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);  
 
@@ -347,7 +411,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             enc_data_node = oxs_token_build_encrypted_data_element(env,
                             parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, enc_data_id );
             status = oxs_xml_enc_encrypt_node(env, enc_ctx,
-                                                  node_to_enc, &enc_data_node);
+                                                  node_to_enc, &enc_data_node, key_reference_node);
             /*Add Ids to the list. We will create reference list*/
             axutil_array_list_add(id_list, env, enc_data_id);
 
@@ -355,11 +419,6 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][rampart_encryption] Cannot encrypt the node " );
-				if(free_session_key)
-				{
-					oxs_key_free(session_key, env);
-					session_key = NULL;
-				}
 				for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
 				{
 					axis2_char_t *id = NULL;
@@ -382,65 +441,90 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axutil_array_list_free(nodes_to_encrypt, env);
     nodes_to_encrypt = NULL;
 
-    /* If not done already, Encrypt the session key using the Public Key of the recipient*/
-    /* Note: Here we do not send the id_list to create a ReferenceList inside the encrypted key. Instead we create the 
-     *       ReferenceList as a child of Security element */
-            
-    encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
-    if(!encrypted_key_node){
-        /*Create EncryptedKey element*/
-        status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
-        if(AXIS2_FAILURE == status){
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_encryption] Cannot encrypt the session key " );
-			if(free_session_key)
-			{
-				oxs_key_free(session_key, env);
-				session_key = NULL;
-			}
-			for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
-			{
-				axis2_char_t *id = NULL;
-				id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
-				AXIS2_FREE(env->allocator, id);
-			}
-			axutil_array_list_free(id_list, env);
-			id_list = NULL;
-            return AXIS2_FAILURE;
+    if (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+    {
+        if(rampart_context_is_token_include(rampart_context,
+                                        token, token_type, server_side, AXIS2_FALSE, env))
+        {
+            axiom_node_t *security_context_token_node = NULL;
+            /*include the security context token*/
+            security_context_token_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_SECURITY_CONTEXT_TOKEN);
+            if((!security_context_token_node) || (is_different_session_key_for_encryption_and_signing(env, rampart_context)))
+            {
+                security_context_token_node = sct_provider_get_token(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+                if(!security_context_token_node)
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption] Cannot get security context token");
+			        for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+			        {
+				        axis2_char_t *id = NULL;
+				        id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+				        AXIS2_FREE(env->allocator, id);
+			        }
+			        axutil_array_list_free(id_list, env);
+			        id_list = NULL;
+                    return AXIS2_FAILURE;
+                }
+                axiom_node_add_child(sec_node, env, security_context_token_node);
+            }
         }
-        /*Now we have en EncryptedKey Node*/
+    }
+    else
+    {
+        /* If not done already, Encrypt the session key using the Public Key of the recipient*/
+        /* Note: Here we do not send the id_list to create a ReferenceList inside the encrypted key. Instead we create the 
+         *       ReferenceList as a child of Security element */
         encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
-
-        /*Get the asym key Id*/
         if(!encrypted_key_node)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
-			if(free_session_key)
-			{
-				oxs_key_free(session_key, env);
-				session_key = NULL;
-			}
-			for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
-			{
-				axis2_char_t *id = NULL;
-				id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
-				AXIS2_FREE(env->allocator, id);
-			}
-			axutil_array_list_free(id_list, env);
-			id_list = NULL;
-            return AXIS2_FAILURE;
+            /*Create EncryptedKey element*/
+            status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+            if(AXIS2_FAILURE == status)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                    "[rampart][rampart_encryption] Cannot encrypt the session key " );
+			    for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+			    {
+				    axis2_char_t *id = NULL;
+				    id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+				    AXIS2_FREE(env->allocator, id);
+			    }
+			    axutil_array_list_free(id_list, env);
+			    id_list = NULL;
+                return AXIS2_FAILURE;
+            }
+            /*Now we have en EncryptedKey Node*/
+            encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
+
+            /*Get the asym key Id*/
+            if(!encrypted_key_node)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
+			    for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+			    {
+				    axis2_char_t *id = NULL;
+				    id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+				    AXIS2_FREE(env->allocator, id);
+			    }
+			    axutil_array_list_free(id_list, env);
+			    id_list = NULL;
+                return AXIS2_FAILURE;
+            }
+            asym_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
+		    free_asym_key_id = AXIS2_TRUE;
+            if(asym_key_id)
+            {
+                oxs_axiom_add_attribute(env, encrypted_key_node, NULL,
+                                    NULL, OXS_ATTR_ID, asym_key_id);
+            }
         }
-        asym_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
-		free_asym_key_id = AXIS2_TRUE;
-        if(asym_key_id)
+        else
         {
-            oxs_axiom_add_attribute(env, encrypted_key_node, NULL,
-                                NULL, OXS_ATTR_ID, asym_key_id);
+            /*OK Buddy we have already created EncryptedKey node. Get the Id */
+            asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
         }
-    }else{
-        /*OK Buddy we have already created EncryptedKey node. Get the Id */
-        asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
     }
 
     /*Add used <wsc:DerivedKeyToken> elements to the header*/
@@ -450,18 +534,38 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         dk = (oxs_key_t *)axutil_array_list_get(dk_list, env, j);
         
         /*Build the <wsc:DerivedKeyToken> element*/
-        if(dk){
+        if(dk)
+        {
             axiom_node_t *dk_node = NULL;
-            dk_node = oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
+            if (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+            {
+               if(rampart_context_is_token_include(rampart_context,
+                                                    token, token_type, server_side, AXIS2_FALSE, env))
+                {
+                    /*set the AttachedReference to key_reference_node*/
+                    key_reference_node = sct_provider_get_attached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+                }
+                else
+                {
+                    /*get the unattachedReference and set to key_reference_node*/
+                    key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+                }
+                dk_node = oxs_derivation_build_derived_key_token_with_stre(env, dk, sec_node, key_reference_node);
+            }
+            else
+            {
+                dk_node = oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
+            }
+
+            /*derived key should appear before ReferenceList*/
+            oxs_axiom_interchange_nodes(env, dk_node, data_ref_list_node);
         }
+
         /*We will free DK here*/
         oxs_key_free(dk, env);
         dk = NULL;
     
     }/*End of For loop of dk_list iteration*/
-    
-    /*Add ReferenceList element to the Security header. Note that we pass the sec_node. Not the EncryptedKey*/
-    data_ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
     
     /*Free derrived key list*/
     axutil_array_list_free(dk_list, env);
@@ -471,18 +575,15 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
 	for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
 	{
 		axis2_char_t *id = NULL;
+        axis2_char_t* mod_id = NULL;
 		id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+        mod_id = axutil_stracat(env, "#",id);
+        oxs_token_build_data_reference_element(env, data_ref_list_node, mod_id);
 		AXIS2_FREE(env->allocator, id);
 	}
     axutil_array_list_free(id_list, env);
     id_list = NULL; 
     
-	if(free_session_key && session_key)
-	{
-		oxs_key_free(session_key, env);
-		session_key = NULL;
-	}
-
 	if(free_asym_key_id && asym_key_id)
 	{
 		AXIS2_FREE(env->allocator, asym_key_id);
@@ -506,7 +607,6 @@ rampart_enc_encrypt_message(
     axis2_char_t *enc_sym_algo = NULL;
     oxs_key_t *session_key = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
-	axis2_bool_t free_session_key = AXIS2_FALSE;
     rp_property_type_t token_type;
     rp_property_t *token = NULL;
     int i = 0;
@@ -604,13 +704,12 @@ rampart_enc_encrypt_message(
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
 
-    session_key = rampart_context_get_session_key(rampart_context, env);
+    session_key = rampart_context_get_encryption_session_key(rampart_context, env);
     if(!session_key){
         /*Generate the  session key*/
          session_key = oxs_key_create(env);
          status = oxs_key_for_algo(session_key, env, enc_sym_algo);
-         rampart_context_set_session_key(rampart_context, env, session_key);
-		 free_session_key = AXIS2_TRUE;
+         rampart_context_set_encryption_session_key(rampart_context, env, session_key);
     }
     if(AXIS2_FAILURE == status)
     {
@@ -618,11 +717,6 @@ rampart_enc_encrypt_message(
                         "[rampart][rampart_encryption] Cannot generate the key for the algorithm %s, ", enc_sym_algo);
 		axutil_array_list_free(nodes_to_encrypt, env);
 		nodes_to_encrypt = NULL;
-		if (free_session_key)
-		{
-			oxs_key_free(session_key, env);
-			session_key = NULL;
-		}
         return AXIS2_FAILURE;
     }
 
@@ -656,11 +750,6 @@ rampart_enc_encrypt_message(
                             "[rampart][rampart_encryption] Cannot get the node from the list to encrypt");
 			axutil_array_list_free(nodes_to_encrypt, env);
 			nodes_to_encrypt = NULL;
-			if (free_session_key)
-			{
-				oxs_key_free(session_key, env);
-				session_key = NULL;
-			}
             return AXIS2_FAILURE;
         }
         /*Create the encryption context for OMXMLSEC*/
@@ -678,7 +767,7 @@ rampart_enc_encrypt_message(
             enc_data_node = oxs_token_build_encrypted_data_element(env,
                             parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, id );
             enc_status = oxs_xml_enc_encrypt_node(env, enc_ctx,
-                                                  node_to_enc, &enc_data_node);
+                                                  node_to_enc, &enc_data_node, NULL); 
             axutil_array_list_add(id_list, env, id);
             if(AXIS2_FAILURE == enc_status)
             {
@@ -686,11 +775,6 @@ rampart_enc_encrypt_message(
                                 "[rampart][rampart_encryption] Cannot encrypt the node " );
 				axutil_array_list_free(nodes_to_encrypt, env);
 				nodes_to_encrypt = NULL;
-				if (free_session_key)
-				{
-					oxs_key_free(session_key, env);
-					session_key = NULL;
-				}
                 return AXIS2_FAILURE;
             }
         }
@@ -705,12 +789,6 @@ rampart_enc_encrypt_message(
 
     /*We need to encrypt the session key.*/
     status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, id_list);
-	if (free_session_key)
-	{
-		oxs_key_free(session_key, env);
-		session_key = NULL;
-	}
-
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }
@@ -864,9 +942,12 @@ rampart_enc_encrypt_signature(
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
+    rp_property_type_t token_type;
     axis2_status_t status = AXIS2_FAILURE;
+    axiom_node_t *key_reference_node = NULL;
+    axiom_node_t *key_reference_for_encrypted_data = NULL;
 
-    session_key = rampart_context_get_session_key(rampart_context, env);
+    session_key = rampart_context_get_encryption_session_key(rampart_context, env);
 
     if(!session_key)
     {
@@ -885,34 +966,57 @@ rampart_enc_encrypt_signature(
         return AXIS2_FAILURE;
     }
 
-    encrypted_key_node = oxs_axiom_get_node_by_local_name(
-                             env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
-    if(!encrypted_key_node)
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
+    token_type = rp_property_get_type(token, env);
+
+    if(token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
-        return AXIS2_FAILURE;
+        if(rampart_context_is_token_include(rampart_context,
+                                        token, token_type, server_side, AXIS2_FALSE, env))
+        {
+            /*set the AttachedReference to key_reference_node*/
+            key_reference_node = sct_provider_get_attached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+        }
+        else
+        {
+            /*get the unattachedReference and set to key_reference_node*/
+            key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+        }
+    }
+    else
+    {
+        encrypted_key_node = oxs_axiom_get_node_by_local_name(
+                                 env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
+        if(!encrypted_key_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_encryption]Encrypting signature, EncryptedKey Not found");
+            return AXIS2_FAILURE;
+        }
     }
 
     enc_ctx = oxs_ctx_create(env);
 
     /*We need to take the decision whether to use derived keys or not*/
-    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
-    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
     use_derived_keys = rampart_context_check_is_derived_keys (env, token);
-    if(AXIS2_TRUE == use_derived_keys){
-            /*Derive a new key*/
-            derived_key = oxs_key_create(env);
-            status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE);
+    if(AXIS2_TRUE == use_derived_keys)
+    {
+        /*Derive a new key*/
+        derived_key = oxs_key_create(env);
+        status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE);
 
-            /*Set the derived key for the encryption*/
-            oxs_ctx_set_key(enc_ctx, env, derived_key);
+        /*Set the derived key for the encryption*/
+        oxs_ctx_set_key(enc_ctx, env, derived_key);
 
-            /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
-            oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
-    }else{
+        /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
+        oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
+    }
+    else
+    {
         /*No Key derivation is needed we will proceed with the same session key*/
         oxs_ctx_set_key(enc_ctx, env, session_key);
+        key_reference_for_encrypted_data = key_reference_node;
     }
     enc_sym_algo = rampart_context_get_enc_sym_algo(rampart_context, env);
     oxs_ctx_set_enc_mtd_algorithm(enc_ctx, env, enc_sym_algo);
@@ -921,33 +1025,42 @@ rampart_enc_encrypt_signature(
     /*Manage the reference list*/
     id_list = axutil_array_list_create(env, 0);
     axutil_array_list_add(id_list, env, id);
-    if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING){
+    if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING)
+    {
         /*We append IDs to the EncryptedKey node*/
         axiom_node_t *ref_list_node = NULL;
         ref_list_node = oxs_token_build_data_reference_list(
                          env, encrypted_key_node, id_list);
-        if(!ref_list_node){
+        if(!ref_list_node)
+        {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_encryption]Asym Encrypting signature,"
                     "Building reference list failed");
             return AXIS2_FAILURE;
         } 
-    }else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING){
-        if(AXIS2_TRUE == use_derived_keys){
+    }
+    else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
+    {
+        if((AXIS2_TRUE == use_derived_keys) || (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN))
+        {
             /*We need to create a new reference list and then attach it before the EncryptedData(signature)*/
             axiom_node_t *ref_list_node = NULL;
 
             ref_list_node = oxs_token_build_data_reference_list(env, sec_node, id_list);
-            if(!ref_list_node){
+            if(!ref_list_node)
+            {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_encryption]Sym Encrypting signature,"
                                     "Building reference list failed");
                 return AXIS2_FAILURE;
-            } 
-        }else{
+            }
+        }
+        else
+        {
             /*The session key is in use. Add a ref to the EncryptedKey's ref list*/
             axiom_node_t *ref_list_node = NULL;
             ref_list_node = oxs_axiom_get_first_child_node_by_name(
                         env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
-            if(ref_list_node){
+            if(ref_list_node)
+            {
                 /*There is a ref list node in EncryptedKey. So append*/
                 axiom_node_t *data_ref_node = NULL;
                 axis2_char_t *mod_id = NULL;
@@ -956,12 +1069,16 @@ rampart_enc_encrypt_signature(
                 mod_id = axutil_stracat(env, "#",id);
                 data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, mod_id);
 
-            }else{
+            }
+            else
+            {
                 /*There is NO ref list node in EncryptedKey. So create a new one */
                 ref_list_node = oxs_token_build_data_reference_list(env, encrypted_key_node, id_list);
             }
         }       
-    }else{
+    }
+    else
+    {
         /*Nothing to do*/
     }
     
@@ -969,7 +1086,7 @@ rampart_enc_encrypt_signature(
     enc_data_node = oxs_token_build_encrypted_data_element(
                         env, sec_node, OXS_TYPE_ENC_ELEMENT, id );
     enc_status = oxs_xml_enc_encrypt_node(
-                     env, enc_ctx, node_to_enc, &enc_data_node);
+        env, enc_ctx, node_to_enc, &enc_data_node, key_reference_for_encrypted_data);
 
     /*FREE*/
     oxs_ctx_free(enc_ctx, env);
@@ -982,11 +1099,18 @@ rampart_enc_encrypt_signature(
         return AXIS2_FAILURE;
     }
     /*If we have used a derrived key, we need to attach it to the Securuty Header*/
-    if(AXIS2_TRUE == use_derived_keys){
-        axis2_char_t *asym_key_id = NULL;
- 
-        asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
-        oxs_derivation_build_derived_key_token(env, derived_key, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);  
+    if(AXIS2_TRUE == use_derived_keys)
+    {
+        if (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+        {
+            oxs_derivation_build_derived_key_token_with_stre(env, derived_key, sec_node, key_reference_node);
+        }
+        else
+        {
+            axis2_char_t *asym_key_id = NULL;
+            asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
+            oxs_derivation_build_derived_key_token(env, derived_key, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);  
+        }
 		/*now we can free the derived key*/
 		oxs_key_free(derived_key, env);
 		derived_key = NULL;
@@ -1012,7 +1136,8 @@ rampart_enc_encrypt_signature(
     }
 
 
-    if(id_list){
+    if(id_list)
+    {
         /*Need to free data of the list*/
         int size = 0;
         int j = 0;
@@ -1020,7 +1145,6 @@ rampart_enc_encrypt_signature(
         for (j = 0; j < size; j++)
         {
             axis2_char_t *id_temp = NULL;
-
             id_temp = axutil_array_list_get(id_list, env, j);
             AXIS2_FREE(env->allocator, id_temp);
             id_temp = NULL;

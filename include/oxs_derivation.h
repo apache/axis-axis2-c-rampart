@@ -63,7 +63,7 @@ extern "C"
      * @param env pointer to environment struct
      * @derived_key The derived key to be used to get information
      * @parent The parent node to be attached to
-     * @stref_uri Security Toekn Reference URI
+     * @stref_uri Security Token Reference URI
      * @stref_val_type Security Token Reference Valut Type
      * @return the built axiom node
      */

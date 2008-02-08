@@ -48,13 +48,15 @@ extern "C"
      * @param enc_ctx encryption context
      * @param node the node tobe encrypted
      * @param enc_type_node reference to the EncryptedData node
+     * @param key_reference_node key reference provided by STS generated tokens.
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_xml_enc_encrypt_node(const axutil_env_t *env,
                              oxs_ctx_t * enc_ctx,
                              axiom_node_t *node,
-                             axiom_node_t **enc_type_node);
+                             axiom_node_t **enc_type_node, 
+                             axiom_node_t *key_reference_node);
 
     /**
      * Decrypts a node as specified in the @enc_ctx.
@@ -78,13 +80,15 @@ extern "C"
      * @param enc_ctx encryption context
      * @param content_buf the content to be encrypted. 
      * @param enc_type_node reference to the EncryptedData node
+     * @param key_reference_node key reference provided by STS generated tokens.
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_xml_enc_encrypt_data(const axutil_env_t *env,
                              oxs_ctx_t * enc_ctx,
                              oxs_buffer_t *content_buf,
-                             axiom_node_t **enc_type_node);
+                             axiom_node_t **enc_type_node, 
+                             axiom_node_t *key_reference_node);
 
     /**
      * Decrypts @enc_type_node and places the data inside the @result_buf

@@ -20,6 +20,8 @@
 #include <oxs_axiom.h>
 #include <oxs_x509_cert.h>
 #include <rampart_replay_detector.h>
+#include <rampart_sct_provider.h>
+#include <rampart_util.h>
 #include <rp_saml_token.h>
 #include <rp_issued_token.h>
 #include <rampart_saml_token.h>
@@ -58,14 +60,17 @@ struct rampart_context_t
     rampart_callback_t *password_callback_module;
     rampart_authn_provider_t *authn_provider;
 	rampart_replay_detector_t *replay_detector;
+    rampart_sct_provider_t *sct_provider;
     auth_password_func authenticate_with_password;
     auth_digest_func authenticate_with_digest;
+
+    axis2_char_t *encryption_sct_id;
+    axis2_char_t *signature_sct_id;
 
     axis2_bool_t require_timestamp;
     axis2_bool_t require_ut;
 
-    oxs_key_t *session_key;
-    axutil_array_list_t *dk_list;
+    axutil_array_list_t *key_list;
     /*This is used in callback functions.*/
     void *ctx;
     
@@ -184,15 +189,18 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->password_callback_module = NULL;
     rampart_context->authn_provider = NULL;
 	rampart_context->replay_detector = NULL;
+    rampart_context->sct_provider = NULL;
     rampart_context->authenticate_with_password = NULL;
     rampart_context->authenticate_with_digest = NULL;
     rampart_context->require_ut = AXIS2_FALSE;
     rampart_context->require_timestamp = AXIS2_FALSE;
     rampart_context->ctx = NULL;
     rampart_context->ref = 0;
-    rampart_context->session_key = NULL;
 
-    rampart_context->dk_list = axutil_array_list_create(env, 2);
+    rampart_context->encryption_sct_id = NULL;
+    rampart_context->signature_sct_id = NULL;
+
+    rampart_context->key_list = axutil_array_list_create(env, 2);
 
     return rampart_context;
 }
@@ -251,24 +259,18 @@ rampart_context_free(rampart_context_t *rampart_context,
             }
         }
 
-        if(rampart_context->session_key)
-        {
-            oxs_key_free(rampart_context->session_key, env);
-            rampart_context->session_key = NULL;
-        }
-
         /*Free derived key list*/
-		if (rampart_context->dk_list)
+		if (rampart_context->key_list)
 		{
 			int i;
-			for(i=0 ; i < axutil_array_list_size(rampart_context->dk_list, env); i++)
+			for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
 			{
 				oxs_key_t* dk = NULL;
-				dk = (oxs_key_t*)axutil_array_list_get(rampart_context->dk_list, env, i);
+				dk = (oxs_key_t*)axutil_array_list_get(rampart_context->key_list, env, i);
 				oxs_key_free(dk, env);
 			}
-			axutil_array_list_free(rampart_context->dk_list, env);
-			rampart_context->dk_list = NULL;
+			axutil_array_list_free(rampart_context->key_list, env);
+			rampart_context->key_list = NULL;
 		}
 
         if(rampart_context->certificate){
@@ -280,22 +282,22 @@ rampart_context_free(rampart_context_t *rampart_context,
             rampart_context->receiver_certificate = NULL;
         }
 
-        if(rampart_context->dk_list){
+        if(rampart_context->key_list){
             /*Need to free data of the list*/
             int size = 0;
             int j = 0;
-            size = axutil_array_list_size(rampart_context->dk_list, env);
+            size = axutil_array_list_size(rampart_context->key_list, env);
             for (j = 0; j < size; j++)
             {
-                oxs_key_t *dk = NULL;
+                oxs_key_t *key = NULL;
 
-                dk = axutil_array_list_get(rampart_context->dk_list, env, j);
-                oxs_key_free(dk , env);
-                dk = NULL;
+                key = axutil_array_list_get(rampart_context->key_list, env, j);
+                oxs_key_free(key , env);
+                key = NULL;
             }
 
-            axutil_array_list_free(rampart_context->dk_list, env);
-            rampart_context->dk_list = NULL;
+            axutil_array_list_free(rampart_context->key_list, env);
+            rampart_context->key_list = NULL;
         }
 
         AXIS2_FREE(env->allocator,rampart_context);
@@ -847,40 +849,115 @@ rampart_context_set_replay_detector(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN oxs_key_t *AXIS2_CALL
-rampart_context_get_session_key(
+AXIS2_EXTERN struct rampart_sct_provider_t *AXIS2_CALL
+rampart_context_get_sct_provider(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-    return rampart_context->session_key;
+    return (void*)rampart_context->sct_provider;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_context_set_session_key(rampart_context_t *rampart_context,
-                                const axutil_env_t *env,
-                                oxs_key_t *session_key)
+rampart_context_set_sct_provider(rampart_context_t *rampart_context,
+                                   const axutil_env_t *env,
+                                   struct rampart_sct_provider_t *sct_provider)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, session_key, AXIS2_FAILURE);
+    AXIS2_PARAM_CHECK(env->error,sct_provider,AXIS2_FAILURE);
 
-    /*Dup before set*/
-    if(rampart_context->session_key){
-        oxs_key_free(rampart_context->session_key, env);
-        rampart_context->session_key = NULL;
-    }
-    rampart_context->session_key = oxs_key_dup(session_key, env);
+    rampart_context->sct_provider= (rampart_sct_provider_t*)sct_provider;
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_context_add_derived_key(rampart_context_t *rampart_context,
-                                const axutil_env_t *env,
-                                oxs_key_t *derived_key)
+AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+rampart_context_get_encryption_session_key(rampart_context_t *rampart_context,
+                                            const axutil_env_t *env)
 {
-    if(rampart_context->dk_list){
-        axutil_array_list_add(rampart_context->dk_list, env, derived_key);
+    oxs_key_t* key = NULL;
+    int i = 0;
+
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+
+    /*Repeat thru all the keys and find the matching one*/
+    for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
+    {
+        key = (oxs_key_t*)axutil_array_list_get(rampart_context->key_list, env, i);
+        if(OXS_KEY_USAGE_SESSION == oxs_key_get_usage(key, env))
+        {
+            return key;
+        }        
+    }
+    
+    return NULL;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_encryption_session_key(rampart_context_t *rampart_context,
+                                            const axutil_env_t *env,
+                                            oxs_key_t *session_key)
+{
+    if(rampart_context->key_list)
+    {
+        oxs_key_set_usage(session_key, env, OXS_KEY_USAGE_SESSION);
+        axutil_array_list_add(rampart_context->key_list, env, session_key);
+        return AXIS2_SUCCESS;
+    }
+        
+    return AXIS2_FALSE;
+}
+
+AXIS2_EXTERN oxs_key_t *AXIS2_CALL
+rampart_context_get_signature_session_key(rampart_context_t *rampart_context,
+                                            const axutil_env_t *env)
+{
+    oxs_key_t* key = NULL;
+    int i = 0;
+    int key_usage = OXS_KEY_USAGE_SESSION;
+
+    if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+        key_usage = OXS_KEY_USAGE_SIGNATURE_SESSION;
+
+    /*Repeat thru all the keys and find the matching one*/
+    for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
+    {
+        key = (oxs_key_t*)axutil_array_list_get(rampart_context->key_list, env, i);
+        if(key_usage == oxs_key_get_usage(key, env))
+        {
+            return key;
+        }        
+    }
+    
+    return NULL;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_signature_session_key(rampart_context_t *rampart_context,
+                                            const axutil_env_t *env,
+                                            oxs_key_t *session_key)
+{
+    if(rampart_context->key_list)
+    {
+        int key_usage = OXS_KEY_USAGE_SESSION;
+        if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+            key_usage = OXS_KEY_USAGE_SIGNATURE_SESSION;
+
+        oxs_key_set_usage(session_key, env, key_usage);
+        axutil_array_list_add(rampart_context->key_list, env, session_key);
+        return AXIS2_SUCCESS;
+    }
+    
+    return AXIS2_FALSE;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_add_key(rampart_context_t *rampart_context,
+                                const axutil_env_t *env,
+                                oxs_key_t *key)
+{
+    if(rampart_context->key_list){
+        axutil_array_list_add(rampart_context->key_list, env, key);
     }else{
         return AXIS2_FALSE;
     }
@@ -888,32 +965,32 @@ rampart_context_add_derived_key(rampart_context_t *rampart_context,
 }
 
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
-rampart_context_get_derived_keys(rampart_context_t *rampart_context,
+rampart_context_get_keys(rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-    return rampart_context->dk_list;
+    return rampart_context->key_list;
 }
 
 AXIS2_EXTERN oxs_key_t* AXIS2_CALL
-rampart_context_get_derived_key(rampart_context_t *rampart_context,
+rampart_context_get_key(rampart_context_t *rampart_context,
     const axutil_env_t *env,
-    axis2_char_t* dk_id)
+    axis2_char_t* key_id)
 {   
-    oxs_key_t* dk = NULL;
+    oxs_key_t* key = NULL;
     int i = 0;
 
     AXIS2_ENV_CHECK(env, AXIS2_FALSE);
 
     /*Repeat thru all the derived keys and find the matching one*/
-    for(i=0 ; i < axutil_array_list_size(rampart_context->dk_list, env); i++)
+    for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
     {
         axis2_char_t *key_name = NULL;
 
-        dk = (oxs_key_t*)axutil_array_list_get(rampart_context->dk_list, env, i);
-        key_name = oxs_key_get_name(dk, env);
-        if(0 == axutil_strcmp(key_name, dk_id)){
-            return dk;
+        key = (oxs_key_t*)axutil_array_list_get(rampart_context->key_list, env, i);
+        key_name = oxs_key_get_name(key, env);
+        if(0 == axutil_strcmp(key_name, key_id)){
+            return key;
         }        
     }
     
@@ -1441,6 +1518,20 @@ rampart_context_is_key_identifier_supported(
         if(rp_x509_token_get_require_key_identifier_reference(x509_token,env))
             return AXIS2_TRUE;
     }
+    else if(rp_property_get_type(token, env) == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+    {
+        rp_security_context_token_t *security_context_token;
+        security_context_token = (rp_security_context_token_t *)rp_property_get_value(token, env);
+        if(security_context_token)
+        {
+            return AXIS2_TRUE;
+        }
+        else
+        {
+            AXIS2_LOG_INFO(env->log, "Cannot get the token value from policy.");
+            return AXIS2_FALSE;
+        }
+    }
     else
         return AXIS2_FALSE;
 
@@ -1801,6 +1892,19 @@ rampart_context_get_replay_detector_name(
         return NULL;
 
     return rp_rampart_config_get_replay_detector(config,env);
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rampart_context_get_sct_provider_name(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_rampart_config_t *config = NULL;
+    config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
+    if(!config)
+        return NULL;
+
+    return rp_rampart_config_get_sct_provider(config,env);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -2249,6 +2353,12 @@ rampart_context_check_is_derived_keys(
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
         return rp_x509_token_get_derivedkeys(x509_token,env);
     }
+    else if(rp_property_get_type(token, env) == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+    {
+        rp_security_context_token_t *security_context_token = NULL;
+        security_context_token = (rp_security_context_token_t *)rp_property_get_value(token, env);
+        return rp_security_context_token_get_derivedkeys(security_context_token, env);
+    }
     /*This can be extended when we are supporting other token types.*/
     else
         return AXIS2_FALSE;
@@ -2404,11 +2514,13 @@ rampart_context_is_token_type_supported(
 {
     if(token_type == RP_PROPERTY_X509_TOKEN)
         return AXIS2_TRUE;
+    else if (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+        return AXIS2_TRUE;
     else if (token_type == RP_PROPERTY_SAML_TOKEN)
         return AXIS2_TRUE;
     else
     {
-        AXIS2_LOG_INFO(env->log,"We still only suppport X509 Tokens.");
+        AXIS2_LOG_INFO(env->log,"We still only suppport X509 Tokens and security context tokens.");
         return AXIS2_FALSE;
     }
     /*This method will be extended when we are supporting other types of tokens.*/
@@ -2445,6 +2557,17 @@ rampart_context_is_token_include(
         saml_token = (rp_saml_token_t *)rp_property_get_value(token, env);
         inclusion = rp_saml_token_get_inclusion(saml_token, env);        
     }
+    else if (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+    {
+        rp_security_context_token_t *security_context_token = NULL;
+        security_context_token = (rp_security_context_token_t *)rp_property_get_value(token, env);
+        inclusion = rp_security_context_token_get_inclusion(security_context_token, env);
+    }
+    else
+    {
+        AXIS2_LOG_INFO(env->log,"We still only support x509 tokens and security context tokens");
+        return AXIS2_FALSE;
+    }
 
     if(server_side)
     {
@@ -2468,7 +2591,8 @@ rampart_context_is_token_include(
         else
             include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
     }
-    return include;    
+    return include;
+    
 }
 
 
@@ -2562,6 +2686,41 @@ rampart_context_increment_ref(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rampart_context_get_encryption_sct_id(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->encryption_sct_id;
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rampart_context_get_signature_sct_id(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->signature_sct_id;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_encryption_sct_id(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axis2_char_t *sct_id)
+{
+    rampart_context->encryption_sct_id = sct_id;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_signature_sct_id(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axis2_char_t *sct_id)
+{
+    rampart_context->signature_sct_id = sct_id;
+    return AXIS2_SUCCESS;
+}
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_is_issued_token_aquired(rampart_context_t *rampart_context,
                                         const axutil_env_t *env)

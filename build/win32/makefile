@@ -24,8 +24,11 @@ OMXMLSEC_SRC = $(RAMPART_SOURCE_DIR)\src\omxmlsec\*.c \
 
 MOD_RAMPART_SRC = $(RAMPART_SOURCE_DIR)\src\core\*.c \
 		  $(RAMPART_SOURCE_DIR)\src\handlers\*.c \
-		  $(RAMPART_SOURCE_DIR)\src\util\*.c \
-		  $(RAMPART_SOURCE_DIR)\src\trust\*.c 
+		  $(RAMPART_SOURCE_DIR)\src\util\*.c 
+
+SECCONV_SRC = $(RAMPART_SOURCE_DIR)\src\secconv\*.c
+
+TRUST_SRC = $(RAMPART_SOURCE_DIR)\src\trust\*.c
 
 MOD_RAMPART_INCLUDE_PATH = /I$(RAMPART_SOURCE_DIR)\include \
 		           /I$(OPENSSL_BIN_DIR)\include \
@@ -87,7 +90,9 @@ distdir:
 	mkdir $(RAMPART_DISTDIR)\bin\samples\callback
 	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
 	mkdir $(RAMPART_DISTDIR)\bin\samples\replay_detector
+	mkdir $(RAMPART_DISTDIR)\bin\samples\sct_provider
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
+	mkdir $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
 	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
@@ -105,7 +110,9 @@ intdirs:
 	if not exist $(RAMPART_INTDIR)\samples\callback\pwcb mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
 	if not exist $(RAMPART_INTDIR)\samples\authn_provider mkdir $(RAMPART_INTDIR)\samples\authn_provider
 	if not exist $(RAMPART_INTDIR)\samples\replay_detector mkdir $(RAMPART_INTDIR)\samples\replay_detector
+	if not exist $(RAMPART_INTDIR)\samples\sct_provider mkdir $(RAMPART_INTDIR)\samples\sct_provider
 	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
+	if not exist $(RAMPART_INTDIR)\samples\services\secconv_echo\ mkdir $(RAMPART_INTDIR)\samples\services\secconv_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
 
@@ -113,7 +120,7 @@ mod_rampart_sample_data:
 	copy $(RAMPART_SOURCE_DIR)\samples\data\passwords.txt $(RAMPART_DISTDIR)\bin\samples\data
 
 $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll :
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) \
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECCONV_SRC) $(TRUST_SRC)\
 	$(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj $(LIBS) axutil.lib axiom.lib \
 	axis2_parser.lib axis2_engine.lib neethi.lib /DLL /OUT:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll \
@@ -153,6 +160,25 @@ $(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll :
 
 mod_rampart_rd: $(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll
 
+$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\sct_provider\sct_provider_stored_key.c \
+	/Fo$(RAMPART_INTDIR)\samples\sct_provider\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\sct_provider\sct_provider_stored_key.obj mod_rampart.lib \
+	axutil.lib axis2_engine.lib neethi.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
+	/OUT:$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+
+mod_rampart_sct_provider: $(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll
+
+$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\sct_provider\sct_provider_hash_map.c \
+	/Fo$(RAMPART_INTDIR)\samples\sct_provider\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\sct_provider\sct_provider_hash_map.obj mod_rampart.lib \
+	axutil.lib axis2_engine.lib neethi.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart /DLL \
+	/OUT:$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+
+mod_rampart_sct_provider_hashdb: $(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll
 
 $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll :
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
@@ -169,13 +195,27 @@ $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll :
 
 mod_rampart_services_sec_echo: $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
 
+$(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo \
+	$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\*.c /Fo$(RAMPART_INTDIR)\samples\services\secconv_echo\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\secconv_echo\*.obj \
+	axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib mod_rampart.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart\
+	axis2_http_receiver.lib axis2_http_sender.lib \
+        /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	
+	copy $(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\services.xml $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\
+
+	copy $(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\server_axis2.xml $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\
+
+mod_rampart_services_secconv_echo: $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll
 
 $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe :
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
         $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
         /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib neethi.lib \
-        axis2_parser.lib axis2_engine.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
+        axis2_parser.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 			
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\data\client.axis2.xml \
@@ -196,7 +236,7 @@ $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll :
 
 mod_rampart_samples_credential_provider: $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll
 
-mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo
+mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo mod_rampart_services_secconv_echo
 
 mod_rampart_copy_include:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\include $(RAMPART_DISTDIR)\include
@@ -225,7 +265,7 @@ copy_dist_files:
 
 #copy make_bin_dist.bat $(RAMPART_DISTDIR)
 
-mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_rd mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include copy_dist_files
+mod_rampart_all: mod_rampart mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_pwcb mod_rampart_htpwcb mod_rampart_samples mod_rampart_copy_include copy_dist_files
 
 mv_dist:
 	move $(RAMPART_DISTDIR) $(RAMPART_DIST_NAME)
@@ -238,14 +278,16 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_services_sec_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
 deploy:
 	chdir $(RAMPART_DISTDIR)
 	deploy_rampart.bat
-	chdir .\..\win32
+	chdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
+	deploy_client_repo.bat
+	chdir .\..\..\..\..\..\win32
 
 install: dist deploy
 

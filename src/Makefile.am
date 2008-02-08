@@ -1,1 +1,1 @@
-SUBDIRS = omxmlsec handlers util core data trust 
+SUBDIRS = omxmlsec handlers util core data trust secconv 

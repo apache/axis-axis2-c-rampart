@@ -146,12 +146,14 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
         return status;
     }
 
-    serverside = axis2_msg_ctx_get_server_side(msg_ctx,env);
-    if(serverside)
+    /*we don't need to clear the rampart context, since it is in the property map.
+    It will be freed when a new rampart context is assigned or when property map is freed*/
+    /*serverside = axis2_msg_ctx_get_server_side(msg_ctx,env);
+    if(!serverside)
     {
         rampart_context_free(rampart_context, env);
         rampart_context = NULL;
-    }
+    }*/
 
     return status;
 }

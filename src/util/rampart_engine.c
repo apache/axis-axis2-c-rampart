@@ -74,7 +74,7 @@ rampart_engine_build_configuration(
     is_server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
 
     /*Server, Outflow*/
-    if(is_server_side || !is_inflow)
+    if((is_server_side && is_inflow) || (!is_server_side && !is_inflow))
     {
         policy = build_policy(env, msg_ctx, is_inflow);
         if(!policy)
@@ -154,12 +154,32 @@ rampart_engine_build_configuration(
         }
     }
 
+    conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
+    if(!conf_ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][engine] Conf context is NULL ");
+        rampart_context_free(rampart_context, env);
+        rampart_context = NULL;
+        return NULL;
+    }
+
+    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
+    if(!ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][engine] axis2 context is NULL ");
+        rampart_context_free(rampart_context, env);
+        rampart_context = NULL;
+        return NULL;
+    }
+    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
+               AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
+    axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
+
     /*For the client side*/
     if(!is_server_side)
     {
-       /* axis2_options_t* options = NULL;
-        options = axis2_msg_ctx_get_options(msg_ctx, env);
-        value = axis2_options_get_property(options, env, RAMPART_CLIENT_CONFIGURATION);*/
         value = axis2_msg_ctx_get_property_value(msg_ctx, env, RAMPART_CLIENT_CONFIGURATION);
         if(value)
         {
@@ -198,29 +218,6 @@ rampart_engine_build_configuration(
                 rampart_context_set_saml_tokens(rampart_context, env, saml_tokens);
             }            
         }
-
-        conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
-        if(!conf_ctx)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][engine] Conf context is NULL ");
-            rampart_context_free(rampart_context, env);
-            rampart_context = NULL;
-            return NULL;
-        }
-
-        ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-        if(!ctx)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][engine] axis2 context is NULL ");
-            rampart_context_free(rampart_context, env);
-            rampart_context = NULL;
-            return NULL;
-        }
-        property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
-                   AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
-        axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
     }
     else
     { /*Server side only*/
@@ -323,9 +320,11 @@ set_rampart_user_properties(
     rampart_callback_t* password_callback_module = NULL;
     rampart_authn_provider_t *authn_provider = NULL;
 	rampart_replay_detector_t *replay_detector = NULL;
+    rampart_sct_provider_t* sct_provider = NULL;
     axis2_char_t *pwcb_module_name = NULL;
     axis2_char_t *authn_provider_name = NULL;
 	axis2_char_t *replay_detector_name = NULL;
+    axis2_char_t *sct_provider_name = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
 
     status = rampart_context_set_user_from_file(rampart_context,env);
@@ -353,15 +352,14 @@ set_rampart_user_properties(
     }
 
     pwcb_module_name = rampart_context_get_password_callback_class(rampart_context,env);
-
     if(pwcb_module_name)
     {
         password_callback_module = rampart_load_pwcb_module(env, pwcb_module_name);
         if(password_callback_module)
             rampart_context_set_password_callback(rampart_context,env,password_callback_module);
     }
-    authn_provider_name = rampart_context_get_authn_module_name(rampart_context,env);
 
+    authn_provider_name = rampart_context_get_authn_module_name(rampart_context,env);
     if(authn_provider_name)
     {
         authn_provider = rampart_load_auth_module(env,authn_provider_name);
@@ -370,12 +368,19 @@ set_rampart_user_properties(
     }
 
     replay_detector_name = rampart_context_get_replay_detector_name(rampart_context,env);
-
     if(replay_detector_name)
     {
         replay_detector = rampart_load_replay_detector(env,replay_detector_name);
         if(replay_detector)
             rampart_context_set_replay_detector(rampart_context,env,(void*)replay_detector);
+    }
+
+    sct_provider_name = rampart_context_get_sct_provider_name(rampart_context,env);
+    if(sct_provider_name)
+    {
+        sct_provider = rampart_load_sct_provider(env,sct_provider_name);
+        if(sct_provider)
+            rampart_context_set_sct_provider(rampart_context,env,(void*)sct_provider);
     }
     return status;
 }
