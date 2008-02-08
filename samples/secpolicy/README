@@ -46,6 +46,7 @@ Scenario    Summary
 13.         Symmetric binding. Both encryption and sign.
             The protection order is Encrypt->Sign
             Signature is Encrypted
+14. 		SAML Signed supporting token inclution. This scenario uses the saml_echo client.
 
 FAQ:
 ---

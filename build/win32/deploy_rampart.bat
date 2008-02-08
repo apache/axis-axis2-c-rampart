@@ -33,6 +33,9 @@ md %AXIS2C_HOME%\bin\samples\rampart\client\
 md %AXIS2C_HOME%\bin\samples\rampart\client\sec_echo\
 copy bin\samples\client\sec_echo\echo.exe %AXIS2C_HOME%\bin\samples\rampart\client\sec_echo\
 
+md %AXIS2C_HOME%\bin\samples\rampart\client\saml_echo\
+copy bin\samples\client\saml_echo\echo.exe %AXIS2C_HOME%\bin\samples\rampart\client\saml_echo\
+
 md %AXIS2C_HOME%\bin\samples\rampart\callback
 copy bin\samples\callback\pwcb.dll %AXIS2C_HOME%\bin\samples\rampart\callback\
 
