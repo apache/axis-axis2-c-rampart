@@ -20,7 +20,7 @@ RAMPART_DISTDIR = $(RAMPART_DIST_NAME)
 OMXMLSEC_SRC = $(RAMPART_SOURCE_DIR)\src\omxmlsec\*.c \
     	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\tokens\*.c \
     	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\c14n\*.c \
-    	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\openssl\*.c 
+    	       $(RAMPART_SOURCE_DIR)\src\omxmlsec\openssl\*.c $(RAMPART_SOURCE_DIR)\src\omxmlsec\saml\*.c 
 
 MOD_RAMPART_SRC = $(RAMPART_SOURCE_DIR)\src\core\*.c \
 		  $(RAMPART_SOURCE_DIR)\src\handlers\*.c \
@@ -94,6 +94,7 @@ distdir:
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
+	mkdir $(RAMPART_DISTDIR)\bin\samples\client\saml_echo
 	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
 	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
 	mkdir $(RAMPART_DISTDIR)\bin\samples\data
@@ -114,6 +115,7 @@ intdirs:
 	if not exist $(RAMPART_INTDIR)\samples\services\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\services\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\services\secconv_echo\ mkdir $(RAMPART_INTDIR)\samples\services\secconv_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
+	if not exist $(RAMPART_INTDIR)\samples\client\saml_echo\ mkdir $(RAMPART_INTDIR)\samples\client\saml_echo
 	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
 
 mod_rampart_sample_data:
@@ -223,6 +225,16 @@ $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe :
 
 mod_rampart_samples_sec_echo: $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 
+####### SAML Echo
+$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe :
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
+        $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\echo.c \
+        /Fo$(RAMPART_INTDIR)\samples\client\saml_echo\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\saml_echo\echo.obj axutil.lib axiom.lib neethi.lib \
+        axis2_parser.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe
+	-@$(_VC_MANIFEST_EMBED_EXE)
+			
+mod_rampart_samples_saml_echo: $(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe	
 
 $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll :
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
@@ -278,7 +290,7 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_samples_sec_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
