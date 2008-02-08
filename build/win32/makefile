@@ -24,7 +24,8 @@ OMXMLSEC_SRC = $(RAMPART_SOURCE_DIR)\src\omxmlsec\*.c \
 
 MOD_RAMPART_SRC = $(RAMPART_SOURCE_DIR)\src\core\*.c \
 		  $(RAMPART_SOURCE_DIR)\src\handlers\*.c \
-		  $(RAMPART_SOURCE_DIR)\src\util\*.c 
+		  $(RAMPART_SOURCE_DIR)\src\util\*.c \
+		  $(RAMPART_SOURCE_DIR)\src\trust\*.c 
 
 MOD_RAMPART_INCLUDE_PATH = /I$(RAMPART_SOURCE_DIR)\include \
 		           /I$(OPENSSL_BIN_DIR)\include \
