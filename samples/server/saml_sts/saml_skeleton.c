@@ -112,10 +112,7 @@ saml_issuer_invoke(
 	{
 		printf("RST Processing Failed!\n");
 	}
-
-		
-
-    
+	
     return axis2_saml_issuer_issue(env, trust_ctx);  
 }
 

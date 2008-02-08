@@ -47,11 +47,14 @@ axiom_node_t *axis2_saml_issuer_issue(
 	trust_rst_t *rst = NULL;	/*Created RST Context*/
 	trust_rstr_t *rstr = NULL;	/*Used for Creating RSTR*/
     
-	rst = trust_context_get_rst(env, trust_ctx);
+	rst = trust_context_get_rst(trust_ctx, env);
 	
 
     token_type = trust_rst_get_token_type(rst, env);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sts] token type %s..!", token_type);
+	if(token_type)
+    	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[sts] token type: %s !", token_type);
+	else
+		return NULL;
     
     if (axutil_strcmp(token_type, SAML_TOKEN))
     {

@@ -32,11 +32,34 @@ int main(
 
     /* Set end point reference of echo service */
     address = "http://localhost:9090/axis2/services/saml_sts";
-    client_home = "/home/milinda/Projects/axis2c/deploy/client_repo";
-    
+   	
+	if(argc > 2)
+	{
+		address = argv[2];
+		client_home = argv[1];
+	}
+	else if(argc == 2)
+	{
+		client_home = argv[1];
+		printf("Client Home : %s\n", client_home);
+		if(!(axutil_strcmp(client_home, "-h")))
+		{
+			printf("STS Client Usage:\n");
+			printf("\t./sts_client [client home] [end point]\n");
+			printf("\tUse ./sts_client -h for help\n");
+			return -1;
+		}
+	}	
+	else if(argc < 2)
+	{
+		printf("Insufficient Arguments.\n");
+		printf("Use ./sts_client -h for help\n");
+		return -1;
+	}
+	
+
     file_name = "./client.xml";
     file_name2 = "./service.xml";
-    /*http://131.107.72.15/Security_Federation_SecurityTokenService_Indigo/Asymmetric.svc*/
     
     sts_client = trust_sts_client_create(env);
    
