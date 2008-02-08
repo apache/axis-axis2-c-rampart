@@ -2,7 +2,7 @@
     <parameter name="ServiceClass" locked="xsd:false">saml_sts</parameter>
 
    <description>
-        This is a testing service , to test the system is working or not
+		   This is a testing service , to test the trust implementation in Rampart/C.
    </description>
     <module ref="rampart"/>
 
