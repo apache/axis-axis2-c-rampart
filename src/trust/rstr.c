@@ -99,6 +99,14 @@ trust_rstr_populate_rstr(
     axiom_node_t *proof_token_node = NULL;
     axiom_element_t *proof_token_ele = NULL;
     axutil_qname_t *proof_token_qname = NULL;
+
+    axiom_node_t *attached_reference_node = NULL;
+    axiom_element_t *attached_reference_ele = NULL;
+    axutil_qname_t *attached_reference_qname = NULL;
+
+    axiom_node_t *unattached_reference_node = NULL;
+    axiom_element_t *unattached_reference_ele = NULL;
+    axutil_qname_t *unattached_reference_qname = NULL;
     
     axiom_node_t *token_type_node = NULL;
     axiom_element_t *token_type_ele = NULL;
@@ -181,7 +189,7 @@ trust_rstr_populate_rstr(
 	
 	/*RequestedProofToken*/
 	proof_token_qname = axutil_qname_create(env, TRUST_REQUESTED_PROOF_TOKEN, rstr->wst_ns_uri, TRUST_WST);
-	if(proof_token_qname)
+	if(!proof_token_qname)
 	{
 		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RequestedProofToken Qname creation failed.");
 		return AXIS2_FAILURE;
@@ -261,14 +269,39 @@ trust_rstr_populate_rstr(
         }
     }
 
-    /*FIX :Attached and Unattached References*/
+    /*Attached reference*/
+	attached_reference_qname = axutil_qname_create(env, TRUST_REQUESTED_ATTACHED_REFERENCE, rstr->wst_ns_uri, TRUST_WST);
+	if(!attached_reference_qname)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RequestedAttachedReference Qname creation failed.");
+		return AXIS2_FAILURE;
+	}
+	attached_reference_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, attached_reference_qname, rstr_node, &attached_reference_node);
+	if(attached_reference_ele)
+	{
+		axiom_element_get_first_element(attached_reference_ele, env, attached_reference_node, &rstr->requested_attached_ref);
+	}
     
+    /*Unattached reference*/
+	unattached_reference_qname = axutil_qname_create(env, TRUST_REQUESTED_UNATTACHED_REFERENCE, rstr->wst_ns_uri, TRUST_WST);
+	if(!unattached_reference_qname)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RequestedUnattachedReference Qname creation failed.");
+		return AXIS2_FAILURE;
+	}
+	unattached_reference_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, unattached_reference_qname, rstr_node, &unattached_reference_node);
+	if(unattached_reference_ele)
+	{
+		axiom_element_get_first_element(unattached_reference_ele, env, unattached_reference_node, &rstr->requested_unattached_ref);
+	}
+
     AXIS2_FREE(env->allocator, lifetime_qname);
     AXIS2_FREE(env->allocator, entropy_qname);    
     AXIS2_FREE(env->allocator, applies_to_qname);
     AXIS2_FREE(env->allocator, token_type_qname);
     AXIS2_FREE(env->allocator, attr_ctx_qname);
-    
+    AXIS2_FREE(env->allocator, attached_reference_qname);
+    AXIS2_FREE(env->allocator, unattached_reference_qname);
     
     return AXIS2_SUCCESS;
     
