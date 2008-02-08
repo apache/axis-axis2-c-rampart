@@ -497,9 +497,6 @@ rampart_sig_sign_message(
     axis2_bool_t is_direct_reference = AXIS2_TRUE;
     axis2_bool_t include = AXIS2_FALSE;
     axiom_node_t *key_reference_node = NULL;
-    int i = 0;
-    oxs_x509_cert_t *cert = NULL;
-    axiom_node_t *bst_node = NULL;
     axis2_char_t *cert_id = NULL;
 
     /*Get nodes to be signed*/

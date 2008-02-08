@@ -442,3 +442,4 @@ trust_sts_client_request_security_token_using_policy(
 
     return;
 }
+

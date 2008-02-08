@@ -99,7 +99,7 @@ echo_invoke(axis2_svc_skeleton_t *svc_skeleton,
      * To see how to deal with multiple impl methods, have a look at the
      * math sample.
      */
-
+	AXIS2_LOG_INFO(env->log,"%s:%d",__FILE__, __LINE__);
     return axis2_echo_echo(env, node, msg_ctx);
 }
 

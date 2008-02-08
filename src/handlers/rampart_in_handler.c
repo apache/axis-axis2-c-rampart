@@ -73,7 +73,7 @@ rampart_in_handler_invoke(struct axis2_handler *handler,
     axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *sec_node = NULL;
     rampart_context_t *rampart_context = NULL;
-    axis2_bool_t serverside =  AXIS2_FALSE;
+    /*axis2_bool_t serverside =  AXIS2_FALSE;*/
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);

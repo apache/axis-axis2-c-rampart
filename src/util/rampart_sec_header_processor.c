@@ -970,7 +970,6 @@ rampart_shp_process_sym_binding_signature(
     axiom_node_t *envelope_node = NULL;
     axiom_node_t *key_info_node = NULL;
     oxs_key_t *key_to_verify = NULL;
-    axis2_char_t *key_name = NULL;
 
     /*Get the envelope node*/
     envelope_node = axiom_soap_envelope_get_base_node(soap_envelope, env);

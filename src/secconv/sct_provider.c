@@ -35,7 +35,7 @@ sct_provider_get_sct(const axutil_env_t* env, rp_property_t *token,
             sct_id = rampart_context_get_signature_sct_id(rampart_context, env);
     }
 
-    sct_provider = rampart_context_get_sct_provider(rampart_context, env);
+    sct_provider = (rampart_sct_provider_t*)rampart_context_get_sct_provider(rampart_context, env);
     if(!sct_provider)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][sct_provider] Security context token provider module is not set");

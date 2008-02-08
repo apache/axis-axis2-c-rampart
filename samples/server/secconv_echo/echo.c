@@ -32,7 +32,7 @@
 axiom_node_t *
 build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
 
-axutil_hash_t *
+static axutil_hash_t *
 secconv_echo_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx);
 
 axiom_node_t *
@@ -107,13 +107,13 @@ secconv_echo_sts_request_security_token(
     }
 
     /*check whether rst is valid and can be processed*/
-    token_type = trust_rst_get_token_type(rst, env, node);
+    token_type = trust_rst_get_token_type(rst, env);
     if((!token_type) || (0 != axutil_strcmp(token_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN)))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][secconv_service] token type is not valid");
         return NULL;
     }
-    request_type = trust_rst_get_request_type(rst, env, node);
+    request_type = trust_rst_get_request_type(rst, env);
     if(!request_type) /*|| (0 != axutil_strcmp(request_type, TRUST_REQ_TYPE_ISSUE)))*/
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][secconv_service] request type is not valid");
@@ -209,3 +209,4 @@ secconv_echo_get_sct_db(const axutil_env_t *env,
 
     return db;
 }
+

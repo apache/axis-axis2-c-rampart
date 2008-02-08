@@ -331,3 +331,5 @@ is_different_session_key_for_encryption_and_signing(const axutil_env_t *env,
 
     return AXIS2_FALSE;
 }
+
+
