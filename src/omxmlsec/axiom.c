@@ -445,3 +445,96 @@ oxs_axiom_add_as_the_first_child(const axutil_env_t *env,
     return status;
 }
 
+AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+oxs_axiom_get_first_node_by_name_and_attr_val_from_xml_doc(
+						 const axutil_env_t *env,
+						 axiom_node_t *node,
+						 axis2_char_t *e_name,
+						 axis2_char_t *e_ns,
+						 axis2_char_t *attr_name,
+						 axis2_char_t *attr_val,
+						 axis2_char_t *attr_ns)
+{
+	axiom_node_t *p = NULL;	
+	axiom_node_t *root = NULL;
+	p = node;
+	do 
+	{
+		root = p;
+		p = axiom_node_get_parent(root, env);	
+	} while (p);	
+	return oxs_axiom_get_first_node_by_name_and_attr_val(env, root, e_name,
+						 e_ns, attr_name, attr_val, attr_ns);
+}
+
+AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+oxs_axiom_get_first_node_by_name_and_attr_val(const axutil_env_t *env,
+                         axiom_node_t *node,
+						 axis2_char_t *e_name,
+						 axis2_char_t *e_ns,
+                         axis2_char_t *attr_name,
+                         axis2_char_t *attr_val,
+                         axis2_char_t *attr_ns)
+{
+    axis2_char_t *attribute_value = NULL;
+    axis2_char_t *localname = NULL;    
+	axiom_namespace_t *nmsp = NULL;
+	axiom_element_t *e = NULL;
+    axis2_bool_t element_match = AXIS2_FALSE;
+	axiom_node_t *temp_node = NULL;
+
+	if (axiom_node_get_node_type(node, env) != AXIOM_ELEMENT){return NULL;}
+	e = axiom_node_get_data_element(node, env);
+    
+	localname = axiom_element_get_localname(e, env);   
+	if (localname && 0 == axutil_strcmp(localname, e_name))
+	{
+		element_match = AXIS2_TRUE;
+		if (e_ns)
+		{
+			axis2_char_t *namespacea = NULL;
+			nmsp = axiom_element_get_namespace(e, env, node);
+			if (nmsp)
+			{
+				namespacea = axiom_namespace_get_uri(nmsp, env);
+				if (0 != axutil_strcmp(e_ns, namespacea))
+				{
+					element_match = AXIS2_FALSE;
+				}
+			}
+		}
+		if (element_match == AXIS2_TRUE)
+		{
+			if (attr_ns)
+			{
+				axiom_attribute_t *attr = NULL;
+				axutil_qname_t *qname = axutil_qname_create(env, attr_name, attr_ns, NULL);
+				attr = axiom_element_get_attribute(e, env, qname);
+				attribute_value = axiom_attribute_get_value(attr, env);
+				axutil_qname_free(qname, env);
+			}
+			else
+			{
+				attribute_value = axiom_element_get_attribute_value_by_name(e, env, attr_name);
+			}
+		}
+		if (attribute_value && 0 == axutil_strcmp(attribute_value, attr_val))
+		{
+			return node;
+		}
+	}        
+    /*Doesn't match? Get the first child*/    
+    temp_node = axiom_node_get_first_element(node, env);
+    while (temp_node)
+    {
+        axiom_node_t *res_node = NULL;
+        res_node = oxs_axiom_get_first_node_by_name_and_attr_val(env, temp_node, e_name, e_ns, attr_name, attr_val, attr_ns);
+        if (res_node)
+		{
+            return res_node;
+        }
+        temp_node = axiom_node_get_next_sibling(temp_node, env);
+    }    
+    return NULL;
+}
+

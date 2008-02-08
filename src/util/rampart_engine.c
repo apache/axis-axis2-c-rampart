@@ -164,6 +164,7 @@ rampart_engine_build_configuration(
         if(value)
         {
             rampart_config_t *client_config = NULL;
+            axutil_array_list_t *saml_tokens = NULL;
             axis2_char_t *config_value = NULL;
             int ttl = 0;
 
@@ -191,6 +192,11 @@ rampart_engine_build_configuration(
             {
                 rampart_context_set_ttl(rampart_context, env, ttl);
             }
+            saml_tokens = rampart_config_get_saml_tokens(client_config, env);
+            if (saml_tokens)
+            {
+                rampart_context_set_saml_tokens(rampart_context, env, saml_tokens);
+            }            
         }
 
         conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);

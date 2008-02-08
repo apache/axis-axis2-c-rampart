@@ -18,12 +18,14 @@
 #include <rampart_config.h>
 #include <rampart_constants.h>
 
+
 struct rampart_config_t
 {
     /*****************************/
     axis2_char_t *username;
     axis2_char_t *password;
     axis2_char_t *password_type;
+    axutil_array_list_t *saml_tokens;
     int ttl;
 };
 
@@ -48,6 +50,7 @@ rampart_config_create(const axutil_env_t *env)
     rampart_config->password = NULL;
     rampart_config->password_type = NULL;
     rampart_config->ttl = 0;
+    rampart_config->saml_tokens = NULL;
 
     return rampart_config;
 }
@@ -165,3 +168,26 @@ rampart_config_get_ttl(
     return rampart_config->ttl;
 }
 
+AXIS2_EXTERN int AXIS2_CALL
+rampart_config_add_saml_token(rampart_config_t *rampart_config, 
+                              axutil_env_t *env, 
+                              rampart_saml_token_t *saml)
+{
+	if (!rampart_config->saml_tokens)
+	{
+		rampart_config->saml_tokens = axutil_array_list_create(env, 3);
+	}
+	if (saml)
+	{
+		axutil_array_list_add(rampart_config->saml_tokens, env, saml);
+		return AXIS2_SUCCESS;
+	}
+    return AXIS2_FAILURE;
+}
+
+AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
+rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
+                              axutil_env_t *env)                         
+{
+    return rampart_config->saml_tokens;
+}

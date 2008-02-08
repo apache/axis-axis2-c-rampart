@@ -39,6 +39,7 @@
 #include <axis2_msg_ctx.h>
 #include <oxs_key.h>
 #include <axutil_array_list.h>
+#include <rampart_saml_token.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -393,6 +394,21 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_is_include_supporting_saml_token(
+        rampart_context_t *rampart_context, axis2_bool_t server_side, 
+        axis2_bool_t is_inpath, const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_is_include_protection_saml_token(
+        rampart_context_t *rampart_context, axis2_bool_t server_side, 
+        axis2_bool_t is_inpath, const axutil_env_t *env);
+
+    AXIS2_EXTERN rp_saml_token_t * AXIS2_CALL
+    rampart_context_get_supporting_saml_token(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_password_callback_class(
         rampart_context_t *rampart_context,
@@ -581,6 +597,41 @@ extern "C"
     rampart_context_is_sig_confirmation_reqd(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+        /**
+     * Set weather the issued token is aquired or not. When setting this to 
+     * true issued token must be set to the rampart context.
+     */
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_set_issued_token_aquired(
+        rampart_context_t *rampart_context, 
+        const axutil_env_t *env, 
+        axis2_bool_t acquired);
+
+    /**
+     * Returns true when the issued token is been set in the rampart context.
+     */
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_is_issued_token_aquired(
+        rampart_context_t *rampart_context, 
+        const axutil_env_t *env);
+
+    /* Return the saml token of token type set in the rampart context */
+    AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
+    rampart_context_get_saml_token(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env,
+										rp_property_type_t token_type);
+
+    /* Add a saml token */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_add_saml_token(rampart_context_t *rampart_context,
+                                    const axutil_env_t *env,
+                                    rampart_saml_token_t *token);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_context_set_saml_tokens(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env,
+                                        axutil_array_list_t *tokens);
 
 #ifdef __cplusplus
 }

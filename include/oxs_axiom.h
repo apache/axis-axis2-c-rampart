@@ -157,6 +157,51 @@ extern "C"
     oxs_axiom_add_as_the_first_child(const axutil_env_t *env,
                           axiom_node_t *parent,
                           axiom_node_t *child);
+
+    /**
+	 * Traverse thru the node and its children. Check if the element has the 
+	 * given qname and has a id attribute equal to the given value.
+	 * @param env Environment. MUST NOT be NULL,
+     * @param node the node to be searched
+	 * @param e_name element name
+	 * @param e_ns element namespace. If NULL doesn't consider the namespaces
+     * @param attr_name the attribute name of the node
+     * @param attr_val the attribute value of the node
+	 * @param attr_ns the attribute namespace. If NULL doesn't consider namespaces.
+     * @return the node if found, else NULL
+     */
+	AXIS2_EXTERN axiom_node_t* AXIS2_CALL
+	oxs_axiom_get_first_node_by_name_and_attr_val(
+							 const axutil_env_t *env,
+							 axiom_node_t *node,
+							 axis2_char_t *e_name,
+							 axis2_char_t *e_ns,
+							 axis2_char_t *attr_name,
+							 axis2_char_t *attr_val,
+							 axis2_char_t *attr_ns);
+
+	/**
+	 * First find the root of the scope node. Traverse thru the root node and its 
+	 * children. Check if the element has the given qname and has a attribute 
+	 * equal to the given values.
+	 * @param env Environment. MUST NOT be NULL,
+     * @param node the node to be searched
+	 * @param e_name element name
+	 * @param e_ns element namespace. If NULL doesn't consider the namespaces
+     * @param attr_name the attribute name of the node
+     * @param attr_val the attribute value of the node
+	 * @param attr_ns the attribute namespace. If NULL doesn't consider namespaces.
+     * @return the node if found, else NULL
+     */	 
+	AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+	oxs_axiom_get_first_node_by_name_and_attr_val_from_xml_doc(
+							 const axutil_env_t *env,
+							 axiom_node_t *node,
+							 axis2_char_t *e_name,
+							 axis2_char_t *e_ns,
+							 axis2_char_t *attr_name,
+							 axis2_char_t *attr_val,
+							 axis2_char_t *attr_ns);
                           
     /** @} */
 #ifdef __cplusplus

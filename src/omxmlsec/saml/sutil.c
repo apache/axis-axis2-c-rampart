@@ -30,9 +30,6 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
 	tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_ENVELOPED_SIGNATURE);
 	axutil_array_list_add(trans, env, tr);
 
-	tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_ENVELOPED_SIGNATURE);
-	axutil_array_list_add(trans, env, tr);
-
 	sig_part = oxs_sign_part_create(env);
 	oxs_sign_part_set_digest_mtd(sig_part, env, OXS_HREF_SHA1);
 

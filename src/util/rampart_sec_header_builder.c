@@ -33,7 +33,7 @@
 #include <axutil_utils.h>
 #include <axutil_array_list.h>
 #include <rampart_signature.h>
-
+#include <rampart_saml.h>
 /*Private functions*/
 
 axis2_status_t AXIS2_CALL
@@ -347,7 +347,7 @@ rampart_shb_build_message(
     axiom_namespace_t *sec_ns_obj = NULL;
     axiom_node_t *sec_node =  NULL;
     axiom_element_t *sec_ele = NULL;
-
+    axis2_bool_t server_side = AXIS2_FALSE;
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
     soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
     soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
@@ -361,7 +361,7 @@ rampart_shb_build_message(
 
     sec_header_block = axiom_soap_header_add_header_block(soap_header,
                        env, RAMPART_SECURITY, sec_ns_obj);
-
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
     if(!sec_header_block)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][shb] Security header block is NULL");
@@ -408,7 +408,7 @@ rampart_shb_build_message(
             relevant parameters are extracted. */
 
             AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
-            status =rampart_username_token_build(
+            status = rampart_username_token_build(
                         env,
                         rampart_context,
                         sec_node,
@@ -420,6 +420,18 @@ rampart_shb_build_message(
 				axiom_namespace_free(sec_ns_obj, env);
                 return AXIS2_FAILURE;
             }
+        }
+    }
+
+    if (rampart_context_is_include_supporting_saml_token(rampart_context, server_side, AXIS2_FALSE, env))
+    {        
+        status = rampart_saml_supporting_token_build(env, rampart_context, sec_node);    
+        if (status == AXIS2_FAILURE)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] SAML Supporting token build failed. ERROR");
+			axiom_namespace_free(sec_ns_obj, env);
+            return AXIS2_FAILURE;
         }
     }
 

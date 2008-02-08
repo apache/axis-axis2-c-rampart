@@ -41,7 +41,9 @@
 #include <oxs_xml_signature.h>
 #include <oxs_key_mgr.h>
 #include <rampart_replay_detector.h>
-
+#include <saml.h>
+#include <rampart_saml.h>
+#include <rampart_saml_token.h>
 /*Private functions*/
 
 /*Process a KeyInfo and return the reference value*/
@@ -1361,6 +1363,43 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
     return AXIS2_SUCCESS; 
 }
 
+static axis2_status_t 
+rampart_shp_process_saml_token(const axutil_env_t *env,
+                            axis2_msg_ctx_t *msg_ctx,
+                            rampart_context_t *rampart_context,
+                            axiom_node_t *saml_node)
+{
+    axis2_bool_t server_side = AXIS2_FALSE;
+    rampart_saml_token_t *saml = NULL;
+    axis2_char_t *sub_conf = NULL;
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    
+    sub_conf = rampart_saml_token_get_subject_confirmation(env, saml_node);
+    if (sub_conf && axutil_strcmp(sub_conf, SAML_SUB_CONFIRMATION_SENDER_VOUCHES) == 0)
+    {
+        if (!rampart_context_is_include_supporting_saml_token(rampart_context, 
+                                                !server_side, AXIS2_FALSE, env))
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                 "[Rampart][shp] Unexpected SAML token.");
+            return AXIS2_FAILURE;
+        }
+    }   
+    else if (sub_conf && axutil_strcmp(sub_conf, SAML_SUB_CONFIRMATION_HOLDER_OF_KEY) == 0)
+    {
+        if (!rampart_context_is_include_protection_saml_token(rampart_context, 
+                                                !server_side, AXIS2_FALSE, env))
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                 "[Rampart][shp] Unexpected SAML token.");
+            return AXIS2_FAILURE;
+        }
+    }
+	/* Set the SAML token to the rampart context */
+    saml = rampart_saml_token_create(env, saml_node, RAMPART_ST_CONFIR_TYPE_UNSPECIFIED);
+	rampart_context_add_saml_token(rampart_context, env, saml);
+    return AXIS2_SUCCESS; 
+}
 
 /*Public functions*/
 
@@ -1411,6 +1450,12 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
             status = rampart_shp_process_signature_confirmation(env, msg_ctx,  rampart_context,  cur_node);
         
         }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_BINARY_SECURITY_TOKEN)){
+            /*We do nothing.*/
+            status = AXIS2_SUCCESS;
+        }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SAML_ASSERTION)){
+            status = rampart_shp_process_saml_token(env, msg_ctx, rampart_context, cur_node);
+		 
+        }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SECURITY_TOKEN_REFRENCE)){
             /*We do nothing.*/
             status = AXIS2_SUCCESS;
         }else{

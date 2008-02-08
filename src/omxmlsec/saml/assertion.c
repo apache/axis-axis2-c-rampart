@@ -313,6 +313,12 @@ saml_assertion_to_om(saml_assertion_t *assertion,
 	return n;
 }
 
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
+saml_assetion_get_assertion_id(saml_assertion_t *a, axutil_env_t *env)
+{
+	return a->assertion_id;
+}
+
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_assetion_get_conditions(saml_assertion_t *a, axutil_env_t *env)
 {
@@ -600,6 +606,16 @@ AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_default_signature(saml_assertion_
 	}
 	a->sign_ctx = sign_ctx;
 	saml_util_set_sig_ctx_defaults(a->sign_ctx, env, SAML_ASSERTION_ID);
+	return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_signature(saml_assertion_t *a, axutil_env_t *env, oxs_sign_ctx_t *sign_ctx)
+{
+	if (a->sign_ctx)
+	{
+		oxs_sign_ctx_free(a->sign_ctx, env);
+	}
+	a->sign_ctx = sign_ctx;
 	return AXIS2_SUCCESS;
 }
 

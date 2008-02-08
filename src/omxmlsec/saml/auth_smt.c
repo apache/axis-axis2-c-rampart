@@ -191,6 +191,12 @@ saml_auth_stmt_to_om(saml_auth_stmt_t *auth_stmt,
 	return n;
 }
 
+AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
+saml_auth_stmt_get_subject(saml_auth_stmt_t *auth_stmt, axutil_env_t *env)
+{
+	return auth_stmt->subject;
+}
+
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_stmt_get_auth_method(saml_auth_stmt_t *auth_stmt, axutil_env_t *env)
 {

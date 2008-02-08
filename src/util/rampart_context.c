@@ -20,6 +20,9 @@
 #include <oxs_axiom.h>
 #include <oxs_x509_cert.h>
 #include <rampart_replay_detector.h>
+#include <rp_saml_token.h>
+#include <rp_issued_token.h>
+#include <rampart_saml_token.h>
 
 struct rampart_context_t
 {
@@ -45,6 +48,10 @@ struct rampart_context_t
     int ref;
 
     /****************************/
+    /* Set true when the issued token is aquired and set to the rampart conext*/
+    axis2_bool_t issued_token_aquired;   
+    /* SAML tokens. */
+    axutil_array_list_t *saml_tokens;
 
     /*Rampart specific members*/
     rp_secpolicy_t *secpolicy;
@@ -170,6 +177,8 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->private_key_file = NULL;
     rampart_context->certificate_file = NULL;
     rampart_context->reciever_certificate_file = NULL;
+    rampart_context->issued_token_aquired = AXIS2_FALSE;
+    rampart_context->saml_tokens = NULL;
 
     rampart_context->secpolicy = NULL;
     rampart_context->password_callback_module = NULL;
@@ -1595,6 +1604,151 @@ rampart_context_is_include_username_token(
     return rampart_context->require_ut;
 }
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_is_include_supporting_saml_token(
+    rampart_context_t *rampart_context, axis2_bool_t server_side, 
+    axis2_bool_t is_inpath, const axutil_env_t *env)
+{
+    axutil_array_list_t *array_list = NULL;
+    axis2_bool_t bvalidate = AXIS2_FALSE;
+    rp_supporting_tokens_t *signed_supporting = NULL;
+    /*First we should check in the direct policy members*/
+    signed_supporting = rp_secpolicy_get_signed_supporting_tokens(rampart_context->secpolicy,env);
+    /*If not there then we should ckeck in the binding*/
+    if (!signed_supporting)
+    {
+        signed_supporting = rampart_context_get_signed_supporting_from_binding(rampart_context,env);
+        if (!signed_supporting)
+            return AXIS2_FALSE;
+    }
+    array_list = rp_supporting_tokens_get_tokens(signed_supporting, env);
+    if (!array_list)
+        return AXIS2_FALSE;
+    else
+    {
+        int i = 0;
+        for (i = 0; i < axutil_array_list_size(array_list, env); i++)
+        {
+            rp_property_t *token = NULL;
+            token = (rp_property_t *)
+                    axutil_array_list_get(array_list, env, i);
+            if (token)
+            {
+                if(rp_property_get_type(token,env) == RP_PROPERTY_SAML_TOKEN)
+                {
+                    rp_saml_token_t *saml_token =
+                        (rp_saml_token_t *)rp_property_get_value(token, env);
+                    bvalidate = rampart_context_is_token_include(
+                                        rampart_context, token, 
+                                        RP_PROPERTY_SAML_TOKEN, server_side, 
+                                        is_inpath, env);
+                    break;
+                }
+            }
+        }
+    }
+    return bvalidate;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_is_include_protection_saml_token(
+    rampart_context_t *rampart_context, axis2_bool_t server_side, 
+    axis2_bool_t is_inpath, const axutil_env_t *env)
+{
+    rp_property_t *binding = NULL;
+    binding = rp_secpolicy_get_binding(rampart_context->secpolicy,env);
+    if(!binding)
+        return AXIS2_FALSE;
+
+    if(rp_property_get_type(binding,env) == RP_PROPERTY_ASYMMETRIC_BINDING)
+    {
+        return AXIS2_FALSE;
+    }
+    /*We support SAML tokens as protection tokens only in symmetrc binding*/
+    else if(rp_property_get_type(binding,env) == RP_PROPERTY_SYMMETRIC_BINDING)
+    {
+        rp_symmetric_binding_t *sym_binding = NULL;
+        rp_property_t *token = NULL;
+        sym_binding = (rp_symmetric_binding_t *)rp_property_get_value(binding,env);
+        if(sym_binding)
+        {
+            /*First check protection tokens have being specified.*/
+            token = rp_symmetric_binding_get_protection_token(sym_binding,env);                
+            if (token && rp_property_get_type(token, env) == RP_PROPERTY_SAML_TOKEN && 
+                rampart_context_is_token_include(rampart_context, token, 
+                                                RP_PROPERTY_SAML_TOKEN, server_side, 
+                                                is_inpath, env))
+            {
+                return AXIS2_TRUE;
+            }
+            token = rp_symmetric_binding_get_encryption_token(sym_binding,env);                               
+            if (token && rp_property_get_type(token, env) == RP_PROPERTY_SAML_TOKEN && 
+                rampart_context_is_token_include(rampart_context, token, 
+                                                RP_PROPERTY_SAML_TOKEN, server_side, 
+                                                is_inpath, env))
+            {
+                return AXIS2_TRUE;
+            }
+            token = rp_symmetric_binding_get_signature_token(sym_binding, env);
+            if (token && rp_property_get_type(token, env) == RP_PROPERTY_SAML_TOKEN && 
+                rampart_context_is_token_include(rampart_context, token, 
+                                                RP_PROPERTY_SAML_TOKEN, server_side, 
+                                                is_inpath, env))
+            {
+                return AXIS2_TRUE;
+            }
+            return AXIS2_FALSE;                
+        }
+        else
+            return AXIS2_FALSE;
+    }
+    else if(rp_property_get_type(binding,env) == RP_PROPERTY_TRANSPORT_BINDING)
+    {
+        return AXIS2_FALSE;
+    }
+    else return AXIS2_FALSE;
+}
+
+AXIS2_EXTERN rp_saml_token_t * AXIS2_CALL
+rampart_context_get_supporting_saml_token(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    axutil_array_list_t *array_list = NULL;
+    rp_supporting_tokens_t *signed_supporting = NULL;
+    /*First we should check in the direct policy members*/
+    signed_supporting = rp_secpolicy_get_signed_supporting_tokens(rampart_context->secpolicy,env);
+    /*If not there then we should ckeck in the binding*/
+    if (!signed_supporting)
+    {
+        signed_supporting = rampart_context_get_signed_supporting_from_binding(rampart_context,env);
+        if (!signed_supporting)
+            return NULL;
+    }
+    array_list = rp_supporting_tokens_get_tokens(signed_supporting, env);
+    if (!array_list)
+        return NULL;
+    else
+    {
+        int i = 0;
+        for (i = 0; i < axutil_array_list_size(array_list, env); i++)
+        {
+            rp_property_t *token = NULL;
+            token = (rp_property_t *)
+                    axutil_array_list_get(array_list, env, i);
+            if (token)
+            {
+                if(rp_property_get_type(token,env) == RP_PROPERTY_SAML_TOKEN)
+                {
+                    rp_saml_token_t *saml_token =
+                        (rp_saml_token_t *)rp_property_get_value(token, env);                    
+                    return saml_token;
+                }
+            }
+        }
+    }
+    return NULL;
+}
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_user_from_file(
@@ -2252,6 +2406,8 @@ rampart_context_is_token_type_supported(
 {
     if(token_type == RP_PROPERTY_X509_TOKEN)
         return AXIS2_TRUE;
+    else if (token_type == RP_PROPERTY_SAML_TOKEN)
+        return AXIS2_TRUE;
     else
     {
         AXIS2_LOG_INFO(env->log,"We still only suppport X509 Tokens.");
@@ -2277,37 +2433,44 @@ rampart_context_is_token_include(
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
-        inclusion = rp_x509_token_get_inclusion(x509_token,env);
+        inclusion = rp_x509_token_get_inclusion(x509_token,env);        
+    }
+    else if (token_type == RP_PROPERTY_ISSUED_TOKEN)
+    {
+        rp_issued_token_t *issued_token = NULL;
+        issued_token = (rp_issued_token_t *)rp_property_get_value(token, env);
+        inclusion = rp_issued_token_get_inclusion(issued_token,env);        
+    }
+    else if (token_type == RP_PROPERTY_SAML_TOKEN)
+    {
+        rp_saml_token_t *saml_token = NULL;
+        saml_token = (rp_saml_token_t *)rp_property_get_value(token, env);
+        inclusion = rp_saml_token_get_inclusion(saml_token, env);        
+    }
 
-        if(server_side)
+    if(server_side)
+    {
+        if(is_inpath)
         {
-            if(is_inpath)
-            {
-                include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                           (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                           (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
-            }
-            else
-                include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
+            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
         }
         else
-        {
-            if(!is_inpath)
-            {
-                include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
-                           (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                           (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
-            }
-            else
-                include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
-        }
-        return include;
+            include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
     }
     else
     {
-        AXIS2_LOG_INFO(env->log,"We still only support x509 tokens");
-        return AXIS2_FALSE;
+        if(!is_inpath)
+        {
+            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
+        }
+        else
+            include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
     }
+    return include;    
 }
 
 
@@ -2401,3 +2564,81 @@ rampart_context_increment_ref(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_is_issued_token_aquired(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env)
+{
+    return rampart_context->issued_token_aquired;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_set_issued_token_aquired(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env, 
+                                        axis2_bool_t acquired)
+{
+    return rampart_context->issued_token_aquired = acquired;
+}
+
+AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
+rampart_context_get_saml_token(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env, 
+										rp_property_type_t token_type)
+{
+	rampart_saml_token_t *saml = NULL;
+	int i = 0, size = 0;
+    if (rampart_context->saml_tokens)
+	{
+		size = axutil_array_list_size(rampart_context->saml_tokens, env);
+		for (i = 0; i < size; i++)
+		{
+			saml = axutil_array_list_get(rampart_context->saml_tokens, env, i);
+			if (saml && rampart_saml_token_get_token_type(saml, env) == token_type)
+			{
+				return saml;
+			}
+		}
+	}
+	return NULL;
+}
+
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_add_saml_token(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env,
+                                        rampart_saml_token_t *token)
+{
+	if (!rampart_context->saml_tokens)
+	{
+		rampart_context->saml_tokens = axutil_array_list_create(env, 3);
+	}
+	if (token)
+	{
+		axutil_array_list_add(rampart_context->saml_tokens, env, token);
+		return AXIS2_SUCCESS;
+	}
+    return AXIS2_FAILURE;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_saml_tokens(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env,
+                                        axutil_array_list_t *tokens)
+{
+	rampart_saml_token_t *saml = NULL;
+	int i = 0, size = 0;
+	if (rampart_context->saml_tokens)
+	{
+		size = axutil_array_list_size(rampart_context->saml_tokens, env);
+		for (i = 0; i < size; i++)
+		{
+			saml = axutil_array_list_get(rampart_context->saml_tokens, env, i);
+			if (saml)
+			{
+				rampart_saml_token_free(saml, env);
+			}
+		}
+		axutil_array_list_free(rampart_context->saml_tokens, env);
+	}
+	rampart_context->saml_tokens = tokens;
+	return AXIS2_SUCCESS;
+}

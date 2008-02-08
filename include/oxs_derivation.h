@@ -75,6 +75,20 @@ extern "C"
     axis2_char_t *stref_val_type);
 
     /**
+     * Build the <wsse:DerivedKeyToken> depending a given derived key @derived_key
+     * The token will be attached to the parent @parent
+     * @param env pointer to environment struct
+     * @derived_key The derived key to be used to get information
+     * @parent The parent node to be attached to
+     * @stre Security Toekn Reference element
+     * @return the built axiom node
+     */
+    AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+    oxs_derivation_build_derived_key_token_with_stre(const axutil_env_t *env,
+                                                    oxs_key_t *derived_key,
+                                                    axiom_node_t *parent,    
+                                                    axiom_node_t *stre);
+    /**
      * Extract information from an AXIOM node of typ <wsse:DerivedKeyToken> and build a key
      * If the (optional) session_key is NULL then extract it form the refered EncryptedKey. Otherwise use it
      * to Derive a new key using information available in the dk_token.

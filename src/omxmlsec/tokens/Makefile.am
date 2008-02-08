@@ -10,7 +10,7 @@ liboxstokens_la_SOURCES =  token_encrypted_data.c token_encryption_method.c toke
 						token_transform.c token_transforms.c token_signature.c token_ds_reference.c \
 						token_x509_certificate.c token_signature_confirmation.c token_derived_key_token.c \
 						token_properties.c token_generation.c token_length.c token_nonce.c token_offset.c token_label.c \
-						token_encrypted_header.c
+						token_encrypted_header.c token_saml.c
 
 
 INCLUDES = -I$(top_builddir)/include \

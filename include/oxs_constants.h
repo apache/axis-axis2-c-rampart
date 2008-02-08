@@ -114,7 +114,7 @@ extern "C"
 #define OXS_NODE_REFERENCE             "Reference"
 #define OXS_NODE_TRANSFORMS            "Transforms"
 #define OXS_NODE_TRANSFORM             "Transform"
-
+#define OXS_NODE_TRANSFORMATIONPARAMETERS   "TransformationParameters"
     /****************************************************************
         KeyInfo Nodes
     ****************************************************************/
@@ -134,6 +134,12 @@ extern "C"
 #define OXS_NODE_LABEL "Label"
 #define OXS_NODE_NONCE "Nonce"
 
+/************************
+    SAML nodes
+*************************/
+#define OXS_NODE_SAML_ASSERTION  "Assertion"
+#define OXS_NODE_SAML_PREFIX    "saml"
+#define OXS_NODE_SAML_SUBJECT_CONFIRMATION_METHOD "ConfirmationMethod"
     /****************************************************************
         Attributes
     ****************************************************************/

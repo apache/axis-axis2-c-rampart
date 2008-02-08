@@ -39,6 +39,7 @@
 #include <axis2_msg_ctx.h>
 #include <oxs_key.h>
 #include <axutil_array_list.h>
+#include <rampart_saml_token.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -92,6 +93,10 @@ extern "C"
                             const axutil_env_t *env,
                             int ttl);
 
+	AXIS2_EXTERN int AXIS2_CALL
+	rampart_config_add_saml_token(rampart_config_t *rampart_config, 
+								  axutil_env_t *env, 
+								  rampart_saml_token_t *saml);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_config_get_username(
@@ -113,8 +118,10 @@ extern "C"
         rampart_config_t *rampart_config,
         const axutil_env_t *env);
 
+	AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
+	rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
+								  axutil_env_t *env);    
     /*End of Getters */
-
 
 
 #ifdef __cplusplus
