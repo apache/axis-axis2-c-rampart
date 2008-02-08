@@ -170,7 +170,7 @@ rampart_config_get_ttl(
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_config_add_saml_token(rampart_config_t *rampart_config, 
-                              axutil_env_t *env, 
+                              const axutil_env_t *env, 
                               rampart_saml_token_t *saml)
 {
 	if (!rampart_config->saml_tokens)
@@ -187,7 +187,7 @@ rampart_config_add_saml_token(rampart_config_t *rampart_config,
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
 rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
-                              axutil_env_t *env)                         
+                              const axutil_env_t *env)                         
 {
     return rampart_config->saml_tokens;
 }

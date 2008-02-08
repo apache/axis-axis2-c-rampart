@@ -186,8 +186,6 @@ oxs_derivation_build_derived_key_token_with_stre(const axutil_env_t *env,
     axiom_node_t *stre)
 {
     axiom_node_t *dk_token = NULL;
-    axiom_node_t *str_token = NULL;
-    axiom_node_t *ref_token = NULL;
     axiom_node_t *nonce_token = NULL;
     axiom_node_t *offset_token = NULL;
     axiom_node_t *length_token = NULL;	

@@ -41,7 +41,7 @@ struct rampart_saml_token_t
 };
 
 AXIS2_EXTERN rampart_saml_token_t *AXIS2_CALL
-rampart_saml_token_create(axutil_env_t *env, axiom_node_t *assertion, 
+rampart_saml_token_create(const axutil_env_t *env, axiom_node_t *assertion, 
                           rampart_st_confir_type_t type)
 {
 	rampart_saml_token_t *tok = AXIS2_MALLOC(env->allocator, 
@@ -59,7 +59,7 @@ rampart_saml_token_create(axutil_env_t *env, axiom_node_t *assertion,
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-rampart_saml_token_free(rampart_saml_token_t *tok, axutil_env_t *env)
+rampart_saml_token_free(rampart_saml_token_t *tok, const axutil_env_t *env)
 {	
     if (tok->key)
     {
@@ -70,7 +70,7 @@ rampart_saml_token_free(rampart_saml_token_t *tok, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-rampart_saml_token_set_assertion(rampart_saml_token_t *tok, axutil_env_t *env, 
+rampart_saml_token_set_assertion(rampart_saml_token_t *tok, const axutil_env_t *env, 
                                  axiom_node_t *assertion)
 {
 	tok->assertion = assertion;
@@ -78,13 +78,13 @@ rampart_saml_token_set_assertion(rampart_saml_token_t *tok, axutil_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-rampart_saml_token_get_assertion(rampart_saml_token_t *tok, axutil_env_t *env)
+rampart_saml_token_get_assertion(rampart_saml_token_t *tok, const axutil_env_t *env)
 {
 	return tok->assertion;
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-rampart_saml_token_set_type(rampart_saml_token_t *tok, axutil_env_t *env, 
+rampart_saml_token_set_type(rampart_saml_token_t *tok, const axutil_env_t *env, 
                             rampart_st_confir_type_t type)
 {
 	tok->type = type;
@@ -92,14 +92,14 @@ rampart_saml_token_set_type(rampart_saml_token_t *tok, axutil_env_t *env,
 }
 
 AXIS2_EXTERN rampart_st_confir_type_t AXIS2_CALL
-rampart_saml_token_get_type(rampart_saml_token_t *tok, axutil_env_t *env)
+rampart_saml_token_get_type(rampart_saml_token_t *tok, const axutil_env_t *env)
 {
 	return tok->type;
 }
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_set_key_value(rampart_saml_token_t *tok, 
-                                 axutil_env_t *env, 
+                                 const axutil_env_t *env, 
                                  oxs_key_t *key)
 {
 	if (tok->key)
@@ -111,7 +111,7 @@ rampart_saml_token_set_key_value(rampart_saml_token_t *tok,
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-rampart_saml_token_set_str(rampart_saml_token_t *tok, axutil_env_t *env, 
+rampart_saml_token_set_str(rampart_saml_token_t *tok, const axutil_env_t *env, 
                            axiom_node_t *str)
 {
     if (tok->str)
@@ -124,20 +124,20 @@ rampart_saml_token_set_str(rampart_saml_token_t *tok, axutil_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-rampart_saml_token_get_str(rampart_saml_token_t *tok, axutil_env_t *env)
+rampart_saml_token_get_str(rampart_saml_token_t *tok, const axutil_env_t *env)
 {
     return tok->str;
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_saml_token_is_added_to_header(rampart_saml_token_t *tok, axutil_env_t *env)
+rampart_saml_token_is_added_to_header(rampart_saml_token_t *tok, const axutil_env_t *env)
 {
     return tok->is_token_added;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_set_is_added_to_header(rampart_saml_token_t *tok, 
-                                      axutil_env_t *env,
+                                      const axutil_env_t *env,
                                       axis2_bool_t is_token_added)
 {
     tok->is_token_added = is_token_added;
@@ -146,14 +146,14 @@ rampart_saml_token_set_is_added_to_header(rampart_saml_token_t *tok,
 
 AXIS2_EXTERN rp_property_type_t AXIS2_CALL
 rampart_saml_token_get_token_type(rampart_saml_token_t *tok,
-								  axutil_env_t *env)
+								  const axutil_env_t *env)
 {
 	return tok->token_type;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_set_token_type(rampart_saml_token_t *tok,
-								  axutil_env_t *env,
+								  const axutil_env_t *env,
 								  rp_property_type_t token_type)
 {
 	tok->token_type = token_type;

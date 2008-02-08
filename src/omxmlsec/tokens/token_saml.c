@@ -19,7 +19,7 @@
 #include <oxs_axiom.h>
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-oxs_saml_token_build_key_identifier_reference_local(axutil_env_t *env, 
+oxs_saml_token_build_key_identifier_reference_local(const axutil_env_t *env, 
                                              axiom_node_t *parent, 
                                              axiom_node_t *assertion)
 {
@@ -45,7 +45,7 @@ oxs_saml_token_build_key_identifier_reference_local(axutil_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-oxs_saml_token_build_key_identifier_reference_remote(axutil_env_t *env, 
+oxs_saml_token_build_key_identifier_reference_remote(const axutil_env_t *env, 
                                              axiom_node_t *parent, 
                                              axiom_node_t *assertion, 
                                              axiom_node_t *auth_bind)
@@ -78,7 +78,7 @@ oxs_saml_token_build_key_identifier_reference_remote(axutil_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-oxs_saml_token_build_embeded_reference(axutil_env_t *env, 
+oxs_saml_token_build_embeded_reference(const axutil_env_t *env, 
                                              axiom_node_t *parent, 
                                              axiom_node_t *assertion)
 {
@@ -108,7 +108,7 @@ oxs_saml_token_build_embeded_reference(axutil_env_t *env,
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-oxs_saml_token_get_from_key_identifer_reference(axutil_env_t *env, 
+oxs_saml_token_get_from_key_identifer_reference(const axutil_env_t *env, 
                                                 axiom_node_t *key_id,
                                                 axiom_node_t *scope)
 {
@@ -152,7 +152,7 @@ oxs_saml_token_get_from_key_identifer_reference(axutil_env_t *env,
 
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
-oxs_saml_token_get_from_embeded_reference(axutil_env_t *env, 
+oxs_saml_token_get_from_embeded_reference(const axutil_env_t *env, 
                                                   axiom_node_t *embeded)
 {
     axiom_node_t *assertion = NULL;
@@ -172,3 +172,4 @@ oxs_saml_token_get_from_embeded_reference(axutil_env_t *env,
     }
     return assertion;
 }
+

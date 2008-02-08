@@ -1636,8 +1636,6 @@ rampart_context_is_include_supporting_saml_token(
             {
                 if(rp_property_get_type(token,env) == RP_PROPERTY_SAML_TOKEN)
                 {
-                    rp_saml_token_t *saml_token =
-                        (rp_saml_token_t *)rp_property_get_value(token, env);
                     bvalidate = rampart_context_is_token_include(
                                         rampart_context, token, 
                                         RP_PROPERTY_SAML_TOKEN, server_side, 
@@ -2642,3 +2640,5 @@ rampart_context_set_saml_tokens(rampart_context_t *rampart_context,
 	rampart_context->saml_tokens = tokens;
 	return AXIS2_SUCCESS;
 }
+
+

@@ -95,7 +95,7 @@ extern "C"
 
 	AXIS2_EXTERN int AXIS2_CALL
 	rampart_config_add_saml_token(rampart_config_t *rampart_config, 
-								  axutil_env_t *env, 
+								  const axutil_env_t *env, 
 								  rampart_saml_token_t *saml);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
@@ -120,7 +120,7 @@ extern "C"
 
 	AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
 	rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
-								  axutil_env_t *env);    
+								  const axutil_env_t *env);    
     /*End of Getters */
 
 

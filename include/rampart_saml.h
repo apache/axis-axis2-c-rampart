@@ -51,7 +51,7 @@ extern "C" {
 #define RAMPART_SAML_FAULT_CODE                         "env:Sender"
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_saml_supporting_token_build(axutil_env_t *env, 
+rampart_saml_supporting_token_build(const axutil_env_t *env, 
                          rampart_context_t *rampart_context,                         
                          axiom_node_t *sec_node);
 
@@ -61,7 +61,7 @@ rampart_saml_token_validate(axutil_env_t *env,
                             axiom_node_t *assertion);
 
 AXIS2_EXTERN char * AXIS2_CALL
-rampart_saml_token_get_subject_confirmation(axutil_env_t *env, 
+rampart_saml_token_get_subject_confirmation(const axutil_env_t *env, 
                                             axiom_node_t *assertion);
 
 /* SAML token proccessing faults */
@@ -81,14 +81,7 @@ AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_fault_invalidsecuritytoken(axutil_env_t *env, 
                                                   axis2_msg_ctx_t *ctx);
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_saml_token_set_is_added_to_header(rampart_saml_token_t *tok, 
-                                      axutil_env_t *env,
-                                      axis2_bool_t is_token_added);
 
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_saml_token_is_added_to_header(rampart_saml_token_t *tok, 
-                                      axutil_env_t *env);
 #ifdef __cplusplus
 }
 #endif

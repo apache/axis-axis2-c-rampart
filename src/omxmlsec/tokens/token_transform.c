@@ -31,7 +31,7 @@ oxs_token_build_transform_element(const axutil_env_t *env,
 {
     axiom_node_t *transform_node = NULL, *tr_para_node = NULL, *tr_can_node = NULL;
     axiom_element_t *transform_ele = NULL, *tr_para_ele = NULL, *tr_can_ele = NULL;
-    axiom_attribute_t *algo_attr = NULL, *can_algo_attr = NULL;
+    axiom_attribute_t *algo_attr = NULL;
     int ret;
     axiom_namespace_t *ns_obj = NULL;
 

@@ -58,7 +58,6 @@ oxs_transforms_enveloped_xmldsig(const axutil_env_t *env,
                         oxs_tr_dtype_t input_dtype,
                         void **output)
 {         
-    oxs_tr_dtype_t output_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;
 	axiom_node_t *sig_node = NULL, *child_node = NULL;
 
     if(input_dtype != OXS_TRANSFORM_TYPE_NODE){

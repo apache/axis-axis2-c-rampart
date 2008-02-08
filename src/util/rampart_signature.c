@@ -53,7 +53,7 @@ rampart_sig_add_x509_token(const axutil_env_t *env,
                                axis2_char_t *cert_id);
 
 axutil_array_list_t * AXIS2_CALL
-rampart_sig_create_sign_parts(axutil_env_t *env,
+rampart_sig_create_sign_parts(const axutil_env_t *env,
                               rampart_context_t *rampart_context, 
                               axutil_array_list_t *nodes_to_sign,
                               axis2_bool_t server_side);
@@ -460,7 +460,6 @@ rampart_sig_sign_message(
 {
     axutil_array_list_t *nodes_to_sign = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_char_t *digest_method = NULL;
     oxs_sign_ctx_t *sign_ctx = NULL;
     axutil_array_list_t *sign_parts = NULL;
     /*axutil_array_list_t *tr_list = NULL;*/
@@ -471,7 +470,6 @@ rampart_sig_sign_message(
     axiom_node_t *sig_node = NULL;
     axis2_char_t *eki = NULL;
     axis2_bool_t is_direct_reference = AXIS2_TRUE, include = AXIS2_FALSE;
-    int i = 0;
     axis2_char_t *cert_id = NULL;
 
     /*Get nodes to be signed*/
@@ -772,7 +770,7 @@ rampart_sig_add_x509_token(const axutil_env_t *env,
 }
 
 axutil_array_list_t * AXIS2_CALL
-rampart_sig_create_sign_parts(axutil_env_t *env, 
+rampart_sig_create_sign_parts(const axutil_env_t *env, 
                               rampart_context_t *rampart_context, 
                               axutil_array_list_t *nodes_to_sign, 
                               axis2_bool_t server_side)

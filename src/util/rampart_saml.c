@@ -19,7 +19,7 @@
 #include <rp_property.h>
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_saml_supporting_token_build(axutil_env_t *env, 
+rampart_saml_supporting_token_build(const axutil_env_t *env, 
                          rampart_context_t *rampart_context,                         
                          axiom_node_t *sec_node)
 {
@@ -60,7 +60,7 @@ rampart_saml_token_validate(axutil_env_t *env,
 }
 
 AXIS2_EXTERN char * AXIS2_CALL
-rampart_saml_token_get_subject_confirmation(axutil_env_t *env, axiom_node_t *assertion)
+rampart_saml_token_get_subject_confirmation(const axutil_env_t *env, axiom_node_t *assertion)
 {
     axiom_node_t *node = oxs_axiom_get_node_by_local_name(env, assertion, OXS_NODE_SAML_SUBJECT_CONFIRMATION_METHOD);
     if (node) 
