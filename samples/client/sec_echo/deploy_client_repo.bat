@@ -1,4 +1,7 @@
 echo off
+echo -------------------------------------------------------------------------
+echo deploying client repository .... 
+echo -------------------------------------------------------------------------
 
 rem if your client repository is different, change the value.
 set CLIENT_REPO=%AXIS2C_HOME%\client_repo
@@ -24,4 +27,7 @@ xcopy /S/I/Q/Y "%AXIS2C_HOME%\lib" "%CLIENT_REPO%\lib"
 @echo Copying latest modules to client_repo
 xcopy /S/I/Q/Y "%AXIS2C_HOME%\modules" "%CLIENT_REPO%\modules"
 
+echo -------------------------------------------------------------------------
+echo Client repository deployed to %CLIENT_REPO%
+echo -------------------------------------------------------------------------
 echo on
