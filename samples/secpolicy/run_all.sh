@@ -38,6 +38,7 @@ do
     cd $_SMPL_DIR
 done
 
+#SAML Sample
 S_i=$_SCEN$_SAML
 echo "------------------------------------------------------------------------------"
 echo ">Deploying $_SAML"
