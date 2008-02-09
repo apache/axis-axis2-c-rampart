@@ -131,13 +131,13 @@ int main(int argc, char** argv)
     }
     /*Create the policy, from file*/   
     policy = neethi_util_create_policy_from_file(env, policy_file);
-    if(policy_file){
-        AXIS2_FREE(env->allocator, policy_file);
-        policy_file = NULL;
-    }
     if(!policy)
     {
         printf("\nPolicy creation failed from the file. %s\n", policy_file);
+    }
+	if(policy_file){
+        AXIS2_FREE(env->allocator, policy_file);
+        policy_file = NULL;
     }
 
     status = axis2_svc_client_set_policy(svc_client, env, policy);
