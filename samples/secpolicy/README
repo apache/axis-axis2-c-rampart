@@ -4,7 +4,6 @@ Simply give the scenario name as an argument to the script.
 
 E.g. %sh deploy.sh scenario1 
 Windows users please use the "deploy.bat".
-Once policy files are deployed,  Windows user must change path names and file extension appropriately.
 
 Make sure you have run the 
 samples/client/sec_echo/deploy_client_repo.sh on Linux or
@@ -74,6 +73,7 @@ WIN32 and Mac OS.
 If you are in a real hurry and need to try a scenario please use "test_scen.sh".
 Usage : %sh test_scen.sh scenarioX server-port
 E.g. %sh test_scen.sh scenario3 8080
+test_scen.bat scenario3 8080
 
 * I need to try all the scenarios
 -------------------------------
