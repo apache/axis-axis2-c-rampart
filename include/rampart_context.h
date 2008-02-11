@@ -354,12 +354,12 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
-    AXIS2_EXTERN struct rampart_replay_detector_t *AXIS2_CALL
+    AXIS2_EXTERN void *AXIS2_CALL
     rampart_context_get_replay_detector(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
-    AXIS2_EXTERN struct rampart_sct_provider_t *AXIS2_CALL
+    AXIS2_EXTERN void *AXIS2_CALL
     rampart_context_get_sct_provider(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
@@ -372,12 +372,12 @@ extern "C"
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	rampart_context_set_replay_detector(rampart_context_t *rampart_context,
        const axutil_env_t *env,
-       struct rampart_replay_detector_t *replay_detector);
+       void *replay_detector);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	rampart_context_set_sct_provider(rampart_context_t *rampart_context,
        const axutil_env_t *env,
-       struct rampart_sct_provider_t *sct_module);
+       void *sct_module);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_get_require_timestamp(

@@ -827,7 +827,7 @@ rampart_context_set_authn_provider(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN struct rampart_replay_detector_t *AXIS2_CALL
+AXIS2_EXTERN void *AXIS2_CALL
 rampart_context_get_replay_detector(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
@@ -840,7 +840,7 @@ rampart_context_get_replay_detector(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_replay_detector(rampart_context_t *rampart_context,
                                    const axutil_env_t *env,
-                                   struct rampart_replay_detector_t *replay_detector)
+                                   void *replay_detector)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,replay_detector,AXIS2_FAILURE);
@@ -849,7 +849,7 @@ rampart_context_set_replay_detector(rampart_context_t *rampart_context,
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN struct rampart_sct_provider_t *AXIS2_CALL
+AXIS2_EXTERN void *AXIS2_CALL
 rampart_context_get_sct_provider(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
@@ -862,7 +862,7 @@ rampart_context_get_sct_provider(
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_sct_provider(rampart_context_t *rampart_context,
                                    const axutil_env_t *env,
-                                   struct rampart_sct_provider_t *sct_provider)
+                                   void *sct_provider)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,sct_provider,AXIS2_FAILURE);
