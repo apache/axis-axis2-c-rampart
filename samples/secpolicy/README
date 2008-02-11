@@ -47,6 +47,19 @@ Scenario    Summary
             The protection order is Encrypt->Sign
             Signature is Encrypted
 14. 		SAML Signed supporting token inclution. This scenario uses the saml_echo client.
+15.			Symmetric binding with security context token. Encryption only.
+16.			Symmetric binding with security context token. Both encryption and sign.
+			The protection order is Encrypt->Sign
+17.			Symmetric binding with secure conversation token. Using derived keys. 
+			Both encryption and sign
+			The protection token is Sign->Encrypt
+18.			Symmetric binding with secure conversation token. 
+			Using different tokens for encryption and signature.Using DerivedKeys
+			The protection token is Encrypt->Sign. Signature is Encrypted.
+19.			Symmetric binding with secure conversation token. 
+			Using different tokens for encryption and signature.
+			The protection token is Sign->Encrypt. Signature is Encrypted.
+
 
 FAQ:
 ---
