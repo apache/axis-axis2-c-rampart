@@ -1,11 +1,10 @@
 var WshShell = new ActiveXObject("WScript.Shell");
 fso = new ActiveXObject("Scripting.FileSystemObject");
 
-var fso, f, s, re, ss, r;
+var fso, f, s, r;
 var ForReading = 1, ForWriting = 2;
 
 var axis2c_home = WshShell.ExpandEnvironmentStrings("%AXIS2C_HOME%");
-var client_repo = axis2c_home + "\\client_repo";
 var args = WScript.Arguments;
 
 var read_file = args.Item(0);
