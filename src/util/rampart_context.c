@@ -51,7 +51,8 @@ struct rampart_context_t
 
     /****************************/
     /* Set true when the issued token is aquired and set to the rampart conext*/
-    axis2_bool_t issued_token_aquired;   
+    issued_token_callback_func aquire_issued_token; 
+	
     /* SAML tokens. */
     axutil_array_list_t *saml_tokens;
 
@@ -181,9 +182,9 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->password_type = NULL;
     rampart_context->private_key_file = NULL;
     rampart_context->certificate_file = NULL;
-    rampart_context->reciever_certificate_file = NULL;
-    rampart_context->issued_token_aquired = AXIS2_FALSE;
+    rampart_context->reciever_certificate_file = NULL;    
     rampart_context->saml_tokens = NULL;
+	rampart_context->aquire_issued_token = NULL;
 
     rampart_context->secpolicy = NULL;
     rampart_context->password_callback_module = NULL;
@@ -1696,9 +1697,9 @@ rampart_context_is_include_username_token(
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_context_is_include_supporting_saml_token(
-    rampart_context_t *rampart_context, axis2_bool_t server_side, 
-    axis2_bool_t is_inpath, const axutil_env_t *env)
+rampart_context_is_include_supporting_token(
+    rampart_context_t *rampart_context, const axutil_env_t *env,
+	axis2_bool_t server_side, axis2_bool_t is_inpath, rp_property_type_t token_type)
 {
     axutil_array_list_t *array_list = NULL;
     axis2_bool_t bvalidate = AXIS2_FALSE;
@@ -1725,11 +1726,11 @@ rampart_context_is_include_supporting_saml_token(
                     axutil_array_list_get(array_list, env, i);
             if (token)
             {
-                if(rp_property_get_type(token,env) == RP_PROPERTY_SAML_TOKEN)
+                if(rp_property_get_type(token,env) == token_type)
                 {
                     bvalidate = rampart_context_is_token_include(
                                         rampart_context, token, 
-                                        RP_PROPERTY_SAML_TOKEN, server_side, 
+                                        token_type, server_side, 
                                         is_inpath, env);
                     break;
                 }
@@ -1738,6 +1739,7 @@ rampart_context_is_include_supporting_saml_token(
     }
     return bvalidate;
 }
+
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_context_is_include_protection_saml_token(
@@ -1798,10 +1800,10 @@ rampart_context_is_include_protection_saml_token(
     else return AXIS2_FALSE;
 }
 
-AXIS2_EXTERN rp_saml_token_t * AXIS2_CALL
-rampart_context_get_supporting_saml_token(
+AXIS2_EXTERN rp_property_t * AXIS2_CALL
+rampart_context_get_supporting_token(
     rampart_context_t *rampart_context,
-    const axutil_env_t *env)
+    const axutil_env_t *env, rp_property_type_t token_type)
 {
     axutil_array_list_t *array_list = NULL;
     rp_supporting_tokens_t *signed_supporting = NULL;
@@ -1827,11 +1829,9 @@ rampart_context_get_supporting_saml_token(
                     axutil_array_list_get(array_list, env, i);
             if (token)
             {
-                if(rp_property_get_type(token,env) == RP_PROPERTY_SAML_TOKEN)
-                {
-                    rp_saml_token_t *saml_token =
-                        (rp_saml_token_t *)rp_property_get_value(token, env);                    
-                    return saml_token;
+                if(rp_property_get_type(token,env) == token_type)
+                {                                            
+                    return token; 
                 }
             }
         }
@@ -2721,20 +2721,7 @@ rampart_context_set_signature_sct_id(
     rampart_context->signature_sct_id = sct_id;
     return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_context_is_issued_token_aquired(rampart_context_t *rampart_context,
-                                        const axutil_env_t *env)
-{
-    return rampart_context->issued_token_aquired;
-}
 
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_context_set_issued_token_aquired(rampart_context_t *rampart_context,
-                                        const axutil_env_t *env, 
-                                        axis2_bool_t acquired)
-{
-    return rampart_context->issued_token_aquired = acquired;
-}
 
 AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
 rampart_context_get_saml_token(rampart_context_t *rampart_context,
@@ -2801,3 +2788,18 @@ rampart_context_set_saml_tokens(rampart_context_t *rampart_context,
 }
 
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_issued_token_aquire_function(rampart_context_t *rampart_context,
+							  const axutil_env_t *env,
+							  issued_token_callback_func issued_token_aquire)
+{
+	rampart_context->aquire_issued_token = issued_token_aquire;
+	return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
+rampart_context_get_issued_token_aquire_function(rampart_context_t *rampart_context, 
+							  const axutil_env_t *env)  
+{
+	return rampart_context->aquire_issued_token;
+}

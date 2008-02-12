@@ -58,7 +58,8 @@ axutil_array_list_t * AXIS2_CALL
 rampart_sig_create_sign_parts(const axutil_env_t *env,
                               rampart_context_t *rampart_context, 
                               axutil_array_list_t *nodes_to_sign,
-                              axis2_bool_t server_side);
+                              axis2_bool_t server_side,
+                              axutil_array_list_t *sign_parts_list);
 
 
 oxs_x509_cert_t *AXIS2_CALL
@@ -481,7 +482,8 @@ rampart_sig_sign_message(
     axis2_msg_ctx_t *msg_ctx,
     rampart_context_t *rampart_context,
     axiom_soap_envelope_t *soap_envelope,
-    axiom_node_t *sec_node)
+    axiom_node_t *sec_node, 
+    axutil_array_list_t *sign_parts_list)
 {
     axutil_array_list_t *nodes_to_sign = NULL;
     axis2_status_t status = AXIS2_FAILURE;
@@ -641,9 +643,9 @@ rampart_sig_sign_message(
 
     sign_ctx = oxs_sign_ctx_create(env);
     /* Create the sign parts */
-    sign_parts = rampart_sig_create_sign_parts(env, rampart_context, nodes_to_sign, server_side);
+    rampart_sig_create_sign_parts(env, rampart_context, nodes_to_sign, server_side, sign_parts_list);
     /* Set which parts to be signed*/
-    oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_parts);
+    oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_parts_list);
 
     /*Get the binding type. Either symmetric or asymmetric for signature*/
     binding_type = rampart_context_get_binding_type(rampart_context,env);
@@ -863,11 +865,11 @@ axutil_array_list_t * AXIS2_CALL
 rampart_sig_create_sign_parts(const axutil_env_t *env, 
                               rampart_context_t *rampart_context, 
                               axutil_array_list_t *nodes_to_sign, 
-                              axis2_bool_t server_side)
+                              axis2_bool_t server_side,
+                              axutil_array_list_t *sign_parts)
 {
     int i = 0;
-    axis2_char_t *digest_method = NULL;
-    axutil_array_list_t *sign_parts = NULL;
+    axis2_char_t *digest_method = NULL;    
 
     axiom_node_t *node_to_sign = NULL;
     axis2_char_t *id = NULL;
@@ -875,8 +877,7 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
     oxs_transform_t *tr = NULL;
     axutil_array_list_t *tr_list = NULL;
 
-    digest_method = rampart_context_get_digest_mtd(rampart_context, env);
-    sign_parts = axutil_array_list_create(env, 0);
+    digest_method = rampart_context_get_digest_mtd(rampart_context, env);    
 
     /*Now we should create sign part for each node in the arraylist.*/
     for (i=0 ; i < axutil_array_list_size(nodes_to_sign, env); i++)
@@ -902,22 +903,22 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
         }
     } 
    
-    if (rampart_context_is_include_supporting_saml_token(rampart_context, server_side, AXIS2_FALSE, env))
+    /*if (rampart_context_is_include_supporting_token(rampart_context, env, server_side, AXIS2_FALSE, RP_PROPERTY_SAML_TOKEN))
     {        
         axiom_element_t *stre = NULL;
         axiom_node_t *strn = NULL, *assertion = NULL;
-        axutil_qname_t *qname = NULL;
+        axutil_qname_t *qname = NULL;*/
         /* These properties are guaranteed to exsists. If not we cannot reach this point. */
-        rampart_saml_token_t *saml = rampart_context_get_saml_token(rampart_context, env, RP_PROPERTY_SIGNED_SUPPORTING_TOKEN);
+        /*rampart_saml_token_t *saml = rampart_context_get_saml_token(rampart_context, env, RP_PROPERTY_SIGNED_SUPPORTING_TOKEN);
         strn = rampart_saml_token_get_str(saml, env);
         assertion = rampart_saml_token_get_assertion(saml, env);
         stre = axiom_node_get_data_element(strn, env);
 
         qname = axutil_qname_create(env, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
         sign_part = oxs_sign_part_create(env);
-        tr_list = axutil_array_list_create(env, 0);
+        tr_list = axutil_array_list_create(env, 0);*/
         /* If ID is not present we add it */
-        id = axiom_element_get_attribute_value(stre, env, qname);
+        /*id = axiom_element_get_attribute_value(stre, env, qname);
         if (!id)
         {
             id = oxs_util_generate_id(env, (axis2_char_t*)OXS_SIG_ID);
@@ -928,15 +929,15 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
         tr = oxs_transforms_factory_produce_transform(env,
                 OXS_HREF_TRANSFORM_STR_TRANSFORM);
         axutil_array_list_add(tr_list, env, tr);
-        oxs_sign_part_set_transforms(sign_part, env, tr_list);                
+        oxs_sign_part_set_transforms(sign_part, env, tr_list);                */
         /* Sign the assertion, not the securitytokenreference */
-        oxs_sign_part_set_node(sign_part, env, strn);
+     /*   oxs_sign_part_set_node(sign_part, env, strn);
         oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
         
         axutil_array_list_add(sign_parts, env, sign_part);
         AXIS2_FREE(env->allocator, id);
         id = NULL;
-    }
+    }*/
     /*Free array list*/
     axutil_array_list_free(nodes_to_sign, env);
     nodes_to_sign = NULL;

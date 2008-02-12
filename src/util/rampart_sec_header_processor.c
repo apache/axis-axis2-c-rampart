@@ -1562,8 +1562,10 @@ rampart_shp_process_saml_token(const axutil_env_t *env,
     sub_conf = rampart_saml_token_get_subject_confirmation(env, saml_node);
     if (sub_conf && axutil_strcmp(sub_conf, SAML_SUB_CONFIRMATION_SENDER_VOUCHES) == 0)
     {
-        if (!rampart_context_is_include_supporting_saml_token(rampart_context, 
-                                                !server_side, AXIS2_FALSE, env))
+        if (!rampart_context_is_include_supporting_token(rampart_context, env,  
+                                                !server_side, AXIS2_FALSE, RP_PROPERTY_SAML_TOKEN) &&
+            !rampart_context_is_include_supporting_token(rampart_context, env,  
+                                                !server_side, AXIS2_FALSE, RP_PROPERTY_ISSUED_TOKEN))
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                  "[Rampart][shp] Unexpected SAML token.");

@@ -186,6 +186,7 @@ rampart_engine_build_configuration(
             rampart_config_t *client_config = NULL;
             axutil_array_list_t *saml_tokens = NULL;
             axis2_char_t *config_value = NULL;
+            issued_token_callback_func issued_token_aquire = NULL;
             int ttl = 0;
 
             client_config = (rampart_config_t*)value;
@@ -216,7 +217,12 @@ rampart_engine_build_configuration(
             if (saml_tokens)
             {
                 rampart_context_set_saml_tokens(rampart_context, env, saml_tokens);
-            }            
+            }
+            issued_token_aquire = rampart_config_get_issued_token_aquire_function(client_config, env);
+            if (issued_token_aquire)
+            {
+                rampart_context_set_issued_token_aquire_function(rampart_context, env, issued_token_aquire); 
+            }
         }
     }
     else

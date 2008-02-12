@@ -15,6 +15,10 @@ md %AXIS2C_HOME%\services\secconv_echo\
 copy bin\samples\services\secconv_echo\secconv_echo.dll %AXIS2C_HOME%\services\secconv_echo\
 copy bin\samples\services\secconv_echo\services.xml %AXIS2C_HOME%\services\secconv_echo\
 
+md %AXIS2C_HOME%\services\saml_sts\
+copy bin\samples\services\saml_sts\saml_sts.dll %AXIS2C_HOME%\services\saml_sts\
+copy bin\samples\services\saml_sts\services.xml %AXIS2C_HOME%\services\saml_sts\
+
 md %AXIS2C_HOME%\bin\samples\rampart\
 md %AXIS2C_HOME%\bin\samples\rampart\authn_provider\
 copy bin\samples\authn_provider\authn.dll %AXIS2C_HOME%\bin\samples\rampart\authn_provider\
@@ -35,6 +39,9 @@ copy bin\samples\client\sec_echo\echo.exe %AXIS2C_HOME%\bin\samples\rampart\clie
 
 md %AXIS2C_HOME%\bin\samples\rampart\client\saml_echo\
 copy bin\samples\client\saml_echo\echo.exe %AXIS2C_HOME%\bin\samples\rampart\client\saml_echo\
+
+md %AXIS2C_HOME%\bin\samples\rampart\client\issued_token\
+copy bin\samples\client\issued_token\echo.exe %AXIS2C_HOME%\bin\samples\rampart\client\issued_token\
 
 md %AXIS2C_HOME%\bin\samples\rampart\callback
 copy bin\samples\callback\pwcb.dll %AXIS2C_HOME%\bin\samples\rampart\callback\

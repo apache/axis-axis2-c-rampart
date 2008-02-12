@@ -28,6 +28,7 @@
 #include <trust_entropy.h>
 #include <trust_claims.h>
 #include <trust_life_time.h>
+#include <rp_issued_token.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -54,7 +55,12 @@ extern "C"
         trust_rst_t *rst,
         const axutil_env_t *env,
         axiom_node_t *parent);
-    
+
+	AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+	trust_rst_build_rst_with_issued_token_assertion(
+		trust_rst_t *rst,
+		const axutil_env_t *env,
+		rp_issued_token_t *issued_token);    
     /* Getters & Setters */
     
     AXIS2_EXTERN axis2_char_t * AXIS2_CALL

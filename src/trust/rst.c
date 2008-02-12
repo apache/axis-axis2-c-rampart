@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <trust_rst.h>
+#include <trust_constants.h>
 
 
 struct trust_rst
@@ -757,7 +758,44 @@ trust_rst_build_rst(
     return NULL;
 }
 
- 
+AXIS2_EXTERN axiom_node_t * AXIS2_CALL
+trust_rst_build_rst_with_issued_token_assertion(
+		trust_rst_t *rst,
+		const axutil_env_t *env,
+		rp_issued_token_t *issued_token)
+{
+	axiom_node_t *rst_node = NULL;
+	axiom_node_t *rst_template_node = NULL;
+	axiom_element_t * rst_template_element = NULL;
+	axiom_children_iterator_t *rst_template_children_iter = NULL;
+	axiom_node_t *rst_template_child = NULL;
+
+
+	/* */
+	rst = trust_rst_create(env);
+	trust_rst_set_wst_ns_uri(rst, env,"http://schemas.xmlsoap.org/ws/2005/02/trust");
+	rst_node = (axiom_node_t*)trust_util_create_rst_element(env, rst->wst_ns_uri, rst->attr_context);
+	rst_template_node = rp_issued_token_get_requested_sec_token_template(issued_token, env);
+	rst_template_node = axiom_node_detach(rst_template_node, env);	/*Detaching RSTTemplate from the original location- FIX - Detaching problem with NS'*/
+	rst_template_element = axiom_node_get_data_element(rst_template_node, env);
+
+	rst_template_children_iter = axiom_element_get_children(rst_template_element, env, rst_template_node);
+
+
+	while(axiom_children_iterator_has_next(rst_template_children_iter, env))
+	{
+		rst_template_child = axiom_children_iterator_next(rst_template_children_iter, env);
+		if(rst_template_node)
+			axiom_node_add_child(rst_node, env, rst_template_child);
+	}
+
+	if(rst_node)
+		return rst_node;
+	
+
+	return NULL;
+}
+
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 trust_rst_get_attr_context(
         trust_rst_t *rst,

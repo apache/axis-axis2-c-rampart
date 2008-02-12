@@ -17,13 +17,24 @@
 #include <rampart_saml.h>
 #include <oxs_constants.h>
 #include <rp_property.h>
+#include <oxs_xml_signature.h>
+#include <oxs_transform.h>
+#include <oxs_utility.h>
+#include <oxs_transforms_factory.h>
+
+oxs_sign_part_t * AXIS2_CALL
+rampart_saml_token_create_sign_part(const axutil_env_t *env, 
+                            rampart_context_t *rampart_context, 
+                            rampart_saml_token_t *saml);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_supporting_token_build(const axutil_env_t *env, 
                          rampart_context_t *rampart_context,                         
-                         axiom_node_t *sec_node)
+                         axiom_node_t *sec_node, 
+                         axutil_array_list_t *sign_parts)
 {
     axiom_node_t *strn = NULL, *assertion = NULL;
+    oxs_sign_part_t *sign_part = NULL;
     rampart_saml_token_t *saml = rampart_context_get_saml_token(rampart_context, env, RP_PROPERTY_SIGNED_SUPPORTING_TOKEN);
     if (!saml)
     {
@@ -46,11 +57,60 @@ rampart_saml_supporting_token_build(const axutil_env_t *env,
         rampart_saml_token_set_str(saml, env, strn);
     }
     axiom_node_add_child(sec_node, env, strn);    
+    sign_part = rampart_saml_token_create_sign_part(env, rampart_context, saml);
+    if (!sign_part)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rs] Sign part creation failed. ERROR");			
+        return AXIS2_FAILURE;
+    }
+    axutil_array_list_add(sign_parts, env, sign_part);
     return AXIS2_SUCCESS;
 }
 
+oxs_sign_part_t * AXIS2_CALL
+rampart_saml_token_create_sign_part(const axutil_env_t *env, 
+                            rampart_context_t *rampart_context, 
+                            rampart_saml_token_t *saml)
+{
+    axiom_element_t *stre = NULL;
+    axiom_node_t *strn = NULL;
+    axutil_qname_t *qname = NULL;    
+    axis2_char_t *id = NULL;
+    oxs_sign_part_t *sign_part = NULL;
+    oxs_transform_t *tr = NULL;
+    axutil_array_list_t *tr_list = NULL;
+
+    axis2_char_t * digest_method = rampart_context_get_digest_mtd(rampart_context, env);
+    strn = rampart_saml_token_get_str(saml, env);
+    stre = axiom_node_get_data_element(strn, env);
+
+    qname = axutil_qname_create(env, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
+    sign_part = oxs_sign_part_create(env);
+    tr_list = axutil_array_list_create(env, 0);
+    /* If ID is not present we add it */
+    id = axiom_element_get_attribute_value(stre, env, qname);
+    if (!id)
+    {
+        id = oxs_util_generate_id(env, (axis2_char_t*)OXS_SIG_ID);
+        oxs_axiom_add_attribute(env, strn,
+                            RAMPART_WSU, RAMPART_WSU_XMLNS, OXS_ATTR_ID, id);
+    }
+    oxs_sign_part_set_id(sign_part, env, id);
+    tr = oxs_transforms_factory_produce_transform(env,
+            OXS_HREF_TRANSFORM_STR_TRANSFORM);
+    axutil_array_list_add(tr_list, env, tr);
+    oxs_sign_part_set_transforms(sign_part, env, tr_list);                
+    /* Sign the assertion, not the securitytokenreference */
+    oxs_sign_part_set_node(sign_part, env, strn);
+    oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
+        
+    AXIS2_FREE(env->allocator, id);   
+    return sign_part;
+}
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_saml_token_validate(axutil_env_t *env, 
+rampart_saml_token_validate(const axutil_env_t *env, 
                             rampart_context_t *rampart_context, 
                             axiom_node_t *assertion)
 {

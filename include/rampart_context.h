@@ -40,6 +40,7 @@
 #include <oxs_key.h>
 #include <axutil_array_list.h>
 #include <rampart_saml_token.h>
+#include <rampart_issued_token.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -72,8 +73,7 @@ extern "C"
                               const char *digest,
                               void *ctx);
 
-
-
+	
     /**
     * Create a rampart_context.rampart_context is the wrapper
     * of secpolicy and the main configuration for rampart.
@@ -404,20 +404,21 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
-    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    rampart_context_is_include_supporting_saml_token(
-        rampart_context_t *rampart_context, axis2_bool_t server_side, 
-        axis2_bool_t is_inpath, const axutil_env_t *env);
+	AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+	rampart_context_is_include_supporting_token(
+		rampart_context_t *rampart_context, const axutil_env_t *env,
+		axis2_bool_t server_side, axis2_bool_t is_inpath, 
+		rp_property_type_t token_type);
 
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_is_include_protection_saml_token(
         rampart_context_t *rampart_context, axis2_bool_t server_side, 
         axis2_bool_t is_inpath, const axutil_env_t *env);
 
-    AXIS2_EXTERN rp_saml_token_t * AXIS2_CALL
-    rampart_context_get_supporting_saml_token(
-        rampart_context_t *rampart_context,
-        const axutil_env_t *env);
+	AXIS2_EXTERN rp_property_t * AXIS2_CALL
+	rampart_context_get_supporting_token(
+		rampart_context_t *rampart_context,
+		const axutil_env_t *env, rp_property_type_t token_type);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_password_callback_class(
@@ -646,23 +647,6 @@ extern "C"
         const axutil_env_t *env,
         axis2_char_t *sct_id);
 
-        /**
-     * Set weather the issued token is aquired or not. When setting this to 
-     * true issued token must be set to the rampart context.
-     */
-    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    rampart_context_set_issued_token_aquired(
-        rampart_context_t *rampart_context, 
-        const axutil_env_t *env, 
-        axis2_bool_t acquired);
-
-    /**
-     * Returns true when the issued token is been set in the rampart context.
-     */
-    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    rampart_context_is_issued_token_aquired(
-        rampart_context_t *rampart_context, 
-        const axutil_env_t *env);
 
     /* Return the saml token of token type set in the rampart context */
     AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
@@ -680,6 +664,17 @@ extern "C"
 	rampart_context_set_saml_tokens(rampart_context_t *rampart_context,
                                         const axutil_env_t *env,
                                         axutil_array_list_t *tokens);
+
+	AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
+	rampart_context_get_issued_token_aquire_function(
+								rampart_context_t *rampart_context, 
+								const axutil_env_t *env);  
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_context_set_issued_token_aquire_function(
+								rampart_context_t *rampart_context,
+								const axutil_env_t *env,
+								issued_token_callback_func issued_token_aquire);
 
 #ifdef __cplusplus
 }

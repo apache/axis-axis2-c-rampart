@@ -53,10 +53,11 @@ extern "C" {
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_supporting_token_build(const axutil_env_t *env, 
                          rampart_context_t *rampart_context,                         
-                         axiom_node_t *sec_node);
+                         axiom_node_t *sec_node,
+                         axutil_array_list_t *sign_parts);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_saml_token_validate(axutil_env_t *env, 
+rampart_saml_token_validate(const axutil_env_t *env, 
                             rampart_context_t *rampart_context, 
                             axiom_node_t *assertion);
 

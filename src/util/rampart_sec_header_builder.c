@@ -34,6 +34,7 @@
 #include <axutil_array_list.h>
 #include <rampart_signature.h>
 #include <rampart_saml.h>
+#include <rampart_issued.h>
 /*Private functions*/
 
 axis2_status_t AXIS2_CALL
@@ -42,7 +43,8 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
                                    rampart_context_t *rampart_context,
                                    axiom_soap_envelope_t *soap_envelope,
                                    axiom_node_t *sec_node,
-                                   axiom_namespace_t *sec_ns_obj)
+                                   axiom_namespace_t *sec_ns_obj,
+                                   axutil_array_list_t *sign_parts_list)
 {
     axis2_bool_t signature_protection = AXIS2_FALSE;
     axis2_bool_t is_encrypt_before_sign = AXIS2_FALSE;
@@ -81,7 +83,7 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
                 return AXIS2_FAILURE;
             }
             /*Then Sign the message*/
-            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node, sign_parts_list);
             if(status != AXIS2_SUCCESS)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -108,7 +110,7 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
                 return AXIS2_FAILURE;
             }
             /*Then do signature specific things*/
-            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+            status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node, sign_parts_list);
             if(status != AXIS2_SUCCESS){
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                 "[rampart][shb] Signature failed. ERROR");
@@ -122,7 +124,7 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
     {
         is_encrypt_before_sign = AXIS2_FALSE;
         /*First do signature specific stuff*/
-        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node, sign_parts_list);
         if(status != AXIS2_SUCCESS){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][shb] Signing failed. ERROR");
@@ -194,7 +196,8 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
                                   rampart_context_t *rampart_context,
                                   axiom_soap_envelope_t *soap_envelope,
                                   axiom_node_t *sec_node,
-                                  axiom_namespace_t *sec_ns_obj)
+                                  axiom_namespace_t *sec_ns_obj,
+                                  axutil_array_list_t *sign_parts_list)
 {
     axis2_status_t status = AXIS2_FAILURE;
 
@@ -218,7 +221,7 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
         }
 
         /*2. Sign*/
-        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node, sign_parts_list);
         if(status != AXIS2_SUCCESS)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -240,7 +243,7 @@ rampart_shb_do_symmetric_binding( const axutil_env_t *env,
     { 
         /*Sign before encrypt*/
         /*First do signature specific stuff using Symmetric key*/
-        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+        status = rampart_sig_sign_message(env, msg_ctx, rampart_context, soap_envelope, sec_node, sign_parts_list);
         if(status != AXIS2_SUCCESS)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -407,6 +410,11 @@ rampart_shb_build_message(
     axiom_node_t *sec_node =  NULL;
     axiom_element_t *sec_ele = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
+	/* 
+	 * sign parts list. Moved this up the building process. This was originally 
+	 * in the rampart_sig_sign_message 
+	 */ 
+    axutil_array_list_t *sign_parts_list = NULL;
     AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
     soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
     soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
@@ -435,7 +443,7 @@ rampart_shb_build_message(
     sec_ele = (axiom_element_t *)
               axiom_node_get_data_element(sec_node, env);
 
-
+    sign_parts_list = axutil_array_list_create(env, 4);
     /*Timestamp Inclusion*/
     if(rampart_context_is_include_timestamp(rampart_context,env))
     {
@@ -482,9 +490,9 @@ rampart_shb_build_message(
         }
     }
 
-    if (rampart_context_is_include_supporting_saml_token(rampart_context, server_side, AXIS2_FALSE, env))
+    if (rampart_context_is_include_supporting_token(rampart_context, env, server_side, AXIS2_FALSE, RP_PROPERTY_SAML_TOKEN))
     {        
-        status = rampart_saml_supporting_token_build(env, rampart_context, sec_node);    
+        status = rampart_saml_supporting_token_build(env, rampart_context, sec_node, sign_parts_list);    
         if (status == AXIS2_FAILURE)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -493,6 +501,18 @@ rampart_shb_build_message(
             return AXIS2_FAILURE;
         }
     }
+
+	if (rampart_context_is_include_supporting_token(rampart_context, env, server_side, AXIS2_FALSE, RP_PROPERTY_ISSUED_TOKEN))
+	{
+		status = rampart_issued_supporting_token_build(rampart_context, env, sec_node, sign_parts_list);					
+        if (status == AXIS2_FAILURE)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shb] Issued supporting token build failed. ERROR");
+			axiom_namespace_free(sec_ns_obj, env);
+            return AXIS2_FAILURE;
+        }
+	}
 
     /*Signature Confirmation support. Only in the server side*/
     if(axis2_msg_ctx_get_server_side(msg_ctx,env)){
@@ -511,7 +531,7 @@ rampart_shb_build_message(
         axis2_status_t status = AXIS2_FAILURE;
 
         AXIS2_LOG_INFO(env->log,  "[rampart][shb] Asymmetric Binding. ");
-        status = rampart_shb_do_asymmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj);
+        status = rampart_shb_do_asymmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj, sign_parts_list);
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Asymmetric Binding failed");
@@ -533,7 +553,7 @@ rampart_shb_build_message(
 
         /*Do Symmetric_binding specific things*/
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. ");
-        status = rampart_shb_do_symmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj);
+        status = rampart_shb_do_symmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj, sign_parts_list);
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding failed");

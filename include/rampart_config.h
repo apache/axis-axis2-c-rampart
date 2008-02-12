@@ -40,6 +40,7 @@
 #include <oxs_key.h>
 #include <axutil_array_list.h>
 #include <rampart_saml_token.h>
+#include <rampart_issued_token.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -98,6 +99,11 @@ extern "C"
 								  const axutil_env_t *env, 
 								  rampart_saml_token_t *saml);
 
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_config_set_issued_token_aquire_function(rampart_config_t *rampart_config,
+								  const axutil_env_t *env,
+								  issued_token_callback_func issued_token_aquire);
+
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_config_get_username(
         rampart_config_t *rampart_config,
@@ -120,6 +126,10 @@ extern "C"
 
 	AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
 	rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
+								  const axutil_env_t *env);    
+
+	AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
+	rampart_config_get_issued_token_aquire_function(rampart_config_t *rampart_config, 
 								  const axutil_env_t *env);    
     /*End of Getters */
 

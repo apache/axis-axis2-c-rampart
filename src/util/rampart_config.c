@@ -18,7 +18,6 @@
 #include <rampart_config.h>
 #include <rampart_constants.h>
 
-
 struct rampart_config_t
 {
     /*****************************/
@@ -26,6 +25,7 @@ struct rampart_config_t
     axis2_char_t *password;
     axis2_char_t *password_type;
     axutil_array_list_t *saml_tokens;
+	issued_token_callback_func issued_token_aquire;
     int ttl;
 };
 
@@ -51,6 +51,7 @@ rampart_config_create(const axutil_env_t *env)
     rampart_config->password_type = NULL;
     rampart_config->ttl = 0;
     rampart_config->saml_tokens = NULL;
+	rampart_config->issued_token_aquire = NULL;
 
     return rampart_config;
 }
@@ -190,4 +191,20 @@ rampart_config_get_saml_tokens(rampart_config_t *rampart_config,
                               const axutil_env_t *env)                         
 {
     return rampart_config->saml_tokens;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_config_set_issued_token_aquire_function(rampart_config_t *rampart_config,
+							  const axutil_env_t *env,
+							  issued_token_callback_func issued_token_aquire)
+{
+	rampart_config->issued_token_aquire = issued_token_aquire;
+	return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
+rampart_config_get_issued_token_aquire_function(rampart_config_t *rampart_config, 
+							  const axutil_env_t *env)  
+{
+	return rampart_config->issued_token_aquire;
 }
