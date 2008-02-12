@@ -1,6 +1,6 @@
 var WshShell = new ActiveXObject("WScript.Shell");
 var fso = new ActiveXObject("Scripting.FileSystemObject");
-var server_port = 7070;
+var server_port = 9090;
 
 var f, s, re, ss, r;
 var ForReading = 1, ForWriting = 2;
@@ -8,7 +8,7 @@ var ForReading = 1, ForWriting = 2;
 var axis2c_home = WshShell.ExpandEnvironmentStrings("%AXIS2C_HOME%");
 var client_repo = axis2c_home + "\\client_repo";
 
-for (var i = 14; i <= 0; i++) {
+for (var i = 1; i <= 14; i++) {
     WScript.Echo("Scenario " + i + ":");    
     deploy(i);
     WScript.Echo("services.xml and policy.xml deployed");
@@ -76,6 +76,7 @@ function deploy(i)
     f.close();
 }
 
+// Additional deployment for scenario 20. This scenario requires a token to be aquired 
 function deploy_20()
 {
     f = fso.OpenTextFile("scenario" + 20 + "\\sts-client-policy.xml", ForReading);
