@@ -488,7 +488,6 @@ rampart_sig_sign_message(
     axutil_array_list_t *nodes_to_sign = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     oxs_sign_ctx_t *sign_ctx = NULL;
-    axutil_array_list_t *sign_parts = NULL;
     /*axutil_array_list_t *tr_list = NULL;*/
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_type_t token_type;

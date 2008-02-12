@@ -39,7 +39,7 @@ rampart_issued_token_create(const axutil_env_t *env)
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_issued_token_free(rampart_issued_token_t *token, axutil_env_t *env)
+rampart_issued_token_free(rampart_issued_token_t *token, const axutil_env_t *env)
 {
 	if (token->token_type == RP_PROPERTY_SAML_TOKEN)
 	{
@@ -53,7 +53,7 @@ rampart_issued_token_free(rampart_issued_token_t *token, axutil_env_t *env)
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_issued_token_set_token(rampart_issued_token_t *issued_token, axutil_env_t *env, void *token, rp_property_type_t token_type)
+rampart_issued_token_set_token(rampart_issued_token_t *issued_token, const axutil_env_t *env, void *token, rp_property_type_t token_type)
 {
 	issued_token->token = token;
 	issued_token->token_type = token_type;
@@ -61,13 +61,14 @@ rampart_issued_token_set_token(rampart_issued_token_t *issued_token, axutil_env_
 }
 
 AXIS2_EXTERN rp_property_type_t AXIS2_CALL
-rampart_issued_token_get_token_type(rampart_issued_token_t *token, axutil_env_t *env)
+rampart_issued_token_get_token_type(rampart_issued_token_t *token, const axutil_env_t *env)
 {
 	return token->token_type;
 }
 
 AXIS2_EXTERN void * AXIS2_CALL
-rampart_issued_token_get_token(rampart_issued_token_t *token, axutil_env_t *env)
+rampart_issued_token_get_token(rampart_issued_token_t *token, const axutil_env_t *env)
 {
 	return token->token;
 }
+

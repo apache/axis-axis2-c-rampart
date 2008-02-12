@@ -31,36 +31,41 @@ extern "C"
 {
 #endif
 
-typedef struct rampart_issued_token_t rampart_issued_token_t;
+	typedef struct rampart_issued_token_t rampart_issued_token_t;
 
-typedef rampart_issued_token_t *(AXIS2_CALL *
-                           issued_token_callback_func)(const axutil_env_t *env,
-												 rp_property_t *issued_token,
-                                                 void *ctx);
+	typedef rampart_issued_token_t *(AXIS2_CALL * issued_token_callback_func)(
+		const axutil_env_t *env,
+		rp_property_t *issued_token,
+        void *ctx);
 
-AXIS2_EXTERN rampart_issued_token_t * AXIS2_CALL
-rampart_issued_token_create(const axutil_env_t *env);
-
-
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_issued_token_free(rampart_issued_token_t *token, 
-						  axutil_env_t *env);
+	AXIS2_EXTERN rampart_issued_token_t * AXIS2_CALL
+	rampart_issued_token_create(
+		const axutil_env_t *env);
 
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_issued_token_set_token(rampart_issued_token_t *issued_token, 
-							   axutil_env_t *env, void *token, 
-							   rp_property_type_t token_type);
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_issued_token_free(
+		rampart_issued_token_t *token, 
+		const axutil_env_t *env);
 
 
-AXIS2_EXTERN rp_property_type_t AXIS2_CALL
-rampart_issued_token_get_token_type(rampart_issued_token_t *token, 
-									axutil_env_t *env);
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_issued_token_set_token(
+		rampart_issued_token_t *issued_token, 
+		const axutil_env_t *env, void *token, 
+		rp_property_type_t token_type);
 
 
-AXIS2_EXTERN void * AXIS2_CALL
-rampart_issued_token_get_token(rampart_issued_token_t *token, 
-									axutil_env_t *env);
+	AXIS2_EXTERN rp_property_type_t AXIS2_CALL
+	rampart_issued_token_get_token_type(
+		rampart_issued_token_t *token, 
+		const axutil_env_t *env);
+
+
+	AXIS2_EXTERN void * AXIS2_CALL
+	rampart_issued_token_get_token(
+		rampart_issued_token_t *token, 
+		const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

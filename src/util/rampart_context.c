@@ -2803,3 +2803,4 @@ rampart_context_get_issued_token_aquire_function(rampart_context_t *rampart_cont
 {
 	return rampart_context->aquire_issued_token;
 }
+

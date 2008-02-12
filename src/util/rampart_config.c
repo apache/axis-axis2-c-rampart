@@ -208,3 +208,4 @@ rampart_config_get_issued_token_aquire_function(rampart_config_t *rampart_config
 {
 	return rampart_config->issued_token_aquire;
 }
+

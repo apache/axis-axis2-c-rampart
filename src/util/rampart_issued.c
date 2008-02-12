@@ -69,3 +69,4 @@ rampart_issued_supporting_token_build(rampart_context_t *rampart_context, const 
                         "[rampart][issued] Not supported token type. ERROR");    
 	return AXIS2_FAILURE;
 }
+
