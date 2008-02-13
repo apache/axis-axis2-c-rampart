@@ -137,7 +137,7 @@ AXIS2_EXTERN void AXIS2_CALL
 sct_provider_sct_db_free(axutil_hash_t *sct_db,
                      const axutil_env_t *env)
 {
-	axutil_hash_t *attr_hash = NULL;
+	/*axutil_hash_t *attr_hash = NULL;*/
 	axutil_hash_index_t *hi = NULL;
 
 	for (hi = axutil_hash_first(sct_db, env); hi != NULL; hi = axutil_hash_next(env, hi))

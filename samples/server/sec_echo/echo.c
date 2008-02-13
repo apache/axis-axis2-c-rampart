@@ -39,7 +39,7 @@ axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node, axis2_msg_ctx_t *ms
     username = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, "SPR_UT_username");
     printf("Username of the Token is = %s ", username);
     }
-*/    
+*/   
     ret_node = build_om_programatically(env, name);
     return ret_node;
 }

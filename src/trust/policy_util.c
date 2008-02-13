@@ -49,7 +49,7 @@ trust_policy_util_get_trust10(
     AXIS2_ENV_CHECK(env, NULL);
 
 	if(!*secpolicy)
-		secpolicy = rp_secpolicy_builder_build(env, policy);
+		*secpolicy = rp_secpolicy_builder_build(env, policy);
     if (!*secpolicy)
     {
         return NULL;
