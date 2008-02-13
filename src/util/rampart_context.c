@@ -260,6 +260,40 @@ rampart_context_free(rampart_context_t *rampart_context,
             }
         }
 
+        if(rampart_context->replay_detector)
+        {
+            axutil_param_t *param = NULL;
+            param = rampart_context->replay_detector->param;
+			/*User specific free logic*/
+            RAMPART_REPLAY_DETECTOR_FREE(rampart_context->replay_detector, env);
+            rampart_context->replay_detector = NULL;
+            if(param){
+                /*We actually free the dll_desc, which is set as the value of the axutil parameter.*/
+				axutil_param_free(param, env);
+                /*axutil_dll_desc_t *dll_desc_l = NULL;
+                dll_desc_l = axutil_param_get_value(param, env);
+                status = axutil_class_loader_delete_dll(env, dll_desc_l);
+                dll_desc_l = NULL;*/
+            }
+        }
+
+        if(rampart_context->sct_provider)
+        {
+            axutil_param_t *param = NULL;
+            param = rampart_context->sct_provider->param;
+			/*User specific free logic*/
+            RAMPART_SCT_PROVIDER_FREE(rampart_context->sct_provider, env);
+            rampart_context->sct_provider = NULL;
+            if(param){
+                /*We actually free the dll_desc, which is set as the value of the axutil parameter.*/
+				axutil_param_free(param, env);
+                /*axutil_dll_desc_t *dll_desc_l = NULL;
+                dll_desc_l = axutil_param_get_value(param, env);
+                status = axutil_class_loader_delete_dll(env, dll_desc_l);
+                dll_desc_l = NULL;*/
+            }
+        }
+
         /*Free derived key list*/
 		if (rampart_context->key_list)
 		{

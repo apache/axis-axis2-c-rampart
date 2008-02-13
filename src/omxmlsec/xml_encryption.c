@@ -266,8 +266,6 @@ oxs_xml_enc_encrypt_node(const axutil_env_t *env,
     AXIS2_FREE(env->allocator, serialized_data);
     serialized_data = NULL;
 
-    serialized_data = axiom_node_to_string_non_optimized(*enc_type_node, env);
-
     /*Return success*/
     return AXIS2_SUCCESS;
 }

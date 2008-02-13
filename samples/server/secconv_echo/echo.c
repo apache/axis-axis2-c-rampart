@@ -28,6 +28,7 @@
 #include <axis2_ctx.h>
 #include <axutil_property.h>
 #include <rampart_constants.h>
+#include <rampart_sct_provider.h>
 
 axiom_node_t *
 build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
@@ -133,7 +134,7 @@ secconv_echo_sts_request_security_token(
     security_context_token_set_local_identifier(sct, env, local_id);
 
     /*store SCT so that when server needs it, can be extracted*/
-    db = secconv_echo_get_sct_db(env, msg_ctx);
+    db = sct_provider_get_sct_db(env, msg_ctx);
     if(!db)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][secconv_service] Cannot get sct datastore");
@@ -162,6 +163,9 @@ secconv_echo_sts_request_security_token(
 
     /*clear stuff*/
     trust_rstr_free(rstr, env);
+
+    /*set the action*/
+    axis2_msg_ctx_set_wsa_action(msg_ctx, env, "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT");
 
     /*return the node*/
     return rstr_node;

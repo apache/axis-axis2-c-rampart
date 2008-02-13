@@ -580,6 +580,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         mod_id = axutil_stracat(env, "#",id);
         oxs_token_build_data_reference_element(env, data_ref_list_node, mod_id);
 		AXIS2_FREE(env->allocator, id);
+		AXIS2_FREE(env->allocator, mod_id);
 	}
     axutil_array_list_free(id_list, env);
     id_list = NULL; 

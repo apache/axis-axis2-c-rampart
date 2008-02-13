@@ -33,7 +33,8 @@ extern "C"
     AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
     trust_policy_util_get_algorithmsuite(
         const axutil_env_t * env,
-        neethi_policy_t * policy);
+        neethi_policy_t * policy,
+		rp_secpolicy_t **secpolicy);
 
     AXIS2_EXTERN rp_binding_commons_t *AXIS2_CALL
     trust_policy_util_get_binding_commons(
@@ -43,7 +44,8 @@ extern "C"
     AXIS2_EXTERN rp_trust10_t *AXIS2_CALL
     trust_policy_util_get_trust10(
         const axutil_env_t * env,
-        neethi_policy_t * policy);
+        neethi_policy_t * policy,
+		rp_secpolicy_t **secpolicy);
 
 #ifdef	__cplusplus
 }

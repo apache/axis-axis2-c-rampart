@@ -20,20 +20,22 @@
 AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
 trust_policy_util_get_algorithmsuite(
     const axutil_env_t * env,
-    neethi_policy_t * policy)
+    neethi_policy_t * policy, 
+	rp_secpolicy_t **secpolicy)
 {
-    rp_secpolicy_t *secpolicy = NULL;
     rp_binding_commons_t *binding_commons = NULL;
 
     AXIS2_ENV_CHECK(env, NULL);
 
-    secpolicy = rp_secpolicy_builder_build(env, policy);
-    if (!secpolicy)
+	if(!*secpolicy)
+		*secpolicy = rp_secpolicy_builder_build(env, policy);
+    
+	if (!*secpolicy)
     {
         return NULL;
     }
 
-    binding_commons = trust_policy_util_get_binding_commons(env, secpolicy);
+    binding_commons = trust_policy_util_get_binding_commons(env, *secpolicy);
 
     return rp_binding_commons_get_algorithmsuite(binding_commons, env);
 }
@@ -41,19 +43,19 @@ trust_policy_util_get_algorithmsuite(
 AXIS2_EXTERN rp_trust10_t *AXIS2_CALL
 trust_policy_util_get_trust10(
     const axutil_env_t * env,
-    neethi_policy_t * policy)
+    neethi_policy_t * policy, 
+	rp_secpolicy_t **secpolicy)
 {
-    rp_secpolicy_t *secpolicy = NULL;
-
     AXIS2_ENV_CHECK(env, NULL);
 
-    secpolicy = rp_secpolicy_builder_build(env, policy);
-    if (!secpolicy)
+	if(!*secpolicy)
+		secpolicy = rp_secpolicy_builder_build(env, policy);
+    if (!*secpolicy)
     {
         return NULL;
     }
 
-    return rp_secpolicy_get_trust10(secpolicy, env);
+    return rp_secpolicy_get_trust10(*secpolicy, env);
 }
 
 AXIS2_EXTERN rp_binding_commons_t *AXIS2_CALL

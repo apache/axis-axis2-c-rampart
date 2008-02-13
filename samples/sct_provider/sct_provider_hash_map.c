@@ -29,9 +29,6 @@
 static security_context_token_t* 
 sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token, axis2_msg_ctx_t* msg_ctx);
 
-static axutil_hash_t *
-sct_provider_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx);
-
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sct_provider_free(rampart_sct_provider_t *sct_provider,
 								const axutil_env_t* env)
@@ -193,6 +190,8 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     trust_rst_t* rst = NULL;
     trust_rstr_t* rstr = NULL;
     security_context_token_t *sct = NULL;
+	neethi_policy_t *sts_policy = NULL;
+	neethi_policy_t *normalised_policy = NULL;
 
     /*check whether rp_property is valid*/
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
@@ -249,11 +248,17 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     trust_rst_set_request_type(rst, env, TRUST_REQ_TYPE_ISSUE);
     trust_rst_set_token_type(rst, env, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN);
     trust_rst_set_wst_ns_uri(rst, env, TRUST_WST_XMLNS_05_02);
+    trust_rst_set_wsa_action(rst, env, "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT");
     trust_context_set_rst(trust_context, env, rst);
 
     /*call sts_client to get the token from sts*/
-    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, 
-                rp_security_context_token_get_bootstrap_policy(rp_sct, env));
+	sts_policy = rp_security_context_token_get_bootstrap_policy(rp_sct, env);
+	if(sts_policy)
+	{
+		normalised_policy = neethi_engine_get_normalize(env, AXIS2_FALSE, sts_policy);
+	}
+		
+    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, normalised_policy);
 
     /*obtain the reply from sts*/
     rstr = trust_context_get_rstr(trust_context, env);
@@ -272,50 +277,9 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
 
     /*now we can clear unwanted stuff*/
     trust_context_free(trust_context, env);
+	trust_sts_client_free(sts_client, env);
 
     return sct;
-}
-
-static axutil_hash_t *
-sct_provider_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx)
-{
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axutil_hash_t *db = NULL;
-    
-    /*Get the conf ctx*/
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    if(!conf_ctx)
-    {
-        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, "[rampart][sct_provider_sample] Conf context is NULL ");
-        return NULL;
-    }
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-    if(!ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][sct_provider_sample] axis2 context is NULL ");
-        return NULL;
-    }
-
-    /*Get the DB property*/
-    property = axis2_ctx_get_property(ctx, env, RAMPART_SCT_PROVIDER_DB_PROB);
-    if(property)
-    {
-        /*Get the DB*/
-        db = (axutil_hash_t*)axutil_property_get_value(property, env);
-    }
-    else
-    {
-        axutil_property_t *db_prop = NULL;
-
-        db = axutil_hash_make(env);
-        db_prop = axutil_property_create(env);
-        axutil_property_set_value(db_prop, env, db);
-        axis2_ctx_set_property(ctx, env, RAMPART_SCT_PROVIDER_DB_PROB, db_prop);
-    }
-
-    return db;
 }
 
 /*

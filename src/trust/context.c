@@ -67,6 +67,11 @@ trust_context_free(
 {
     if (trust_context)
     {
+		if(trust_context->rst)
+			trust_rst_free(trust_context->rst, env);
+		if(trust_context->rstr)
+			trust_rstr_free(trust_context->rstr, env);
+
         /*Free Other Contexts*/
         AXIS2_FREE(env->allocator, trust_context);
     }
@@ -276,6 +281,7 @@ trust_context_set_rstr(
     }
     return AXIS2_FAILURE;
 }
+
 
 
 

@@ -16,18 +16,15 @@
  */
 
 #include <stdio.h>
-#include <rampart_sct_provider.h>
 #include <axutil_string.h>
 #include <axutil_utils.h>
 #include <oxs_utility.h>
 #include <rampart_util.h>
+#include <rampart_sct_provider.h>
 
 #define SCT_DB_LABLE_ENC "Encryption"
 #define SCT_DB_LABLE_SIG "Signature"
 #define SCT_DB_LABLE_COM "Common"
-
-static axutil_hash_t *
-sct_provider_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx);
 
 static security_context_token_t *
 sct_provider_get_stored_token(const axutil_env_t *env, axis2_char_t *sct_id);
@@ -142,48 +139,6 @@ axis2_remove_instance(rampart_sct_provider_t *inst,
         status = RAMPART_SCT_PROVIDER_FREE(inst, env);
     }
     return status;
-}
-
-static axutil_hash_t *
-sct_provider_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx)
-{
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axutil_hash_t *db = NULL;
-    
-    /*Get the conf ctx*/
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    if(!conf_ctx)
-    {
-        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, "[rampart][sct_provider_sample] Conf context is NULL ");
-        return NULL;
-    }
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-    if(!ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][sct_provider_sample] axis2 context is NULL ");
-        return NULL;
-    }
-
-    /*Get the DB property*/
-    property = axis2_ctx_get_property(ctx, env, RAMPART_SCT_PROVIDER_DB_PROB);
-    if(property)
-    {
-        /*Get the DB*/
-        db = (axutil_hash_t*)axutil_property_get_value(property, env);
-    }
-    else
-    {
-        axutil_property_t *db_prop = NULL;
-
-        db = axutil_hash_make(env);
-        db_prop = axutil_property_create(env);
-        axutil_property_set_value(db_prop, env, db);
-        axis2_ctx_set_property(ctx, env, RAMPART_SCT_PROVIDER_DB_PROB, db_prop);
-    }
-
-    return db;
 }
 
 static security_context_token_t *

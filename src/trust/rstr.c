@@ -76,6 +76,7 @@ trust_rstr_free(
         trust_rstr_t *rstr,
         const axutil_env_t *env)
 {
+	AXIS2_FREE(env->allocator, rstr);
     return AXIS2_SUCCESS;
 }
 
@@ -145,13 +146,11 @@ trust_rstr_populate_rstr(
         return AXIS2_FAILURE;
     }
     attr_ctx = axiom_element_get_attribute_value(rstr_ele, env, attr_ctx_qname);
-
     if (attr_ctx)
     {
         rstr->attr_context = attr_ctx;
     }
-    
-    
+	axutil_qname_free(attr_ctx_qname, env);
     
     /*TokenType*/
     token_type_qname = axutil_qname_create(env, TRUST_TOKEN_TYPE, rstr->wst_ns_uri, TRUST_WST);
@@ -160,7 +159,6 @@ trust_rstr_populate_rstr(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] TokenType Qname creation failed.");
         return AXIS2_FAILURE;
     }
-    
     token_type_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, token_type_qname, rstr_node, &token_type_node);
     if (token_type_ele)
     {
@@ -170,6 +168,7 @@ trust_rstr_populate_rstr(
             rstr->token_type = token_type;
         }        
     }
+	axutil_qname_free(token_type_qname, env);
     
     
     /*RequestedSecurityToken*/
@@ -185,6 +184,7 @@ trust_rstr_populate_rstr(
     {
         axiom_element_get_first_element(requested_security_token_ele, env, requested_security_token_node, &rstr->requested_sec_token);
     }
+	axutil_qname_free(requested_security_token_qname, env);
 
 	
 	/*RequestedProofToken*/
@@ -199,9 +199,8 @@ trust_rstr_populate_rstr(
 	{
 		axiom_element_get_first_element(proof_token_ele, env, proof_token_node, &rstr->requested_proof_token);
 	}
+	axutil_qname_free(proof_token_qname, env);
     
-
-
     /*AppliesTo*/
     applies_to_qname = axutil_qname_create(env, TRUST_APPLIES_TO, TRUST_WSP_XMLNS, TRUST_WSP);
     if (!applies_to_qname)
@@ -209,7 +208,6 @@ trust_rstr_populate_rstr(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Appliesto Qname creation failed.");
         return AXIS2_FAILURE;
     }
-    
     appliesto_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, applies_to_qname, rstr_node, &appliesto_node);
     if(appliesto_ele)
     {
@@ -219,7 +217,7 @@ trust_rstr_populate_rstr(
             rstr->applies_to = axiom_element_get_text(first_ele, env, first_node);
         }
     }
-    
+	axutil_qname_free(applies_to_qname, env);
     
     /*Entropy*/
     entropy_qname = axutil_qname_create(env, TRUST_ENTROPY, rstr->wst_ns_uri, TRUST_WST);
@@ -228,7 +226,6 @@ trust_rstr_populate_rstr(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Entropy Qname creation failed.");
         return AXIS2_FAILURE;
     }
-    
     entropy_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, entropy_qname, rstr_node, &entropy_node);
     if(entropy_ele)
     {
@@ -237,6 +234,7 @@ trust_rstr_populate_rstr(
             rstr->entropy = entropy;
         }
     }
+	axutil_qname_free(entropy_qname, env);
     
     
     /*LifeTime*/
@@ -246,7 +244,6 @@ trust_rstr_populate_rstr(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] LifeTime Qname creation failed.");
         return AXIS2_FAILURE;        
     }
-
     lifetime_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, lifetime_qname, rstr_node, &lifetime_node);
     if(lifetime_ele)
     {
@@ -256,7 +253,8 @@ trust_rstr_populate_rstr(
             
         }
     }
-    
+    axutil_qname_free(lifetime_qname, env);
+
         /* KeySize */
     key_size_qname = axutil_qname_create(env, TRUST_KEY_SIZE, rstr->wst_ns_uri, TRUST_WST);
     key_size_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, key_size_qname, rstr_node, &key_size_node);
@@ -268,6 +266,7 @@ trust_rstr_populate_rstr(
             rstr->key_size = atoi(key_size);
         }
     }
+	axutil_qname_free(key_size_qname, env);
 
     /*Attached reference*/
 	attached_reference_qname = axutil_qname_create(env, TRUST_REQUESTED_ATTACHED_REFERENCE, rstr->wst_ns_uri, TRUST_WST);
@@ -281,7 +280,8 @@ trust_rstr_populate_rstr(
 	{
 		axiom_element_get_first_element(attached_reference_ele, env, attached_reference_node, &rstr->requested_attached_ref);
 	}
-    
+    axutil_qname_free(attached_reference_qname, env);
+
     /*Unattached reference*/
 	unattached_reference_qname = axutil_qname_create(env, TRUST_REQUESTED_UNATTACHED_REFERENCE, rstr->wst_ns_uri, TRUST_WST);
 	if(!unattached_reference_qname)
@@ -294,15 +294,8 @@ trust_rstr_populate_rstr(
 	{
 		axiom_element_get_first_element(unattached_reference_ele, env, unattached_reference_node, &rstr->requested_unattached_ref);
 	}
+	axutil_qname_free(unattached_reference_qname, env);
 
-    AXIS2_FREE(env->allocator, lifetime_qname);
-    AXIS2_FREE(env->allocator, entropy_qname);    
-    AXIS2_FREE(env->allocator, applies_to_qname);
-    AXIS2_FREE(env->allocator, token_type_qname);
-    AXIS2_FREE(env->allocator, attr_ctx_qname);
-    AXIS2_FREE(env->allocator, attached_reference_qname);
-    AXIS2_FREE(env->allocator, unattached_reference_qname);
-    
     return AXIS2_SUCCESS;
     
 }

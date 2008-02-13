@@ -148,7 +148,8 @@ rampart_pv_validate_encryption(const axutil_env_t *env,
                   rampart_context, env, soap_envelope, nodes_to_encrypt);
 
     /*See if the body need to be encrypted*/
-    if(nodes_to_encrypt && (axutil_array_list_size(nodes_to_encrypt, env) > 0)){
+    if(nodes_to_encrypt && (axutil_array_list_size(nodes_to_encrypt, env) > 0))
+	{
         for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
         {
             axiom_node_t *node_to_enc = NULL;
@@ -156,30 +157,43 @@ rampart_pv_validate_encryption(const axutil_env_t *env,
             /*Get the node to be encrypted*/
             node_to_enc = (axiom_node_t *)axutil_array_list_get
                       (nodes_to_encrypt, env, i);
-            if(node_to_enc){
-                if(0 == axutil_strcmp( OXS_NODE_BODY , axiom_util_get_localname(axiom_node_get_parent(node_to_enc,env), env))){
+            if(node_to_enc)
+			{
+                if(0 == axutil_strcmp( OXS_NODE_BODY , axiom_util_get_localname(axiom_node_get_parent(node_to_enc,env), env)))
+				{
                     body_encryption = AXIS2_TRUE;
                     break;
                 }
             }
         }/*Eof loop*/
-    }else{
+    }
+	else
+	{
+		axutil_array_list_free(nodes_to_encrypt, env);
         return AXIS2_SUCCESS;
     }
     
-    if(AXIS2_TRUE == body_encryption){
+	axutil_array_list_free(nodes_to_encrypt, env);
+
+    if(AXIS2_TRUE == body_encryption)
+	{
         axis2_char_t* body_encrypted = NULL;
         body_encrypted = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_BODY_ENCRYPTED);
-        if(0 == axutil_strcmp(RAMPART_YES, body_encrypted)){
+        if(0 == axutil_strcmp(RAMPART_YES, body_encrypted))
+		{
             return AXIS2_SUCCESS;
-        }else{
+        }
+		else
+		{
             /*Error*/
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Body need to be encrypted.");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Body need to be encrypted", 
                         RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
             return AXIS2_FAILURE;
         }
-    }else{
+    }
+	else
+	{
         return AXIS2_SUCCESS;
     }
 }
@@ -209,6 +223,7 @@ rampart_pv_validate_signature(const axutil_env_t *env,
     {
         if(axutil_array_list_size(nodes_to_sign, env) <= 0)
         {
+			axutil_array_list_free(nodes_to_sign, env);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Signature is not expected.");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Signature is not expected", 
                         RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
@@ -219,12 +234,15 @@ rampart_pv_validate_signature(const axutil_env_t *env,
     {
         if(axutil_array_list_size(nodes_to_sign, env) > 0)
         {
+			axutil_array_list_free(nodes_to_sign, env);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rpv] Could not find signature.");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, "Could not find signature", 
                         RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
             return AXIS2_FAILURE;
         }
     }
+
+	axutil_array_list_free(nodes_to_sign, env);
     return AXIS2_SUCCESS;
 }
 
@@ -264,5 +282,6 @@ rampart_pv_validate_sec_header(const axutil_env_t *env,
     /*All the policy reqmnts are met. We are good to go*/
     return AXIS2_SUCCESS;
 }
+
 
 

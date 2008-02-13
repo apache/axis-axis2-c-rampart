@@ -250,6 +250,7 @@ trust_rst_populate_rst(
     {
         rst->attr_context = attr_ctx;
     }
+	axutil_qname_free(attr_ctx_qname, env);
     
     
     /*TokenType*/
@@ -269,6 +270,7 @@ trust_rst_populate_rst(
             rst->token_type = token_type;
         }        
     }
+	axutil_qname_free(token_type_qname, env);
         
     /* RequestType */
     req_type_qname = axutil_qname_create(env, TRUST_REQUEST_TYPE, rst->wst_ns_uri, TRUST_WST);
@@ -287,6 +289,7 @@ trust_rst_populate_rst(
             rst->request_type = req_type;
         }
     }
+	axutil_qname_free(req_type_qname, env);
     
     /* AppliesTo */
     applies_to_qname = axutil_qname_create(env, TRUST_APPLIES_TO, TRUST_WSP_XMLNS, TRUST_WSP);
@@ -315,6 +318,9 @@ trust_rst_populate_rst(
             }
         }
     }
+	axutil_qname_free(applies_to_qname, env);
+	axutil_qname_free(applies_to_epr_qname, env);
+	axutil_qname_free(applies_to_addr_qname, env);
     
     
     /* Claims */
@@ -333,7 +339,8 @@ trust_rst_populate_rst(
             rst->claims = claims;
         }
     }
-    
+    axutil_qname_free(claims_qname, env);
+
     /*Entropy */
     entropy_qname = axutil_qname_create(env, TRUST_ENTROPY, rst->wst_ns_uri, TRUST_WST);
     if (!entropy_qname)
@@ -341,7 +348,6 @@ trust_rst_populate_rst(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Entropy Qname creation failed.");
         return AXIS2_FAILURE;
     }
-    
     entropy_ele = axiom_element_get_first_child_with_qname(rst_ele, env, entropy_qname, rst_node, &entropy_node);
     if(entropy_ele)
     {
@@ -353,6 +359,7 @@ trust_rst_populate_rst(
             rst->entropy = entropy;
         }
     }
+	axutil_qname_free(entropy_qname, env);
     
     /*LifeTime*/
     lifetime_qname = axutil_qname_create(env, TRUST_LIFE_TIME, rst->wst_ns_uri, TRUST_WST);
@@ -361,7 +368,6 @@ trust_rst_populate_rst(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] LifeTime Qname creation failed.");
         return AXIS2_FAILURE;        
     }
-    
     lifetime_ele = axiom_element_get_first_child_with_qname(rst_ele, env, lifetime_qname, rst_node, &lifetime_node);
     if(lifetime_ele)
     {
@@ -370,6 +376,7 @@ trust_rst_populate_rst(
             rst->life_time = NULL;
         }
     }
+	axutil_qname_free(lifetime_qname, env);
  
     /*Key and Encryption Requirements*/
     
@@ -380,7 +387,6 @@ trust_rst_populate_rst(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] KeyType Qname creation failed.");
         return AXIS2_FAILURE;        
     }
-    
     key_type_ele = axiom_element_get_first_child_with_qname(rst_ele, env, key_type_qname, rst_node, &key_type_node);
     if(key_type_ele)
     {
@@ -390,6 +396,7 @@ trust_rst_populate_rst(
             rst->key_type = key_type;
         }
     }
+	axutil_qname_free(key_type_qname, env);
     
     
     /* KeySize */
@@ -403,7 +410,8 @@ trust_rst_populate_rst(
             rst->key_size = atoi(key_size);
         }
     }
-    
+    axutil_qname_free(key_size_qname, env);
+
     /*AuthenticationType*/
     authnetication_type_qname = axutil_qname_create(env, TRUST_AUTHENTICATION_TYPE, rst->wst_ns_uri, TRUST_WST); 
     authnetication_type_ele = axiom_element_get_first_child_with_qname(rst_ele, env, authnetication_type_qname, rst_node, &authnetication_type_node);
@@ -415,6 +423,7 @@ trust_rst_populate_rst(
             rst->authentication_type = authnetication_type;
         }
     }
+	axutil_qname_free(authnetication_type_qname, env);
     
     /*SignatureAlgorithm*/
     signature_algo_qname = axutil_qname_create(env, TRUST_SIGNATURE_ALGO, rst->wst_ns_uri, TRUST_WST); 
@@ -427,6 +436,7 @@ trust_rst_populate_rst(
             rst->signature_algo = signature_algo;
         }
     }
+	axutil_qname_free(signature_algo_qname, env);
     
     /*EncryptionAlgorithm*/
     encryption_algo_qname = axutil_qname_create(env, TRUST_ENCRYPTION_ALGO, rst->wst_ns_uri, TRUST_WST); 
@@ -439,6 +449,7 @@ trust_rst_populate_rst(
             rst->encryption_algo = encryption_algo;
         }
     }
+	axutil_qname_free(encryption_algo_qname, env);
     
     /*CanonicalizationAlgorithm*/
     canonocalization_algo_qname = axutil_qname_create(env, TRUST_CANONICAL_ALGO, rst->wst_ns_uri, TRUST_WST); 
@@ -451,6 +462,7 @@ trust_rst_populate_rst(
             rst->canonicalization_algo = canonocalization_algo;
         }
     }
+	axutil_qname_free(canonocalization_algo_qname, env);
 
     /*ComputedKeyAlgorithm*/
     computedkey_algo_qname = axutil_qname_create(env, TRUST_COMPUTED_KEY_ALGO, rst->wst_ns_uri, TRUST_WST); 
@@ -463,6 +475,7 @@ trust_rst_populate_rst(
             rst->computed_key_algo = computedkey_algo;
         }
     }
+	axutil_qname_free(computedkey_algo_qname, env);
     
     
     /*(Desired)Encryption */
@@ -472,13 +485,13 @@ trust_rst_populate_rst(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Encryption Qname creation failed.");
         return AXIS2_FAILURE;
     }
-    
     desired_encryption_ele = axiom_element_get_first_child_with_qname(rst_ele, env, desired_encryption_qname, rst_node, &desired_encryption_node);
     if(desired_encryption_ele)
     {                
         desired_encryption_key_ele = axiom_element_get_first_element(desired_encryption_ele, env, desired_encryption_node, &desired_encryption_key_node);
         rst->desired_encryption = desired_encryption_key_node;      
     }
+	axutil_qname_free(desired_encryption_qname, env);
     
     /*ProofEncryption*/
     proof_encryption_qname = axutil_qname_create(env, TRUST_PROOF_ENCRYPTION, rst->wst_ns_uri, TRUST_WST);
@@ -487,7 +500,6 @@ trust_rst_populate_rst(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] ProofEncryption Qname creation failed.");
         return AXIS2_FAILURE;
     }
-    
     proof_encryption_ele = axiom_element_get_first_child_with_qname(rst_ele, env, proof_encryption_qname, rst_node, &proof_encryption_node);
     if(proof_encryption_ele)
     {                
@@ -495,6 +507,7 @@ trust_rst_populate_rst(
         rst->proof_encryption = proof_encryption_key_node;             
         
     }
+	axutil_qname_free(proof_encryption_qname, env);
     
     /*UseKey*/
     use_key_qname = axutil_qname_create(env, TRUST_USE_KEY, rst->wst_ns_uri, TRUST_WST);
@@ -504,13 +517,13 @@ trust_rst_populate_rst(
         return AXIS2_FAILURE;   
         
     }
-    
     use_key_ele = axiom_element_get_first_child_with_qname(rst_ele, env, use_key_qname, rst_node, &use_key_node);
     if(use_key_ele)
     {
         usekey_key_ele = axiom_element_get_first_element(use_key_ele, env, use_key_node, &usekey_key_node);
         rst->usekey = usekey_key_node;
     }
+	axutil_qname_free(use_key_qname, env);
     
     /*SignWith*/
     sign_with_qname = axutil_qname_create(env, TRUST_SIGN_WITH, rst->wst_ns_uri, TRUST_WST); 
@@ -523,6 +536,7 @@ trust_rst_populate_rst(
             rst->sign_with = sign_with;
         }
     }
+	axutil_qname_free(sign_with_qname, env);
     
     /*EncryptWith*/
     encrypt_with_qname = axutil_qname_create(env, TRUST_ENCRYPT_WITH, rst->wst_ns_uri, TRUST_WST); 
@@ -540,27 +554,7 @@ trust_rst_populate_rst(
             rst->encrypt_with = encrypt_with;
         }
     }
-    
-    AXIS2_FREE(env->allocator, key_size_qname);
-    AXIS2_FREE(env->allocator, key_type_qname);
-    AXIS2_FREE(env->allocator, lifetime_qname);
-    AXIS2_FREE(env->allocator, entropy_qname);    
-    AXIS2_FREE(env->allocator, claims_qname);
-    AXIS2_FREE(env->allocator, applies_to_qname);
-    AXIS2_FREE(env->allocator, applies_to_epr_qname);
-    AXIS2_FREE(env->allocator, applies_to_addr_qname);
-    AXIS2_FREE(env->allocator, req_type_qname);
-    AXIS2_FREE(env->allocator, token_type_qname);
-    AXIS2_FREE(env->allocator, attr_ctx_qname);
-    AXIS2_FREE(env->allocator, authnetication_type_qname);
-    AXIS2_FREE(env->allocator, signature_algo_qname);
-    AXIS2_FREE(env->allocator, encryption_algo_qname);
-    AXIS2_FREE(env->allocator, canonocalization_algo_qname);
-    AXIS2_FREE(env->allocator, computedkey_algo_qname);    
-    AXIS2_FREE(env->allocator, proof_encryption_qname);
-    AXIS2_FREE(env->allocator, use_key_qname);
-    AXIS2_FREE(env->allocator, sign_with_qname);
-    AXIS2_FREE(env->allocator, encrypt_with_qname);
+	axutil_qname_free(encrypt_with_qname, env);
         
     return AXIS2_SUCCESS;
 }
@@ -1292,7 +1286,7 @@ trust_rst_free(
         trust_rst_t *rst,
         const axutil_env_t *env)
 {
-    return;
+    AXIS2_FREE(env->allocator, rst);
 }
 
 

@@ -254,6 +254,7 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
         key = rampart_context_get_key(rampart_context, env, id);
     }
 
+	AXIS2_FREE(env->allocator, id);
     return key;
 }
     
@@ -1692,4 +1693,5 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
     }
     return AXIS2_SUCCESS;
 }
+
 

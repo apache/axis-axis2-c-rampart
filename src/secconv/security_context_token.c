@@ -60,6 +60,15 @@ security_context_token_free(
     {
         oxs_buffer_free(sct->buffer, env);
     }
+    if(sct->local_id)
+    {
+        AXIS2_FREE(env->allocator, sct->local_id);
+    }
+    if(sct->global_id)
+    {
+        AXIS2_FREE(env->allocator, sct->global_id);
+    }
+
     AXIS2_FREE(env->allocator, sct);
     return;
 }
@@ -94,6 +103,10 @@ security_context_token_set_secret(
     const axutil_env_t * env,
     oxs_buffer_t *buffer)
 {
+    if(sct->buffer)
+    {
+        oxs_buffer_free(sct->buffer, env);
+    }
     sct->buffer = buffer;
     return AXIS2_SUCCESS;
 }
@@ -104,6 +117,10 @@ security_context_token_set_global_identifier(
     const axutil_env_t * env,
     axis2_char_t *global_id)
 {
+    if(sct->global_id)
+    {
+        AXIS2_FREE(env->allocator, sct->global_id);
+    }
     sct->global_id = global_id;
     return AXIS2_SUCCESS;
 }
@@ -114,6 +131,10 @@ security_context_token_set_local_identifier(
     const axutil_env_t * env,
     axis2_char_t *local_id)
 {
+    if(sct->local_id)
+    {
+        AXIS2_FREE(env->allocator, sct->local_id);
+    }
     sct->local_id = local_id;
     return AXIS2_SUCCESS;
 }
@@ -136,15 +157,11 @@ security_context_token_get_requested_proof_token(
         AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have a shared secret");
         return NULL;
     }
-
-    encodedlen = axutil_base64_encode_len(oxs_buffer_get_size(sct->buffer, env));
-    encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
-    axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(sct->buffer, env), oxs_buffer_get_size(sct->buffer, env));
     
     ns_obj_wst = axiom_namespace_create(env, TRUST_WST_XMLNS, TRUST_WST);
     proof_token_ele = axiom_element_create(env, NULL, TRUST_REQUESTED_PROOF_TOKEN, ns_obj_wst, &proof_token);
     if (!proof_token_ele)
-    {
+	{
         AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot create requested proof token");
         return NULL;
     }
@@ -155,7 +172,12 @@ security_context_token_get_requested_proof_token(
         AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot create binary secret token");
         return NULL;
     }
+
+	encodedlen = axutil_base64_encode_len(oxs_buffer_get_size(sct->buffer, env));
+    encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
+    axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(sct->buffer, env), oxs_buffer_get_size(sct->buffer, env));
     axiom_element_set_text(secret_ele, env, encoded_str, secret_node);
+	AXIS2_FREE(env->allocator, encoded_str);
 
     return proof_token;
 }
@@ -228,9 +250,12 @@ security_context_token_get_token(
 
     if(sct->local_id)
     {
+		axis2_char_t *id = NULL;
+		id = axutil_string_substring_starting_at(axutil_strdup(env, sct->local_id), 1);
         ns_obj_wsu = axiom_namespace_create(env, OXS_WSU_XMLNS, OXS_WSU);
-        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, axutil_string_substring_starting_at(axutil_strdup(env, sct->local_id), 1), ns_obj_wsu);
+        id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, ns_obj_wsu);
         axiom_element_add_attribute(token_ele, env, id_attr, sct_token);
+		AXIS2_FREE(env->allocator, id);
     }
 
     identifier_ele = axiom_element_create(env, sct_token, OXS_NODE_IDENTIFIER, ns_obj_sc, &identifier_node);
@@ -255,6 +280,7 @@ security_context_token_set_requested_proof_token(
     axis2_char_t *shared_secret = NULL;
     int decoded_len = 0;
     axis2_char_t *decoded_shared_secret = NULL;
+    oxs_buffer_t *buffer = NULL;
 
     AXIS2_PARAM_CHECK(env->error, node, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sct, AXIS2_FAILURE);
@@ -277,12 +303,11 @@ security_context_token_set_requested_proof_token(
 	decoded_shared_secret = AXIS2_MALLOC(env->allocator, decoded_len);
 	axutil_base64_decode_binary((unsigned char*)decoded_shared_secret, shared_secret);
 
-    sct->buffer = oxs_buffer_create(env);
-    oxs_buffer_populate(sct->buffer, env, (unsigned char*)decoded_shared_secret, decoded_len);
-
+    buffer = oxs_buffer_create(env);
+    oxs_buffer_populate(buffer, env, (unsigned char*)decoded_shared_secret, decoded_len);
     AXIS2_FREE(env->allocator, decoded_shared_secret);
 
-    return AXIS2_SUCCESS;
+    return security_context_token_set_secret(sct, env, buffer);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -311,8 +336,7 @@ security_context_token_set_attached_reference(
         return AXIS2_FAILURE;
     }
     
-    sct->local_id = local_id;
-    return AXIS2_SUCCESS;
+    return security_context_token_set_local_identifier(sct, env, axutil_strdup(env, local_id));
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -341,8 +365,7 @@ security_context_token_set_unattached_reference(
         return AXIS2_FAILURE;
     }
     
-    sct->global_id = reference_id;
-    return AXIS2_SUCCESS;
+    return security_context_token_set_global_identifier(sct, env, axutil_strdup(env, reference_id));
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -353,5 +376,6 @@ security_context_token_set_token(
 {
     return AXIS2_SUCCESS;
 }
+
 
 

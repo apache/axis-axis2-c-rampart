@@ -35,6 +35,7 @@
 #include <axis2_conf_ctx.h>
 #include <rampart_context.h>
 #include <secconv_security_context_token.h>
+#include <axutil_hash.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -123,6 +124,11 @@ extern "C"
         rampart_context_t* rampart_context, 
         axis2_msg_ctx_t* msg_ctx);
 
+	AXIS2_EXTERN axutil_hash_t* AXIS2_CALL
+    sct_provider_get_sct_db(
+        const axutil_env_t *env, 
+        axis2_msg_ctx_t* msg_ctx);
+
     /*************************** Function macros **********************************/
 #define RAMPART_SCT_PROVIDER_GET_TOKEN(sct_provider, env, token, server_side, is_enc, sct_id, rampart_ctx, msg_ctx) \
         ((sct_provider)->ops->get_token(sct_provider, env, token, server_side, is_enc, sct_id, rampart_ctx, msg_ctx))
@@ -136,4 +142,5 @@ extern "C"
 #endif
 
 #endif                          /* RAMPART_SCT_PROVIDER_H */
+
 

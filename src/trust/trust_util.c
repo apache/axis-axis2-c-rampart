@@ -146,6 +146,7 @@ trust_util_create_request_type_element(
     {
         req_type_str = axutil_stracat(env, wst_ns_uri, request_type);
         status = axiom_element_set_text(request_type_ele, env, req_type_str, request_type_node);
+		AXIS2_FREE(env->allocator, req_type_str);
     }
     else
     {

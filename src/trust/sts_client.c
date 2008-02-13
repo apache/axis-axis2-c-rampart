@@ -55,6 +55,8 @@ struct trust_sts_client
 	/*RECEIVED In_msg_ctx*/
 	axis2_msg_ctx_t *received_in_msg_ctx;
 
+	rp_secpolicy_t *sec_policy;
+
 
 };
 
@@ -73,6 +75,7 @@ trust_sts_client_create(
     sts_client->issuer_policy_location = NULL;
     sts_client->service_policy_location = NULL;
 	sts_client->svc_client = NULL;
+	sts_client->sec_policy = NULL;
 
     return sts_client;
 }
@@ -89,6 +92,12 @@ trust_sts_client_free(
 		axis2_svc_client_free(sts_client->svc_client, env);
 		sts_client->svc_client = NULL;
 	}
+
+	/*if(sts_client->sec_policy)
+	{
+		rp_secpolicy_free(sts_client->sec_policy, env->allocator);
+		sts_client->sec_policy = NULL;
+	}*/
 
     if (sts_client)
     {
@@ -222,7 +231,16 @@ trust_sts_client_get_svc_client(
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_action(options, env, action);
 
-    svc_client = axis2_svc_client_create(env, sts_client->home_dir);
+	if(!(sts_client->svc_client))
+	{
+		svc_client = axis2_svc_client_create(env, sts_client->home_dir);
+		sts_client->svc_client = svc_client;
+	}
+	else
+	{
+		svc_client = sts_client->svc_client;
+	}
+
     if (!svc_client)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Stub invoke FAILED: Error code:" " %d :: %s",
@@ -250,12 +268,12 @@ trust_sts_client_process_policies(
 
     if (issuer_policy)
     {
-        sts_client->algo_suite = trust_policy_util_get_algorithmsuite(env, issuer_policy);
+        sts_client->algo_suite = trust_policy_util_get_algorithmsuite(env, issuer_policy, &sts_client->sec_policy);
     }
 
     if (service_policy)
     {
-        sts_client->trust10 = trust_policy_util_get_trust10(env, service_policy);
+        sts_client->trust10 = trust_policy_util_get_trust10(env, service_policy, &sts_client->sec_policy);
     }
 
     return AXIS2_SUCCESS;
@@ -365,8 +383,6 @@ trust_sts_client_request_security_token_using_policy(
     trust_context_t *trust_context,
     neethi_policy_t *issuer_policy)
 {
-    axis2_svc_client_t *svc_client = NULL;
-
     axis2_status_t status = AXIS2_SUCCESS;
     axiom_node_t *rst_node = NULL;
     axiom_node_t *return_node = NULL;
@@ -406,22 +422,22 @@ trust_sts_client_request_security_token_using_policy(
     sts_client->svc_client =
     trust_sts_client_get_svc_client(sts_client, env, wsa_action);														  
 
-    if (svc_client)
+    if (sts_client->svc_client)
     {
-        status = axis2_svc_client_set_policy(svc_client, env, issuer_policy);
-
-        if (status == AXIS2_FAILURE)
-        {
-            axis2_svc_client_free(svc_client, env);
-            svc_client = NULL;
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy setting failed.");
-        }
+		if(issuer_policy)
+		{
+			status = axis2_svc_client_set_policy(sts_client->svc_client, env, issuer_policy);
+			if (status == AXIS2_FAILURE)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy setting failed.");
+			}
+		}
 
 		/*Building the RST */
         rst_node = trust_context_build_rst_node(trust_context, env);
         if(rst_node)
         {
-            return_node = axis2_svc_client_send_receive(svc_client, env, rst_node);
+            return_node = axis2_svc_client_send_receive(sts_client->svc_client, env, rst_node);
 			sts_client->sent_rst_node = return_node;
 
 			/*Processing Response*/
@@ -432,7 +448,7 @@ trust_sts_client_request_security_token_using_policy(
 			else
 			{
 				/*Processing IN_MSG_CONTEXT*/
-				op_client = axis2_svc_client_get_op_client(svc_client, env);
+				op_client = axis2_svc_client_get_op_client(sts_client->svc_client, env);
 				if(op_client)
 				{
 					in_msg_ctx = (axis2_msg_ctx_t *)axis2_op_client_get_msg_ctx (op_client, env, AXIS2_WSDL_MESSAGE_LABEL_IN);
