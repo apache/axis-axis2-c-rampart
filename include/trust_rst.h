@@ -56,11 +56,14 @@ extern "C"
         const axutil_env_t *env,
         axiom_node_t *parent);
 
+	/*Automated RST building with RelyingParty's policy*/
 	AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 	trust_rst_build_rst_with_issued_token_assertion(
 		trust_rst_t *rst,
 		const axutil_env_t *env,
-		rp_issued_token_t *issued_token);    
+		rp_issued_token_t *issued_token);
+
+    
     /* Getters & Setters */
     
     AXIS2_EXTERN axis2_char_t * AXIS2_CALL
@@ -91,13 +94,23 @@ extern "C"
     trust_rst_get_request_type(
         trust_rst_t *rst,
         const axutil_env_t *env);
-    
+ 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     trust_rst_set_request_type(
         trust_rst_t *rst,
         const axutil_env_t *env,
         axis2_char_t *request_type);
     
+	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+	trust_rst_get_wsa_action(
+			trust_rst_t *rst,
+			const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	trust_rst_set_wsa_action(
+			trust_rst_t *rst,
+			const axutil_env_t *env,
+			axis2_char_t *wsa_action);
     
     AXIS2_EXTERN axis2_char_t * AXIS2_CALL
     trust_rst_get_applies_to_addr(
@@ -322,4 +335,5 @@ extern "C"
 #endif
 
 #endif 
+
 

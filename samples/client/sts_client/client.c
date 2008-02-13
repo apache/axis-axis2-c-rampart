@@ -2,6 +2,7 @@
 #include <trust_context.h>
 #include <trust_rst.h>
 #include <trust_rstr.h>
+#include <trust_constants.h>
 #include <axutil_env.h>
 #include <rampart_constants.h>
 #include <neethi_util.h>
@@ -22,6 +23,7 @@ int main(
     axis2_char_t *appliesto = "http://oasis.open.org";
     axis2_char_t *token = "oasis:names:tc:SAML:1.0:assertion";
     axis2_char_t *request_type = "http://schemas.xmlsoap.org/ws/2005/02/RST/Issue";
+	axis2_char_t *action = "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue";
 
     trust_context_t *trust_ctx = NULL;
     trust_rst_t *rst = NULL;
@@ -75,6 +77,7 @@ int main(
     trust_rst_set_token_type(rst, env, token);
     trust_rst_set_appliesto(rst, env, appliesto);
     trust_rst_set_request_type(rst, env, request_type);
+    trust_rst_set_wsa_action(rst, env, action);
 
     trust_context_set_rst(trust_ctx, env, rst);
 
@@ -100,6 +103,7 @@ int main(
     
 	return 0;
 }
+
 
 
 

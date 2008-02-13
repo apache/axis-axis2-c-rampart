@@ -7,7 +7,7 @@
     <module ref="rampart"/>
 
     <operation name="echoString">
-            <parameter name="wsamapping">http://example.com/ws/2004/09/policy/Test/EchoRequest</parameter>
+            <parameter name="wsamapping">http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue</parameter>
     </operation>
 
     <wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">

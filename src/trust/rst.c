@@ -27,6 +27,8 @@ struct trust_rst
     
     axis2_char_t *request_type;
     
+	axis2_char_t *wsa_action;
+    
     axis2_char_t *applies_to_addr;
     
     trust_claims_t *claims;
@@ -87,6 +89,7 @@ trust_rst_create(
     rst->attr_context = NULL;
     rst->token_type = NULL;
     rst->request_type = NULL;
+	rst->wsa_action = NULL;
     rst->applies_to_addr = NULL;
     rst->claims = NULL;
     rst->entropy = NULL;
@@ -758,6 +761,7 @@ trust_rst_build_rst(
     return NULL;
 }
 
+
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 trust_rst_build_rst_with_issued_token_assertion(
 		trust_rst_t *rst,
@@ -771,9 +775,7 @@ trust_rst_build_rst_with_issued_token_assertion(
 	axiom_node_t *rst_template_child = NULL;
 
 
-	/* */
-	rst = trust_rst_create(env);
-	trust_rst_set_wst_ns_uri(rst, env,"http://schemas.xmlsoap.org/ws/2005/02/trust");
+	/*Attr Context is NULL -?*/
 	rst_node = (axiom_node_t*)trust_util_create_rst_element(env, rst->wst_ns_uri, rst->attr_context);
 	rst_template_node = rp_issued_token_get_requested_sec_token_template(issued_token, env);
 	rst_template_node = axiom_node_detach(rst_template_node, env);	/*Detaching RSTTemplate from the original location- FIX - Detaching problem with NS'*/
@@ -796,6 +798,8 @@ trust_rst_build_rst_with_issued_token_assertion(
 	return NULL;
 }
 
+
+ 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 trust_rst_get_attr_context(
         trust_rst_t *rst,
@@ -864,6 +868,30 @@ trust_rst_set_request_type(
     
     return AXIS2_FAILURE;
 }
+
+
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+trust_rst_get_wsa_action(                
+		trust_rst_t *rst,
+		const axutil_env_t *env)
+{
+	return rst->wsa_action;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+trust_rst_set_wsa_action(
+		trust_rst_t *rst,
+		const axutil_env_t *env,
+		axis2_char_t *wsa_action)
+{
+	if(wsa_action)
+	{
+		rst->wsa_action = wsa_action;
+		return AXIS2_SUCCESS;
+	}
+	return AXIS2_FAILURE;
+}
+
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 trust_rst_get_applies_to_addr(
@@ -1266,5 +1294,6 @@ trust_rst_free(
 {
     return;
 }
+
 
 

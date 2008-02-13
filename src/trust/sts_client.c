@@ -116,6 +116,7 @@ trust_sts_client_request_security_token(
     /*Action Logic*/
     trust_rst_t *rst = NULL;
     axis2_char_t *request_type = NULL;
+    axis2_char_t *wsa_action = NULL;
     
     if(sts_client->issuer_policy_location && sts_client->service_policy_location)
     {
@@ -142,6 +143,7 @@ trust_sts_client_request_security_token(
     }
 
     request_type = trust_rst_get_request_type(rst, env);
+	wsa_action = trust_rst_get_wsa_action(rst, env);
 
     if(NULL == request_type)
     {
@@ -149,8 +151,13 @@ trust_sts_client_request_security_token(
             return;
     }
 
+	if(NULL == wsa_action)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST-WSA-Action is NOT set");
+	}
+
     sts_client->svc_client =
-    trust_sts_client_get_svc_client(sts_client, env, request_type);
+    trust_sts_client_get_svc_client(sts_client, env, wsa_action);
 														  
 
     if (status == AXIS2_SUCCESS)
@@ -370,6 +377,7 @@ trust_sts_client_request_security_token_using_policy(
     /*Action Logic*/
     trust_rst_t *rst = NULL;
     axis2_char_t *request_type = NULL;
+    axis2_char_t *wsa_action = NULL;
     
     trust_sts_client_process_policies(sts_client, env, issuer_policy, issuer_policy);
  
@@ -382,6 +390,7 @@ trust_sts_client_request_security_token_using_policy(
     }
 
     request_type = trust_rst_get_request_type(rst, env);
+    wsa_action = trust_rst_get_wsa_action(rst, env);
 
     if(NULL == request_type)
     {
@@ -389,9 +398,13 @@ trust_sts_client_request_security_token_using_policy(
             return;
     }
 
-    svc_client =
-    trust_sts_client_get_svc_client(sts_client, env, request_type);
-														  
+	if(NULL == wsa_action)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST-WSA-Action is NOT set");
+	}
+
+    sts_client->svc_client =
+    trust_sts_client_get_svc_client(sts_client, env, wsa_action);														  
 
     if (svc_client)
     {
@@ -442,4 +455,5 @@ trust_sts_client_request_security_token_using_policy(
 
     return;
 }
+
 
