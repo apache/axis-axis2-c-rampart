@@ -178,6 +178,34 @@ axis2_remove_instance(rampart_sct_provider_t *inst,
     return status;
 }
 
+static neethi_policy_t *
+clone_policy(neethi_policy_t *policy, const axutil_env_t* env)
+{
+	neethi_policy_t *return_policy = NULL;
+
+	if (policy)
+    {
+		axutil_array_list_t *policy_components = NULL;
+		axis2_char_t *name = NULL;
+		axis2_char_t* id = NULL;
+		
+		return_policy = neethi_policy_create(env);
+		policy_components = neethi_policy_get_policy_components(policy, env);
+		neethi_policy_add_policy_components(return_policy, policy_components, env);
+
+		name = neethi_policy_get_name(policy, env);
+        if (name)
+        {
+            neethi_policy_set_name(return_policy, env, name);
+        }
+        id = neethi_policy_get_id(policy, env);
+        if (id)
+        {
+            neethi_policy_set_id(return_policy, env, id);
+        }
+    }
+	return return_policy;
+}
 
 static security_context_token_t* 
 sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token, axis2_msg_ctx_t* msg_ctx)
@@ -191,7 +219,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     trust_rstr_t* rstr = NULL;
     security_context_token_t *sct = NULL;
 	neethi_policy_t *sts_policy = NULL;
-	neethi_policy_t *normalised_policy = NULL;
+	neethi_policy_t *cloned_policy = NULL;
 
     /*check whether rp_property is valid*/
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
@@ -255,10 +283,10 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
 	sts_policy = rp_security_context_token_get_bootstrap_policy(rp_sct, env);
 	if(sts_policy)
 	{
-		normalised_policy = neethi_engine_get_normalize(env, AXIS2_FALSE, sts_policy);
+		cloned_policy = clone_policy(sts_policy, env);
 	}
 		
-    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, normalised_policy);
+    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, cloned_policy);
 
     /*obtain the reply from sts*/
     rstr = trust_context_get_rstr(trust_context, env);

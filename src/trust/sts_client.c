@@ -87,17 +87,17 @@ trust_sts_client_free(
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
+    if(sts_client->sec_policy)
+	{
+		rp_secpolicy_free(sts_client->sec_policy, env);
+		sts_client->sec_policy = NULL;
+	}
+
 	if(sts_client->svc_client)
 	{
 		axis2_svc_client_free(sts_client->svc_client, env);
 		sts_client->svc_client = NULL;
 	}
-
-	/*if(sts_client->sec_policy)
-	{
-		rp_secpolicy_free(sts_client->sec_policy, env->allocator);
-		sts_client->sec_policy = NULL;
-	}*/
 
     if (sts_client)
     {
