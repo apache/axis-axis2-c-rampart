@@ -146,6 +146,7 @@ sct_provider_get_stored_token(const axutil_env_t *env, axis2_char_t *sct_id)
 {
     security_context_token_t* sct = NULL;
     oxs_buffer_t* key_buffer = NULL;
+    axis2_bool_t *free_sctid = AXIS2_FALSE;
    
     sct = security_context_token_create(env);
     if(!sct)
@@ -159,9 +160,15 @@ sct_provider_get_stored_token(const axutil_env_t *env, axis2_char_t *sct_id)
     security_context_token_set_secret(sct, env, key_buffer);
 
     if(!sct_id)
+    {
         sct_id = oxs_util_generate_id(env,"urn:uuid:");
+        free_sctid = AXIS2_TRUE;
+    }
     security_context_token_set_global_identifier(sct, env, axutil_strdup(env, sct_id));
     security_context_token_set_local_identifier(sct, env, axutil_strdup(env, "#sctId-29530019"));
+    
+    if(free_sctid)
+        AXIS2_FREE(env->allocator, sct_id);
 
     return sct;
 }

@@ -497,6 +497,7 @@ rampart_shb_build_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][shb] SAML Supporting token build failed. ERROR");
+            axutil_array_list_free(sign_parts_list, env);
 			axiom_namespace_free(sec_ns_obj, env);
             return AXIS2_FAILURE;
         }
@@ -509,6 +510,7 @@ rampart_shb_build_message(
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][shb] Issued supporting token build failed. ERROR");
+            axutil_array_list_free(sign_parts_list, env);
 			axiom_namespace_free(sec_ns_obj, env);
             return AXIS2_FAILURE;
         }
@@ -541,8 +543,10 @@ rampart_shb_build_message(
                 rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
                                   " Asymmetric Binding failed. Check configurations ", RAMPART_FAULT_IN_POLICY, msg_ctx);
             }
+            axutil_array_list_free(sign_parts_list, env);
             return AXIS2_FAILURE;
         }else{
+            axutil_array_list_free(sign_parts_list, env);
             return AXIS2_SUCCESS;
         }
 
@@ -562,8 +566,10 @@ rampart_shb_build_message(
                 rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
                                   " Symmetric Binding failed. Check configurations ", RAMPART_FAULT_IN_POLICY, msg_ctx);
             }
+            axutil_array_list_free(sign_parts_list, env);
             return AXIS2_FAILURE;
         }else{
+            axutil_array_list_free(sign_parts_list, env);
             return AXIS2_SUCCESS;
         }
     }
@@ -571,8 +577,10 @@ rampart_shb_build_message(
     {
         AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using transport binding");
 		axiom_namespace_free(sec_ns_obj, env);
+        axutil_array_list_free(sign_parts_list, env);
         return AXIS2_SUCCESS;
     }else{
+        axutil_array_list_free(sign_parts_list, env);
 		axiom_namespace_free(sec_ns_obj, env);
         return AXIS2_FAILURE;
     }

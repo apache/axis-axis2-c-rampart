@@ -136,7 +136,8 @@ oxs_derivation_build_derived_key_token(const axutil_env_t *env,
 
     uri = axutil_stracat(env, "#", stref_uri);
     str_token = oxs_token_build_security_token_reference_element(env, NULL); 
-    ref_token = oxs_token_build_reference_element(env, str_token, uri, stref_val_type);   
+    ref_token = oxs_token_build_reference_element(env, str_token, uri, stref_val_type); 
+    AXIS2_FREE(env->allocator, uri);
     return oxs_derivation_build_derived_key_token_with_stre(env, derived_key, parent, str_token); 
 }
 

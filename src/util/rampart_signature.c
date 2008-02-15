@@ -641,10 +641,10 @@ rampart_sig_sign_message(
     }
 
     sign_ctx = oxs_sign_ctx_create(env);
-    /* Create the sign parts */
-    rampart_sig_create_sign_parts(env, rampart_context, nodes_to_sign, server_side, sign_parts_list);
+
     /* Set which parts to be signed*/
-    oxs_sign_ctx_set_sign_parts(sign_ctx, env, sign_parts_list);
+    oxs_sign_ctx_set_sign_parts(sign_ctx, env, 
+        rampart_sig_create_sign_parts(env, rampart_context, nodes_to_sign, server_side, sign_parts_list));
 
     /*Get the binding type. Either symmetric or asymmetric for signature*/
     binding_type = rampart_context_get_binding_type(rampart_context,env);
@@ -876,7 +876,24 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
     oxs_transform_t *tr = NULL;
     axutil_array_list_t *tr_list = NULL;
 
-    digest_method = rampart_context_get_digest_mtd(rampart_context, env);    
+    /*content of sign_parts + sign parts created from nodes_to_sign will be copied to 
+    this list. We can put everything to sign_parts, but hard to keep track of who has to delete
+    sign_parts in case if there is an error. Since it is copied, sign_parts can be deleted in 
+    rampart_shb_build_message retardless of return status. Modified due to SAML modifications*/
+    axutil_array_list_t *new_sign_parts = NULL;
+    new_sign_parts = axutil_array_list_create(env, 0);
+
+    digest_method = rampart_context_get_digest_mtd(rampart_context, env);   
+
+    /*copy the content of sign_parts to new_sign_parts*/
+    for(i = 0; i < axutil_array_list_size(sign_parts, env); i++)
+    {
+        sign_part = (oxs_sign_part_t*)axutil_array_list_get(sign_parts, env, i);
+        if(sign_part)
+        {
+            axutil_array_list_add(new_sign_parts, env, sign_part);
+        }
+    }
 
     /*Now we should create sign part for each node in the arraylist.*/
     for (i=0 ; i < axutil_array_list_size(nodes_to_sign, env); i++)
@@ -896,7 +913,7 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
                                     RAMPART_WSU, RAMPART_WSU_XMLNS,OXS_ATTR_ID, id);
             oxs_sign_part_set_node(sign_part, env, node_to_sign);
             oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
-            axutil_array_list_add(sign_parts, env, sign_part);
+            axutil_array_list_add(new_sign_parts, env, sign_part);
             AXIS2_FREE(env->allocator, id);
             id = NULL;
         }
@@ -940,6 +957,6 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
     /*Free array list*/
     axutil_array_list_free(nodes_to_sign, env);
     nodes_to_sign = NULL;
-    return sign_parts;
+    return new_sign_parts;
 }
 
