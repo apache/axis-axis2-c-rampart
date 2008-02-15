@@ -236,20 +236,26 @@ saml_assertion_to_om(saml_assertion_t *assertion,
 		if (assertion->minor_version && assertion->issuer && 
 			assertion->issue_instant)
 		{
+			axis2_char_t *random_byte = NULL;
+			axis2_char_t *serialised_date = NULL;
 			attr = axiom_attribute_create(env, SAML_MAJORVERSION, 
 				SAML_MAJOR_VERSION, NULL);
 			axiom_element_add_attribute(e, env, attr, n);
 			attr = axiom_attribute_create(env, SAML_MINORVERSION, 
 				assertion->minor_version, NULL);
 			axiom_element_add_attribute(e, env, attr, n);
+			random_byte = saml_id_generate_random_bytes(env);
 			attr = axiom_attribute_create(env, SAML_ASSERTION_ID, 
-				saml_id_generate_random_bytes(env), NULL);
+				random_byte, NULL);
 			axiom_element_add_attribute(e, env, attr, n);
 			attr = axiom_attribute_create(env, SAML_ISSUER, assertion->issuer, NULL);
 			axiom_element_add_attribute(e, env, attr, n);
+			serialised_date = axutil_date_time_serialize_date_time(assertion->issue_instant, env);
 			attr = axiom_attribute_create(env, SAML_ISSUE_INSTANT, 
-				axutil_date_time_serialize_date_time(assertion->issue_instant, env), NULL);
-			axiom_element_add_attribute(e, env, attr, n);						
+				serialised_date, NULL);
+			axiom_element_add_attribute(e, env, attr, n);
+			AXIS2_FREE(env->allocator, random_byte);
+			AXIS2_FREE(env->allocator, serialised_date);
 		}		
 		else
 		{

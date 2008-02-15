@@ -113,6 +113,10 @@ oxs_transforms_STR(const axutil_env_t *env,
 
     if (!embeded_qname || !key_qname)
     {
+		if(embeded_qname)
+			axutil_qname_free(embeded_qname, env);
+		if(key_qname)
+			axutil_qname_free(key_qname, env);
         return OXS_TRANSFORM_TYPE_UNKNOWN;
     }
 
@@ -142,12 +146,17 @@ oxs_transforms_STR(const axutil_env_t *env,
                 }
                 else
                 {
+					axutil_qname_free(embeded_qname, env);
+					axutil_qname_free(key_qname, env);
                     oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Unrecognized reference type  NODE.");
                     return OXS_TRANSFORM_TYPE_UNKNOWN;   
                 }
             }
         }
     }
+
+	axutil_qname_free(embeded_qname, env);
+	axutil_qname_free(key_qname, env);
     if (node)
     {
         doc = axiom_node_get_document(node, env);

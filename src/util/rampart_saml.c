@@ -104,7 +104,8 @@ rampart_saml_token_create_sign_part(const axutil_env_t *env,
     /* Sign the assertion, not the securitytokenreference */
     oxs_sign_part_set_node(sign_part, env, strn);
     oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
-        
+    
+	axutil_qname_free(qname, env);
     AXIS2_FREE(env->allocator, id);   
     return sign_part;
 }
