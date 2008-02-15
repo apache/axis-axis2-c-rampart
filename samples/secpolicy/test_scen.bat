@@ -26,7 +26,12 @@ echo waiting.......
 pause %_SLEEP%
 
 echo Go to client directory
-cd %_SMPL_DIR%/../client/sec_echo
+if not "%1" == "scenario14"  goto else
+	cd %_SMPL_DIR%/../client/saml_echo
+	goto endif
+:else
+	cd %_SMPL_DIR%/../client/sec_echo
+:endif
 
 echo Run the sample
 call update_n_run.bat
