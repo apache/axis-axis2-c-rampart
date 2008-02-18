@@ -187,7 +187,7 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_is
     
     if(!issuer || !(serial_number > 0))
     {
-        OXS_ERROR(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
                 "Invalid arguments to get_certificate_for_issuer_serial.");
         return NULL;
     }
@@ -218,7 +218,7 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_th
     
     if(!thumbprint)
     {
-        OXS_ERROR(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
                 "Invalid arguments to get_certificate_for_issuer_serial.");
         return NULL;
     }
@@ -247,7 +247,7 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_su
     
     if(!ski)
     {
-        OXS_ERROR(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
+        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
                 "Invalid arguments to get_certificate_for_issuer_serial.");
         return NULL;
     }
