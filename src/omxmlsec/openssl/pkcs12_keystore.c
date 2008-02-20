@@ -44,6 +44,7 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
     if(!keystore)
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
+        return NULL;
     }
     
     keystore->keystore_file = filename;
