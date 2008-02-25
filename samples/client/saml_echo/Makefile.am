@@ -12,6 +12,7 @@ saml_echo_LDADD   = $(LDFLAGS) \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \
+					-lsecconv \
                     -laxis2_engine \
                     -laxis2_parser \
                     -lpthread \
