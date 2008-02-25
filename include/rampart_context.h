@@ -681,6 +681,16 @@ extern "C"
 								const axutil_env_t *env,
 								issued_token_callback_func issued_token_aquire);
 
+    AXIS2_EXTERN int AXIS2_CALL
+    rampart_context_get_encryption_derived_key_len(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN int AXIS2_CALL
+    rampart_context_get_signature_derived_key_len(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
 #ifdef __cplusplus
 }
 #endif

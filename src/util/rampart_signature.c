@@ -326,6 +326,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
         oxs_key_t *derived_key = NULL;
         /*Derive a new key*/
         derived_key = oxs_key_create(env);
+        oxs_key_set_length(derived_key, env, rampart_context_get_signature_derived_key_len(rampart_context, env));
         oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE);
         oxs_sign_ctx_set_secret(sign_ctx, env, derived_key);
     }

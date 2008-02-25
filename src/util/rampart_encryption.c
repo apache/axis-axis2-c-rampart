@@ -373,6 +373,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         {
             /*Derive a new key*/
             derived_key = oxs_key_create(env);
+            oxs_key_set_length(derived_key, env, rampart_context_get_encryption_derived_key_len(rampart_context, env));
             status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE); 
             
             /*Set the derived key for the encryption*/
@@ -1080,6 +1081,7 @@ rampart_enc_encrypt_signature(
     {
         /*Derive a new key*/
         derived_key = oxs_key_create(env);
+        oxs_key_set_length(derived_key, env, rampart_context_get_encryption_derived_key_len(rampart_context, env));
         status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE);
 
         /*Set the derived key for the encryption*/

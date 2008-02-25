@@ -2424,6 +2424,38 @@ rampart_context_check_is_derived_keys(
         return AXIS2_FALSE;
 }
 
+AXIS2_EXTERN int AXIS2_CALL
+rampart_context_get_encryption_derived_key_len(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_algorithmsuite_t *algosuite = NULL;
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context,env);
+    if(algosuite)
+    {
+        return rp_algorithmsuite_get_encryption_derivation_keylength(algosuite,env)/8;
+    }
+    else
+        return 0;
+}
+
+AXIS2_EXTERN int AXIS2_CALL
+rampart_context_get_signature_derived_key_len(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_algorithmsuite_t *algosuite = NULL;
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context,env);
+    if(algosuite)
+    {
+        return rp_algorithmsuite_get_signature_derivation_keylength(algosuite,env)/8;
+    }
+    else
+        return 0;
+}
+
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_enc_sym_algo(
     rampart_context_t *rampart_context,
