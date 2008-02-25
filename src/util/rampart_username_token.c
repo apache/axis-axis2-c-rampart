@@ -487,6 +487,21 @@ rampart_username_token_validate(
         password_from_svr = rampart_context_get_password(
                                 rampart_context, env);
 
+        /*If the direct passowrd is available, then chk for the username too in the context. We need to compare it with the message's:
+          The reason is here we do not use callbacks. Thus there will be no failure if the username is wrong and the password is correct*/
+        if(password_from_svr){
+            axis2_char_t *context_usr = NULL;
+
+            context_usr = rampart_context_get_user(rampart_context, env);
+            if(0 != axutil_strcmp(context_usr, username)){
+                rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                                                  "Username is not valid", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                 "[rampart][rampart_usernametoken] Username id not valid");
+                return AXIS2_FAILURE;
+            }
+        }
+
         /*If not then check the call  back function*/
         if(!password_from_svr)
         {
