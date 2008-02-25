@@ -220,6 +220,9 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     security_context_token_t *sct = NULL;
 	neethi_policy_t *sts_policy = NULL;
 	neethi_policy_t *cloned_policy = NULL;
+    axis2_ctx_t *ctx = NULL;
+    axis2_char_t *addressing_version_from_msg_ctx = NULL;
+    axutil_property_t *property = NULL;
 
     /*check whether rp_property is valid*/
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
@@ -265,6 +268,12 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
         return NULL;
     }
 
+    /*get the addressing namespace to be used from msg_ctx*/
+    ctx = axis2_msg_ctx_get_base(msg_ctx, env);
+    property = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
+    if(property)
+        addressing_version_from_msg_ctx = axutil_property_get_value(property, env);    
+
     /*Create sts client and set the values*/
     sts_client = trust_sts_client_create(env);    
     trust_sts_client_set_home_dir(sts_client, env, client_home);
@@ -283,10 +292,11 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
 	sts_policy = rp_security_context_token_get_bootstrap_policy(rp_sct, env);
 	if(sts_policy)
 	{
-		cloned_policy = clone_policy(sts_policy, env);
+		/*cloned_policy = clone_policy(sts_policy, env);*/
+        cloned_policy = neethi_engine_get_normalize(env, AXIS2_FALSE, sts_policy); 
 	}
 		
-    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, cloned_policy);
+    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, cloned_policy, addressing_version_from_msg_ctx);
 
     /*obtain the reply from sts*/
     rstr = trust_context_get_rstr(trust_context, env);

@@ -262,6 +262,17 @@ extern "C"
     AXIS2_EXTERN oxs_key_t *AXIS2_CALL
     oxs_key_create(const axutil_env_t *env);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_key_set_key_sha(
+        oxs_key_t *key,
+        const axutil_env_t *env,
+        axis2_char_t *key_sha);
+    
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    oxs_key_get_key_sha(
+        const oxs_key_t *key,
+        const axutil_env_t *env);
+
 
 #ifdef __cplusplus
 }

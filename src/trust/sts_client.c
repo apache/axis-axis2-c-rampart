@@ -166,7 +166,7 @@ trust_sts_client_request_security_token(
 	}
 
     sts_client->svc_client =
-    trust_sts_client_get_svc_client(sts_client, env, wsa_action);
+    trust_sts_client_get_svc_client(sts_client, env, wsa_action, NULL);
 														  
 
     if (status == AXIS2_SUCCESS)
@@ -219,7 +219,8 @@ AXIS2_EXTERN axis2_svc_client_t *AXIS2_CALL
 trust_sts_client_get_svc_client(
     trust_sts_client_t * sts_client,
     const axutil_env_t * env,
-    axis2_char_t * action)
+    axis2_char_t * action, 
+    axis2_char_t *address_version)
 {
     axis2_endpoint_ref_t *endpoint_ref = NULL;
     axis2_options_t *options = NULL;
@@ -253,6 +254,17 @@ trust_sts_client_get_svc_client(
 
     /* Engage addressing module */
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
+
+    /*set the address version*/
+    if(address_version)
+    {
+        axutil_property_t *property  = NULL;
+
+        property = axutil_property_create(env);
+        axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+        axutil_property_set_value(property, env, axutil_strdup(env, address_version));
+        axis2_options_set_property(options, env, AXIS2_WSA_VERSION, property);
+    }
 
     return svc_client;
 }
@@ -381,7 +393,8 @@ trust_sts_client_request_security_token_using_policy(
     trust_sts_client_t * sts_client,
     const axutil_env_t * env,
     trust_context_t *trust_context,
-    neethi_policy_t *issuer_policy)
+    neethi_policy_t *issuer_policy, 
+    axis2_char_t *address_version)
 {
     axis2_status_t status = AXIS2_SUCCESS;
     axiom_node_t *rst_node = NULL;
@@ -420,7 +433,7 @@ trust_sts_client_request_security_token_using_policy(
 	}
 
     sts_client->svc_client =
-    trust_sts_client_get_svc_client(sts_client, env, wsa_action);														  
+    trust_sts_client_get_svc_client(sts_client, env, wsa_action, address_version);														  
 
     if (sts_client->svc_client)
     {

@@ -72,7 +72,8 @@ extern "C"
     ****************************************************************/
 #define OXS_DSIG_NS                "http://www.w3.org/2000/09/xmldsig#"
 #define OXS_ENC_NS                 "http://www.w3.org/2001/04/xmlenc#"
-#define OXS_WSSE_NS                "http://schemas.xmlsoap.org/ws/2002/04/secext"
+/*#define OXS_WSSE_NS                "http://schemas.xmlsoap.org/ws/2002/04/secext"*/
+#define OXS_WSSE_NS                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 #define OXS_WSC_NS "http://schemas.xmlsoap.org/ws/2005/02/sc"
 
     /****************************************************************
@@ -379,6 +380,7 @@ extern "C"
 #define OXS_VALUE_X509V3 "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
 #define OXS_X509_SUBJ_KI "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509SubjectKeyIdentifier"
 #define OXS_X509_TUMBP_PRINT_SHA1 "http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#ThumbprintSHA1"
+#define OXS_X509_ENCRYPTED_KEY_SHA1 "http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#EncryptedKeySHA1"
     /****************************************************************
         ST References
     ****************************************************************/

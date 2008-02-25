@@ -42,7 +42,6 @@
 #include <oxs_key_mgr.h>
 #include <rampart_replay_detector.h>
 #include <rampart_sct_provider.h>
-
 #include <saml.h>
 #include <rampart_saml.h>
 #include <rampart_saml_token.h>
@@ -78,25 +77,25 @@ rampart_shp_add_security_context_token(const axutil_env_t* env,
 }
 
 static void
-rampart_shp_store_sct_id(const axutil_env_t *env, 
+rampart_shp_store_token_id(const axutil_env_t *env, 
                          axiom_node_t *key_info_node, 
                          rampart_context_t *rampart_context, 
                          axiom_node_t *sec_node, 
                          axis2_bool_t is_encryption,
                          axis2_msg_ctx_t* msg_ctx)
 {
-    axis2_char_t *sct_id = NULL;
+    axis2_char_t *token_id = NULL;
     axiom_node_t* key_node = NULL;
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
 
     if(is_encryption)
-        sct_id = rampart_context_get_encryption_sct_id(rampart_context, env);
+        token_id = rampart_context_get_encryption_token_id(rampart_context, env);
     else
-        sct_id = rampart_context_get_signature_sct_id(rampart_context, env);
+        token_id = rampart_context_get_signature_token_id(rampart_context, env);
 
     /*if already stored, then can return*/
-    if(sct_id)
+    if(token_id)
         return;
 
     /*if not symmetric binding, then return*/
@@ -111,12 +110,12 @@ rampart_shp_store_sct_id(const axutil_env_t *env,
     token = rampart_context_get_token(rampart_context, env,
                                       is_encryption, AXIS2_TRUE, AXIS2_TRUE);
     token_type = rp_property_get_type(token, env);
-    if(token_type != RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+    if((token_type != RP_PROPERTY_SECURITY_CONTEXT_TOKEN) && (token_type != RP_PROPERTY_X509_TOKEN))
         return;
 
     key_node = key_info_node;
 
-    while(!sct_id)
+    while(!token_id)
     {
         axis2_char_t* id = NULL;
         axis2_char_t *cur_local_name = NULL;
@@ -148,7 +147,7 @@ rampart_shp_store_sct_id(const axutil_env_t *env,
             value_type = oxs_token_get_reference_value_type(env, ref_node);
             if(0 == axutil_strcmp(value_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN))
             {
-                sct_id = axutil_strdup(env, ref_val);
+                token_id = axutil_strdup(env, ref_val);
                 break;
             }
         }
@@ -172,7 +171,12 @@ rampart_shp_store_sct_id(const axutil_env_t *env,
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Cannot find identifier node in security context token");
                 break;
             }
-            sct_id = oxs_axiom_get_node_content(env, identifier_node);
+            token_id = oxs_axiom_get_node_content(env, identifier_node);
+            break;
+        }
+        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_KEY))
+        {
+            token_id = oxs_axiom_get_attribute_value_of_node_by_name(env, key_node, OXS_ATTR_ID, NULL);
             break;
         }
     }
@@ -181,14 +185,14 @@ rampart_shp_store_sct_id(const axutil_env_t *env,
     if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
     {
         if(is_encryption)
-            rampart_context_set_encryption_sct_id(rampart_context, env, sct_id);
+            rampart_context_set_encryption_token_id(rampart_context, env, token_id);
         else
-            rampart_context_set_signature_sct_id(rampart_context, env, sct_id);
+            rampart_context_set_signature_token_id(rampart_context, env, token_id);
     }
     else
     {
-        rampart_context_set_encryption_sct_id(rampart_context, env, sct_id);
-        rampart_context_set_signature_sct_id(rampart_context, env, sct_id);
+        rampart_context_set_encryption_token_id(rampart_context, env, token_id);
+        rampart_context_set_signature_token_id(rampart_context, env, token_id);
     }
 }
 
@@ -218,22 +222,51 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
     ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
     if(!ref_node)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get reference node from security token reference");
-        return NULL;
-    }
+        axis2_char_t *value_type = NULL;
+        axis2_char_t *given_hash = NULL;
+        axis2_char_t *calculated_hash = NULL;
+        oxs_key_t *key = NULL;
 
-    /*Get the reference value in the @URI*/
-       
-    ref_val = oxs_token_get_reference(env, ref_node);
-    if(ref_val[0] == '#')
-    {
-        /*Need to remove # sign from the ID*/
-        id = axutil_string_substring_starting_at(axutil_strdup(env, ref_val), 1);
-        external_reference = AXIS2_FALSE;
+        ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_KEY_IDENTIFIER, OXS_WSSE_XMLNS, NULL);
+        if(!ref_node)
+        {
+            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get reference node from security token reference");
+            return NULL;
+        }
+        value_type = oxs_axiom_get_attribute_value_of_node_by_name(env, ref_node, OXS_ATTR_VALUE_TYPE, NULL);
+        if(axutil_strcmp(value_type, OXS_X509_ENCRYPTED_KEY_SHA1) != 0)
+        {
+            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to identify Key Identifier %s", value_type);
+            return NULL;
+        }
+        given_hash = oxs_axiom_get_node_content(env, ref_node);
+        if(!given_hash)
+        {
+            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get value of EncryptedKeySHA1");
+            return NULL;
+        }
+
+        key = rampart_context_get_key_using_hash(rampart_context, env, given_hash);
+        if(!key)
+        {
+            AXIS2_LOG_INFO(env->log, "[rampart][shp]Cannot get key corresponding to EncryptedKeySHA1");
+        }
+        return key;        
     }
     else
     {
-        id = axutil_strdup(env, ref_val);
+        /*Get the reference value in the @URI*/
+        ref_val = oxs_token_get_reference(env, ref_node);
+        if(ref_val[0] == '#')
+        {
+            /*Need to remove # sign from the ID*/
+            id = axutil_string_substring_starting_at(axutil_strdup(env, ref_val), 1);
+            external_reference = AXIS2_FALSE;
+        }
+        else
+        {
+            id = axutil_strdup(env, ref_val);
+        }
     }
 
     if(!id)
@@ -911,7 +944,7 @@ rampart_shp_process_reference_list(
             key_to_decrypt = rampart_shp_get_key_for_key_info(env, key_info_node, rampart_context, msg_ctx);
             
             /*if security context token is used, then store it. It will be used by the server to encrypt the message*/
-            rampart_shp_store_sct_id(env, key_info_node, rampart_context, sec_node, AXIS2_TRUE, msg_ctx);
+            rampart_shp_store_token_id(env, key_info_node, rampart_context, sec_node, AXIS2_TRUE, msg_ctx);
 
             if(key_to_decrypt)
             {
@@ -994,7 +1027,7 @@ rampart_shp_process_sym_binding_signature(
         return AXIS2_FAILURE;
     } 
     /*if security context token is used, then store it. It will be used by the server to sign the message*/
-    rampart_shp_store_sct_id(env, key_info_node, rampart_context, sec_node, AXIS2_FALSE, msg_ctx);
+    rampart_shp_store_token_id(env, key_info_node, rampart_context, sec_node, AXIS2_FALSE, msg_ctx);
 
     /*Create sign context*/
     sign_ctx = oxs_sign_ctx_create(env);

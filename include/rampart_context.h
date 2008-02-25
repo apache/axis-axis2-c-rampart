@@ -306,6 +306,11 @@ extern "C"
         const axutil_env_t *env,
         axis2_char_t* key_id);
 
+    AXIS2_EXTERN oxs_key_t* AXIS2_CALL
+    rampart_context_get_key_using_hash(rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axis2_char_t* hash);
+
     /*End of Getters */
 
     /*Rampart specific functions */
@@ -626,23 +631,23 @@ extern "C"
         const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_context_get_encryption_sct_id(
+    rampart_context_get_encryption_token_id(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_context_get_signature_sct_id(
+    rampart_context_get_signature_token_id(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_set_encryption_sct_id(
+    rampart_context_set_encryption_token_id(
         rampart_context_t *rampart_context,
         const axutil_env_t *env,
         axis2_char_t *sct_id);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_set_signature_sct_id(
+    rampart_context_set_signature_token_id(
         rampart_context_t *rampart_context,
         const axutil_env_t *env,
         axis2_char_t *sct_id);

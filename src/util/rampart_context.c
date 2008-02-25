@@ -65,8 +65,8 @@ struct rampart_context_t
     auth_password_func authenticate_with_password;
     auth_digest_func authenticate_with_digest;
 
-    axis2_char_t *encryption_sct_id;
-    axis2_char_t *signature_sct_id;
+    axis2_char_t *encryption_token_id;
+    axis2_char_t *signature_token_id;
 
     axis2_bool_t require_timestamp;
     axis2_bool_t require_ut;
@@ -198,8 +198,8 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->ctx = NULL;
     rampart_context->ref = 0;
 
-    rampart_context->encryption_sct_id = NULL;
-    rampart_context->signature_sct_id = NULL;
+    rampart_context->encryption_token_id = NULL;
+    rampart_context->signature_token_id = NULL;
 
     rampart_context->key_list = axutil_array_list_create(env, 2);
 
@@ -1025,6 +1025,32 @@ rampart_context_get_key(rampart_context_t *rampart_context,
         key = (oxs_key_t*)axutil_array_list_get(rampart_context->key_list, env, i);
         key_name = oxs_key_get_name(key, env);
         if(0 == axutil_strcmp(key_name, key_id)){
+            return key;
+        }        
+    }
+    
+    return NULL;
+}
+
+AXIS2_EXTERN oxs_key_t* AXIS2_CALL
+rampart_context_get_key_using_hash(rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axis2_char_t* hash)
+{   
+    oxs_key_t* key = NULL;
+    int i = 0;
+
+    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
+
+    /*Repeat thru all the derived keys and find the matching one*/
+    for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
+    {
+        axis2_char_t *key_hash = NULL;
+
+        key = (oxs_key_t*)axutil_array_list_get(rampart_context->key_list, env, i);
+        key_hash = oxs_key_get_key_sha(key, env);
+        if(0 == axutil_strcmp(key_hash, hash))
+        {
             return key;
         }        
     }
@@ -2721,38 +2747,38 @@ rampart_context_increment_ref(rampart_context_t *rampart_context,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-rampart_context_get_encryption_sct_id(
+rampart_context_get_encryption_token_id(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    return rampart_context->encryption_sct_id;
+    return rampart_context->encryption_token_id;
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-rampart_context_get_signature_sct_id(
+rampart_context_get_signature_token_id(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    return rampart_context->signature_sct_id;
+    return rampart_context->signature_token_id;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_context_set_encryption_sct_id(
+rampart_context_set_encryption_token_id(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
     axis2_char_t *sct_id)
 {
-    rampart_context->encryption_sct_id = sct_id;
+    rampart_context->encryption_token_id = sct_id;
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_context_set_signature_sct_id(
+rampart_context_set_signature_token_id(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
     axis2_char_t *sct_id)
 {
-    rampart_context->signature_sct_id = sct_id;
+    rampart_context->signature_token_id = sct_id;
     return AXIS2_SUCCESS;
 }
 

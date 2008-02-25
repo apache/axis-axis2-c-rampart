@@ -279,10 +279,10 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
         /*Create a new key and set to the rampart_context. This usually happens when the SignBeforeEncrypt*/
         /*Generate the  session key. if security context token, get the 
         shared secret and create the session key.*/
-        session_key = oxs_key_create(env);
         if(token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
         {
             oxs_buffer_t *key_buf = NULL;
+            session_key = oxs_key_create(env);
             key_buf = sct_provider_get_secret(env, token, server_side, AXIS2_FALSE, rampart_context, msg_ctx);
             if(!key_buf)
             {
@@ -294,12 +294,29 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
             oxs_key_populate(session_key, env,
                    oxs_buffer_get_data(key_buf, env), "for-algo",
                    oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
+            rampart_context_set_signature_session_key(rampart_context, env, session_key);
         }
         else
         {
-            oxs_key_for_algo(session_key, env, OXS_HREF_HMAC_SHA1);
+            axis2_char_t *token_id = NULL;
+            token_id = rampart_context_get_signature_token_id(rampart_context, env);
+            if(token_id)
+            {
+                int key_usage = OXS_KEY_USAGE_SESSION;
+                if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+                    key_usage = OXS_KEY_USAGE_SIGNATURE_SESSION;
+
+                session_key = rampart_context_get_key(rampart_context, env, token_id);
+                oxs_key_set_usage(session_key, env, key_usage);
+            }
+            else
+            {
+                session_key = oxs_key_create(env);
+                oxs_key_for_algo(session_key, env, OXS_HREF_HMAC_SHA1);
+                rampart_context_set_signature_session_key(rampart_context, env, session_key);
+            }
         }
-        rampart_context_set_signature_session_key(rampart_context, env, session_key);
+        
     }
 
     /*If we need to use derrived keys, we must sign using a derived key of the session key*/
@@ -709,56 +726,87 @@ rampart_sig_sign_message(
         }
         else
         {
-            axiom_node_t *encrypted_key_node = NULL;
-            axis2_char_t *enc_key_id = NULL;
-		    axis2_bool_t free_enc_key_id = AXIS2_FALSE;
-
-            /*If there is an EncryptedKey element use the Id. If not, generate an Id and use it*/ 
-            encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY); 
-            if(!encrypted_key_node)
+            if(server_side)
             {
-                /*There is no EncryptedKey so generate one*/
-                status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
-                if(AXIS2_FAILURE == status)
+                /*have to send EncryptedKeySHA1*/
+                axis2_char_t *encrypted_key_hash = NULL;
+                axiom_node_t *identifier_token = NULL;
+                encrypted_key_hash = oxs_key_get_key_sha(session_key, env);
+                key_reference_node = oxs_token_build_security_token_reference_element(env, NULL); 
+                identifier_token = oxs_token_build_key_identifier_element(env, key_reference_node, 
+                                    OXS_ENCODING_BASE64BINARY, OXS_X509_ENCRYPTED_KEY_SHA1, encrypted_key_hash);
+
+                if(0 == axutil_strcmp(oxs_key_get_name(session_key, env), oxs_key_get_name(signed_key, env))) 
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Cannot encrypt the session key " );
-                    return AXIS2_FAILURE;
-                } 
-                encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
-                /*Add Id attribute*/
-                enc_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
-			    free_enc_key_id = AXIS2_TRUE;
-                oxs_axiom_add_attribute(env, encrypted_key_node, NULL, NULL, OXS_ATTR_ID, enc_key_id);
-                /*And we have to make sure that we place this newly generated EncryptedKey node above the Signature node*/
-                oxs_axiom_interchange_nodes(env, encrypted_key_node, sig_node);
+                    /*Now then... we have used the session key to sign*/
+                    axiom_node_t* key_info_node = NULL;
+                    key_info_node = oxs_token_build_key_info_element(env, sig_node);
+                    axiom_node_add_child(key_info_node, env, key_reference_node);
+                }
+                else
+                {
+                    axiom_node_t *dk_token = NULL;
+                    /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
+                    rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL);
+                    /*In addition we need to add a DerivedKeyToken*/
+                    dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node);
+                    /*We need to make DerivedKeyToken to appear before the sginature node*/
+                    oxs_axiom_interchange_nodes(env, dk_token, sig_node);
+                }
             }
             else
             {
-                /*There is the encrypted key. May be used by the encryption process. So get the Id and use it*/
-                enc_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
-            }
+                axiom_node_t *encrypted_key_node = NULL;
+                axis2_char_t *enc_key_id = NULL;
+		        axis2_bool_t free_enc_key_id = AXIS2_FALSE;
 
-            /* Now if the signed key is the session key. We need to Encrypt it. If it's a derived key, we need to Attach a 
-             * DerivedKeyToken and encrypt the session key if not done already */    
-            if(0 == axutil_strcmp(oxs_key_get_name(session_key, env), oxs_key_get_name(signed_key, env))) 
-            {
-                /*Now then... we have used the session key to sign*/
-                rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, enc_key_id);
+                /*If there is an EncryptedKey element use the Id. If not, generate an Id and use it*/ 
+                encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY); 
+                if(!encrypted_key_node)
+                {
+                    /*There is no EncryptedKey so generate one*/
+                    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+                    if(AXIS2_FAILURE == status)
+                    {
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Cannot encrypt the session key " );
+                        return AXIS2_FAILURE;
+                    } 
+                    encrypted_key_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_ENCRYPTED_KEY);
+                    /*Add Id attribute*/
+                    enc_key_id = oxs_util_generate_id(env, (axis2_char_t*)OXS_ENCKEY_ID);
+			        free_enc_key_id = AXIS2_TRUE;
+                    oxs_axiom_add_attribute(env, encrypted_key_node, NULL, NULL, OXS_ATTR_ID, enc_key_id);
+                    /*And we have to make sure that we place this newly generated EncryptedKey node above the Signature node*/
+                    oxs_axiom_interchange_nodes(env, encrypted_key_node, sig_node);
+                }
+                else
+                {
+                    /*There is the encrypted key. May be used by the encryption process. So get the Id and use it*/
+                    enc_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
+                }
+
+                /* Now if the signed key is the session key. We need to Encrypt it. If it's a derived key, we need to Attach a 
+                 * DerivedKeyToken and encrypt the session key if not done already */    
+                if(0 == axutil_strcmp(oxs_key_get_name(session_key, env), oxs_key_get_name(signed_key, env))) 
+                {
+                    /*Now then... we have used the session key to sign*/
+                    rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, enc_key_id);
+                }
+                else
+                {
+                    axiom_node_t *dk_token = NULL;
+                    /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
+                    rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL  );
+                    /*In addition we need to add a DerivedKeyToken after the EncryptedKey*/
+                    dk_token = oxs_derivation_build_derived_key_token(env, signed_key, sec_node, enc_key_id ,OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
+                    /*We need to make DerivedKeyToken to appear before the sginature node*/
+                    oxs_axiom_interchange_nodes(env, dk_token, sig_node);
+                }
+		        if (free_enc_key_id)
+		        {
+			        AXIS2_FREE(env->allocator, enc_key_id);
+		        }
             }
-            else
-            {
-                axiom_node_t *dk_token = NULL;
-                /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
-                rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL  );
-                /*In addition we need to add a DerivedKeyToken after the EncryptedKey*/
-                dk_token = oxs_derivation_build_derived_key_token(env, signed_key, sec_node, enc_key_id ,OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
-                /*We need to make DerivedKeyToken to appear before the sginature node*/
-                oxs_axiom_interchange_nodes(env, dk_token, sig_node);
-            }
-		    if (free_enc_key_id)
-		    {
-			    AXIS2_FREE(env->allocator, enc_key_id);
-		    }
         }
     }
 

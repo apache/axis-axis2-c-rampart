@@ -33,6 +33,8 @@
 #include <oxs_utility.h>
 #include <oxs_encryption.h>
 #include <oxs_xml_encryption.h>
+#include <openssl_digest.h>
+
 
 /*private functions*/
 
@@ -470,6 +472,9 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
     axiom_node_t *cd_node = NULL;
     axiom_node_t *cv_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    axis2_char_t* encrypted_key_hash = NULL;
+    int decoded_len = 0;
+    axis2_char_t *decoded_enc_sec = NULL;
 
     /*Create input buffer*/
     input = oxs_buffer_create(env);
@@ -523,6 +528,15 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
     if(id_list){
         oxs_token_build_data_reference_list(env, encrypted_key_node, id_list);
     }
+
+    /*calculate the EncryptedKeySHA1 and set as the key_sha*/
+    decoded_len = axutil_base64_decode_len(encrypted_key_data);
+    decoded_enc_sec = AXIS2_MALLOC(env->allocator, decoded_len);
+	axutil_base64_decode_binary((unsigned char*)decoded_enc_sec, encrypted_key_data);
+    encrypted_key_hash = openssl_sha1(env, decoded_enc_sec, decoded_len);
+    oxs_key_set_key_sha(sym_key, env, encrypted_key_hash);
+    AXIS2_FREE(env->allocator, decoded_enc_sec);
+
     /*Free*/
     oxs_buffer_free(result, env);
     result = NULL;
@@ -550,6 +564,10 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     oxs_buffer_t *input_buf = NULL;
     oxs_buffer_t *result_buf = NULL;
     axis2_char_t *key_name = NULL;
+
+    axis2_char_t* encrypted_key_hash = NULL;
+    int decoded_len = 0;
+    axis2_char_t *decoded_enc_sec = NULL;
 
     /*Get encryption method algorithm*/
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,OXS_XENC);
@@ -589,6 +607,13 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     oxs_buffer_free(input_buf, env);
     input_buf = NULL;
 
+     /*calculate the EncryptedKeySHA1 and set as the key_sha*/
+    decoded_len = axutil_base64_decode_len(new_cipher_val);
+    decoded_enc_sec = AXIS2_MALLOC(env->allocator, decoded_len);
+	axutil_base64_decode_binary((unsigned char*)decoded_enc_sec, new_cipher_val);
+    encrypted_key_hash = openssl_sha1(env, decoded_enc_sec, decoded_len);
+    AXIS2_FREE(env->allocator, decoded_enc_sec);
+
     AXIS2_FREE(env->allocator, new_cipher_val);
     new_cipher_val = NULL;
 
@@ -604,6 +629,8 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
                      key_name,
                      oxs_buffer_get_size(result_buf, env),
                      OXS_KEY_USAGE_SESSION  );
+    oxs_key_set_key_sha(key, env, encrypted_key_hash);
+
     /*Free*/
     oxs_buffer_free(result_buf, env);
     result_buf = NULL;

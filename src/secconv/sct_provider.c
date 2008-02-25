@@ -31,9 +31,9 @@ sct_provider_get_sct(const axutil_env_t* env, rp_property_t *token,
     if(!sct_id)
     {
         if(is_encryption)
-            sct_id = rampart_context_get_encryption_sct_id(rampart_context, env);
+            sct_id = rampart_context_get_encryption_token_id(rampart_context, env);
         else
-            sct_id = rampart_context_get_signature_sct_id(rampart_context, env);
+            sct_id = rampart_context_get_signature_token_id(rampart_context, env);
     }
 
     sct_provider = (rampart_sct_provider_t*)rampart_context_get_sct_provider(rampart_context, env);
