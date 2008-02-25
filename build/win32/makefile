@@ -192,6 +192,7 @@ $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll :
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\sec_echo\*.obj \
 	axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
 	axis2_http_receiver.lib axis2_http_sender.lib \
+	mod_rampart.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart \
         /DLL /OUT:$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
 	-@$(_VC_MANIFEST_EMBED_DLL)
 	
