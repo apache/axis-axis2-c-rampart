@@ -224,7 +224,6 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
     {
         axis2_char_t *value_type = NULL;
         axis2_char_t *given_hash = NULL;
-        axis2_char_t *calculated_hash = NULL;
         oxs_key_t *key = NULL;
 
         ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_KEY_IDENTIFIER, OXS_WSSE_XMLNS, NULL);
