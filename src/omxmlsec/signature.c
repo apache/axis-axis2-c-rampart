@@ -179,7 +179,7 @@ oxs_sig_verify_hmac_sha1(const axutil_env_t *env,
     signed_val = (axis2_char_t*)oxs_buffer_get_data(output_buf, env);
 	oxs_buffer_free(input_buf, env);
     /*Compare the output with the signature. If tally; SUCCESS*/
-    if(axutil_strcmp(signature, signed_val)){
+    if(axutil_strcmp(signature, signed_val) == 0){
 		oxs_buffer_free(output_buf, env);
         return AXIS2_SUCCESS;
     }else{

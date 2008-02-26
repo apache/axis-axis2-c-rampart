@@ -1269,13 +1269,15 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     if(!nspace)
         return AXIS2_FAILURE;
 
-    if(axutil_strcmp(nspace, RP_SECURITY_NS)==0)
+    local_name = (axis2_char_t*) rp_header_get_name(header, env);
+
+    /*if(axutil_strcmp(nspace, RP_SECURITY_NS)==0)*/
+    if((axutil_strcmp(nspace, RP_SECURITY_NS)==0) && (!local_name))
     {
         AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace headers");
         return AXIS2_FAILURE;
     }
 
-    local_name = (axis2_char_t*) rp_header_get_name(header, env);
     if(!local_name)
     {
         axutil_array_list_t *soap_header_blocks = NULL;
@@ -1339,11 +1341,11 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
             else
             {
                 AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Cannot find the header with name %s", local_name);
-                return AXIS2_FAILURE;
+                return AXIS2_SUCCESS;
             }
         }
     }
-    return AXIS2_FAILURE;
+    return AXIS2_SUCCESS;
 }
 
 axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(

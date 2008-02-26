@@ -57,6 +57,9 @@ rampart_pv_validate_ut(const axutil_env_t *env,
         rampart_context_t *rampart_context,
         axis2_msg_ctx_t *msg_ctx)
 {
+    if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
+        return AXIS2_SUCCESS;
+
     if(rampart_context_is_include_username_token(rampart_context, env)){
         axis2_char_t *ut_found = NULL;
         ut_found = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_UT_CHECKED);
