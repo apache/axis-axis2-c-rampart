@@ -229,6 +229,8 @@ trust_rstr_populate_rstr(
     entropy_ele = axiom_element_get_first_child_with_qname(rstr_ele, env, entropy_qname, rstr_node, &entropy_node);
     if(entropy_ele)
     {
+        entropy = trust_entropy_create(env);
+        trust_entropy_set_ns_uri(entropy, env, rstr->wst_ns_uri);
         if(AXIS2_SUCCESS == trust_entropy_deserialize(entropy, env, entropy_node))
         {
             rstr->entropy = entropy;

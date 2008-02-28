@@ -185,6 +185,16 @@ trust_entropy_set_binary_secret(
     return AXIS2_FALSE;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+trust_entropy_set_binary_secret_type(
+        trust_entropy_t *entropy,
+        const axutil_env_t *env,
+        trust_bin_sec_type_t binsec_type)
+{
+    entropy->binsec_type = binsec_type;
+    return AXIS2_SUCCESS;
+}
+
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 trust_entropy_get_other(
         trust_entropy_t *entropy,

@@ -202,6 +202,10 @@ extern "C"
 							 axis2_char_t *attr_name,
 							 axis2_char_t *attr_val,
 							 axis2_char_t *attr_ns);
+
+    AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+    oxs_axiom_clone_node(const axutil_env_t *env,
+                             axiom_node_t *node);
                           
     /** @} */
 #ifdef __cplusplus

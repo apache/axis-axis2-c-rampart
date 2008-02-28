@@ -17,10 +17,24 @@
 
 #include <trust_sts_client.h>
 #include <axis2_op_client.h>
+#include <openssl_hmac.h>
 
 #ifndef TRUST_COMPUTED_KEY_PSHA1
 #define TRUST_COMPUTED_KEY_PSHA1	"P-SHA1"
 #endif
+
+static void
+trust_sts_client_insert_entropy(
+    trust_sts_client_t *sts_client, 
+    const axutil_env_t *env, 
+    trust_rst_t *rst);
+
+static oxs_buffer_t*
+trust_sts_client_compute_key(
+     trust_sts_client_t *sts_client, 
+     const axutil_env_t *env, 
+     trust_rst_t *rst,
+     trust_rstr_t *rstr);
 
 struct trust_sts_client
 {
@@ -388,7 +402,7 @@ trust_sts_client_get_service_policy_location(
     return sts_client->service_policy_location;
 }
 
-AXIS2_EXTERN void AXIS2_CALL
+AXIS2_EXTERN oxs_buffer_t* AXIS2_CALL
 trust_sts_client_request_security_token_using_policy(
     trust_sts_client_t * sts_client,
     const axutil_env_t * env,
@@ -415,7 +429,7 @@ trust_sts_client_request_security_token_using_policy(
     if(NULL == rst)
     {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST is NULL: Created RST_CTX may not set to TrustContest");
-            return;
+            return NULL;
     }
 
     request_type = trust_rst_get_request_type(rst, env);
@@ -424,7 +438,7 @@ trust_sts_client_request_security_token_using_policy(
     if(NULL == request_type)
     {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST-RequestType is NOT set. RST MUST have a RequestType");
-            return;
+            return NULL;
     }
 
 	if(NULL == wsa_action)
@@ -444,6 +458,9 @@ trust_sts_client_request_security_token_using_policy(
 			{
 				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Policy setting failed.");
 			}
+
+            /*insert entropy if needed*/
+            trust_sts_client_insert_entropy(sts_client, env, rst);
 		}
 
 		/*Building the RST */
@@ -460,6 +477,13 @@ trust_sts_client_request_security_token_using_policy(
 			}
 			else
 			{
+                /*---- for debug ------*/
+                /*axis2_char_t *serialise_node = NULL;
+                serialise_node = axiom_node_to_string(return_node, env);
+                printf("sct reply is %s\n", serialise_node);*/
+                /*---- End for debug ------*/
+
+
 				/*Processing IN_MSG_CONTEXT*/
 				op_client = axis2_svc_client_get_op_client(sts_client->svc_client, env);
 				if(op_client)
@@ -470,6 +494,7 @@ trust_sts_client_request_security_token_using_policy(
 					{
 						trust_context_process_rstr(trust_context, env, in_msg_ctx);
 						sts_client->received_in_msg_ctx = in_msg_ctx;	/*Store the in_msg_context for sec_header extentions in trust*/
+                        return trust_sts_client_compute_key(sts_client, env, rst, trust_context_get_rstr(trust_context, env));
 					}
 				}
 
@@ -478,11 +503,159 @@ trust_sts_client_request_security_token_using_policy(
         else
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] RST-Not send -> RST Node building failed");
-            return;
+            return NULL;
         }
     }
 
+    return NULL;
+}
+
+static void
+trust_sts_client_insert_entropy(
+    trust_sts_client_t *sts_client, 
+    const axutil_env_t *env, 
+    trust_rst_t *rst)
+{
+    axis2_char_t *request_type = NULL;
+    int key_size = 0;
+    axis2_char_t *nonce = NULL;
+    trust_entropy_t* entropy = NULL;
+    
+    request_type = trust_rst_get_request_type(rst, env);
+
+    /*we support entropy for issue only*/
+    if(0 != axutil_strcmp(request_type, TRUST_REQ_TYPE_ISSUE))
+        return;
+
+    /*if entropy is already give, no need to create*/
+    if(trust_rst_get_entropy(rst, env))
+        return;
+
+    /*if algorithm suite is missing or trust10 is missing, then we can't proceed*/
+    if((!sts_client->algo_suite) || (!sts_client->trust10))
+        return;
+
+    /*check whether client entropy is needed. If not can return*/
+    if(!rp_trust10_get_require_client_entropy(sts_client->trust10, env))
+        return;
+
+    key_size = rp_algorithmsuite_get_max_symmetric_keylength(sts_client->algo_suite, env);
+    if (key_size <= 0)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] maximum symmetric key length of issuer algorithm suite is not valid");
+        return;
+    }
+
+    /*nonce should be created with half the size. size is in bits, have to convert it to bytes*/
+    nonce = rampart_generate_nonce(env, key_size/16);
+    if(!nonce)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] cannon create nonce with length %d", key_size/16);
+        return;
+    }
+
+    entropy = trust_entropy_create(env);
+    trust_entropy_set_binary_secret(entropy, env, nonce);
+    trust_entropy_set_ns_uri(entropy, env, TRUST_WST_XMLNS_05_02);
+    trust_entropy_set_binary_secret_type(entropy, env, NONCE);
+
+    trust_rst_set_key_size(rst, env, key_size);
+    trust_rst_set_entropy(rst, env, entropy);
     return;
 }
 
+static oxs_buffer_t*
+trust_sts_client_compute_key(trust_sts_client_t *sts_client, 
+                             const axutil_env_t *env, 
+                             trust_rst_t *rst,
+                             trust_rstr_t *rstr)
+{
+    trust_entropy_t* requester_entropy = NULL;
+    axiom_node_t *proof_token = NULL;
+    
+    /*if rstr is not valid, then can't proceed*/
+    if(!rstr)
+        return NULL;
 
+    /*if requester doesn't provide entropy, then no need to compute the key */
+    requester_entropy = trust_rst_get_entropy(rst, env);
+    if((!requester_entropy) || (!trust_entropy_get_binary_secret(requester_entropy, env)))
+        return NULL;
+
+    /*check the proof token whether to compute the token or not*/
+    proof_token = trust_rstr_get_requested_proof_token(rstr, env);
+    
+    /*if issuer doesn't give a proof token/entropy, then requester_entropy is the key*/
+    if(!proof_token)
+    {
+        oxs_buffer_t *buffer = NULL;
+        int decoded_len = 0;
+        axis2_char_t *decoded_shared_secret = NULL;
+        axis2_char_t* shared_secret = NULL;
+        
+        shared_secret = trust_entropy_get_binary_secret(requester_entropy, env);
+        decoded_len = axutil_base64_decode_len(shared_secret);
+	    decoded_shared_secret = AXIS2_MALLOC(env->allocator, decoded_len);
+	    axutil_base64_decode_binary((unsigned char*)decoded_shared_secret, shared_secret);
+        buffer = oxs_buffer_create(env);
+        oxs_buffer_populate(buffer, env, (unsigned char*)decoded_shared_secret, decoded_len);
+        AXIS2_FREE(env->allocator, decoded_shared_secret);
+        return buffer;
+    }
+    else
+    /*proof token is available. We have to check the content of proof token*/
+    {
+        axis2_char_t *local_name = NULL;
+        axis2_char_t *compute_key_algo = NULL;
+        trust_entropy_t* issuer_entropy = NULL;
+        int key_size = 0;
+        axis2_char_t *output = NULL;
+
+        oxs_buffer_t *buffer = NULL;
+        int requester_entropy_len = 0;
+        axis2_char_t *decoded_requester_entropy = NULL;
+        axis2_char_t *requester_nonce = NULL;
+        int issuer_entropy_len = 0;
+        axis2_char_t *decoded_issuer_entropy = NULL;
+        axis2_char_t *issuer_nonce = NULL;
+        
+        local_name = axiom_util_get_localname(proof_token, env);
+        /*if local name is not ComputedKey, then we can return*/
+        if(axutil_strcmp(local_name, TRUST_COMPUTED_KEY) != 0)
+            return NULL;
+
+        key_size = trust_rst_get_key_size(rst, env)/8;
+        if(key_size <= 0)
+            return NULL;
+
+        compute_key_algo = oxs_axiom_get_node_content(env, proof_token);
+
+        buffer = oxs_buffer_create(env);
+        requester_nonce = trust_entropy_get_binary_secret(requester_entropy, env);
+        requester_entropy_len = axutil_base64_decode_len(requester_nonce);
+        decoded_requester_entropy = AXIS2_MALLOC(env->allocator, requester_entropy_len);
+        axutil_base64_decode_binary((unsigned char*)decoded_requester_entropy, requester_nonce);
+
+        issuer_entropy = trust_rstr_get_entropy(rstr, env);
+
+        /*if issuer doesn't provide entropy, we can take requester entropy as key*/
+        if((!requester_entropy) || (!trust_entropy_get_binary_secret(requester_entropy, env)))
+        {   
+            oxs_buffer_populate(buffer, env, (unsigned char*)decoded_requester_entropy, requester_entropy_len);
+            AXIS2_FREE(env->allocator, decoded_requester_entropy);
+            return buffer;
+        }
+
+        issuer_nonce = trust_entropy_get_binary_secret(issuer_entropy, env);
+        issuer_entropy_len = axutil_base64_decode_len(issuer_nonce);
+        decoded_issuer_entropy = AXIS2_MALLOC(env->allocator, issuer_entropy_len);
+        axutil_base64_decode_binary((unsigned char*)decoded_issuer_entropy, issuer_nonce);
+        output = AXIS2_MALLOC(env->allocator, key_size);
+
+        openssl_p_hash(env, (unsigned char*)decoded_requester_entropy, requester_entropy_len,
+                            (unsigned char*)decoded_issuer_entropy, issuer_entropy_len, 
+                            (unsigned char*)output, key_size);
+        oxs_buffer_populate(buffer, env, (unsigned char*)output, key_size);
+        return buffer;
+    }
+}

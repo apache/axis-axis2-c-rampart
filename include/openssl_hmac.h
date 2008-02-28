@@ -52,6 +52,15 @@ extern "C" {
 			 axis2_char_t *seed,
 			 oxs_key_t *derived_key);
 
+        AXIS2_EXTERN axis2_status_t AXIS2_CALL
+        openssl_p_hash(const axutil_env_t *env,
+			unsigned char *secret,
+            unsigned int secret_len,
+			unsigned char *seed, 
+			unsigned int seed_len, 
+			unsigned char *output,
+			unsigned int output_len);
+
     /* @} */
 #ifdef __cplusplus
 }

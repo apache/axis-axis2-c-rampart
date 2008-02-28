@@ -223,6 +223,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     axis2_ctx_t *ctx = NULL;
     axis2_char_t *addressing_version_from_msg_ctx = NULL;
     axutil_property_t *property = NULL;
+    oxs_buffer_t *buffer = NULL;
 
     /*check whether rp_property is valid*/
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
@@ -296,7 +297,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
         cloned_policy = neethi_engine_get_normalize(env, AXIS2_FALSE, sts_policy); 
 	}
 		
-    trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, cloned_policy, addressing_version_from_msg_ctx);
+    buffer = trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, cloned_policy, addressing_version_from_msg_ctx);
 
     /*obtain the reply from sts*/
     rstr = trust_context_get_rstr(trust_context, env);
@@ -311,7 +312,10 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     security_context_token_set_token(sct, env, trust_rstr_get_requested_security_token(rstr, env));
     security_context_token_set_attached_reference(sct, env, trust_rstr_get_requested_attached_reference(rstr, env));
     security_context_token_set_unattached_reference(sct, env, trust_rstr_get_requested_unattached_reference(rstr, env));
-    security_context_token_set_requested_proof_token(sct, env, trust_rstr_get_requested_proof_token(rstr, env));
+    if(buffer)
+        security_context_token_set_secret(sct, env, buffer);
+    else
+        security_context_token_set_requested_proof_token(sct, env, trust_rstr_get_requested_proof_token(rstr, env));
 
     /*now we can clear unwanted stuff*/
     trust_context_free(trust_context, env);

@@ -25,6 +25,9 @@ struct security_context_token_t
     oxs_buffer_t *buffer;
     axis2_char_t *global_id;
     axis2_char_t *local_id;
+    axiom_node_t *sct_node;
+    axiom_node_t *attached_reference;
+    axiom_node_t *unattached_reference;
 };
 
 AXIS2_EXTERN security_context_token_t *AXIS2_CALL
@@ -47,6 +50,9 @@ AXIS2_EXTERN security_context_token_t *AXIS2_CALL
     sct->buffer = NULL;
     sct->global_id = NULL;
     sct->local_id = NULL;
+    sct->sct_node = NULL;
+    sct->attached_reference = NULL;
+    sct->unattached_reference = NULL;
     return sct;
 }
 
@@ -67,6 +73,18 @@ security_context_token_free(
     if(sct->global_id)
     {
         AXIS2_FREE(env->allocator, sct->global_id);
+    }
+    if(sct->sct_node)
+    {
+        axiom_node_free_tree(sct->sct_node, env);
+    }
+    if(sct->attached_reference)
+    {
+        axiom_node_free_tree(sct->attached_reference, env);
+    }
+    if(sct->unattached_reference)
+    {
+        axiom_node_free_tree(sct->unattached_reference, env);
     }
 
     AXIS2_FREE(env->allocator, sct);
@@ -190,6 +208,9 @@ security_context_token_get_attached_reference(
     axiom_node_t *str_token = NULL;
     axiom_node_t *ref_token = NULL;
 
+    if(sct->attached_reference)
+        return oxs_axiom_clone_node(env, sct->attached_reference);
+
     if(!sct->local_id)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have a local identifier");
@@ -209,6 +230,9 @@ security_context_token_get_unattached_reference(
     axiom_node_t *str_token = NULL;
     axiom_node_t *ref_token = NULL;
     
+    if(sct->unattached_reference)
+        return oxs_axiom_clone_node(env, sct->unattached_reference);
+
     if(!sct->global_id)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have a global identifier");
@@ -232,6 +256,9 @@ security_context_token_get_token(
     axiom_namespace_t *ns_obj_sc = NULL;
     axiom_namespace_t *ns_obj_wsu = NULL;
     axiom_attribute_t *id_attr = NULL;
+
+    if(sct->sct_node)
+        return oxs_axiom_clone_node(env, sct->sct_node);
 
     if(!sct->global_id)
     {
@@ -336,6 +363,7 @@ security_context_token_set_attached_reference(
         return AXIS2_FAILURE;
     }
     
+    sct->attached_reference = oxs_axiom_clone_node(env, node);
     return security_context_token_set_local_identifier(sct, env, axutil_strdup(env, local_id));
 }
 
@@ -365,6 +393,8 @@ security_context_token_set_unattached_reference(
         return AXIS2_FAILURE;
     }
     
+    sct->unattached_reference = oxs_axiom_clone_node(env, node);
+
     return security_context_token_set_global_identifier(sct, env, axutil_strdup(env, reference_id));
 }
 
@@ -374,6 +404,7 @@ security_context_token_set_token(
     const axutil_env_t * env,
     axiom_node_t *node)
 {
+    sct->sct_node = oxs_axiom_clone_node(env, node);
     return AXIS2_SUCCESS;
 }
 

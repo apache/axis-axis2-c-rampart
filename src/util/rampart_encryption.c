@@ -234,6 +234,8 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
 
+    oxs_key_t *derived_key = NULL;
+
     axis2_bool_t signature_protection = AXIS2_FALSE;
     int i = 0;
     int j = 0;
@@ -352,12 +354,27 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     /*Add ReferenceList element to the Security header. Note that we pass the sec_node. Not the EncryptedKey*/
     data_ref_list_node = oxs_token_build_reference_list_element(env, sec_node);
 
+    /*create derived key. */
+    if(AXIS2_TRUE == use_derived_keys)
+    {
+        /*Derive a new key*/
+        derived_key = oxs_key_create(env);
+        oxs_key_set_length(derived_key, env, rampart_context_get_encryption_derived_key_len(rampart_context, env));
+        status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE); 
+        
+        /*Add derived key to the list. We will create tokens*/
+        axutil_array_list_add(dk_list, env, derived_key);
+        key_reference_node = NULL;
+    }
+
     /*Repeat until all encryption parts are encrypted*/
     for(i=0 ; i < axutil_array_list_size(nodes_to_encrypt, env); i++)
     {
         axiom_node_t *node_to_enc = NULL;
         oxs_ctx_t *enc_ctx = NULL;
+#if 0
         oxs_key_t *derived_key = NULL;
+#endif
         axis2_char_t *enc_data_id = NULL;
         axiom_node_t *parent_of_node_to_enc = NULL;
         axiom_node_t *enc_data_node = NULL;
@@ -371,20 +388,22 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
 
         if(AXIS2_TRUE == use_derived_keys)
         {
+#if 0
             /*Derive a new key*/
             derived_key = oxs_key_create(env);
             oxs_key_set_length(derived_key, env, rampart_context_get_encryption_derived_key_len(rampart_context, env));
             status = oxs_derivation_derive_key(env, session_key, derived_key, AXIS2_TRUE); 
-            
+#endif
             /*Set the derived key for the encryption*/
             oxs_ctx_set_key(enc_ctx, env, derived_key);
 
             /*Set the ref key name to build KeyInfo element. Here the key name is the derived key id*/
             oxs_ctx_set_ref_key_name(enc_ctx, env, oxs_key_get_name(derived_key, env));
-            
+#if 0            
             /*Add derived key to the list. We will create tokens*/
             axutil_array_list_add(dk_list, env, derived_key);
             key_reference_node = NULL;
+#endif
         }
         else
         {

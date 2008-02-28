@@ -32,9 +32,9 @@ extern "C"
 {
 #endif
     
-    #define BIN_SEC_ASSYM   "http://schemas.xmlsoap.org/ws/2005/02/trust/AsymmetricKey"
-    #define BIN_SEC_SYM     "http://schemas.xmlsoap.org/ws/2005/02/trust/SymmetricKey"
-    #define BIN_SEC_NONCE   "http://schemas.xmlsoap.org/ws/2005/02/trust/Nonce"    
+    #define BIN_SEC_ASSYM   "/AsymmetricKey"
+    #define BIN_SEC_SYM     "/SymmetricKey"
+    #define BIN_SEC_NONCE   "/Nonce"    
 
     typedef enum
     {
@@ -111,6 +111,12 @@ extern "C"
         trust_entropy_t *entropy,
         const axutil_env_t *env,
         axis2_char_t *ns_uri);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    trust_entropy_set_binary_secret_type(
+        trust_entropy_t *entropy,
+        const axutil_env_t *env,
+        trust_bin_sec_type_t binsec_type);
 
 #ifdef	__cplusplus
 }

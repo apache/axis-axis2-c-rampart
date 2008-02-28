@@ -538,3 +538,31 @@ oxs_axiom_get_first_node_by_name_and_attr_val(const axutil_env_t *env,
     return NULL;
 }
 
+AXIS2_EXTERN axiom_node_t *AXIS2_CALL
+oxs_axiom_clone_node(const axutil_env_t *env,
+                         axiom_node_t *node)
+{
+    axis2_char_t* node_string = NULL;
+    axiom_xml_reader_t *reader = NULL;
+    axiom_document_t *doc = NULL;
+    axiom_stax_builder_t *builder = NULL;
+    axiom_node_t *clone = NULL;
+
+    if(!node)
+        return NULL;
+
+    node_string = axiom_node_sub_tree_to_string(node, env);
+    reader = axiom_xml_reader_create_for_memory(env, node_string, axutil_strlen(node_string),
+                                               NULL,
+                                               AXIS2_XML_PARSER_TYPE_BUFFER);
+
+    builder = axiom_stax_builder_create(env, reader);
+    doc = axiom_document_create(env, NULL, builder);
+    clone = axiom_document_build_all(doc, env);
+
+    axiom_xml_reader_xml_free(reader, env, NULL);
+    if(node_string)
+        AXIS2_FREE(env->allocator, node_string);
+
+    return clone;
+}

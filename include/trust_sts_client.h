@@ -95,7 +95,7 @@ extern "C"
         const axutil_env_t * env,
         axis2_char_t * directory);
 
-    AXIS2_EXTERN void AXIS2_CALL
+    AXIS2_EXTERN oxs_buffer_t* AXIS2_CALL
     trust_sts_client_request_security_token_using_policy(
         trust_sts_client_t * sts_client,
         const axutil_env_t * env,
