@@ -106,7 +106,7 @@ oxs_xml_enc_populate_stref_with_bst(const axutil_env_t *env,
     id = oxs_util_generate_id(env,(axis2_char_t*)OXS_CERT_ID);
 
     /*Build BinarySecurityToken as a child of parent(wsse:Security)*/
-    bst_node = oxs_token_build_binary_security_token_element(env, parent, id, OXS_VALUE_X509V3, OXS_ENCODING_BASE64BINARY, bst_data);
+    bst_node = oxs_token_build_binary_security_token_element(env, parent, id, OXS_ENCODING_BASE64BINARY, OXS_VALUE_X509V3, bst_data);
 
     /*Build a Reference to above BST*/
     ref_node = oxs_token_build_reference_element(env, stref_node, id, OXS_VALUE_X509V3);
@@ -141,7 +141,7 @@ oxs_xml_enc_populate_stref_with_embedded(const axutil_env_t *env,
     /*Build embedded token*/
     embedded_node = oxs_token_build_embedded_element(env, stref_node, NULL);
     /*Build BinarySecurityToken*/
-    bst_node = oxs_token_build_binary_security_token_element(env, embedded_node, NULL, OXS_VALUE_X509V3, OXS_ENCODING_BASE64BINARY, bst_data);
+    bst_node = oxs_token_build_binary_security_token_element(env, embedded_node, NULL, OXS_ENCODING_BASE64BINARY, OXS_VALUE_X509V3, bst_data);
 
     return AXIS2_SUCCESS;
 }

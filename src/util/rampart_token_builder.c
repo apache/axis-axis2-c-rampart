@@ -80,7 +80,7 @@ rampart_token_build_embedded(const axutil_env_t *env,
     }
     embedded_node = oxs_token_build_embedded_element(env, parent, "ID");
     bst_id = oxs_util_generate_id(env, (axis2_char_t*)"BST-");
-    bst_node =  oxs_token_build_binary_security_token_element(env, embedded_node, bst_id , OXS_VALUE_X509V3, OXS_ENCODING_BASE64BINARY, data);
+    bst_node =  oxs_token_build_binary_security_token_element(env, embedded_node, bst_id ,OXS_ENCODING_BASE64BINARY, OXS_VALUE_X509V3, data);
     return AXIS2_SUCCESS;
 }
 
