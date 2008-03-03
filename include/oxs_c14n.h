@@ -25,7 +25,7 @@
 
 /**
  * @file oxs_c14n.h
- * @brief Cannonicalization algo implementation for OMXMLSecurity
+ * @brief Cannonicalization implementation for OMXMLSecurity
  */
 
 #include <axis2_const.h>
@@ -38,10 +38,25 @@
 #include <axutil_array_list.h>
 #include <axutil_stream.h>
 
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+    
+    /**
+     * Perform given XML-Canonicalization (XML-C14N) method and returns the
+     * result as an <pre>axutil_stream</pre>.
+     *
+     * @param env Pointer to the Axis2/C environment.
+     * @param doc Document on which the canonicalization is performed.
+     * @param stream Output stream.
+     * @param ns_prefixes List of inclusive namespace prefixes.
+     * @param node Node that defines the subdocument to be canonicalized.
+     *             When it is <pre>NULL</pre> the whole document will be
+     *             canonicalized.
+     * @param algo Canonicalization method to be used.
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_stream_algo(
         const axutil_env_t *env,
@@ -52,6 +67,21 @@ extern "C"
         const axis2_char_t* algo
     );
 
+
+    /**
+     * Perform given XML-Canonicalization (XML-C14N) method and returns the
+     * result as an <pre>axis2_char_t</pre> buffer.
+     *
+     * @param env Pointer to the Axis2/C environment.
+     * @param doc Document on which the canonicalization is performed.
+     * @param outbuf Output buffer. A new buffer is allocated by the function,
+     *               should be free'd by the caller.
+     * @param ns_prefixes List of inclusive namespace prefixes.
+     * @param node Node that defines the subdocument to be canonicalized.
+     *             When it is <pre>NULL</pre> the whole document will be
+     *             canonicalized.
+     * @param algo Canonicalization method to be used.
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_algo(
         const axutil_env_t *env,
@@ -63,6 +93,22 @@ extern "C"
     );
 
 
+    /**
+     * Perform given XML-Canonicalization (XML-C14N) method and returns the
+     * result as an <pre>axutil_stream</pre>.
+     *
+     * @param env Pointer to the Axis2/C environment.
+     * @param doc Document on which the canonicalization is performed.
+     * @param comments <pre>TRUE</pre> if comments should be included in the
+     *                 output; <pre>FALSE</pre> otherwise.
+     * @param stream Output stream.
+     * @param ns_prefixes List of inclusive namespace prefixes.
+     * @param exclusive <pre>TRUE</pre> if exclusive cannonicalization should
+     *                  be used; <pre>FALSE</pre> otherwise.
+     * @param node Node that defines the subdocument to be canonicalized.
+     *             When it is <pre>NULL</pre> the whole document will be
+     *             canonicalized.
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply_stream(
         const axutil_env_t *env,
@@ -74,6 +120,24 @@ extern "C"
         const axiom_node_t *node
     );
 
+
+    /**
+     * Perform given XML-Canonicalization (XML-C14N) method and returns the
+     * result as an <pre>axis2_char_t</pre> buffer.
+     *
+     * @param env Pointer to the Axis2/C environment.
+     * @param doc Document on which the canonicalization is performed.
+     * @param comments <pre>TRUE</pre> if comments should be included in the
+     *                 output; <pre>FALSE</pre> otherwise.
+     * @param outbuf Output buffer. A new buffer is allocated by the function,
+     *               should be free'd by the caller.
+     * @param ns_prefixes List of inclusive namespace prefixes.
+     * @param exclusive <pre>TRUE</pre> if exclusive cannonicalization should
+     *                  be used; <pre>FALSE</pre> otherwise.
+     * @param node Node that defines the subdocument to be canonicalized.
+     *             When it is <pre>NULL</pre> the whole document will be
+     *             canonicalized.
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_c14n_apply (
         const axutil_env_t *env,
@@ -84,8 +148,8 @@ extern "C"
         const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node
     );
-
 #ifdef __cplusplus
 }
+/** @} */
 #endif
 #endif  /* OXS_C14N_H */
