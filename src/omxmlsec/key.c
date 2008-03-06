@@ -401,7 +401,7 @@ oxs_key_for_algo(oxs_key_t *key,
                  rp_algorithmsuite_t *key_algo)
 {
     oxs_buffer_t *key_buf = NULL;
-    openssl_cipher_property_t * cprop = NULL;
+    /*openssl_cipher_property_t * cprop = NULL;*/
     axis2_status_t ret = AXIS2_FAILURE;
     int size;
 
