@@ -33,6 +33,7 @@
 #include <oxs_constants.h>
 #include <oxs_buffer.h>
 #include <axutil_env.h>
+#include <rp_algorithmsuite.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -248,7 +249,7 @@ extern "C"
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_key_for_algo(oxs_key_t *key,
                      const axutil_env_t *env,
-                     axis2_char_t *key_algo);
+                     rp_algorithmsuite_t *key_algo);
 
 
     AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL

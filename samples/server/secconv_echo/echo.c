@@ -29,9 +29,13 @@
 #include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_sct_provider.h>
+#include <openssl_hmac.h>
 
 axiom_node_t *
 build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
+
+axiom_node_t *
+build_om_payload_for_echo_svc_interop(const axutil_env_t *env, axis2_char_t *text);
 
 static axutil_hash_t *
 secconv_echo_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx);
@@ -54,7 +58,7 @@ axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node, axis2_msg_ctx_t *ms
     printf("Username of the Token is = %s ", username);
     }
 */    
-    ret_node = build_om_programatically(env, name);
+    ret_node = build_om_payload_for_echo_svc_interop(env, name);
     return ret_node;
 }
 
@@ -96,6 +100,7 @@ secconv_echo_sts_request_security_token(
     axiom_node_t* rstr_node = NULL;
     int size = 32;
     axutil_hash_t* db = NULL;
+    trust_entropy_t* requester_entropy = NULL;
 
     /*create and populate rst using node given*/
     rst = trust_rst_create(env);
@@ -121,17 +126,56 @@ secconv_echo_sts_request_security_token(
         return NULL;
     }
 
+    requester_entropy = trust_rst_get_entropy(rst, env);;
+
     /*create global id, local id, and shared secret*/
     global_id = oxs_util_generate_id(env,"urn:uuid:");
     local_id = axutil_stracat(env, "#", oxs_util_generate_id(env, "sctId"));
     shared_secret = oxs_buffer_create(env);
+    if(requester_entropy)
+    {
+        size = trust_rst_get_key_size(rst, env)/16;
+    }
     openssl_generate_random_data(env, shared_secret, size);
 
     /*create security context token and populate it*/
     sct = security_context_token_create(env);
-    security_context_token_set_secret(sct, env, shared_secret);
     security_context_token_set_global_identifier(sct, env, global_id);
     security_context_token_set_local_identifier(sct, env, local_id);
+
+    if(requester_entropy)
+    {
+        oxs_buffer_t *buffer = NULL;
+        int requester_entropy_len = 0;
+        axis2_char_t *decoded_requester_entropy = NULL;
+        axis2_char_t *requester_nonce = NULL;
+        int issuer_entropy_len = 0;
+        axis2_char_t *decoded_issuer_entropy = NULL;
+        int key_size = 0;
+        axis2_char_t *output = NULL;
+        
+        buffer = oxs_buffer_create(env);
+        requester_nonce = trust_entropy_get_binary_secret(requester_entropy, env);
+        requester_entropy_len = axutil_base64_decode_len(requester_nonce);
+        decoded_requester_entropy = AXIS2_MALLOC(env->allocator, requester_entropy_len);
+        axutil_base64_decode_binary((unsigned char*)decoded_requester_entropy, requester_nonce);
+
+        issuer_entropy_len = oxs_buffer_get_size(shared_secret, env);
+        decoded_issuer_entropy = oxs_buffer_get_data(shared_secret, env);
+
+        key_size = size * 2;
+        output = AXIS2_MALLOC(env->allocator, key_size);
+
+        openssl_p_hash(env, (unsigned char*)decoded_requester_entropy, requester_entropy_len,
+                            (unsigned char*)decoded_issuer_entropy, issuer_entropy_len, 
+                            (unsigned char*)output, key_size);
+        oxs_buffer_populate(buffer, env, (unsigned char*)output, key_size);
+        security_context_token_set_secret(sct, env, buffer);
+    }
+    else
+    {
+        security_context_token_set_secret(sct, env, shared_secret);
+    }
 
     /*store SCT so that when server needs it, can be extracted*/
     db = sct_provider_get_sct_db(env, msg_ctx);
@@ -149,14 +193,43 @@ secconv_echo_sts_request_security_token(
     trust_rstr_set_token_type(rstr, env, token_type);
     trust_rstr_set_request_type(rstr, env, request_type);
     trust_rstr_set_wst_ns_uri(rstr, env, TRUST_WST_XMLNS_05_02);
-    trust_rstr_set_requested_proof_token(rstr, env, 
-                    security_context_token_get_requested_proof_token(sct, env));
     trust_rstr_set_requested_unattached_reference(rstr, env, 
                     security_context_token_get_unattached_reference(sct, env));
     trust_rstr_set_requested_attached_reference(rstr, env, 
                     security_context_token_get_attached_reference(sct, env));
     trust_rstr_set_requested_security_token(rstr, env, 
                     security_context_token_get_token(sct, env));
+
+    if(requester_entropy)
+    {
+        axis2_char_t *nonce = NULL;
+        trust_entropy_t* entropy = NULL;
+        axiom_node_t *computed_key = NULL;
+        axiom_element_t *computed_key_element = NULL;
+        axiom_node_t *requested_proof = NULL;
+
+        trust_rstr_set_key_size(rstr, env, size * 16);
+
+        nonce = AXIS2_MALLOC(env->allocator, sizeof(char) * (axutil_base64_encode_len(size)+1));
+        axutil_base64_encode(nonce, (char*)oxs_buffer_get_data(shared_secret, env), size);
+
+        entropy = trust_entropy_create(env);
+        trust_entropy_set_binary_secret(entropy, env, nonce);
+        trust_entropy_set_ns_uri(entropy, env, TRUST_WST_XMLNS_05_02);
+        trust_entropy_set_binary_secret_type(entropy, env, NONCE);
+        trust_rstr_set_entropy(rstr, env, entropy);
+
+        computed_key = trust_util_computed_key_element(env, TRUST_WST_XMLNS_05_02, NULL);
+        computed_key_element = axiom_node_get_data_element(computed_key, env);
+        axiom_element_set_text(computed_key_element, env, TRUST_COMPUTED_KEY_PSHA1, computed_key);
+        requested_proof = trust_util_create_requsted_proof_token_element(env, TRUST_WST_XMLNS_05_02, NULL, computed_key);
+        trust_rstr_set_requested_proof_token(rstr, env, requested_proof);
+    }
+    else
+    {
+        trust_rstr_set_requested_proof_token(rstr, env, 
+                        security_context_token_get_requested_proof_token(sct, env));
+    }
 
     /*build the rstr node*/
     rstr_node = trust_rstr_build_rstr(rstr, env, NULL);
@@ -214,3 +287,22 @@ secconv_echo_get_sct_db(const axutil_env_t *env,
     return db;
 }
 
+axiom_node_t *
+build_om_payload_for_echo_svc_interop(const axutil_env_t *env, axis2_char_t *text)
+{
+ axiom_node_t *echo_om_node = NULL;
+    axiom_element_t* echo_om_ele = NULL;
+    axiom_node_t* text_om_node = NULL;
+    axiom_element_t * text_om_ele = NULL;
+    axiom_namespace_t *ns1 = NULL;
+
+    ns1 = axiom_namespace_create(env, "http://InteropBaseAddress/interop", "ns1");
+    echo_om_ele = axiom_element_create(env, NULL, "echoResponse", ns1, &echo_om_node);
+
+    text_om_ele = axiom_element_create(env, echo_om_node, "LocalName", NULL, &text_om_node);
+
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
+ 
+    return echo_om_node;
+
+}

@@ -72,7 +72,7 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     axis2_char_t *nonce = NULL;
     axis2_char_t *id = NULL;
     /*Default values*/
-    int offset = -1;
+    int offset = 0;
     int length = 0;
 
 

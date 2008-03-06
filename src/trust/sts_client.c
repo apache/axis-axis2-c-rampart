@@ -19,10 +19,6 @@
 #include <axis2_op_client.h>
 #include <openssl_hmac.h>
 
-#ifndef TRUST_COMPUTED_KEY_PSHA1
-#define TRUST_COMPUTED_KEY_PSHA1	"P-SHA1"
-#endif
-
 static void
 trust_sts_client_insert_entropy(
     trust_sts_client_t *sts_client, 
@@ -180,7 +176,7 @@ trust_sts_client_request_security_token(
 	}
 
     sts_client->svc_client =
-    trust_sts_client_get_svc_client(sts_client, env, wsa_action, NULL);
+    trust_sts_client_get_svc_client(sts_client, env, wsa_action, NULL, AXIS2_FALSE);
 														  
 
     if (status == AXIS2_SUCCESS)
@@ -234,7 +230,8 @@ trust_sts_client_get_svc_client(
     trust_sts_client_t * sts_client,
     const axutil_env_t * env,
     axis2_char_t * action, 
-    axis2_char_t *address_version)
+    axis2_char_t *address_version, 
+    axis2_bool_t is_soap11)
 {
     axis2_endpoint_ref_t *endpoint_ref = NULL;
     axis2_options_t *options = NULL;
@@ -245,6 +242,11 @@ trust_sts_client_get_svc_client(
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_action(options, env, action);
+    if(is_soap11)
+    {
+        axis2_options_set_soap_action(options, env, axutil_string_create(env, action));
+        axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
+    }
 
 	if(!(sts_client->svc_client))
 	{
@@ -408,7 +410,8 @@ trust_sts_client_request_security_token_using_policy(
     const axutil_env_t * env,
     trust_context_t *trust_context,
     neethi_policy_t *issuer_policy, 
-    axis2_char_t *address_version)
+    axis2_char_t *address_version, 
+    axis2_bool_t is_soap11)
 {
     axis2_status_t status = AXIS2_SUCCESS;
     axiom_node_t *rst_node = NULL;
@@ -447,7 +450,7 @@ trust_sts_client_request_security_token_using_policy(
 	}
 
     sts_client->svc_client =
-    trust_sts_client_get_svc_client(sts_client, env, wsa_action, address_version);														  
+    trust_sts_client_get_svc_client(sts_client, env, wsa_action, address_version, is_soap11);														  
 
     if (sts_client->svc_client)
     {

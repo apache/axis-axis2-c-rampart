@@ -174,6 +174,17 @@ extern "C"
         trust_rstr_t *rstr,
         const axutil_env_t *env,
         axis2_char_t *wst_ns_uri);
+
+    AXIS2_EXTERN int AXIS2_CALL
+    trust_rstr_get_key_size(
+        trust_rstr_t *rstr,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN  axis2_status_t AXIS2_CALL
+    trust_rstr_set_key_size(
+        trust_rstr_t *rstr,
+        const axutil_env_t *env,
+        int key_size);
     
      
 

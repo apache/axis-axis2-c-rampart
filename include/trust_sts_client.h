@@ -81,7 +81,8 @@ extern "C"
         trust_sts_client_t * sts_client,
         const axutil_env_t * env,
         axis2_char_t * action,
-        axis2_char_t * address_version);
+        axis2_char_t * address_version, 
+        axis2_bool_t is_soap11);
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     trust_sts_client_set_issuer_address(
@@ -101,7 +102,8 @@ extern "C"
         const axutil_env_t * env,
         trust_context_t *trust_context,
         neethi_policy_t *issuer_policy,
-        axis2_char_t *address_version);
+        axis2_char_t *address_version,
+        axis2_bool_t is_soap11);
 
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	trust_sts_client_set_issuer_policy_location(

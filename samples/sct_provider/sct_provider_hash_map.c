@@ -224,6 +224,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     axis2_char_t *addressing_version_from_msg_ctx = NULL;
     axutil_property_t *property = NULL;
     oxs_buffer_t *buffer = NULL;
+    axis2_bool_t is_soap11 = AXIS2_FALSE;
 
     /*check whether rp_property is valid*/
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
@@ -273,7 +274,9 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     ctx = axis2_msg_ctx_get_base(msg_ctx, env);
     property = axis2_ctx_get_property(ctx, env, AXIS2_WSA_VERSION);
     if(property)
-        addressing_version_from_msg_ctx = axutil_property_get_value(property, env);    
+        addressing_version_from_msg_ctx = axutil_property_get_value(property, env);  
+
+    is_soap11 = axis2_msg_ctx_get_is_soap_11(msg_ctx, env);
 
     /*Create sts client and set the values*/
     sts_client = trust_sts_client_create(env);    
@@ -297,7 +300,8 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
         cloned_policy = neethi_engine_get_normalize(env, AXIS2_FALSE, sts_policy); 
 	}
 		
-    buffer = trust_sts_client_request_security_token_using_policy(sts_client, env, trust_context, cloned_policy, addressing_version_from_msg_ctx);
+    buffer = trust_sts_client_request_security_token_using_policy(sts_client, env, 
+                        trust_context, cloned_policy, addressing_version_from_msg_ctx, is_soap11);
 
     /*obtain the reply from sts*/
     rstr = trust_context_get_rstr(trust_context, env);

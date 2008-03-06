@@ -1059,7 +1059,8 @@ rampart_shp_process_asym_binding_signature(
     rampart_context_t *rampart_context,
     axiom_soap_envelope_t *soap_envelope,
     axiom_node_t *sec_node,
-    axiom_node_t *sig_node)
+    axiom_node_t *sig_node,
+    axis2_bool_t *is_endorsing)
 {
 
     oxs_sign_ctx_t *sign_ctx = NULL;
@@ -1178,7 +1179,10 @@ rampart_shp_process_asym_binding_signature(
     /*Get the key identifiers and build the certificate*/
     /*First we should verify with policy*/
 
-    token = rampart_context_get_token(rampart_context, env,
+    if(is_endorsing)
+        token = rampart_context_get_endorsing_token(rampart_context, env);
+    else
+        token = rampart_context_get_token(rampart_context, env,
                                       AXIS2_FALSE, server_side, AXIS2_TRUE);
 
     if(!token)
@@ -1432,7 +1436,7 @@ const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     
     if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_ASYMMETRIC_BINDING){
-        status = rampart_shp_process_asym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node);
+        status = rampart_shp_process_asym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node, AXIS2_FALSE);
     }else if ((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING){
         status = rampart_shp_process_sym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, sig_node);
     }else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING){
@@ -1632,6 +1636,7 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
 {
     axiom_node_t *cur_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
+    axis2_bool_t first_signature= AXIS2_TRUE;
 
     AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing security header in Strict layout");
 
@@ -1664,7 +1669,23 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
         }
         else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE))
         {
-            status = rampart_shp_process_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
+            if(first_signature)
+            {
+                status = rampart_shp_process_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
+                first_signature = AXIS2_FALSE;
+            }
+            else /*endorsing*/
+            {
+                status = rampart_shp_process_asym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node, AXIS2_TRUE);
+                if(AXIS2_SUCCESS == status)
+                {
+                    axis2_char_t *sig_val = NULL; 
+                    axiom_node_t *sig_val_node = NULL;
+                    sig_val_node = oxs_axiom_get_first_child_node_by_name(env, cur_node, OXS_NODE_SIGNATURE_VALUE, OXS_DSIG_NS, OXS_DS );
+                    sig_val = oxs_token_get_signature_value(env, sig_val_node);
+                    rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_ENDORSED_VALUE, sig_val);
+                }
+            }
         }
         else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_REFERENCE_LIST))
         {

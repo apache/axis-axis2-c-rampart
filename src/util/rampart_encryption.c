@@ -283,6 +283,23 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                 return AXIS2_FAILURE;
             }
             axutil_array_list_add(nodes_to_encrypt, env, sig_node);
+
+            if(rampart_context_is_sig_confirmation_reqd(rampart_context, env))
+            {
+                axiom_node_t* cur_node = NULL;
+                cur_node = axiom_node_get_first_child(sec_node, env);
+                while(cur_node)
+                {
+                    axis2_char_t *cur_local_name = NULL;
+                    cur_local_name = axiom_util_get_localname(cur_node, env);
+
+                    if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE_CONFIRMATION))
+                    {
+                        axutil_array_list_add(nodes_to_encrypt, env, cur_node);
+                    }
+                    cur_node = axiom_node_get_next_sibling(cur_node, env);
+                }
+            }
         }
     }
 
@@ -338,7 +355,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             else
             {
                 session_key = oxs_key_create(env);
-                status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+                status = oxs_key_for_algo(session_key, env, rampart_context_get_algorithmsuite(rampart_context, env));
                 rampart_context_set_encryption_session_key(rampart_context, env, session_key);
             }
         }
@@ -792,7 +809,7 @@ rampart_enc_encrypt_message(
     if(!session_key){
         /*Generate the  session key*/
          session_key = oxs_key_create(env);
-         status = oxs_key_for_algo(session_key, env, enc_sym_algo);
+         status = oxs_key_for_algo(session_key, env, rampart_context_get_algorithmsuite(rampart_context, env));
          rampart_context_set_encryption_session_key(rampart_context, env, session_key);
     }
     if(AXIS2_FAILURE == status)

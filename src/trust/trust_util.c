@@ -576,7 +576,7 @@ trust_util_create_key_type_element(
 
     if (key_type)
     {
-        if (0 == axutil_strcmp(key_type, TRUST_KEY_TYPE_BEARER) ||
+        if (0 == axutil_strcmp(key_type, TRUST_KEY_TYPE_SYMM_KEY) ||
             0 == axutil_strcmp(key_type, TRUST_KEY_TYPE_PUBLIC_KEY) ||
             0 == axutil_strcmp(key_type, TRUST_KEY_TYPE_BEARER))
         {
@@ -1401,7 +1401,7 @@ trust_util_create_random_session_key_proof_token_element(
 
 	/*Generating Session key*/
 	session_key = oxs_key_create(env);
-	oxs_key_for_algo(session_key, env, OXS_HREF_HMAC_SHA1);
+	oxs_key_for_algo(session_key, env, NULL);
 
 	if(oxs_key_get_data(session_key, env))
 	{

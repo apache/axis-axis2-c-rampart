@@ -398,15 +398,17 @@ oxs_key_read_from_file(oxs_key_t *key,
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_for_algo(oxs_key_t *key,
                  const axutil_env_t *env,
-                 axis2_char_t *key_algo)
+                 rp_algorithmsuite_t *key_algo)
 {
     oxs_buffer_t *key_buf = NULL;
     openssl_cipher_property_t * cprop = NULL;
     axis2_status_t ret = AXIS2_FAILURE;
     int size;
 
-    /*We need to make an special entry for the HMAC-Sha1 as we do not need a cipher property for it.*/
+
+#if 0
     if(0 == axutil_strcmp(key_algo, OXS_HREF_HMAC_SHA1)){
+        /*We need to make an special entry for the HMAC-Sha1 as we do not need a cipher property for it.*/
         size = OPENSSL_HMAC_SHA1_KEY_LEN;
     }else{
 
@@ -422,6 +424,11 @@ oxs_key_for_algo(oxs_key_t *key,
 	    openssl_cipher_property_free(cprop, env);
 	    cprop = NULL;
     }
+#endif
+    if(key_algo)
+        size = rp_algorithmsuite_get_min_symmetric_keylength(key_algo,env)/8;
+    else
+        size = OPENSSL_HMAC_SHA1_KEY_LEN;
 
     key_buf = oxs_buffer_create(env);
     /*The actual key generation happens here*/

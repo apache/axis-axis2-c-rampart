@@ -303,7 +303,8 @@ rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
     h_node = axiom_node_get_first_child(sec_node, env);
     while(h_node)
     {
-        if(0 == axutil_strcmp(OXS_NODE_DERIVED_KEY_TOKEN, axiom_util_get_localname(h_node, env)))
+        if(0 == axutil_strcmp(OXS_NODE_DERIVED_KEY_TOKEN, axiom_util_get_localname(h_node, env)) ||
+                (0 == axutil_strcmp(OXS_NODE_BINARY_SECURITY_TOKEN, axiom_util_get_localname(h_node, env))))
         {
             axutil_array_list_add(dk_list, env, h_node);
         }
@@ -323,9 +324,27 @@ rampart_shb_ensure_sec_header_order(const axutil_env_t *env,
     {
         if(is_encrypt_before_sign)
         {
+            int no_of_sig_node = 0;
             /*Encrypt->Sig         <Sig><RefList>*/
             oxs_axiom_interchange_nodes(env,  sig_node, ref_list_node );
             first_protection_item = sig_node;
+            no_of_sig_node = oxs_axiom_get_number_of_children_with_qname(env, sec_node, OXS_NODE_SIGNATURE, OXS_DSIG_NS, NULL);
+            if(no_of_sig_node > 1)
+            {
+                axiom_node_t* cur_node = NULL;
+                cur_node = axiom_node_get_first_child(sec_node, env);
+                while(cur_node)
+                {
+                    axis2_char_t *cur_local_name = NULL;
+                    cur_local_name = axiom_util_get_localname(cur_node, env);
+
+                    if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE))
+                    {
+                        oxs_axiom_interchange_nodes(env,  cur_node, ref_list_node);
+                    }
+                    cur_node = axiom_node_get_next_sibling(cur_node, env);
+                }
+            }
         }
         else
         {

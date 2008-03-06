@@ -1435,7 +1435,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
     return AXIS2_FAILURE;
 }
 
-rp_algorithmsuite_t *AXIS2_CALL
+AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
 rampart_context_get_algorithmsuite(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
@@ -2898,3 +2898,41 @@ rampart_context_get_issued_token_aquire_function(rampart_context_t *rampart_cont
 	return rampart_context->aquire_issued_token;
 }
 
+AXIS2_EXTERN rp_property_t *AXIS2_CALL
+rampart_context_get_endorsing_token(rampart_context_t *rampart_context, 
+                                    const axutil_env_t *env)
+{
+    axutil_array_list_t *array_list = NULL;
+    rp_supporting_tokens_t *endorsing_supporting = NULL;
+    /*First we should check in the direct policy members*/
+    endorsing_supporting = rp_secpolicy_get_endorsing_supporting_tokens(rampart_context->secpolicy,env);
+    /*If not there then we should check in the binding*/
+    if (!endorsing_supporting)
+    {
+        rp_binding_commons_t *commons = NULL;
+        commons = rampart_context_get_binding_commons(rampart_context,env);
+        if(!commons)
+            return NULL;
+        endorsing_supporting = rp_binding_commons_get_endorsing_supporting_tokens(commons,env);
+        if (!endorsing_supporting)
+            return NULL;
+    }
+    array_list = rp_supporting_tokens_get_tokens(endorsing_supporting, env);
+    if (!array_list)
+        return NULL;
+    else
+    {
+        int i = 0;
+        for (i = 0; i < axutil_array_list_size(array_list, env); i++)
+        {
+            rp_property_t *token = NULL;
+            token = (rp_property_t *)
+                    axutil_array_list_get(array_list, env, i);
+            if (token)
+            {
+                    return token; 
+            }
+        }
+    }
+    return NULL;
+}

@@ -143,6 +143,7 @@ extern "C"
 #define TRUST_XS         "xs"
 #define TRUST_XS_XMLNS   "http://www.w3.org/2001/XMLSchema"
 
+#define TRUST_COMPUTED_KEY_PSHA1 "http://schemas.xmlsoap.org/ws/2005/02/trust/CK/PSHA1"
 /* NS Versions */
 
 #define TRUST_VERSION_05_02 1

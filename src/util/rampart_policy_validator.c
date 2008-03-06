@@ -84,7 +84,9 @@ rampart_pv_validate_signature_confirmation(const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx)
 {
     axis2_bool_t sig_conf_reqd = AXIS2_FALSE;
-    
+    if(axis2_msg_ctx_get_server_side(msg_ctx,env))
+        return AXIS2_SUCCESS;
+
     sig_conf_reqd = rampart_context_is_sig_confirmation_reqd(rampart_context, env);
     
     if(AXIS2_TRUE == sig_conf_reqd){

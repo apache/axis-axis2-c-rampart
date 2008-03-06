@@ -1621,7 +1621,7 @@ c14n_no_output_ancestor_uses_prefix(
          * the following hack should work instead of a more
          * general in_nodest()*/
 
-        if (!in_nodeset(node, ctx))
+        if (!in_nodeset(parent_node, ctx))
         {
             /*we reached a node beyond the nodeset,
              * so the prefix is not used*/

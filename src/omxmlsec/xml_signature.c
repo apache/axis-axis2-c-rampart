@@ -417,7 +417,12 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
 	}
 	else
 	{
-		reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id2, OXS_WSU_XMLNS );		
+		reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id2, OXS_WSU_XMLNS );	
+        /*for endorsing, we have to check "Id", not "wsu:Id"*/
+        if(!reffed_node)
+        {
+            reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id2, NULL );	
+        }
 
 	}
     /*Find the node refered by this ref_id2 and set to the sign part*/

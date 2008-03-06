@@ -49,8 +49,6 @@
 axis2_status_t AXIS2_CALL
 rampart_sig_add_x509_token(const axutil_env_t *env, 
                                rampart_context_t *rampart_context, 
-                               axutil_array_list_t *nodes_to_sign, 
-                               rp_property_t *token,
                                axiom_node_t *sec_node,
                                axis2_char_t *cert_id);
 
@@ -60,6 +58,14 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
                               axutil_array_list_t *nodes_to_sign,
                               axis2_bool_t server_side,
                               axutil_array_list_t *sign_parts_list);
+
+static axis2_status_t
+rampart_sig_endorse_sign(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node);
 
 
 oxs_x509_cert_t *AXIS2_CALL
@@ -312,7 +318,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
             else
             {
                 session_key = oxs_key_create(env);
-                oxs_key_for_algo(session_key, env, OXS_HREF_HMAC_SHA1);
+                oxs_key_for_algo(session_key, env, rampart_context_get_algorithmsuite(rampart_context, env));
                 rampart_context_set_signature_session_key(rampart_context, env, session_key);
             }
         }
@@ -575,6 +581,25 @@ rampart_sig_sign_message(
             axutil_array_list_add(nodes_to_sign, env, ut_node);
         }
     }
+    else
+    {
+        if(rampart_context_is_sig_confirmation_reqd(rampart_context, env))
+        {
+            axiom_node_t* cur_node = NULL;
+            cur_node = axiom_node_get_first_child(sec_node, env);
+            while(cur_node)
+            {
+                axis2_char_t *cur_local_name = NULL;
+                cur_local_name = axiom_util_get_localname(cur_node, env);
+
+                if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE_CONFIRMATION))
+                {
+                    axutil_array_list_add(nodes_to_sign, env, cur_node);
+                }
+                cur_node = axiom_node_get_next_sibling(cur_node, env);
+            }
+        }
+    }
 
     /*Now we have to check whether a token is specified.*/
     token = rampart_context_get_token(rampart_context, env, AXIS2_FALSE, server_side, AXIS2_FALSE);
@@ -605,10 +630,10 @@ rampart_sig_sign_message(
 		if (include) 
         {
             cert_id = oxs_util_generate_id(env,(axis2_char_t*)OXS_CERT_ID);
-			if (!rampart_sig_add_x509_token(env, rampart_context, 
-                                   nodes_to_sign, token,
-                                   sec_node, cert_id)) 
+			if (!rampart_sig_add_x509_token(env, rampart_context, sec_node, cert_id)) 
             {
+                axutil_array_list_free(nodes_to_sign, env);
+                nodes_to_sign = NULL;
 				return AXIS2_FAILURE;
 			}
 			/*This flag will be useful when creating key Info element.*/
@@ -826,6 +851,11 @@ rampart_sig_sign_message(
     oxs_sign_ctx_free(sign_ctx, env);
     sign_ctx = NULL;
 
+    if(status)
+    {
+        return rampart_sig_endorse_sign(env, msg_ctx, rampart_context, soap_envelope, sec_node);
+    }
+
     return status;
 }
 
@@ -844,15 +874,20 @@ rampart_sig_confirm_signature(const axutil_env_t *env,
     /*If the request has signed, then the @Value = contents of <ds:SignatureValue>*/
 
     /*Generate an Id*/
-    id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_CONF_ID);
- 
-    /*TODO: Get the SignatureValue from the request*/
-    
+    /*id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_CONF_ID);*/
+     
     /*Get SPR*/
     sig_val = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_SIG_VALUE);
 
     /*Build wsse11:SignatureConfirmation element */
     oxs_token_build_signature_confirmation_element(env, sec_node, id, sig_val);
+
+    /*id = oxs_util_generate_id(env,(axis2_char_t*)OXS_SIG_CONF_ID);*/
+    sig_val = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_ENDORSED_VALUE);
+    if(sig_val)
+    {
+        oxs_token_build_signature_confirmation_element(env, sec_node, id, sig_val);
+    }
 
     return AXIS2_SUCCESS;
 
@@ -862,8 +897,6 @@ rampart_sig_confirm_signature(const axutil_env_t *env,
 axis2_status_t AXIS2_CALL
 rampart_sig_add_x509_token(const axutil_env_t *env, 
                                rampart_context_t *rampart_context, 
-                               axutil_array_list_t *nodes_to_sign, 
-                               rp_property_t *token,
                                axiom_node_t *sec_node,
                                axis2_char_t *cert_id)
 {
@@ -880,8 +913,6 @@ rampart_sig_add_x509_token(const axutil_env_t *env,
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] Cannot get certificate");
-        axutil_array_list_free(nodes_to_sign, env);
-        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }    
     bst_data = oxs_x509_cert_get_data(cert, env);
@@ -889,8 +920,6 @@ rampart_sig_add_x509_token(const axutil_env_t *env,
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] Certificate data cannot be loaded from the cert.");
-        axutil_array_list_free(nodes_to_sign, env);
-        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }
 
@@ -900,8 +929,6 @@ rampart_sig_add_x509_token(const axutil_env_t *env,
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart][rampart_signature] Binary Security Token creation failed.");
-        axutil_array_list_free(nodes_to_sign, env);
-        nodes_to_sign = NULL;
         return AXIS2_FAILURE;
     }
     oxs_x509_cert_free(cert, env);
@@ -1009,3 +1036,142 @@ rampart_sig_create_sign_parts(const axutil_env_t *env,
     return new_sign_parts;
 }
 
+
+static axis2_status_t
+rampart_sig_endorse_sign(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node)
+{
+    axis2_bool_t server_side = AXIS2_FALSE;
+    axiom_node_t *node_to_sign = NULL;
+    rp_property_t *token = NULL;
+    rp_property_type_t token_type;
+    axis2_bool_t include = AXIS2_FALSE;
+    axis2_bool_t is_direct_reference = AXIS2_TRUE;
+    oxs_sign_ctx_t *sign_ctx = NULL;
+    axutil_array_list_t *nodes_to_sign = NULL;
+    axis2_char_t *cert_id = NULL;
+    axis2_char_t *eki = NULL;
+    oxs_sign_part_t *sign_part = NULL;
+    axutil_array_list_t *tr_list = NULL;
+    oxs_transform_t *tr = NULL;
+    axis2_char_t *digest_method = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
+    axiom_node_t *sig_node = NULL;
+    axiom_namespace_t *sign_ns = NULL;
+
+    /*endorsing will be only for client*/
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    if(server_side)
+        return AXIS2_SUCCESS;
+
+    /*if signature is not found, can't continue*/
+    node_to_sign = oxs_axiom_get_node_by_local_name(env, sec_node, OXS_NODE_SIGNATURE);
+    if(!node_to_sign)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_signature]Endorsing signature, Sigature Not found");
+        return AXIS2_FAILURE;
+    }
+
+    /*Now we have to check whether a token is specified. If not specified then no need to endorse*/
+    token = rampart_context_get_endorsing_token(rampart_context, env);
+    if(!token)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_signature] Endorsing Token is not specified. No need to endorse");
+        return AXIS2_SUCCESS;
+    }
+
+    token_type = rp_property_get_type(token, env);
+	if(!rampart_context_is_token_type_supported(token_type, env))
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_signature] Token type %d not supported", token_type);
+        return AXIS2_FAILURE;
+    }
+
+    /*this implementaion supports only x509 to endorse signature*/
+    if(token_type != RP_PROPERTY_X509_TOKEN)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rampart_signature] Token type %d not supported for endorsing", token_type);
+        return AXIS2_FAILURE;
+    }
+
+    /* Determine weather we need to include the token */
+    include = rampart_context_is_token_include(rampart_context, token, 
+                                                token_type, server_side, 
+                                                AXIS2_FALSE, env);
+    if (token_type == RP_PROPERTY_X509_TOKEN) 
+    {        
+		if (include) 
+        {
+            cert_id = oxs_util_generate_id(env,(axis2_char_t*)OXS_CERT_ID);
+			if (!rampart_sig_add_x509_token(env, rampart_context, sec_node, cert_id)) 
+            {
+				return AXIS2_FAILURE;
+			}
+			/*This flag will be useful when creating key Info element.*/
+			is_direct_reference = AXIS2_TRUE;
+			eki = RAMPART_STR_DIRECT_REFERENCE;			
+		}
+		else 
+        {
+			eki = rampart_context_get_key_identifier(rampart_context, token, env);
+            if(!eki) 
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature] Cannot attach the token.");
+                axutil_array_list_free(nodes_to_sign, env);
+                nodes_to_sign = NULL;
+                return AXIS2_FAILURE;
+            }
+			is_direct_reference = AXIS2_FALSE;
+		}
+    }
+
+    sign_ctx = oxs_sign_ctx_create(env);
+
+    /* Set signatures to be endorsed*/
+    nodes_to_sign = axutil_array_list_create(env, 0);
+    digest_method = rampart_context_get_digest_mtd(rampart_context, env);   
+    sign_part = oxs_sign_part_create(env);
+    sign_ns = axiom_namespace_create(env, NULL, NULL); /*we have to get the id from "Id" of signature, not from "wsu:Id"*/
+    oxs_sign_part_set_sign_namespace(sign_part, env, sign_ns);
+    tr_list = axutil_array_list_create(env, 0);
+    tr = oxs_transforms_factory_produce_transform(env,
+            OXS_HREF_TRANSFORM_XML_EXC_C14N);
+    axutil_array_list_add(tr_list, env, tr);
+    oxs_sign_part_set_transforms(sign_part, env, tr_list);
+    oxs_sign_part_set_node(sign_part, env, node_to_sign);
+    oxs_sign_part_set_digest_mtd(sign_part, env, digest_method);
+    axutil_array_list_add(nodes_to_sign, env, sign_part);
+
+    oxs_sign_ctx_set_sign_parts(sign_ctx, env, nodes_to_sign);
+
+    /* We support asymmetric endorsing only for this release. So, pack for asymmetric signature*/
+    status = rampart_sig_pack_for_asym(env, rampart_context, sign_ctx);
+    
+    /* All the things are ready for signing. So lets try signing*/
+    status = oxs_xml_sig_sign(env, sign_ctx, sec_node, &sig_node);
+    if(status!=AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Message endorsing failed.");
+        return AXIS2_FAILURE;
+    }
+
+    /* We support asymmetric endorsing only for this release. 
+     * So, build the key info inside signature node for asymmetric signature
+     */
+    rampart_sig_prepare_key_info_for_asym_binding(env, rampart_context, sign_ctx, sig_node , cert_id, eki, is_direct_reference);
+
+    /*Free sig ctx*/
+    oxs_sign_ctx_free(sign_ctx, env);
+    sign_ctx = NULL;
+
+    return status;
+}

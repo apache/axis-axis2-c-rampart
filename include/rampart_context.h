@@ -491,6 +491,11 @@ extern "C"
         axis2_bool_t server_side,
         axis2_bool_t is_inpath);
 
+    AXIS2_EXTERN rp_property_t *AXIS2_CALL
+    rampart_context_get_endorsing_token(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_check_is_derived_keys(
         const axutil_env_t *env,
@@ -688,6 +693,11 @@ extern "C"
 
     AXIS2_EXTERN int AXIS2_CALL
     rampart_context_get_signature_derived_key_len(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN rp_algorithmsuite_t *AXIS2_CALL
+    rampart_context_get_algorithmsuite(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 

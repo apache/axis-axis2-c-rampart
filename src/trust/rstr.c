@@ -662,3 +662,21 @@ trust_rstr_set_wst_ns_uri(
 
 		return AXIS2_FAILURE;
 }
+
+AXIS2_EXTERN int AXIS2_CALL
+trust_rstr_get_key_size(
+        trust_rstr_t *rstr,
+        const axutil_env_t *env)
+{
+    return rstr->key_size;
+}
+
+AXIS2_EXTERN  axis2_status_t AXIS2_CALL
+trust_rstr_set_key_size(
+        trust_rstr_t *rstr,
+        const axutil_env_t *env,
+        int key_size)
+{
+    rstr->key_size = key_size;
+    return AXIS2_SUCCESS;
+}

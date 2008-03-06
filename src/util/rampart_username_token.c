@@ -306,9 +306,10 @@ rampart_username_token_validate(
                 if (!password_type)
                 {
                     /*ERROR: R4201 Any PASSWORD MUST specify a Type attribute */
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    /*AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                     "[rampart][rampart_usernametoken] Password Type is not specified in the password element");
-                    return AXIS2_FAILURE;
+                    return AXIS2_FAILURE;*/
+                    password_type = RAMPART_PASSWORD_TEXT_URI;
                 }
 
                 /*Then we must check the password type with policy*/
