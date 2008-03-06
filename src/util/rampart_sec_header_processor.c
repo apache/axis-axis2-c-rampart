@@ -1060,7 +1060,7 @@ rampart_shp_process_asym_binding_signature(
     axiom_soap_envelope_t *soap_envelope,
     axiom_node_t *sec_node,
     axiom_node_t *sig_node,
-    axis2_bool_t *is_endorsing)
+    axis2_bool_t is_endorsing)
 {
 
     oxs_sign_ctx_t *sign_ctx = NULL;
