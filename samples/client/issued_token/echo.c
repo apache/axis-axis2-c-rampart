@@ -54,6 +54,7 @@ int main(int argc, char** argv)
     neethi_policy_t *policy = NULL;
     rampart_config_t* client_config = NULL;
     axutil_property_t *property = NULL;
+    
 
 	/* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
@@ -258,7 +259,7 @@ get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context
 	axis2_msg_ctx_t *in_msg_ctx = NULL;
 	axis2_status_t status = AXIS2_SUCCESS;
 	neethi_policy_t *issuer_policy = NULL;
-	
+    trust_rst_t *rst = NULL;
 	rp_issued_token_t *it = (rp_issued_token_t *)rp_property_get_value(issued_token, env);
 	/*Setting Issuer's EPR*/
 	endpoint_ref = endpoint_ref = axis2_endpoint_ref_create(env, "http://127.0.0.1:9090/axis2/services/saml_sts");
@@ -282,8 +283,10 @@ get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context
 	axis2_options_set_action(options, env, "http://example.com/ws/2004/09/policy/Test/EchoRequest");
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);
+    rst = trust_rst_create(env);
+    trust_rst_set_wst_ns_uri(rst, env, "http://schemas.xmlsoap.org/ws/2005/02/trust");
 
-	rst_node = trust_rst_build_rst_with_issued_token_assertion(NULL, env, it);
+	rst_node = trust_rst_build_rst_with_issued_token_assertion(rst, env, it);
 	if (status == AXIS2_SUCCESS)
     {
         status = axis2_svc_client_set_policy(svc_client, env, issuer_policy);
@@ -293,7 +296,7 @@ get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context
         }
 		/*Building the RST */       
         if(rst_node)
-        {
+        {            
 			return_rstr_node = axis2_svc_client_send_receive(svc_client, env, rst_node);
 			rstr = trust_rstr_create(env);
 			trust_rstr_set_wst_ns_uri(rstr, env, "http://schemas.xmlsoap.org/ws/2005/02/trust");		
