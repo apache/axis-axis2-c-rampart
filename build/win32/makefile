@@ -51,12 +51,16 @@ LD = @link.exe
 LDFLAGS = /nologo /LIBPATH:$(AXIS2_LIBS) /LIBPATH:$(OPENSSL_BIN_DIR)\lib\VC \
 	  /LIBPATH:$(AXIS2_BIN_DIR)\lib
 
+SSL_LIB_FLAG = "MD"
+!if "$(CRUNTIME)" == "/MT"
+SSL_LIB_FLAG = "MT"
+!endif
 
 #debug symbols
 !if "$(DEBUG)" == "1"
-LIBS = $(LIBS) libeay32MTd.lib ssleay32MTd.lib
+LIBS = $(LIBS) libeay32$(SSL_LIB_FLAG)d.lib ssleay32$(SSL_LIB_FLAG)d.lib
 !else
-LIBS = $(LIBS) libeay32MT.lib ssleay32MT.lib
+LIBS = $(LIBS) libeay32$(SSL_LIB_FLAG).lib ssleay32$(SSL_LIB_FLAG).lib
 !endif
 
 ####################
