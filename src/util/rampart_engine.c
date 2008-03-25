@@ -64,8 +64,8 @@ rampart_engine_build_configuration(
     rp_secpolicy_t *secpolicy = NULL;
     rampart_context_t *rampart_context = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
+    /*axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_ctx_t *ctx = NULL;*/
     axis2_bool_t is_server_side = AXIS2_TRUE;
     neethi_policy_t *policy = NULL;
     axutil_property_t *property = NULL;
@@ -154,7 +154,7 @@ rampart_engine_build_configuration(
         }
     }
 
-    conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
+    /*conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
     if(!conf_ctx)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -173,9 +173,14 @@ rampart_engine_build_configuration(
         rampart_context = NULL;
         return NULL;
     }
+
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
                AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
-    axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);
+    axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);*/
+
+    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
+               AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
+    axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_CONTEXT, property);
 
     /*For the client side*/
     if(!is_server_side)

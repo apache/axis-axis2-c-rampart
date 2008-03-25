@@ -37,9 +37,6 @@ build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
 axiom_node_t *
 build_om_payload_for_echo_svc_interop(const axutil_env_t *env, axis2_char_t *text);
 
-static axutil_hash_t *
-secconv_echo_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx);
-
 axiom_node_t *
 axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node, axis2_msg_ctx_t *msg_ctx)
 {
@@ -128,6 +125,8 @@ secconv_echo_sts_request_security_token(
 
     requester_entropy = trust_rst_get_entropy(rst, env);;
 
+    axutil_allocator_switch_to_global_pool(env->allocator);
+
     /*create global id, local id, and shared secret*/
     global_id = oxs_util_generate_id(env,"urn:uuid:");
     local_id = axutil_stracat(env, "#", oxs_util_generate_id(env, "sctId"));
@@ -142,7 +141,7 @@ secconv_echo_sts_request_security_token(
     sct = security_context_token_create(env);
     security_context_token_set_global_identifier(sct, env, global_id);
     security_context_token_set_local_identifier(sct, env, local_id);
-
+    
     if(requester_entropy)
     {
         oxs_buffer_t *buffer = NULL;
@@ -178,7 +177,7 @@ secconv_echo_sts_request_security_token(
     }
 
     /*store SCT so that when server needs it, can be extracted*/
-    db = sct_provider_get_sct_db(env, msg_ctx);
+    db = sct_provider_get_sct_hash(env, msg_ctx);
     if(!db)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][secconv_service] Cannot get sct datastore");
@@ -186,7 +185,9 @@ secconv_echo_sts_request_security_token(
         return NULL;
     }
 
+    axutil_hash_set_env(db, env);
     axutil_hash_set(db, global_id, AXIS2_HASH_KEY_STRING, sct);
+    axutil_allocator_switch_to_local_pool(env->allocator);
 
     /*create rstr and populate*/
     rstr = trust_rstr_create(env);
@@ -242,49 +243,6 @@ secconv_echo_sts_request_security_token(
 
     /*return the node*/
     return rstr_node;
-}
-
-static axutil_hash_t *
-secconv_echo_get_sct_db(const axutil_env_t *env,
-                                  axis2_msg_ctx_t* msg_ctx)
-{
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axutil_hash_t *db = NULL;
-    
-    /*Get the conf ctx*/
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    if(!conf_ctx)
-    {
-        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, "[rampart][secconv_service] Conf context is NULL ");
-        return NULL;
-    }
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-    if(!ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][secconv_service] axis2 context is NULL ");
-        return NULL;
-    }
-
-    /*Get the DB property*/
-    property = axis2_ctx_get_property(ctx, env, RAMPART_SCT_PROVIDER_DB_PROB);
-    if(property)
-    {
-        /*Get the DB*/
-        db = (axutil_hash_t*)axutil_property_get_value(property, env);
-    }
-    else
-    {
-        axutil_property_t *db_prop = NULL;
-
-        db = axutil_hash_make(env);
-        db_prop = axutil_property_create(env);
-        axutil_property_set_value(db_prop, env, db);
-        axis2_ctx_set_property(ctx, env, RAMPART_SCT_PROVIDER_DB_PROB, db_prop);
-    }
-
-    return db;
 }
 
 axiom_node_t *

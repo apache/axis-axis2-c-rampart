@@ -155,7 +155,7 @@ sct_provider_sct_db_free(axutil_hash_t *sct_db,
 }
 
 AXIS2_EXTERN axutil_hash_t * AXIS2_CALL
-sct_provider_get_sct_db(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx)
+sct_provider_get_sct_hash(const axutil_env_t *env, axis2_msg_ctx_t* msg_ctx)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;

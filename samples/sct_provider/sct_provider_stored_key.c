@@ -78,7 +78,7 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
     }
 
     /*get the sct_db*/
-    sct_db = sct_provider_get_sct_db(env, msg_ctx);
+    sct_db = sct_provider_get_sct_hash(env, msg_ctx);
     if(!sct_db)
     {
         AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot find sct datastore");

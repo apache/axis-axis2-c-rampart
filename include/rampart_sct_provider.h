@@ -125,7 +125,7 @@ extern "C"
         axis2_msg_ctx_t* msg_ctx);
 
 	AXIS2_EXTERN axutil_hash_t* AXIS2_CALL
-    sct_provider_get_sct_db(
+    sct_provider_get_sct_hash(
         const axutil_env_t *env, 
         axis2_msg_ctx_t* msg_ctx);
 
