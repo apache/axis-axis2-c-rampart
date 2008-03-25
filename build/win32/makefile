@@ -91,21 +91,21 @@ CFLAGS = $(CFLAGS) /D "_WINSOCKAPI_"
 
 distdir:
 	if not exist $(RAMPART_DISTDIR) mkdir $(RAMPART_DISTDIR)
-	mkdir $(RAMPART_DISTDIR)\bin\samples\callback
-	mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
-	mkdir $(RAMPART_DISTDIR)\bin\samples\replay_detector
-	mkdir $(RAMPART_DISTDIR)\bin\samples\sct_provider
-	mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
-	mkdir $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo
-	mkdir $(RAMPART_DISTDIR)\bin\samples\services\saml_sts
-	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
-	mkdir $(RAMPART_DISTDIR)\bin\samples\client\saml_echo
-	mkdir $(RAMPART_DISTDIR)\bin\samples\client\issued_token
-	mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
-	mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
-	mkdir $(RAMPART_DISTDIR)\bin\samples\data
-	mkdir $(RAMPART_DISTDIR)\modules\rampart
-	mkdir $(RAMPART_DISTDIR)\include
+	if not exist $(RAMPART_DISTDIR)\bin\samples\callback               mkdir $(RAMPART_DISTDIR)\bin\samples\callback
+	if not exist $(RAMPART_DISTDIR)\bin\samples\authn_provider         mkdir $(RAMPART_DISTDIR)\bin\samples\authn_provider
+	if not exist $(RAMPART_DISTDIR)\bin\samples\replay_detector        mkdir $(RAMPART_DISTDIR)\bin\samples\replay_detector
+	if not exist $(RAMPART_DISTDIR)\bin\samples\sct_provider           mkdir $(RAMPART_DISTDIR)\bin\samples\sct_provider
+	if not exist $(RAMPART_DISTDIR)\bin\samples\services\sec_echo      mkdir $(RAMPART_DISTDIR)\bin\samples\services\sec_echo
+	if not exist $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo  mkdir $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo
+	if not exist $(RAMPART_DISTDIR)\bin\samples\services\saml_sts	   mkdir $(RAMPART_DISTDIR)\bin\samples\services\saml_sts
+	if not exist $(RAMPART_DISTDIR)\bin\samples\client\sec_echo        mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
+	if not exist $(RAMPART_DISTDIR)\bin\samples\client\saml_echo       mkdir $(RAMPART_DISTDIR)\bin\samples\client\saml_echo
+	if not exist $(RAMPART_DISTDIR)\bin\samples\client\issued_token    mkdir $(RAMPART_DISTDIR)\bin\samples\client\issued_token
+	if not exist $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data   mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
+	if not exist $(RAMPART_DISTDIR)\bin\samples\credential_provider    mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
+	if not exist $(RAMPART_DISTDIR)\bin\samples\data                   mkdir $(RAMPART_DISTDIR)\bin\samples\data
+	if not exist $(RAMPART_DISTDIR)\modules\rampart                    mkdir $(RAMPART_DISTDIR)\modules\rampart
+	if not exist $(RAMPART_DISTDIR)\include                            mkdir $(RAMPART_DISTDIR)\include                              
 
 clean: 
 	if exist $(RAMPART_DISTDIR) rmdir /S /Q $(RAMPART_DISTDIR)
@@ -129,8 +129,8 @@ intdirs:
 mod_rampart_sample_data:
 	copy $(RAMPART_SOURCE_DIR)\samples\data\passwords.txt $(RAMPART_DISTDIR)\bin\samples\data
 
-$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll :
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECCONV_SRC) $(TRUST_SRC)\
+$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll : $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECCONV_SRC) $(TRUST_SRC)
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(MOD_RAMPART_SRC) $(OMXMLSEC_SRC) $(SECCONV_SRC) $(TRUST_SRC) \
 	$(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\*.obj $(LIBS) axutil.lib axiom.lib \
 	axis2_parser.lib axis2_engine.lib neethi.lib /DLL /OUT:$(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll \
@@ -140,7 +140,7 @@ $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll :
 
 mod_rampart : $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll
 
-$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll :
+$(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll : $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c \
 	/Fo$(RAMPART_INTDIR)\samples\callback\ /c
 	$(LD) $(LDFLAGS) $(LIBS) axutil.lib $(RAMPART_INTDIR)\samples\callback\*.obj \
@@ -150,7 +150,7 @@ $(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll :
 mod_rampart_pwcb: $(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll
 
 
-$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll : 
+$(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll : $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\authn_provider\authn_provider.c \
 	/Fo$(RAMPART_INTDIR)\samples\authn_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\authn_provider\*.obj mod_rampart.lib \
@@ -160,7 +160,7 @@ $(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll :
 
 mod_rampart_authn : $(RAMPART_DISTDIR)\bin\samples\authn_provider\authn.dll
 
-$(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll :
+$(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll : $(RAMPART_SOURCE_DIR)\samples\replay_detector\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\replay_detector\*.c \
 	/Fo$(RAMPART_INTDIR)\samples\replay_detector\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\replay_detector\*.obj mod_rampart.lib \
@@ -170,7 +170,7 @@ $(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll :
 
 mod_rampart_rd: $(RAMPART_DISTDIR)\bin\samples\replay_detector\rdflatfile.dll
 
-$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll :
+$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll : $(RAMPART_SOURCE_DIR)\samples\sct_provider\sct_provider_stored_key.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\sct_provider\sct_provider_stored_key.c \
 	/Fo$(RAMPART_INTDIR)\samples\sct_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\sct_provider\sct_provider_stored_key.obj mod_rampart.lib \
@@ -180,7 +180,7 @@ $(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll :
 
 mod_rampart_sct_provider: $(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider.dll
 
-$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll :
+$(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll : $(RAMPART_SOURCE_DIR)\samples\sct_provider\sct_provider_hash_map.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\sct_provider\sct_provider_hash_map.c \
 	/Fo$(RAMPART_INTDIR)\samples\sct_provider\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\sct_provider\sct_provider_hash_map.obj mod_rampart.lib \
@@ -190,7 +190,7 @@ $(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll :
 
 mod_rampart_sct_provider_hashdb: $(RAMPART_DISTDIR)\bin\samples\sct_provider\sctprovider_hashdb.dll
 
-$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll :
+$(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll : $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
 	$(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c /Fo$(RAMPART_INTDIR)\samples\services\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\sec_echo\*.obj \
@@ -207,7 +207,7 @@ $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll :
 mod_rampart_services_sec_echo: $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll
 
 
-$(RAMPART_DISTDIR)\bin\samples\services\saml_sts\saml_sts.dll :
+$(RAMPART_DISTDIR)\bin\samples\services\saml_sts\saml_sts.dll : $(RAMPART_SOURCE_DIR)\samples\server\saml_sts\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\saml_sts \
 	$(RAMPART_SOURCE_DIR)\samples\server\saml_sts\*.c /Fo$(RAMPART_INTDIR)\samples\services\saml_sts\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\saml_sts\*.obj \
@@ -222,7 +222,7 @@ $(RAMPART_DISTDIR)\bin\samples\services\saml_sts\saml_sts.dll :
 
 mod_rampart_services_saml_sts: $(RAMPART_DISTDIR)\bin\samples\services\saml_sts\saml_sts.dll
 
-$(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll :
+$(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll : $(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo \
 	$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\*.c /Fo$(RAMPART_INTDIR)\samples\services\secconv_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\secconv_echo\*.obj \
@@ -237,11 +237,11 @@ $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll :
 
 mod_rampart_services_secconv_echo: $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll
 
-$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe :
+$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe : $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
         $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\echo.c \
         /Fo$(RAMPART_INTDIR)\samples\client\sec_echo\ /c
-	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib neethi.lib \
+	$(LD) $(LDFLAGS) /FIXED:No $(RAMPART_INTDIR)\samples\client\sec_echo\echo.obj axutil.lib axiom.lib neethi.lib \
         axis2_parser.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 			
@@ -251,17 +251,17 @@ $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe :
 mod_rampart_samples_sec_echo: $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\echo.exe
 
 ####### SAML Echo
-$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe :
+$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe : $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\echo.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
         $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\echo.c \
         /Fo$(RAMPART_INTDIR)\samples\client\saml_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\saml_echo\echo.obj axutil.lib axiom.lib neethi.lib \
-        axis2_parser.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe
+		axis2_parser.lib axis2_engine.lib /FIXED:NO /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe
 	-@$(_VC_MANIFEST_EMBED_EXE)
 			
 mod_rampart_samples_saml_echo: $(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe	
 
-$(RAMPART_DISTDIR)\bin\samples\client\issued_token\echo.exe :
+$(RAMPART_DISTDIR)\bin\samples\client\issued_token\echo.exe : $(RAMPART_SOURCE_DIR)\samples\client\issued_token\echo.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
         $(RAMPART_SOURCE_DIR)\samples\client\issued_token\echo.c \
         /Fo$(RAMPART_INTDIR)\samples\client\issued_token\ /c
@@ -271,7 +271,7 @@ $(RAMPART_DISTDIR)\bin\samples\client\issued_token\echo.exe :
 			
 mod_rampart_samples_issued_token: $(RAMPART_DISTDIR)\bin\samples\client\issued_token\echo.exe	
 
-$(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll :
+$(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll : $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
         $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c \
         /Fo$(RAMPART_INTDIR)\samples\credential_provider\ /c
@@ -296,6 +296,7 @@ mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\deploy_client_repo.bat $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\update_n_run.bat $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
+	copy $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\update_n_run.bat $(RAMPART_DISTDIR)\bin\samples\client\saml_echo
 
 copy_sec_policy:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\secpolicy $(RAMPART_DISTDIR)\bin\samples\secpolicy
@@ -325,7 +326,7 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: clean distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+dist: distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
