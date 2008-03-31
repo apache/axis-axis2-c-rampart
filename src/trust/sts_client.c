@@ -66,7 +66,12 @@ struct trust_sts_client
 	axis2_msg_ctx_t *received_in_msg_ctx;
 
 	rp_secpolicy_t *sec_policy;
+	
+	axis2_char_t	*username;
 
+	axis2_char_t	*password;
+
+	axis2_char_t	*auth_type;
 
 };
 
@@ -86,6 +91,9 @@ trust_sts_client_create(
     sts_client->service_policy_location = NULL;
 	sts_client->svc_client = NULL;
 	sts_client->sec_policy = NULL;
+	sts_client->username = NULL;
+	sts_client->password = NULL;
+	sts_client->auth_type = NULL;
 
     return sts_client;
 }
@@ -236,6 +244,8 @@ trust_sts_client_get_svc_client(
     axis2_endpoint_ref_t *endpoint_ref = NULL;
     axis2_options_t *options = NULL;
     axis2_svc_client_t *svc_client = NULL;
+	rampart_config_t* client_config = NULL;
+    axutil_property_t *property = NULL;
 
     endpoint_ref = axis2_endpoint_ref_create(env, sts_client->issuer_address);
 
@@ -247,6 +257,22 @@ trust_sts_client_get_svc_client(
         axis2_options_set_soap_action(options, env, axutil_string_create(env, action));
         axis2_options_set_soap_version(options, env, AXIOM_SOAP11);
     }
+
+	  client_config = rampart_config_create(env);
+    if(!client_config)
+    {
+        printf("Cannot create rampart config\n");
+        return 0;
+    }
+
+    rampart_config_set_username(client_config, env, sts_client->username);
+    rampart_config_set_password(client_config, env, sts_client->password);
+    rampart_config_set_password_type(client_config, env, sts_client->auth_type);
+    rampart_config_set_ttl(client_config, env, 360);
+
+    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
+               AXIS2_TRUE, (void *)rampart_config_free, client_config);
+    axis2_options_set_property(options, env, RAMPART_CLIENT_CONFIGURATION, property);
 
 	if(!(sts_client->svc_client))
 	{
@@ -354,6 +380,22 @@ trust_sts_client_get_home_dir(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     return sts_client->home_dir;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+trust_sts_client_set_auth_info(
+    trust_sts_client_t * sts_client,
+    const axutil_env_t * env,
+	axis2_char_t *username,
+	axis2_char_t *password,
+	axis2_char_t * auth_type)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+	sts_client->username = username;
+	sts_client->password = password;
+	sts_client->auth_type = auth_type;
+	return AXIS2_SUCCESS;
+  
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
