@@ -25,18 +25,17 @@
 #include <rp_saml_token.h>
 #include <rp_issued_token.h>
 #include <rampart_saml_token.h>
-#include <oxs_key_mgr.h>
 
 struct rampart_context_t
 {
     /*****************************/
     axiom_node_t *policy_node;
-    /*void *prv_key;
+    void *prv_key;
     axis2_key_type_t prv_key_type;
     void *certificate;
     axis2_key_type_t certificate_type;
     void *receiver_certificate;
-    axis2_key_type_t receiver_certificate_type;*/
+    axis2_key_type_t receiver_certificate_type;
     axis2_char_t *user;
     axis2_char_t *password;
     axis2_char_t *password_type;
@@ -45,13 +44,13 @@ struct rampart_context_t
     rampart_is_replayed_fn is_replayed_function;
     int ttl;
     axis2_char_t *rd_val;
-    /*axis2_char_t *private_key_file;
+    axis2_char_t *private_key_file;
     axis2_char_t *certificate_file;
-    axis2_char_t *reciever_certificate_file;*/
+    axis2_char_t *reciever_certificate_file;
     int ref;
-	oxs_key_mgr_t *key_mgr;
+
     /****************************/
-    /* Callback function for aquiring the issued token */
+    /* Set true when the issued token is aquired and set to the rampart conext*/
     issued_token_callback_func aquire_issued_token; 
 	
     /* SAML tokens. */
@@ -167,23 +166,23 @@ rampart_context_create(const axutil_env_t *env)
         return NULL;
     }
     rampart_context->policy_node = NULL;
-    /*rampart_context->prv_key = NULL;
+    rampart_context->prv_key = NULL;
     rampart_context->prv_key_type = 0;
     rampart_context->certificate = NULL;
     rampart_context->certificate_type = 0;
     rampart_context->receiver_certificate = NULL;
-    rampart_context->receiver_certificate_type = 0;*/
+    rampart_context->receiver_certificate_type = 0;
     rampart_context->user = 0;
     rampart_context->password = NULL;
-    /*rampart_context->prv_key_password = NULL;*/
+    rampart_context->prv_key_password = NULL;
     rampart_context->pwcb_function = NULL;
     rampart_context->is_replayed_function = NULL;
     rampart_context->ttl = 300;
     rampart_context->rd_val = NULL;
     rampart_context->password_type = NULL;
-    /*rampart_context->private_key_file = NULL;
+    rampart_context->private_key_file = NULL;
     rampart_context->certificate_file = NULL;
-    rampart_context->reciever_certificate_file = NULL;*/    
+    rampart_context->reciever_certificate_file = NULL;    
     rampart_context->saml_tokens = NULL;
 	rampart_context->aquire_issued_token = NULL;
 
@@ -203,7 +202,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->signature_token_id = NULL;
 
     rampart_context->key_list = axutil_array_list_create(env, 2);
-	rampart_context->key_mgr = oxs_key_mgr_create(env);
+
     return rampart_context;
 }
 
@@ -309,14 +308,14 @@ rampart_context_free(rampart_context_t *rampart_context,
 			rampart_context->key_list = NULL;
 		}
 
-        /*if(rampart_context->certificate){
+        if(rampart_context->certificate){
             oxs_x509_cert_free(rampart_context->certificate, env);
             rampart_context->certificate = NULL;
         }
         if(rampart_context->receiver_certificate){
             oxs_x509_cert_free(rampart_context->receiver_certificate, env);
             rampart_context->receiver_certificate = NULL;
-        }*/
+        }
 
         if(rampart_context->key_list){
             /*Need to free data of the list*/
@@ -366,12 +365,9 @@ rampart_context_set_prv_key(rampart_context_t *rampart_context,
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,prv_key,AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_prv_key(rampart_context->key_mgr, env, prv_key);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->prv_key = prv_key;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -381,12 +377,9 @@ rampart_context_set_prv_key_type(rampart_context_t *rampart_context,
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_prv_key_type(rampart_context->key_mgr, env, type);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->prv_key_type = type;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -396,12 +389,9 @@ rampart_context_set_certificate(rampart_context_t *rampart_context,
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,certificate,AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_certificate(rampart_context->key_mgr, env, certificate);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->certificate = certificate;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -411,12 +401,9 @@ rampart_context_set_certificate_type(rampart_context_t *rampart_context,
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_certificate_type(rampart_context->key_mgr, env, type);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->certificate_type = type;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -426,12 +413,9 @@ rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,receiver_certificate,AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_receiver_certificate(rampart_context->key_mgr, env, receiver_certificate);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->receiver_certificate = receiver_certificate;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -441,12 +425,9 @@ rampart_context_set_receiver_certificate_type(rampart_context_t *rampart_context
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_receiver_certificate_type(rampart_context->key_mgr, env, type);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->receiver_certificate_type = type;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -486,12 +467,8 @@ rampart_context_set_prv_key_password(rampart_context_t *rampart_context,
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,prv_key_password,AXIS2_FAILURE);
 
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_prv_key_password(rampart_context->key_mgr, env, prv_key_password);
-		return AXIS2_SUCCESS;
-	}  
-	return AXIS2_FAILURE;
+    rampart_context->prv_key_password = prv_key_password;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -552,6 +529,7 @@ rampart_context_set_rd_val(rampart_context_t *rampart_context,
                            const axutil_env_t *env,
                            axis2_char_t *rd_val)
 {
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rd_val, AXIS2_FAILURE);
 
@@ -564,13 +542,11 @@ rampart_context_set_private_key_file(rampart_context_t *rampart_context,
                                      const axutil_env_t *env,
                                      axis2_char_t *private_key_file)
 {
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_private_key_file(rampart_context->key_mgr, env, private_key_file);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->private_key_file = private_key_file;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -578,13 +554,11 @@ rampart_context_set_certificate_file(rampart_context_t *rampart_context,
                                      const axutil_env_t *env,
                                      axis2_char_t *certificate_file)
 {
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_certificate_file(rampart_context->key_mgr, env, certificate_file);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->certificate_file = certificate_file;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -592,13 +566,11 @@ rampart_context_set_reciever_certificate_file(rampart_context_t *rampart_context
         const axutil_env_t *env,
         axis2_char_t *reciever_certificate_file)
 {
+
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		oxs_key_mgr_set_reciever_certificate_file(rampart_context->key_mgr, env, reciever_certificate_file);
-		return AXIS2_SUCCESS;
-	}    
-    return AXIS2_FAILURE;
+
+    rampart_context->reciever_certificate_file = reciever_certificate_file;
+    return AXIS2_SUCCESS;
 }
 
 /*End of implementation*/
@@ -621,11 +593,8 @@ rampart_context_get_prv_key(
     const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, NULL);
- 	if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_prv_key(rampart_context->key_mgr, env);
-	}
-    return NULL;
+
+    return rampart_context->prv_key;
 }
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
@@ -634,11 +603,8 @@ rampart_context_get_prv_key_type(
     const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-	if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_prv_key_type(rampart_context->key_mgr, env);
-	}
-    return AXIS2_KEY_TYPE_UNKNOWN;
+
+    return rampart_context->prv_key_type;
 }
 
 AXIS2_EXTERN void *AXIS2_CALL
@@ -648,11 +614,7 @@ rampart_context_get_certificate(
 {
     AXIS2_ENV_CHECK(env, NULL);
 
-	if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_certificate(rampart_context->key_mgr, env);
-	}
-    return NULL;
+    return rampart_context->certificate;
 }
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
@@ -662,11 +624,7 @@ rampart_context_get_certificate_type(
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-	if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_certificate_type(rampart_context->key_mgr, env);
-	}
-    return AXIS2_KEY_TYPE_UNKNOWN;
+    return rampart_context->certificate_type;
 }
 
 
@@ -677,11 +635,7 @@ rampart_context_get_receiver_certificate(
 {
     AXIS2_ENV_CHECK(env, NULL);
 
-    if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_receiver_certificate(rampart_context->key_mgr, env);
-	}
-    return NULL;
+    return rampart_context->receiver_certificate;
 }
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
@@ -691,11 +645,7 @@ rampart_context_get_receiver_certificate_type(
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-    if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_receiver_certificate_type(rampart_context->key_mgr, env);
-	}
-    return AXIS2_KEY_TYPE_UNKNOWN;
+    return rampart_context->receiver_certificate_type;
 }
 
 
@@ -727,11 +677,7 @@ rampart_context_get_prv_key_password(
 {
     AXIS2_ENV_CHECK(env, NULL);
 
-	if (rampart_context->key_mgr)
-	{
-		return oxs_key_mgr_get_prv_key_password(rampart_context->key_mgr, env);
-	}
-    return NULL;
+    return rampart_context->prv_key_password;
 }
 
 AXIS2_EXTERN password_callback_fn AXIS2_CALL
@@ -2584,9 +2530,9 @@ rampart_context_get_certificate_file(
 {
     rp_rampart_config_t *rampart_config = NULL;
 
-    if(rampart_context->key_mgr && oxs_key_mgr_get_certificate_file(rampart_context->key_mgr, env))
+    if(rampart_context->certificate_file)
     {
-        return oxs_key_mgr_get_certificate_file(rampart_context->key_mgr, env);
+        return rampart_context->certificate_file;
     }
 
     rampart_config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
@@ -2605,9 +2551,9 @@ rampart_context_get_receiver_certificate_file(
 {
     rp_rampart_config_t *rampart_config = NULL;
 
-    if(rampart_context->key_mgr && oxs_key_mgr_get_reciever_certificate_file(rampart_context->key_mgr, env))
+    if(rampart_context->reciever_certificate_file)
     {
-        return oxs_key_mgr_get_reciever_certificate_file(rampart_context->key_mgr, env);
+        return rampart_context->reciever_certificate_file;
     }
 
     rampart_config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
@@ -2627,9 +2573,9 @@ rampart_context_get_private_key_file(
 {
     rp_rampart_config_t *rampart_config = NULL;
 
-    if(rampart_context->key_mgr && oxs_key_mgr_get_private_key_file(rampart_context->key_mgr, env))
+    if(rampart_context->private_key_file)
     {
-        return oxs_key_mgr_get_private_key_file(rampart_context->key_mgr, env);
+        return rampart_context->private_key_file;
     }
 
     rampart_config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);

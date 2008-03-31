@@ -199,7 +199,7 @@ oxs_transforms_factory_produce_transform(const axutil_env_t *env,
         tr = oxs_transform_create(env);
         oxs_transform_set_id(tr, env, id);
         oxs_transform_set_input_data_type(tr, env, OXS_TRANSFORM_TYPE_NODE);
-        oxs_transform_set_output_data_type(tr, env, OXS_TRANSFORM_TYPE_CHAR);
+        oxs_transform_set_output_data_type(tr, env, OXS_TRANSFORM_TYPE_NODE);
         oxs_transform_set_transform_func(tr, env, (oxs_transform_tr_func)oxs_transforms_STR);
         return tr; 
     }

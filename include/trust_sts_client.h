@@ -38,7 +38,7 @@
 #include <trust_util.h>
 #include <trust_policy_util.h>
 #include <trust_token.h>
-#include <rampart_config.h>
+
 #include <trust_rst.h>
 #include <trust_rstr.h>
 #include <trust_context.h>
@@ -126,15 +126,6 @@ extern "C"
     	trust_sts_client_t * sts_client,
     	const axutil_env_t * env,
 	    axis2_char_t * file_path);
-
-	
-	AXIS2_EXTERN axis2_status_t AXIS2_CALL
-	trust_sts_client_set_auth_info(
-		trust_sts_client_t * sts_client,
-		const axutil_env_t * env,
-		axis2_char_t *username,
-		axis2_char_t *password,
-		axis2_char_t * auth_type);
 
 
 

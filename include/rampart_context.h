@@ -41,7 +41,6 @@
 #include <axutil_array_list.h>
 #include <rampart_saml_token.h>
 #include <rampart_issued_token.h>
-#include <oxs_key_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
