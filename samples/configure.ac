@@ -120,6 +120,7 @@ AC_CONFIG_FILES([Makefile \
         client/sec_echo/data/Makefile \
 		client/saml_echo/Makefile \
 		client/sts_client/Makefile \
+		client/issued_token/Makefile \
         keys/Makefile \
         keys/ahome/Makefile \
         keys/bhome/Makefile \
