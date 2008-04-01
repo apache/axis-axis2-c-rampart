@@ -169,6 +169,12 @@ rampart_create_fault_envelope(const axutil_env_t *env,
     text_om_ele = axiom_element_create(env, NULL, "ProblemSecurityHeader", ns1, &text_om_node);
     axiom_element_set_text(text_om_ele, env, detail_node_text, text_om_node);
 
+    /*In case of SOAP v 1.1 we change the default version*/
+    if(axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
+    {
+        soap_version =  AXIOM_SOAP11;
+    }
+
     envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env,
                "soapenv:Sender",
                reason_text,
