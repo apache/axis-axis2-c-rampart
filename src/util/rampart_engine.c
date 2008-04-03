@@ -73,8 +73,9 @@ rampart_engine_build_configuration(
 
     is_server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
 
-    /*Server, Outflow*/
-    if((is_server_side && is_inflow) || (!is_server_side && !is_inflow))
+    /*policy has to be created for inflow and outflow for server side. 
+    but for client side, it will be created only on outflow*/
+    if(is_server_side || (!is_server_side && !is_inflow))
     {
         policy = build_policy(env, msg_ctx, is_inflow);
         if(!policy)
@@ -86,11 +87,32 @@ rampart_engine_build_configuration(
             return NULL;
         }
     }
-    else
+    
+    /*for server side's outflow and client side's inflow, we have to use rampart context created in 
+    server side's inflow or client side's out flow*/
+    if((is_server_side && !is_inflow) || (!is_server_side && is_inflow))
     {
         property = axis2_msg_ctx_get_property(msg_ctx, env, RAMPART_CONTEXT);
         if(property)
         {
+            rampart_context = (rampart_context_t *)axutil_property_get_value(property, env);
+
+            /*for serverside, recreate security policy and attach it to rampart context. This is because, 
+            there might be differnt policy for inflow and outflow (only for server side. we are still not 
+            supporting this feature for client side*/
+            if(is_server_side)
+            {
+                secpolicy = rp_secpolicy_builder_build(env, policy);
+                if(!secpolicy)
+                {
+                    rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
+                                                  "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                    "[rampart][rampart_engine] Cannot create security policy from policy.");
+                    return NULL;
+                }
+                rampart_context_set_secpolicy(rampart_context, env, secpolicy);
+            }
             return (rampart_context_t *)axutil_property_get_value(property, env);
         }
         else
@@ -103,6 +125,7 @@ rampart_engine_build_configuration(
         }
     }
 
+    /*rampart context will be created for server side's inflow and client side's out flow*/
     value = rampart_get_rampart_configuration(env, msg_ctx, RAMPART_CONFIGURATION);
     if(value)
     {
