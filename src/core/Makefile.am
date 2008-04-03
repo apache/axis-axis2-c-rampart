@@ -1,6 +1,9 @@
 TESTS =
+
 prglibdir=$(prefix)/modules/rampart
+
 prglib_LTLIBRARIES = libmod_rampart.la
+
 prglib_DATA= ../data/module.xml
 
 libmod_rampart_la_SOURCES = mod_rampart.c
@@ -21,3 +24,7 @@ INCLUDES = -I$(top_builddir)/include \
 			@UTILINC@ \
 			@NEETHIINC@ \
 			@AXIOMINC@
+
+install-data-hook:
+	cp $(prefix)/modules/rampart/libmod_rampart* $(prefix)/lib
+	
