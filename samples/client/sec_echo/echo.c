@@ -73,7 +73,7 @@ int main(int argc, char** argv)
             "http://example.com/ws/2004/09/policy/Test/EchoRequest");
     /*axis2_options_set_action(options, env,
             "urn:echo");*/
-
+    axis2_options_set_soap_version(options, env, AXIOM_SOAP12);
 
     /*If the client home is not specified, use the AXIS2C_HOME*/
     if (!client_home)

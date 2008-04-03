@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "If you do not need to build Rampart/C %sh rampart-bindist nobuild"
-BIN_DIR=rampartc-bin-1.1.0-linux
-INCL_V_DIR=rampart-1.1.0
+BIN_DIR=rampartc-bin-1.2.0-linux
+INCL_V_DIR=rampart-1.2.0
 TAR_GZ=$BIN_DIR.tar.gz
 MD5=$TAR_GZ.md5
 PWDIR=$PWD

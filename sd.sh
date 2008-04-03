@@ -2,7 +2,7 @@
 
 
 this_dir=$PWD
-src_dist=rampartc-src-1.1.0 #Make sure you set the correct directory name
+src_dist=rampartc-src-1.2.0 #Make sure you set the correct directory name
 src_dist_tar_gz=$src_dist.tar.gz
 src_dist_tar_gz_md5=$src_dist_tar_gz.md5
 src_dist_tar_gz_asc=$src_dist_tar_gz.asc
