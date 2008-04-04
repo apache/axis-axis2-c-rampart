@@ -353,7 +353,7 @@ axis2_get_instance(rampart_replay_detector_t **inst,
 
     if (!(*inst))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rrd_sample] Cannot initialize the replay detector  module");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd_sample] Cannot initialize the replay detector  module");
         return AXIS2_FAILURE;
     }
 

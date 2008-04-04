@@ -65,6 +65,7 @@ get_sample_password(rampart_callback_t *rcb,
     else if (0 == axutil_strcmp(username, "Alice"))
     {
         pw = "abcd!1234";
+        /*pw = "ecilA";*/
     }
     /*These are for sample keystores*/
     else if (0 == axutil_strcmp(username, "a"))
@@ -78,6 +79,10 @@ get_sample_password(rampart_callback_t *rcb,
     else if (0 == axutil_strcmp(username, "x"))
     {
         pw = "x12345";
+    }
+    else if (0 == axutil_strcmp(username, "abcd"))
+    {
+        pw = "dcba";
     }
     else if (0 == axutil_strcmp(username, "y"))
     {
@@ -116,7 +121,7 @@ axis2_get_instance(rampart_callback_t **inst,
 
     if (!(*inst))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][pwcb_sample] Cannot initialize the PWCB module");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][pwcb_sample] Cannot initialize the PWCB module");
         return AXIS2_FAILURE;
     }
 
