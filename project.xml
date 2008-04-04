@@ -113,6 +113,18 @@
       <email>shankar AT wso2.com</email>
       <organization>WSO2</organization>
     </developer>
+    <developer>
+      <name>Milinda Pathirage</name>
+      <id>milinda</id>
+      <email>milinda DOT pathirage AT gmail DOT com</email>
+      <organization>University of Moratuwa, Sri Lanka</organization>
+    </developer>
+    <developer>
+      <name>Supun Kamburugamuwa</name>
+      <id>supun</id>
+      <email>supun06 AT gmail DOT com</email>
+      <organization>University of Moratuwa, Sri Lanka</organization>
+    </developer>
   </developers>
   <contributors>
     <contributor>

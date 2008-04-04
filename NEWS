@@ -28,6 +28,8 @@ Key features
     - Support for different modes of key identifiers
     - Support for different algorithm suites
         [Basic128, Basic 192, Basic256, TrippleDES, Basic128Rsa15, Basic192Rsa15,Basic256Rsa15, TripleDesRsa15]
+    - Support for IssuedToken assertion in client side.
+    - Support for SAMLToken assertion.
 
 6. Replay detection support
     - Easy to use built-in replay detection module
@@ -56,6 +58,10 @@ Key features
     - STS Client
     - Server and Client entrophy support
 
+12. SAML Support
+    - Support for Creation and Processing of SAML Core 1.1 Assertions
+    - SAML Token as Sign Supporting Token
+
 10. Other
     - Easy to use deployment scripts
     - A comprehensive set of samples
@@ -71,7 +77,9 @@ Major Changes Since Last Release
 
 Un-Implemented Architecture Features 
 ------------------------------------
-1. SAML support 
+1. Signing and Encryption with SAML
+2. WS-Trust : Client/Server challenege response protocol
+ 
 
 We welcome your early feedback on this implementation.
 Thanks for your interest in Rampart/C
