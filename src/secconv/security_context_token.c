@@ -172,7 +172,7 @@ security_context_token_get_requested_proof_token(
 
     if(!sct->buffer)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have a shared secret");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][security context token] Security context token does not have a shared secret");
         return NULL;
     }
     
@@ -180,14 +180,14 @@ security_context_token_get_requested_proof_token(
     proof_token_ele = axiom_element_create(env, NULL, TRUST_REQUESTED_PROOF_TOKEN, ns_obj_wst, &proof_token);
     if (!proof_token_ele)
 	{
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot create requested proof token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot create requested proof token");
         return NULL;
     }
 
     secret_ele = axiom_element_create(env, proof_token, TRUST_BINARY_SECRET, ns_obj_wst, &secret_node);
     if(!secret_ele)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot create binary secret token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot create binary secret token");
         return NULL;
     }
 
@@ -213,7 +213,7 @@ security_context_token_get_attached_reference(
 
     if(!sct->local_id)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have a local identifier");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Security context token does not have a local identifier");
         return NULL;
     }
 
@@ -235,7 +235,7 @@ security_context_token_get_unattached_reference(
 
     if(!sct->global_id)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have a global identifier");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Security context token does not have a global identifier");
         return NULL;
     }
 
@@ -262,7 +262,7 @@ security_context_token_get_token(
 
     if(!sct->global_id)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Security context token does not have an identifier.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Security context token does not have an identifier.");
         return NULL;
     }
 
@@ -315,14 +315,14 @@ security_context_token_set_requested_proof_token(
     /*secret_node = oxs_axiom_get_first_child_node_by_name(env, node, TRUST_BINARY_SECRET, TRUST_WST_XMLNS, NULL);
     if(!secret_node)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot get binary secret node from proof token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get binary secret node from proof token");
         return AXIS2_FAILURE;
     }*/
 
     shared_secret = oxs_axiom_get_node_content(env, node);
     if(!shared_secret)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot get content of binary secret node");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get content of binary secret node");
         return AXIS2_FAILURE;
     }
     
@@ -352,14 +352,14 @@ security_context_token_set_attached_reference(
     ref_token = oxs_axiom_get_first_child_node_by_name(env, node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
     if(!ref_token)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot get reference node from attached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get reference node from attached reference");
         return AXIS2_FAILURE;
     }
 
     local_id = oxs_token_get_reference(env, ref_token);
     if(!local_id)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot get attached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get attached reference");
         return AXIS2_FAILURE;
     }
     
@@ -382,14 +382,14 @@ security_context_token_set_unattached_reference(
     ref_token = oxs_axiom_get_first_child_node_by_name(env, node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
     if(!ref_token)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot get reference node from unattached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get reference node from unattached reference");
         return AXIS2_FAILURE;
     }
 
     reference_id = oxs_token_get_reference(env, ref_token);
     if(!reference_id)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][security context token] Cannot get unattached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get unattached reference");
         return AXIS2_FAILURE;
     }
     

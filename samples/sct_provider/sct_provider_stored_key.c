@@ -81,7 +81,7 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
     sct_db = sct_provider_get_sct_hash(env, msg_ctx);
     if(!sct_db)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot find sct datastore");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot find sct datastore");
         return NULL;
     }
 
@@ -122,7 +122,7 @@ axis2_get_instance(rampart_sct_provider_t **inst,
 
     if (!(*inst))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot initialize the sct provider module");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot initialize the sct provider module");
         return AXIS2_FAILURE;
     }
 
@@ -151,7 +151,7 @@ sct_provider_get_stored_token(const axutil_env_t *env, axis2_char_t *sct_id)
     sct = security_context_token_create(env);
     if(!sct)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot create security context token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot create security context token");
         return NULL;
     }
 

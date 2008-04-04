@@ -1274,7 +1274,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     /*if(axutil_strcmp(nspace, RP_SECURITY_NS)==0)*/
     if((axutil_strcmp(nspace, RP_SECURITY_NS)==0) && (!local_name))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace headers");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] We do not sign or encrypt security namespace headers");
         return AXIS2_FAILURE;
     }
 
@@ -1307,7 +1307,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
     }
     else if(axutil_strcmp(local_name,"Security")==0)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt %s", local_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] We do not sign or encrypt %s", local_name);
         return AXIS2_FAILURE;
     }
     else
@@ -1364,7 +1364,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
 
     if(axutil_strcmp(nspace, RP_SECURITY_NS)==0)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt security namespace elements");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] We do not sign or encrypt security namespace elements");
         return AXIS2_FAILURE;
     }
 
@@ -1398,7 +1398,7 @@ axis2_status_t rampart_context_set_elements_to_encrypt_or_sign(
     {
         if(axutil_strcmp(local_name,"Security")==0)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] We do not sign or encrypt %s", local_name);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] We do not sign or encrypt %s", local_name);
             return AXIS2_FAILURE;
         }
         else
@@ -2705,7 +2705,7 @@ rampart_context_get_key_identifier(
 
         if(!x509_token)
         {
-            AXIS2_LOG_INFO(env->log,"Cannot get the token value from policy.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot get the token value from policy.");
             return NULL;
         }
         else

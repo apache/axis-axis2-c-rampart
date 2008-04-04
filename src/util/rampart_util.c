@@ -67,7 +67,7 @@ rampart_load_module(const axutil_env_t *env,
 
     if (!ptr)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to load the module %s. ERROR", module_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Unable to load the module %s. ERROR", module_name);
         return NULL;
     }
 
@@ -97,7 +97,7 @@ rampart_load_credentials_module(const axutil_env_t *env,
     cred = (rampart_credentials_t*)rampart_load_module(env, cred_module_name, &param);
     if (!cred)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the credentials  module %s. ERROR", cred_module_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Unable to identify the credentials  module %s. ERROR", cred_module_name);
         return AXIS2_FAILURE;
     }
     if(param){
@@ -117,7 +117,7 @@ rampart_load_auth_module(const axutil_env_t *env,
     authp = (rampart_authn_provider_t*)rampart_load_module(env, auth_module_name, &param);
     if (!authp)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the authentication module %s. ERROR", auth_module_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Unable to identify the authentication module %s. ERROR", auth_module_name);
         return AXIS2_FAILURE;
     }
     if(param){
@@ -137,7 +137,7 @@ rampart_load_replay_detector(const axutil_env_t *env,
     rd = (rampart_replay_detector_t*)rampart_load_module(env, replay_detector_name, &param);
     if (!rd)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the replay detection  module %s. ERROR", replay_detector_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Unable to identify the replay detection  module %s. ERROR", replay_detector_name);
         return AXIS2_FAILURE;
     }
     if(param){
@@ -157,7 +157,7 @@ rampart_load_sct_provider(const axutil_env_t *env,
     sct_provider = (rampart_sct_provider_t*)rampart_load_module(env, sct_provider_name, &param);
     if (!sct_provider)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the security context token provider module %s. ERROR", sct_provider_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Unable to identify the security context token provider module %s. ERROR", sct_provider_name);
         return AXIS2_FAILURE;
     }
     if(param)
@@ -178,7 +178,7 @@ rampart_load_pwcb_module(const axutil_env_t *env,
     cb = (rampart_callback_t*)rampart_load_module(env, callback_module_name, &param);
     if (!cb)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Unable to identify the callback module %s. ERROR", callback_module_name);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Unable to identify the callback module %s. ERROR", callback_module_name);
         if (param)
         {
 			axutil_param_free(param, env);

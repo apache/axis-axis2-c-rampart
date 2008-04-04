@@ -214,7 +214,7 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
     str_node = oxs_axiom_get_first_child_node_by_name(env, key_info_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
     if(!str_node)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Failed to get security token reference node");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Failed to get security token reference node");
         return NULL;
     }
 
@@ -229,19 +229,19 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
         ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_KEY_IDENTIFIER, OXS_WSSE_XMLNS, NULL);
         if(!ref_node)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get reference node from security token reference");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to get reference node from security token reference");
             return NULL;
         }
         value_type = oxs_axiom_get_attribute_value_of_node_by_name(env, ref_node, OXS_ATTR_VALUE_TYPE, NULL);
         if(axutil_strcmp(value_type, OXS_X509_ENCRYPTED_KEY_SHA1) != 0)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to identify Key Identifier %s", value_type);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to identify Key Identifier %s", value_type);
             return NULL;
         }
         given_hash = oxs_axiom_get_node_content(env, ref_node);
         if(!given_hash)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get value of EncryptedKeySHA1");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to get value of EncryptedKeySHA1");
             return NULL;
         }
 
@@ -270,7 +270,7 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
 
     if(!id)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get key name from reference node");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to get key name from reference node");
         return NULL;
     }
     
@@ -1572,7 +1572,7 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
     session_key = rampart_shp_get_key_for_key_info(env, dk_node, rampart_context, msg_ctx);
     if(!session_key)
     {
-        AXIS2_LOG_INFO(env->log,  "[rampart][shp] On processing derived key, failed to get the session key. Cannot derive the key");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  "[rampart][shp] On processing derived key, failed to get the session key. Cannot derive the key");
         return AXIS2_FAILURE;
     }
 

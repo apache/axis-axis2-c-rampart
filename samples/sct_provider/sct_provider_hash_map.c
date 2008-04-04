@@ -84,7 +84,7 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
     sct_db = sct_provider_get_sct_hash(env, msg_ctx);
     if(!sct_db)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot find sct datastore");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot find sct datastore");
         return NULL;
     }
 
@@ -99,14 +99,14 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
     /*check whether rp_property is valid*/
     if(!token)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] token property is not valid");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] token property is not valid");
         return NULL;
     }
 
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
     if(!rp_sct)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] value of token property is not valid");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] value of token property is not valid");
         return NULL;
     }
 
@@ -119,14 +119,14 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
             axutil_hash_set(sct_db, sct_db_lable, AXIS2_HASH_KEY_STRING, sct);
 
         return sct;*/
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] SecurityContextToken assertion is not supported. Only SecureConversationToken assertion is supported by this module.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] SecurityContextToken assertion is not supported. Only SecureConversationToken assertion is supported by this module.");
         return NULL;
     }
 
     /*so the token is secure conversation token. If client side then we can request from sts. If server side, can't do anything*/
     if(server_side)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot find security context token in server side");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot find security context token in server side");
         return NULL;
     }
     
@@ -161,7 +161,7 @@ axis2_get_instance(rampart_sct_provider_t **inst,
 
     if (!(*inst))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot initialize the sct provider module");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot initialize the sct provider module");
         return AXIS2_FAILURE;
     }
 
@@ -232,7 +232,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     rp_sct = (rp_security_context_token_t*)rp_property_get_value(token, env);
     if(!rp_sct)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] token property is not valid");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] token property is not valid");
         return NULL;
     }
 
@@ -240,7 +240,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     request the token from STS.*/
     if(!rp_security_context_token_get_is_secure_conversation_token(rp_sct, env))
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] token is not a secure conversation token.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] token is not a secure conversation token.");
         return NULL;
     }
 
@@ -259,7 +259,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
 
         if(!issuer_address)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] issuer address is not valid.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] issuer address is not valid.");
             return NULL;
         }
     }
@@ -268,7 +268,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     client_home = axis2_conf_get_repo(axis2_conf_ctx_get_conf(axis2_msg_ctx_get_conf_ctx(msg_ctx, env), env), env);
     if(!client_home)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot get client home");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot get client home");
         return NULL;
     }
 
@@ -309,7 +309,7 @@ sct_provider_obtain_token_from_sts(const axutil_env_t* env, rp_property_t *token
     rstr = trust_context_get_rstr(trust_context, env);
     if(!rstr)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot get RSTR from STS");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot get RSTR from STS");
         return NULL;
     }
 
@@ -340,7 +340,7 @@ sct_provider_get_stored_token(const axutil_env_t *env, axis2_char_t *sct_id)
     sct = security_context_token_create(env);
     if(!sct)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider_sample] Cannot create security context token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider_sample] Cannot create security context token");
         return NULL;
     }
 

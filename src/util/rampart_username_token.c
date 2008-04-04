@@ -70,7 +70,7 @@ rampart_username_token_build(
     username = rampart_context_get_user(rampart_context, env);
     if(!username)
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_usernametoken] User is not specified.");
         return AXIS2_FAILURE;
     }
@@ -85,7 +85,7 @@ rampart_username_token_build(
             param = rampart_context_get_ctx(rampart_context, env);
             if(!param)
             {
-                AXIS2_LOG_INFO(env->log,
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                "[rampart][rampart_usernametoken] Param is not set.");
                 return AXIS2_FAILURE;
             }
@@ -96,7 +96,7 @@ rampart_username_token_build(
             password_callback = rampart_context_get_password_callback(rampart_context, env);
             if(!password_callback)
             {
-                AXIS2_LOG_INFO(env->log,
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                                "[rampart][rampart_usernametoken] password callback module is not loaded. ERROR");
                 return AXIS2_FAILURE;
             }
@@ -105,7 +105,7 @@ rampart_username_token_build(
     }
     if (!password)
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_usernametoken] Cannot find the password for user %s. ERROR", username);
         return AXIS2_FAILURE;
     }

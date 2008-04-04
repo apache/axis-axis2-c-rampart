@@ -39,7 +39,7 @@ sct_provider_get_sct(const axutil_env_t* env, rp_property_t *token,
     sct_provider = (rampart_sct_provider_t*)rampart_context_get_sct_provider(rampart_context, env);
     if(!sct_provider)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider] Security context token provider module is not set");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider] Security context token provider module is not set");
         return NULL;
     }
 
@@ -48,7 +48,7 @@ sct_provider_get_sct(const axutil_env_t* env, rp_property_t *token,
 
     if(!sct)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][sct_provider] Security context token is not valid");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][sct_provider] Security context token is not valid");
     }
     
     return sct;

@@ -151,7 +151,7 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
             status = oxs_axiom_interchange_nodes(env, sig_node, enc_key_node);
             if(status!=AXIS2_SUCCESS)
             {
-                AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Node interchange failed.");
                 return status;
             }
         }
@@ -160,7 +160,7 @@ rampart_shb_do_asymmetric_binding( const axutil_env_t *env,
             status = oxs_axiom_interchange_nodes(env, enc_key_node, sig_node);
             if(status!=AXIS2_SUCCESS)
             {
-                AXIS2_LOG_INFO(env->log,"[rampart][shb] Node interchange failed.");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Node interchange failed.");
                 return status;
             }
         }
