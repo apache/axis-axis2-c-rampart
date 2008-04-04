@@ -39,7 +39,6 @@ extern "C"
     *
     * Set of error codes for rampart
     */
-    typedef enum rampart_error_codes rampart_error_codes_t;
     enum rampart_error_codes
     { 
         /* No error */
@@ -61,6 +60,7 @@ extern "C"
         RAMPART_ERROR_LAST
     };
       
+    typedef enum rampart_error_codes rampart_error_codes_t;
 
 axis2_status_t AXIS2_CALL
 rampart_error_init();
