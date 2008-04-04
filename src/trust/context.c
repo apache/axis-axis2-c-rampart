@@ -197,11 +197,11 @@ trust_context_build_rst_node(
         trust_context->rst_node = trust_rst_build_rst(trust_context->rst, env, NULL);        
 		if(trust_context->rst_node)
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Node Not NULL");
+			AXIS2_LOG_INFO(env->log, "Node Not NULL");
 		}
 		else
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Node -- NULL");
+			AXIS2_LOG_INFO(env->log, "Node -- NULL");
 		}
 
         return trust_context->rst_node;

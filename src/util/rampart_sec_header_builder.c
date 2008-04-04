@@ -575,7 +575,7 @@ rampart_shb_build_message(
         axis2_status_t status = AXIS2_FAILURE;
 
         /*Do Symmetric_binding specific things*/
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. ");
+        AXIS2_LOG_INFO(env->log, "[rampart][shb] Symmetric Binding. ");
         status = rampart_shb_do_symmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj, sign_parts_list);
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){

@@ -95,7 +95,7 @@ rampart_replay_detector_get_ll_db(const axutil_env_t *env,
         return ll;
     }else{
         ll = rampart_replay_detector_set_ll_db(env, ctx);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
+        AXIS2_LOG_INFO(env->log, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
         return ll;
     }
 }
@@ -130,7 +130,7 @@ rampart_replay_detector_get_default_db(const axutil_env_t *env,
         return hash;
     }else{
         hash = rampart_replay_detector_set_default_db(env, ctx);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
+        AXIS2_LOG_INFO(env->log, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
         return hash;
     }
 }
