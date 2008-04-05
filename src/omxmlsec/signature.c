@@ -195,6 +195,7 @@ oxs_sig_verify(const axutil_env_t *env,
                axis2_char_t *content,
                axis2_char_t *signature)
 {
+    axis2_status_t status = AXIS2_FAILURE;
     axis2_char_t *sign_algo = NULL;
 
     /*Get algo. To check whether we support*/
@@ -203,19 +204,19 @@ oxs_sig_verify(const axutil_env_t *env,
     /*Prepare content and verify*/
     if ((axutil_strcmp(sign_algo, OXS_HREF_RSA_SHA1)) == 0)
     {
-        oxs_sig_verify_rsa_sha1(env, sign_ctx, content, signature);
+        status = oxs_sig_verify_rsa_sha1(env, sign_ctx, content, signature);
     }
     else if ((axutil_strcmp(sign_algo, OXS_HREF_HMAC_SHA1)) == 0)
     {
-        oxs_sig_verify_hmac_sha1(env, sign_ctx,  content, signature);
+        status = oxs_sig_verify_hmac_sha1(env, sign_ctx,  content, signature);
     }
     else
     {
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,  "Cannot support cipher %s for verification", sign_algo);
-        return AXIS2_FAILURE;
+        status = AXIS2_FAILURE;
     }
 
-    return AXIS2_SUCCESS;
+    return status;
 }
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_sig_verify_rsa_sha1(const axutil_env_t *env,
