@@ -122,6 +122,11 @@ extern "C"
         security_context_token_t *sct, 
         const axutil_env_t * env,
         axiom_node_t *node);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    security_context_token_increment_ref(
+        security_context_token_t *sct,
+        const axutil_env_t * env);
    
 #ifdef __cplusplus
 }

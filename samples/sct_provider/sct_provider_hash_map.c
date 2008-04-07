@@ -62,9 +62,9 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
      */
 
     /*find the sct_db lable to be used*/
-    if(server_side)
+    if(sct_id)
         sct_db_lable = sct_id;
-    else
+    else if (!server_side)
     {
         if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
         {
@@ -132,7 +132,12 @@ sct_provider_obtain_token(rampart_sct_provider_t *sct_provider, const axutil_env
     
     sct = sct_provider_obtain_token_from_sts(env, token, msg_ctx);
     if(sct)
+    {
         axutil_hash_set(sct_db, sct_db_lable, AXIS2_HASH_KEY_STRING, sct);
+        sct_db_lable = security_context_token_get_global_identifier(sct, env);
+        security_context_token_increment_ref(sct, env);
+        axutil_hash_set(sct_db, sct_db_lable, AXIS2_HASH_KEY_STRING, sct);
+    }
 
     return sct;
 }

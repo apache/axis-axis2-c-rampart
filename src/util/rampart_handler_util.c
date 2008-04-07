@@ -238,7 +238,7 @@ rampart_get_rampart_configuration(const axutil_env_t *env,
 
     if (!param_x_flow_security)
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_handler_utils] %d parameter is not set.",param_x_flow_security);
         return NULL;
     }
@@ -264,13 +264,13 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
     conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu] Conf context is NULL ");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rhu] Conf context is NULL ");
         return AXIS2_FALSE;
     }
     conf =  axis2_conf_ctx_get_conf(conf_ctx, env);
     if(!conf)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu] Cannot get the axis2 conf from conf context. ");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rhu] Cannot get the axis2 conf from conf context. ");
         return AXIS2_FALSE;
     }
 

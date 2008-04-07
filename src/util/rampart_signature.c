@@ -1081,7 +1081,7 @@ rampart_sig_endorse_sign(
     token = rampart_context_get_endorsing_token(rampart_context, env);
     if(!token)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+        AXIS2_LOG_INFO(env->log,
                         "[rampart][rampart_signature] Endorsing Token is not specified. No need to endorse");
         return AXIS2_SUCCESS;
     }

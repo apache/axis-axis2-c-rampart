@@ -127,7 +127,7 @@ rampart_shp_store_token_id(const axutil_env_t *env,
         str_node = oxs_axiom_get_first_child_node_by_name(env, key_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, NULL);
         if(!str_node)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Failed to get security token reference node");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Failed to get security token reference node");
             break;
         }
 
@@ -135,7 +135,7 @@ rampart_shp_store_token_id(const axutil_env_t *env,
         ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
         if(!ref_node)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp]Failed to get reference node from security token reference");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to get reference node from security token reference");
             break;
         }
 
@@ -248,7 +248,7 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
         key = rampart_context_get_key_using_hash(rampart_context, env, given_hash);
         if(!key)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][shp]Cannot get key corresponding to EncryptedKeySHA1");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Cannot get key corresponding to EncryptedKeySHA1");
         }
         return key;        
     }

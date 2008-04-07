@@ -28,6 +28,7 @@ struct security_context_token_t
     axiom_node_t *sct_node;
     axiom_node_t *attached_reference;
     axiom_node_t *unattached_reference;
+    int ref;
 };
 
 AXIS2_EXTERN security_context_token_t *AXIS2_CALL
@@ -53,7 +54,18 @@ AXIS2_EXTERN security_context_token_t *AXIS2_CALL
     sct->sct_node = NULL;
     sct->attached_reference = NULL;
     sct->unattached_reference = NULL;
+    sct->ref = 1;
     return sct;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+security_context_token_increment_ref(
+    security_context_token_t *sct,
+    const axutil_env_t * env)
+{
+    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    sct->ref++;
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN void AXIS2_CALL
@@ -62,6 +74,10 @@ security_context_token_free(
     const axutil_env_t *env)
 {
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+
+    if (--sct->ref > 0)
+        return;
+
     if(sct->buffer)
     {
         oxs_buffer_free(sct->buffer, env);

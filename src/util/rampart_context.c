@@ -1555,7 +1555,7 @@ rampart_context_is_key_identifier_supported(
     if(!wss)
     {
         /*TODO error*/
-        AXIS2_LOG_INFO(env->log,"wss properties are not set" );
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "wss properties are not set" );
         return AXIS2_FALSE;
     }
 
@@ -1575,7 +1575,7 @@ rampart_context_is_key_identifier_supported(
 
         if(!x509_token)
         {
-            AXIS2_LOG_INFO(env->log,"Cannot get the token value from policy.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot get the token value from policy.");
             return AXIS2_FALSE;
         }
         if(rp_x509_token_get_require_key_identifier_reference(x509_token,env))
@@ -1591,7 +1591,7 @@ rampart_context_is_key_identifier_supported(
         }
         else
         {
-            AXIS2_LOG_INFO(env->log, "Cannot get the token value from policy.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot get the token value from policy.");
             return AXIS2_FALSE;
         }
     }
@@ -1621,7 +1621,7 @@ rampart_context_is_issuer_serial_supported(
     wss = rp_secpolicy_get_wss(rampart_context->secpolicy,env);
     if(!wss)
     {
-        AXIS2_LOG_INFO(env->log,"wss properties are not set.." );
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"wss properties are not set.." );
         return AXIS2_FALSE;
     }
 
@@ -1641,7 +1641,7 @@ rampart_context_is_issuer_serial_supported(
 
         if(!x509_token)
         {
-            AXIS2_LOG_INFO(env->log,"Cannot get the token value from policy.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot get the token value from policy.");
             return AXIS2_FALSE;
         }
         if(rp_x509_token_get_require_issuer_serial_reference(x509_token,env))
@@ -1673,7 +1673,7 @@ rampart_context_is_embedded_token_supported(
     wss = rp_secpolicy_get_wss(rampart_context->secpolicy,env);
     if(!wss)
     {
-        AXIS2_LOG_INFO(env->log,"wss properties are not set.." );
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "wss properties are not set.." );
         return AXIS2_FALSE;
     }
 
@@ -1693,7 +1693,7 @@ rampart_context_is_embedded_token_supported(
 
         if(!x509_token)
         {
-            AXIS2_LOG_INFO(env->log,"Cannot get the token value from policy.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Cannot get the token value from policy.");
             return AXIS2_FALSE;
         }
         if(rp_x509_token_get_require_embedded_token_reference(x509_token,env))
@@ -2614,7 +2614,7 @@ rampart_context_is_token_type_supported(
         return AXIS2_TRUE;
     else
     {
-        AXIS2_LOG_INFO(env->log,"We still only suppport X509 Tokens and security context tokens.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "We still only suppport X509 Tokens and security context tokens.");
         return AXIS2_FALSE;
     }
     /*This method will be extended when we are supporting other types of tokens.*/
@@ -2659,7 +2659,7 @@ rampart_context_is_token_include(
     }
     else
     {
-        AXIS2_LOG_INFO(env->log,"We still only support x509 tokens and security context tokens");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "We still only support x509 tokens and security context tokens");
         return AXIS2_FALSE;
     }
 
