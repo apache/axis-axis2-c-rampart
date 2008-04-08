@@ -42,7 +42,7 @@ rampart_get_security_param(const axutil_env_t *env,
                            axis2_char_t *parameter);
 
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
-rampart_get_security_token(const axutil_env_t *env,
+rampart_get_security_header(const axutil_env_t *env,
                            axis2_msg_ctx_t *msg_ctx,
                            axiom_soap_header_t *soap_header);
 
@@ -54,7 +54,7 @@ rampart_create_fault_envelope(const axutil_env_t *env,
                               axis2_msg_ctx_t *msg_ctx);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_validate_security_token(const axutil_env_t *env,
+rampart_validate_security_header(const axutil_env_t *env,
                                 axis2_msg_ctx_t *msg_ctx,
                                 axiom_node_t *sec_node);
 
@@ -101,7 +101,7 @@ rampart_get_security_param(const axutil_env_t *env,
 
 
 axiom_node_t *AXIS2_CALL
-rampart_get_security_token(const axutil_env_t *env,
+rampart_get_security_header(const axutil_env_t *env,
                            axis2_msg_ctx_t *msg_ctx,
                            axiom_soap_header_t *soap_header
                           )
@@ -208,7 +208,7 @@ rampart_create_fault_envelope(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_validate_security_token(const axutil_env_t *env,
+rampart_validate_security_header(const axutil_env_t *env,
                                 axis2_msg_ctx_t *msg_ctx,
                                 axiom_node_t *sec_node)
 {

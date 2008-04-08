@@ -87,7 +87,7 @@ extern "C"
     * @return soap_header security element node
     */
     AXIS2_EXTERN axiom_node_t *AXIS2_CALL
-    rampart_get_security_token(const axutil_env_t *env,
+    rampart_get_security_header(const axutil_env_t *env,
                                axis2_msg_ctx_t *msg_ctx,
                                axiom_soap_header_t *soap_header);
 
@@ -114,7 +114,7 @@ extern "C"
      * @param  sec_node the reference to the security node
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_validate_security_token(const axutil_env_t *env,
+    rampart_validate_security_header(const axutil_env_t *env,
                                     axis2_msg_ctx_t *msg_ctx,
                                     axiom_node_t *sec_node);
     /**
