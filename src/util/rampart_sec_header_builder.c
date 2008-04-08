@@ -450,7 +450,7 @@ rampart_shb_build_message(
     server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
     if(!sec_header_block)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Security header block is NULL");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Security header block is NULL");
 		axiom_namespace_free(sec_ns_obj, env);
         return AXIS2_SUCCESS;
     }
@@ -468,7 +468,7 @@ rampart_shb_build_message(
     {
         int ttl = -1;
         AXIS2_LOG_INFO(env->log, "[rampart][shb] Building Timestamp Token");
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Using default timeToLive value %d",
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Using default timeToLive value %d",
                        RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
         ttl = rampart_context_get_ttl(rampart_context,env);
 
@@ -493,7 +493,7 @@ rampart_shb_build_message(
             /*Now we are passing rampart_context here so inside this method
             relevant parameters are extracted. */
 
-            AXIS2_LOG_INFO(env->log, "[rampart][shb]  building UsernmaeToken");
+            AXIS2_LOG_INFO(env->log, "[rampart][shb] Building UsernmaeToken");
             status = rampart_username_token_build(
                         env,
                         rampart_context,
@@ -551,7 +551,7 @@ rampart_shb_build_message(
     {
         axis2_status_t status = AXIS2_FAILURE;
 
-        AXIS2_LOG_INFO(env->log,  "[rampart][shb] Asymmetric Binding. ");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Asymmetric Binding. ");
         status = rampart_shb_do_asymmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj, sign_parts_list);
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){
@@ -575,7 +575,7 @@ rampart_shb_build_message(
         axis2_status_t status = AXIS2_FAILURE;
 
         /*Do Symmetric_binding specific things*/
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Symmetric Binding. ");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Symmetric Binding. ");
         status = rampart_shb_do_symmetric_binding(env, msg_ctx, rampart_context, soap_envelope, sec_node, sec_ns_obj, sign_parts_list);
 		axiom_namespace_free(sec_ns_obj, env);
         if(AXIS2_FAILURE == status){
@@ -594,7 +594,7 @@ rampart_shb_build_message(
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_TRANSPORT_BINDING)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shb]  Using transport binding");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Using transport binding");
 		axiom_namespace_free(sec_ns_obj, env);
         axutil_array_list_free(sign_parts_list, env);
         return AXIS2_SUCCESS;

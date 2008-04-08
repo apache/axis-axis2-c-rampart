@@ -1475,12 +1475,12 @@ rampart_shp_detect_replays(const axutil_env_t *env,
 
         if((NULL == rampart_context_get_rd_val(rampart_context, env)) && (NULL == rampart_context_get_replay_detector_name(rampart_context, env)))
 		{
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Replay detection is not specified. Nothing to do");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Replay detection is not specified. Nothing to do");
             need_replay_detection = AXIS2_FALSE;
         }
 		else
 		{
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Checking message for replay.");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Checking message for replay.");
             need_replay_detection = AXIS2_TRUE;
         }
         if(AXIS2_TRUE == need_replay_detection)
@@ -1534,7 +1534,7 @@ rampart_shp_detect_replays(const axutil_env_t *env,
 				}
 				else
 				{
-					AXIS2_LOG_INFO(env->log, "[rampart][shp] No replay detection function specified. Nothing to do. ");
+					AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] No replay detection function specified. Nothing to do. ");
 				}
 			}
         }
@@ -1638,7 +1638,7 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
     axis2_status_t status = AXIS2_FAILURE;
     axis2_bool_t first_signature= AXIS2_TRUE;
 
-    AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing security header in Strict layout");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Processing security header in Strict layout");
 
     cur_node = axiom_node_get_first_child(sec_node, env);
 
@@ -1648,7 +1648,7 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
         axis2_char_t *cur_local_name = NULL;
         
         cur_local_name = axiom_util_get_localname(cur_node, env);
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Processing security header element %s", cur_local_name);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Processing security header element %s", cur_local_name);
 
         if(0 == axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_KEY))
         {
@@ -1716,7 +1716,7 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
             /*We do nothing.*/
             status = AXIS2_SUCCESS;
         }else{
-            AXIS2_LOG_INFO(env->log, "[rampart][shp] Unknown security header %s", cur_local_name);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Unknown security header %s", cur_local_name);
             status = AXIS2_SUCCESS;
         }
 
