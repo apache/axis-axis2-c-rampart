@@ -31,27 +31,26 @@
 #include <rampart_sec_header_builder.h>
 #include <rampart_context.h>
 #include <rampart_engine.h>
-/*********************** Function headers *********************************/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_out_handler_invoke(struct axis2_handler *handler,
-                           const axutil_env_t * env,
-                           struct axis2_msg_ctx *msg_ctx);
-
-
-
-/**********************end of header functions ****************************/
+rampart_out_handler_invoke(
+    struct axis2_handler *handler,
+    const axutil_env_t * env,
+    struct axis2_msg_ctx *msg_ctx);
 
 AXIS2_EXTERN axis2_handler_t *AXIS2_CALL
-rampart_out_handler_create(const axutil_env_t *env,  axutil_string_t *name)
+rampart_out_handler_create(
+    const axutil_env_t *env,  
+    axutil_string_t *name)
 {
     axis2_handler_t *handler = NULL;
-
     AXIS2_ENV_CHECK(env, NULL);
 
     handler = axis2_handler_create(env);
     if (!handler)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_out_handler] Cannot create out-handler.");
         return NULL;
     }
 
@@ -62,8 +61,10 @@ rampart_out_handler_create(const axutil_env_t *env,  axutil_string_t *name)
 }
 
 axis2_status_t AXIS2_CALL
-rampart_out_handler_invoke(struct axis2_handler * handler,
-                           const axutil_env_t * env, axis2_msg_ctx_t * msg_ctx)
+rampart_out_handler_invoke(
+    struct axis2_handler * handler,
+    const axutil_env_t * env, 
+    axis2_msg_ctx_t * msg_ctx)
 {
     axiom_soap_envelope_t *soap_envelope = NULL;
     axiom_soap_header_t *soap_header = NULL;
@@ -71,84 +72,69 @@ rampart_out_handler_invoke(struct axis2_handler * handler,
     axiom_element_t *soap_header_ele = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     rampart_context_t *rampart_context = NULL;
-    axis2_bool_t serverside = AXIS2_FALSE;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
 
-    serverside = axis2_msg_ctx_get_server_side(msg_ctx,env);
-    soap_envelope =  axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
-    if (!soap_envelope)
+    /* 
+     * Since rampart out_handler is a global handler we should
+     * first check whether the rampart module is engaged.If not we
+     * should not process the message and return success.
+     */
+    if(!rampart_is_rampart_engaged(env,msg_ctx))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_out_handler] No SOAP envelope found. ERROR");
-        return AXIS2_FAILURE;
-    }
-
-    /* We are checking for the soap header element*/
-    soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
-
-    if (!soap_header)
-    {
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] No SOAP header found. ERROR");
-        /*No SOAP header, so no point of proceeding*/
+        AXIS2_LOG_INFO(env->log, 
+            "[rampart][rampart_out_handler] Rampart is not engaged. No security support is needed.");
         return AXIS2_SUCCESS;
     }
 
-    /* If the soap header is available then add the security header*/
-    if (soap_header)
+    soap_envelope =  axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+    if (!soap_envelope)
     {
-        soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
-        if(!soap_header_node)
-        {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] Cannot Create the header node");
-            /*No SOAP header, so no point of proceeding*/
-            return AXIS2_SUCCESS;
-        }
-        soap_header_ele = (axiom_element_t *)axiom_node_get_data_element(soap_header_node,env);
-
-        /* Since rampart out_handler is a global handler we should
-         * first check whether the rampart module is engaged.If not we
-         * should not process the message and return success.
-         * */
-
-        /* Is rampart engaged? Just checking*/
-        if(!rampart_is_rampart_engaged(env,msg_ctx))
-        {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_out_handler] Ramart is not engaged. No security support");
-            return AXIS2_SUCCESS;
-        }
-
-        /* Build configurations
-         * 1. Load policies
-         * 2. Create rampart context
-         * 3. Set policies to define ramprat behaviuor 
-         * */
-        rampart_context = rampart_engine_build_configuration(env, msg_ctx, AXIS2_FALSE);
-
-        if(!rampart_context)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_out_handler] ramaprt_context creation failed.");
-            return AXIS2_FAILURE;
-        }
-
-        /* We call the security header builder.
-         * Based on security policies we build the message.
-         * Encrypt/Sign/UT/TS/Attach Key Info etc.*/
-        status = rampart_shb_build_message(env, msg_ctx, rampart_context, soap_envelope);
-        if(AXIS2_FAILURE == status){
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                           "[rampart][rampart_out_handler] Security header building failed ERROR");
-            return AXIS2_FAILURE;
-        }
-        
-        /*we don't need to clear the rampart context, since it is in the property map.
-        It will be freed when a new rampart context is assigned or when property map is freed*/
-       /* if(serverside)
-        {
-            rampart_context_free(rampart_context, env);
-            rampart_context = NULL;
-        }*/
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_out_handler] SOAP envelope cannot be found.");
+        return AXIS2_FAILURE;
     }
 
-    return status;
+    soap_header  = axiom_soap_envelope_get_header(soap_envelope, env);
+    if (!soap_header)
+    {
+        /*No SOAP header, so no point of proceeding. FAIL*/
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_out_handler] SOAP header cannot be found.");
+        return AXIS2_FAILURE;
+    }
+
+    soap_header_node = axiom_soap_header_get_base_node(soap_header, env);
+    if(!soap_header_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_out_handler] Cannot get soap header node.");
+        return AXIS2_FAILURE;
+    }
+
+    soap_header_ele = (axiom_element_t *)axiom_node_get_data_element(soap_header_node,env);
+    if(!soap_header_ele)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_out_handler] Cannot get soap header element.");
+        return AXIS2_FAILURE;
+    }
+
+    rampart_context = rampart_engine_build_configuration(env, msg_ctx, AXIS2_FALSE);
+    if(!rampart_context)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_out_handler] ramaprt_context creation failed.");
+        return AXIS2_FAILURE;
+    }
+
+    status = rampart_shb_build_message(env, msg_ctx, rampart_context, soap_envelope);
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart][rampart_out_handler] Security header building failed.");
+        return status;
+    }
+
+    return AXIS2_SUCCESS;
 }
