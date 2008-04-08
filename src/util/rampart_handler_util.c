@@ -293,7 +293,8 @@ rampart_is_rampart_engaged(const axutil_env_t *env,
     svc =  axis2_msg_ctx_get_svc(msg_ctx,env);
     if(!svc)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][rhu] Service is NULL.");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[rampart][rhu] Service is NULL. Check if the security is enabled in the Conf ");
         return axis2_conf_get_enable_security(conf,env);
     }
 

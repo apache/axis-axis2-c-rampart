@@ -262,7 +262,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     {
         if(!signature_protection)
         {
-            AXIS2_LOG_INFO(env->log,
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                            "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
 			axutil_array_list_free(nodes_to_encrypt, env);
 			nodes_to_encrypt = NULL;
@@ -310,7 +310,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     /*If not specified set the default*/
     if(!enc_sym_algo ||  (0 == axutil_strcmp(enc_sym_algo, "")))
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_encryption] No symmetric algorithm is specified for encryption. Using the default");
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }
@@ -739,7 +739,7 @@ rampart_enc_encrypt_message(
     {
         if(!signature_protection)
         {
-            AXIS2_LOG_INFO(env->log,
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                            "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
 			axutil_array_list_free(nodes_to_encrypt, env);
 			nodes_to_encrypt = NULL;
@@ -769,7 +769,7 @@ rampart_enc_encrypt_message(
                                       AXIS2_TRUE, server_side, AXIS2_FALSE);
     if(!token)
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_encryption]Encryption Token is not specified");
 		axutil_array_list_free(nodes_to_encrypt, env);
 		nodes_to_encrypt = NULL;
@@ -800,7 +800,7 @@ rampart_enc_encrypt_message(
     /*If not specified set the default*/
     if(!enc_sym_algo ||  (0 == axutil_strcmp(enc_sym_algo, "")))
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_encryption]No symmetric algorithm is specified for encryption. Using the default");
         enc_sym_algo = OXS_DEFAULT_SYM_ALGO;
     }

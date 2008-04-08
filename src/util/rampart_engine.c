@@ -177,30 +177,6 @@ rampart_engine_build_configuration(
         }
     }
 
-    /*conf_ctx =  axis2_msg_ctx_get_conf_ctx(msg_ctx,env);
-    if(!conf_ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][engine] Conf context is NULL ");
-        rampart_context_free(rampart_context, env);
-        rampart_context = NULL;
-        return NULL;
-    }
-
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-    if(!ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][engine] axis2 context is NULL ");
-        rampart_context_free(rampart_context, env);
-        rampart_context = NULL;
-        return NULL;
-    }
-
-    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
-               AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
-    axis2_ctx_set_property(ctx, env, RAMPART_CONTEXT, property);*/
-
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
                AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_CONTEXT, property);
