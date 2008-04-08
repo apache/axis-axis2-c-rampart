@@ -105,7 +105,7 @@ Try samples on Win32
 ===============================
 
 There are several scenarios that you can try out with the sec_echo sample of the Rampart/C distribution.
-You can find more about it from the README.TXT file inside samples\secpolicy folder.
+You can find more about it from the README file inside samples\secpolicy folder.
 
 1. Set the AXIS2C_HOME envirionment variable to direct to your Axis2/C Installation.
 	SET AXIS2C_HOME=[your-path-to-axis2c]

@@ -80,6 +80,7 @@ test_scen.bat scenario3 8080
 In this case please use the script run_all.sh.
 Usage: %sh run_all.sh server-port
 E.g. %sh run_all.sh 8080
+run_all.bat 8080
 
 * I need to see messages exchanged
 --------------------------------------
