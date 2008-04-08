@@ -75,7 +75,7 @@ Major Changes Since Last Release
 5. Many bug fixes
 
 
-Un-Implemented Architecture Features 
+Planned to be implemented Architecture Features 
 ------------------------------------
 1. Signing and Encryption with SAML
 2. WS-Trust : Client/Server challenege response protocol
