@@ -366,7 +366,7 @@ rampart_username_token_validate(
             }
             else
             {
-                AXIS2_LOG_INFO(env->log,
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                "\n[rampart][rampart_usernametoken] Unknown element found %s -> %s",
                                localname, axiom_element_get_text(element, env, node));
             }
@@ -460,7 +460,7 @@ rampart_username_token_validate(
     authn_provider = rampart_context_get_authn_provider(rampart_context, env);
     if(authn_provider)
     {
-        AXIS2_LOG_INFO(env->log,
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                        "[rampart][rampart_usernametoken] Password authentication using AUTH MODULE");
         auth_status = rampart_authenticate_un_pw(env, authn_provider,
                       username, password, nonce, created, password_type, msg_ctx);
@@ -532,13 +532,13 @@ rampart_username_token_validate(
 
                     return AXIS2_FAILURE;
                 }
-                AXIS2_LOG_INFO(env->log,
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                                "[rampart][rampart_usernametoken] Password authentication using CALLBACK MODULE ");
                 password_from_svr = rampart_callback_password(env, password_callback, username);
             }
         }else{
 
-            AXIS2_LOG_INFO(env->log,
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
                            "[rampart][rampart_usernametoken] Using the password is in the context");
         }
 

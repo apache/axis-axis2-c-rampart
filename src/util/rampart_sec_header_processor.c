@@ -763,7 +763,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
         /*Get the i-th element and decrypt it */
         id = (axis2_char_t*)axutil_array_list_get(reference_list, env, i);
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Decrypting node, ID=%s", id);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Decrypting node, ID=%s", id);
 
         /*Need to remove # sign from the ID*/
         id2 = axutil_string_substring_starting_at(id, 1);
@@ -845,7 +845,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
         oxs_ctx_free(ctx, env);
         ctx = NULL;
 
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Node ID=%s decrypted successfuly", id);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Node ID=%s decrypted successfuly", id);
       }/*end of For loop*/
     }
 

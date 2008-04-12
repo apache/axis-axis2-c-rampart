@@ -467,7 +467,7 @@ rampart_shb_build_message(
     if(rampart_context_is_include_timestamp(rampart_context,env))
     {
         int ttl = -1;
-        AXIS2_LOG_INFO(env->log, "[rampart][shb] Building Timestamp Token");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Building Timestamp Token");
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Using default timeToLive value %d",
                        RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
         ttl = rampart_context_get_ttl(rampart_context,env);
@@ -493,7 +493,7 @@ rampart_shb_build_message(
             /*Now we are passing rampart_context here so inside this method
             relevant parameters are extracted. */
 
-            AXIS2_LOG_INFO(env->log, "[rampart][shb] Building UsernmaeToken");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Building UsernmaeToken");
             status = rampart_username_token_build(
                         env,
                         rampart_context,

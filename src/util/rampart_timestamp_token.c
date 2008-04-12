@@ -72,7 +72,8 @@ rampart_timestamp_token_build(
         /*Then we build Expires element*/
         /*TIP: If ttl<0 then we dont build the expires element.*/
         if(ttl<0){
-            AXIS2_LOG_INFO(env->log, " [rampart][ts] ttl is %d which is less then zero. Thus we do not build the expires element. ");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+                " [rampart][ts] ttl is %d which is less then zero. Thus we do not build the expires element. ");
             return AXIS2_SUCCESS;
         }
         expires_ele = axiom_element_create(env, ts_node, RAMPART_SECURITY_TIMESTAMP_EXPIRES, wsu_ns_obj,
@@ -158,7 +159,8 @@ rampart_timestamp_token_validate(
     expires_node =  axiom_node_get_next_sibling(created_node, env);
     if (!expires_node)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][ts]Cannot find expires in timestamp element. This is not critical. Assume that the message is not expiring");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+            "[rampart][ts]Cannot find expires in timestamp element. This is not critical. Assume that the message is not expiring");
         /*If the expire element is not present, it means that the message will not be expired.*/
         AXIS2_FREE(env->allocator, current_val);
         current_val = NULL;

@@ -1284,7 +1284,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
         int i = 0;
         soap_header_blocks = axiom_soap_header_get_header_blocks_with_namespace_uri(soap_header, env, nspace);
         if(!soap_header_blocks){
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Header cannot find with namespace %s", nspace);
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Header cannot find with namespace %s", nspace);
             return AXIS2_SUCCESS;
         }
         for(i=0 ; i<axutil_array_list_size(soap_header_blocks, env); i++)
@@ -1340,7 +1340,7 @@ axis2_status_t rampart_context_set_nodes_to_encrypt_or_sign(
             }
             else
             {
-                AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Cannot find the header with name %s", local_name);
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Cannot find the header with name %s", local_name);
                 return AXIS2_SUCCESS;
             }
         }
@@ -1489,7 +1489,7 @@ rampart_context_get_key_identifier_from_wss(
     wss = rp_secpolicy_get_wss(rampart_context->secpolicy,env);
     if(!wss)
     {
-        AXIS2_LOG_INFO(env->log,"Problem identifying the key Identifier." );
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,"Problem identifying the key Identifier." );
         return identifier;
     }
 
@@ -2130,11 +2130,11 @@ rampart_context_get_nodes_to_protect(
     {
         if(is_sign)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Nothing to sign outside Secyrity header.");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Nothing to sign outside Secyrity header.");
         }
         else
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Nothing to encrypt outside Secyrity header.");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Nothing to encrypt outside Secyrity header.");
         }
         return AXIS2_SUCCESS;
     }
@@ -2163,7 +2163,7 @@ rampart_context_get_nodes_to_protect(
         axiom_node_t *body_node = NULL;
         axiom_node_t *body_child_node = NULL;
 
-        AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Including the body.");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Including the body for encryption/sign.");
         body = axiom_soap_envelope_get_body(soap_envelope, env);
         body_node = axiom_soap_body_get_base_node(body, env);
         body_child_node = axiom_node_get_first_element(body_node, env);
@@ -2205,10 +2205,12 @@ rampart_context_get_elements_to_protect(
     items = rp_signed_encrypted_items_get_elements(signed_encrypted_items,env);
     if(!items || (axutil_array_list_size(items,env)==0))
     {
-        if(is_sign)
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Nothing to sign outside Secyrity header.");
-        else
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context] Nothing to encrypt outside Secyrity header.");
+        if(is_sign){
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Nothing to sign outside Secyrity header.");
+        
+        }else{
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Nothing to encrypt outside Secyrity header.");
+        }
         return AXIS2_FAILURE;
     }
     else
@@ -2249,11 +2251,12 @@ rampart_context_check_whether_to_encrypt(
             parts = rp_signed_encrypted_items_get_elements(encrypted_items,env);
             if(!parts||(axutil_array_list_size(parts,env)==0))
             {
-                AXIS2_LOG_INFO(env->log, "[rampart][rampart_context]No Signed parts specified Nothing to Verify");
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] No Signed parts specified Nothing to Verify");
                 return AXIS2_FALSE;
             }
-            else
+            else{
                 return AXIS2_TRUE;
+            }
         }
     }
     parts = rp_signed_encrypted_parts_get_headers(encrypted_parts,env);
@@ -2264,7 +2267,7 @@ rampart_context_check_whether_to_encrypt(
 
         else
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context]No encryption parts specified Nothing to decrypt");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context]No encryption parts specified Nothing to decrypt");
             return AXIS2_FALSE;
         }
     }
@@ -2292,7 +2295,7 @@ rampart_context_check_whether_to_sign(
             parts = rp_signed_encrypted_items_get_elements(signed_items,env);
             if(!parts||(axutil_array_list_size(parts,env)==0))
             {
-                AXIS2_LOG_INFO(env->log, "[rampart][rampart_context]No Signed parts specified Nothing to Verify");
+                AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context]No Signed parts specified Nothing to Verify");
                 return AXIS2_FALSE;
             }
             else
@@ -2307,7 +2310,7 @@ rampart_context_check_whether_to_sign(
 
         else
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][rampart_context]No Signed parts specified Nothing to Verify");
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context]No Signed parts specified Nothing to Verify");
             return AXIS2_FALSE;
         }
     }

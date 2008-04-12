@@ -230,7 +230,7 @@ rampart_callback_password(const axutil_env_t *env,
     /*Get the password thru the callback*/
     password = RAMPART_CALLBACK_CALLBACK_PASSWORD(callback_module, env, username, cb_prop_val);
 
-    AXIS2_LOG_INFO(env->log, "[rampart][rampart_util] Password taken from the callback module . SUCCESS");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_util] Password taken from the callback module . SUCCESS");
     return password;
 }
 
