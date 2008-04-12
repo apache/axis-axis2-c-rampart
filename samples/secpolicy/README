@@ -58,7 +58,7 @@ Scenario    Summary
 19.			Symmetric binding with secure conversation token. 
 			Using different tokens for encryption and signature.
 			The protection token is Sign->Encrypt. Signature is Encrypted.
-
+20.         SAML Scenario. Cannot be run with test_scen.sh. Please use saml.sh script
 
 FAQ:
 ---
