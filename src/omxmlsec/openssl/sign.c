@@ -59,7 +59,7 @@ openssl_sig_sign(const axutil_env_t *env,
 
     /*Sign init*/
     ret = EVP_SignInit(&md_ctx, digest);
-    AXIS2_LOG_INFO(env->log, "[openssl][sig] Signing content %s", oxs_buffer_get_data(input_buf, env) );
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[openssl][sig] Signing content %s", oxs_buffer_get_data(input_buf, env) );
     EVP_SignUpdate (&md_ctx, oxs_buffer_get_data(input_buf, env), oxs_buffer_get_size(input_buf, env));
     sig_len = sizeof(sig_buf);
     err = EVP_SignFinal (&md_ctx,

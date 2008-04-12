@@ -150,7 +150,6 @@ oxs_axiom_get_node_by_id(const axutil_env_t *env,
     if(axiom_node_get_node_type(node, env) != AXIOM_ELEMENT){return NULL;}
 
     localname = axiom_util_get_localname(node, env);
-    /*AXIS2_LOG_INFO(env->log, "[rampart][axiom] Checking node %s for the attribute %s with value = %s", localname, attr, val);*/
     attribute_value = oxs_axiom_get_attribute_value_of_node_by_name(env, node, attr, ns);
     
     if(0 == axutil_strcmp(val, attribute_value) ){

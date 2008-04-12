@@ -754,14 +754,14 @@ oxs_xml_sig_verify(const axutil_env_t *env,
     doc = axiom_node_get_document(signed_info_node, env);
 
 	  signed_info_node_value = axiom_node_to_string(signed_info_node, env);
-    AXIS2_LOG_INFO(env->log, "[oxs][xml_sig] C14N (verif1)= %s ", signed_info_node_value );
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[oxs][xml_sig] C14N (verif1)= %s ", signed_info_node_value );
 	AXIS2_FREE(env->allocator, signed_info_node_value);
 	  signed_info_node_value = NULL;
     /*    oxs_c14n_apply(env, doc, AXIS2_FALSE, &content, AXIS2_TRUE, NULL, signed_info_node);*/
 
     oxs_c14n_apply_algo(env, doc, &content, NULL, signed_info_node, c14n_mtd);
 
-    AXIS2_LOG_INFO(env->log, "[oxs][xml_sig] C14N (verif2)=\n\n%s\n\n", content );
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[oxs][xml_sig] C14N (verif2)=\n\n%s\n\n", content );
 
     /*In the final step we Verify*/
     status = oxs_sig_verify(env, sign_ctx, content , signature_val);
