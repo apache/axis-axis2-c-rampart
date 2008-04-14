@@ -52,18 +52,17 @@ extern "C"
 
     /**
     * Create a rampart_config.rampart_config is the wrapper
-    * @env pointer to environment struct
+    * @param env pointer to environment struct,Must not be NULL.
     * @return ramaprt_config_t* on successful creation. Else NULL; 
     */
-
     AXIS2_EXTERN rampart_config_t *AXIS2_CALL
     rampart_config_create(const axutil_env_t *env);
 
 
     /**
     * Frees a rampart_config.
-    * @rampart_config the rampart_config
-    * @env pointer to environment struct
+    * @param rampart_config the rampart_config
+    * @param env pointer to environment struct,Must not be NULL.
     */
 
     AXIS2_EXTERN void AXIS2_CALL
@@ -73,60 +72,149 @@ extern "C"
 
     /****************************************************************/
 
+    /**
+     *
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * @param user
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_config_set_username(rampart_config_t *rampart_config,
                              const axutil_env_t *env,
                              axis2_char_t *user);
 
+    /**
+     *
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * @param password
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_config_set_password(rampart_config_t *rampart_config,
                                  const axutil_env_t *env,
                                  axis2_char_t *password);
+
+    /**
+     *
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * @param password_type
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_config_set_password_type(rampart_config_t *rampart_config,
                                       const axutil_env_t *env,
                                       axis2_char_t *password_type);
 
+    /**
+     *
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * @param ttl
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_config_set_ttl(rampart_config_t *rampart_config,
                             const axutil_env_t *env,
                             int ttl);
+
+    /**
+     *
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * @param user
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
 	AXIS2_EXTERN int AXIS2_CALL
 	rampart_config_add_saml_token(rampart_config_t *rampart_config, 
 								  const axutil_env_t *env, 
 								  rampart_saml_token_t *saml);
 
+    /**
+     *
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * @param issued_token_aquire
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
+
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	rampart_config_set_issued_token_aquire_function(rampart_config_t *rampart_config,
 								  const axutil_env_t *env,
 								  issued_token_callback_func issued_token_aquire);
+    /**
+     * 
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_config_get_username(
         rampart_config_t *rampart_config,
         const axutil_env_t *env);
+    /**
+     * 
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_config_get_password(
         rampart_config_t *rampart_config,
         const axutil_env_t *env);
+    /**
+     * 
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_config_get_password_type(
         rampart_config_t *rampart_config,
         const axutil_env_t *env);
+    /**
+     * 
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * returns
+     */
     
     AXIS2_EXTERN int AXIS2_CALL
     rampart_config_get_ttl(
         rampart_config_t *rampart_config,
         const axutil_env_t *env);
+    /**
+     * 
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 	AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
 	rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
 								  const axutil_env_t *env);    
+    /**
+     * 
+     * @param rampart_config
+     * @param evn pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 	AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
 	rampart_config_get_issued_token_aquire_function(rampart_config_t *rampart_config, 
@@ -138,3 +226,10 @@ extern "C"
 }
 #endif
 #endif
+
+
+
+
+
+
+

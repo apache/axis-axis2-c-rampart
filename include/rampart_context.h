@@ -172,6 +172,7 @@ extern "C"
      * @param env pointer to environment struct,Must not be NULL.
      * @returns status of the op.                                                                                                        
      * @param receiver_certificate
+     * returns status of the op.
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
 
