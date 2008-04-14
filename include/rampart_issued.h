@@ -26,6 +26,16 @@ extern "C"
 {
 #endif
 
+    /**
+     * 
+     * @param rampart_context
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param sec_node
+     * @param sign_parts
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
+
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	rampart_issued_supporting_token_build(
 		rampart_context_t *rampart_context, 

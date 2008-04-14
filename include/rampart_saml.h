@@ -49,34 +49,82 @@ extern "C" {
 #define RAMPART_ST_FAULT_INVALIDSECURITYTOKEN_CODE      "wsse:InvalidSecurityToken"                
 
 #define RAMPART_SAML_FAULT_CODE                         "env:Sender"
+    /**
+     *
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param rampart_context
+     * @param sec_node
+     * @param sign_parts
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_supporting_token_build(const axutil_env_t *env, 
                          rampart_context_t *rampart_context,                         
                          axiom_node_t *sec_node,
                          axutil_array_list_t *sign_parts);
+    /**
+     *
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param rampart_context
+     * @param assertion
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_validate(const axutil_env_t *env, 
                             rampart_context_t *rampart_context, 
                             axiom_node_t *assertion);
+    /**
+     *
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param assertion
+     * @returns 
+     */
 
 AXIS2_EXTERN char * AXIS2_CALL
 rampart_saml_token_get_subject_confirmation(const axutil_env_t *env, 
                                             axiom_node_t *assertion);
 
-/* SAML token proccessing faults */
+
+    /**
+     * SAML token proccessing faults 
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param ctx
+     * @returns 
+     */
+
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_fault_securitytokenunavailable(axutil_env_t *env, 
                                                   axis2_msg_ctx_t *ctx);
+    /**
+     * 
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param ctx
+     * @returns 
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_fault_unsupportedsecuritytoken(axutil_env_t *env, 
                                                   axis2_msg_ctx_t *ctx);
+    /**
+     * 
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param ctx
+     * @returns 
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_fault_failedcheck(axutil_env_t *env, 
                                                   axis2_msg_ctx_t *ctx);
+    /**
+     * 
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param ctx
+     * @returns 
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_fault_invalidsecuritytoken(axutil_env_t *env, 

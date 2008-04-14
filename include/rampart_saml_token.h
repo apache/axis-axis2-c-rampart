@@ -44,51 +44,139 @@ typedef enum
 
 typedef struct rampart_saml_token_t rampart_saml_token_t;
 
+    /**
+     *
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param assertion
+     * @param type
+     * returns
+     */
+
 AXIS2_EXTERN rampart_saml_token_t *AXIS2_CALL
 rampart_saml_token_create(const axutil_env_t *env, axiom_node_t *assertion, 
                           rampart_st_confir_type_t type);
+    /**
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * returns
+     */
+
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_free(rampart_saml_token_t *tok, const axutil_env_t *env);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param assertion
+     * returns
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_set_assertion(rampart_saml_token_t *tok, const axutil_env_t *env, 
                                  axiom_node_t *assertion);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 rampart_saml_token_get_assertion(rampart_saml_token_t *tok, const axutil_env_t *env);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param assertion
+     * returns
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_set_type(rampart_saml_token_t *tok, const axutil_env_t *env, 
                             rampart_st_confir_type_t type);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 AXIS2_EXTERN rampart_st_confir_type_t AXIS2_CALL
 rampart_saml_token_get_type(rampart_saml_token_t *tok, const axutil_env_t *env);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param key
+     * returns
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_set_key_value(rampart_saml_token_t *tok, const axutil_env_t *env, 
                                  oxs_key_t *key);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 rampart_saml_token_get_str(rampart_saml_token_t *tok, const axutil_env_t *env);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param str
+     * returns
+     */
 
 AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_set_str(rampart_saml_token_t *tok, const axutil_env_t *env, 
                            axiom_node_t *str);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param is_token_added
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_set_is_added_to_header(rampart_saml_token_t *tok, 
                                       const axutil_env_t *env,
                                       axis2_bool_t is_token_added);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
 rampart_saml_token_is_added_to_header(rampart_saml_token_t *tok, 
                                       const axutil_env_t *env);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param token_type
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_set_token_type(rampart_saml_token_t *tok,
 								  const axutil_env_t *env,
 								  rp_property_type_t token_type);
+    /**
+     *
+     * @param tok
+     * @param env pointer to environment struct,Must not be NULL.
+     * returns
+     */
 
 AXIS2_EXTERN rp_property_type_t AXIS2_CALL
 rampart_saml_token_get_token_type(rampart_saml_token_t *tok,

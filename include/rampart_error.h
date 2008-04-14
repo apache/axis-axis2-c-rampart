@@ -62,6 +62,12 @@ extern "C"
       
     typedef enum rampart_error_codes rampart_error_codes_t;
 
+    /**
+     * initialising method for error
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
+
 axis2_status_t AXIS2_CALL
 rampart_error_init();
 
