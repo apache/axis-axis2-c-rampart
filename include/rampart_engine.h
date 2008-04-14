@@ -39,6 +39,13 @@
 extern "C"
 {
 #endif
+    /**
+     * 
+     * @param env pointer to environment struct,Must not be 
+     * @param msg_ctx
+     * @param is_inflow
+     * returns 
+     */
 
     AXIS2_EXTERN rampart_context_t *AXIS2_CALL
     rampart_engine_build_configuration(
@@ -50,3 +57,10 @@ extern "C"
 }
 #endif
 #endif
+
+
+
+
+
+
+
