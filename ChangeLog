@@ -1,17 +1,26 @@
+Rampart/C 1.2.0
+  * WS-Secure Conversation Language support (Experimental)
+  * WS-Trust Language support (Experimental)
+  * SAML 1.1 Support
+  * Memory leak fixes
+  * Many bug fixes
+--Rampart-C team <rampart-c-dev@ws.apache.org> 23 Apr 2008
+
 Rampart/C 1.1.0
 
- * MAC support with HMAC-SHA1
- * Derrived key encryption
- * Derived key signing
- * Symmetric policy bindings
- * New security header processor based on SOAP header layout
- * Security policy validator
- * Extensible Replay detection module
- * Signature confirmation support
- * Support for thumb prints
- * Easy to use deployment scripts
- * Memory leak fixes
- * Many bug fixes
+  * MAC support with HMAC-SHA1
+  * Derrived key encryption
+  * Derived key signing
+  * Symmetric policy bindings
+  * New security header processor based on SOAP header layout
+  * Security policy validator
+  * Extensible Replay detection module
+  * Signature confirmation support
+  * Support for thumb prints
+  * Easy to use deployment scripts
+  * Memory leak fixes
+  * Many bug fixes
+--Rampart-C team <rampart-c-dev@ws.apache.org> 16 Jan 2008
 
 Rampart/C 1.0.0
 
@@ -24,8 +33,7 @@ Rampart/C 1.0.0
   * Easy to use deployment scripts
   * Memory leak fixes
   * Many bug fixes
-
---Rampart-C team <rampart-c-dev@ws.apache.org> Tue 25 Sept 2007
+--Rampart-C team <rampart-c-dev@ws.apache.org> 05 Oct 2007
 
 Rampart/C 0.90 
 
@@ -33,4 +41,4 @@ Rampart/C 0.90
   * Usernametoken support
   * Timestamp support
   * Samples for clients and callbacks
--- Axis2-C team <axis-c-dev@ws.apache.org>  Tue 13 June 2006
+--Rampart-C team <rampart-c-dev@ws.apache.org> 25 Sept 2007

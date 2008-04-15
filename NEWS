@@ -70,7 +70,7 @@ Major Changes Since Last Release
 --------------------------------
 1. WS-Secure Conversation Language support (Experimental)
 2. WS-Trust Language support (Experimental)
-3. SAML Support
+3. SAML 1.1 Support
 4. Memory leak fixes
 5. Many bug fixes
 

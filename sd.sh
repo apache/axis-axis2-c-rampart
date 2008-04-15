@@ -48,6 +48,13 @@ do
 done
 
 echo "Removing .lo entries in $src_dist"
+for i in `find $src_dist -name "*.o"`
+do
+    echo "Deleting $i"
+    rm  $i
+done
+
+echo "Removing .lo entries in $src_dist"
 for i in `find $src_dist -name "*.lo"`
 do
     echo "Deleting $i"
