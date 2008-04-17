@@ -509,6 +509,45 @@ rampart_shb_build_message(
         }
     }
 
+    /**********************
+     * Sample node to be added to the security header. This is for testing
+     * TODO: Remove later*/
+
+    if(1){
+        axiom_node_t *my_token = NULL;
+        axutil_array_list_t *token_list = NULL;
+        axis2_char_t *buf = "<MyToken/>";
+
+        token_list = axutil_array_list_create(env, 1);
+        my_token = oxs_axiom_deserialize_node(env, buf);
+        axutil_array_list_add(token_list, env, my_token);
+        rampart_context_set_custom_tokens(rampart_context,env, token_list);
+    }
+ 
+    /***********************/
+    /*Custom tokens are included if its available in the rampart context*/
+    if(!axis2_msg_ctx_get_server_side(msg_ctx,env))
+    {
+        axutil_array_list_t *token_list = NULL;
+
+        token_list = rampart_context_get_custom_tokens(rampart_context, env);
+        if(token_list){
+            int size = 0, i = 0;
+            size = axutil_array_list_size(token_list, env);
+            for (i = 0; i < size; i++){
+                axiom_node_t *token_node = NULL;
+                token_node = (axiom_node_t*)axutil_array_list_get(token_list, env, i);
+                if(token_node){
+                    axis2_status_t status = AXIS2_FAILURE;
+                    status = axiom_node_add_child(sec_node, env, token_node); 
+                    if(status != AXIS2_SUCCESS){
+                        return AXIS2_FAILURE;
+                    }
+                }
+            }
+        }
+    }
+
     if (rampart_context_is_include_supporting_token(rampart_context, env, server_side, AXIS2_FALSE, RP_PROPERTY_SAML_TOKEN))
     {        
         status = rampart_saml_supporting_token_build(env, rampart_context, sec_node, sign_parts_list);    

@@ -55,7 +55,10 @@ struct rampart_context_t
 	
     /* SAML tokens. */
     axutil_array_list_t *saml_tokens;
-
+    
+    /* Custom tokens. */
+    axutil_array_list_t *custom_tokens;
+    
     /*Rampart specific members*/
     rp_secpolicy_t *secpolicy;
     rampart_callback_t *password_callback_module;
@@ -184,6 +187,7 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->certificate_file = NULL;
     rampart_context->reciever_certificate_file = NULL;    
     rampart_context->saml_tokens = NULL;
+    rampart_context->custom_tokens = NULL;
 	rampart_context->aquire_issued_token = NULL;
 
     rampart_context->secpolicy = NULL;
@@ -333,6 +337,13 @@ rampart_context_free(rampart_context_t *rampart_context,
 
             axutil_array_list_free(rampart_context->key_list, env);
             rampart_context->key_list = NULL;
+        }
+
+        /*Free custom tokens list*/
+        if(rampart_context->custom_tokens){
+            /*No need to free the contents*/
+            axutil_array_list_free(rampart_context->custom_tokens, env);
+            rampart_context->custom_tokens = NULL;
         }
 
         AXIS2_FREE(env->allocator,rampart_context);
@@ -2858,6 +2869,23 @@ rampart_context_add_saml_token(rampart_context_t *rampart_context,
 		return AXIS2_SUCCESS;
 	}
     return AXIS2_FAILURE;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_custom_tokens(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env,
+                                        axutil_array_list_t *tokens)
+{
+    
+    rampart_context->custom_tokens = tokens;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
+rampart_context_get_custom_tokens(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env)
+{
+    return rampart_context->custom_tokens;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL

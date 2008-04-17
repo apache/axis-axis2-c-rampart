@@ -1521,6 +1521,30 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    /**
+     * Set the a node list to the context. These nodes will be append to
+     * the Security header
+     * @param rampart_context
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param tokens the token list as an array
+     * @returns status of the op.                                                                                                        
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_custom_tokens(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env,
+                                        axutil_array_list_t *tokens); 
+
+    /**
+     * Get the node or the token list as an array. If the size is 0
+     * that means there are no custom tokens specified by the client
+     * @param rampart_context
+     * @param env pointer to environment struct,Must not be NULL.
+     * @returns the custom tokens list 
+     */
+    AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
+    rampart_context_get_custom_tokens(rampart_context_t *rampart_context,
+                                        const axutil_env_t *env);
 #ifdef __cplusplus
 }
 #endif
