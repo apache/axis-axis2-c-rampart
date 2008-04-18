@@ -45,11 +45,13 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
 {
     axis2_char_t *serialized_node = NULL;
     axis2_char_t *digest = NULL;
+	axiom_node_t *ori_node = NULL, *sig_node = NULL;
+	oxs_tr_dtype_t output_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;/*This will always be the current dtype*/
+    void *tr_output = NULL;
     int i = 0;
 
     if((transforms) && (0 < axutil_array_list_size(transforms, env))){
-        oxs_tr_dtype_t output_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;/*This will always be the current dtype*/
-        void *tr_output = NULL;
+       
         output_dtype = OXS_TRANSFORM_TYPE_NODE; /*We always begin with a node*/
 
         tr_output = node; /*The first transformation is applied to the node*/
@@ -77,6 +79,14 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
             }else if((input_dtype == OXS_TRANSFORM_TYPE_NODE) && (output_dtype == OXS_TRANSFORM_TYPE_CHAR)){
                 /*De-serialize*/
                 tr_input =  oxs_axiom_deserialize_node(env, (axis2_char_t *)tr_output);
+			}else if((input_dtype == OXS_TRANSFORM_TYPE_NODE) && (output_dtype == OXS_TRANSFORM_TYPE_NODE_ARRAY_LIST)){
+				ori_node = axutil_array_list_get((axutil_array_list_t*)tr_output, env, 0);
+				sig_node = axutil_array_list_get((axutil_array_list_t*)tr_output, env, 1);
+				tr_input = ori_node;				
+			}else if((input_dtype == OXS_TRANSFORM_TYPE_CHAR) && (output_dtype == OXS_TRANSFORM_TYPE_NODE_ARRAY_LIST)){
+				ori_node = axutil_array_list_get((axutil_array_list_t*)tr_output, env, 0);
+				sig_node = axutil_array_list_get((axutil_array_list_t*)tr_output, env, 1);
+				tr_input = axiom_node_to_string(ori_node, env);
             }else{
                 /*Let it go as it is. */
                 tr_input = tr_output;
@@ -92,18 +102,24 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
                 oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Transform failed for %s", tr_id);
                 return NULL;
             }
-        }/*eof for loop*/
+		}/*eof for loop*/
         /*We have applied all our transforms now*/
         /*Serialize node*/
         if(OXS_TRANSFORM_TYPE_NODE == output_dtype ){
             serialized_node = axiom_node_to_string((axiom_node_t*)tr_output, env);
         }else if(OXS_TRANSFORM_TYPE_CHAR == output_dtype){
             serialized_node = (axis2_char_t*)tr_output;
-        }else{
+        }
+		else if(OXS_TRANSFORM_TYPE_NODE_ARRAY_LIST == output_dtype){
+			ori_node = (axiom_node_t*)axutil_array_list_get((axutil_array_list_t*)tr_output, env, 0);
+			sig_node = (axiom_node_t*)axutil_array_list_get((axutil_array_list_t*)tr_output, env, 1);
+			serialized_node = axiom_node_to_string(ori_node, env);
+		}
+		else{
             /*Error*/
             oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported transform data type  %d", output_dtype);
         }
-    }else{
+	}else{
         /*No transforms defined. Thus we simply direct the node, to make the digest*/
         serialized_node = axiom_node_to_string(node, env);
     }
@@ -114,11 +130,14 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
         oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported digest method  %s", digest_mtd);
         return NULL;
     }
+	
+	if(ori_node && sig_node){			
+		axiom_node_add_child(ori_node, env, sig_node);
+	}
     if(serialized_node){
         AXIS2_FREE(env->allocator, serialized_node);
         serialized_node = NULL;
     }
-
     return digest;
 }
 
@@ -145,15 +164,17 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     node = oxs_sign_part_get_node(sign_part, env);
 
 	id_name = oxs_sign_part_get_id_name(sign_part, env);
-	if(!id_name)
-		id_name = OXS_ATTR_ID;
-
 	ns = oxs_sign_part_get_sign_namespace(sign_part, env);
 
 	if(ns)
 		ns_uri = axiom_namespace_get_uri(ns, env);
-	else 
+	else if (!ns && !id_name) 
 		ns_uri = OXS_WSU_XMLNS;
+    else
+        ns_uri = NULL;
+
+	if(!id_name)
+		id_name = OXS_ATTR_ID;
 
     /*Get the reference ID from the node and hence to the ds:Reference node*/
     id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, id_name,
@@ -422,8 +443,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
         if(!reffed_node)
         {
             reffed_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id2, NULL );	
-        }
-
+        }		
 	}
     /*Find the node refered by this ref_id2 and set to the sign part*/
 	

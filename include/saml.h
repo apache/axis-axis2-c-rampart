@@ -613,8 +613,8 @@ saml_assertion_signature_verify(saml_assertion_t *assertion, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_sign(saml_assertion_t *assertion, axutil_env_t *env, 
-					oxs_sign_ctx_t *sign_ctx, axiom_node_t **node);
+saml_assertion_sign(saml_assertion_t *assertion, 
+					axiom_node_t *node, axutil_env_t *env);
 
 /* 
  * Remove the information set for signing or verifying the assertion.

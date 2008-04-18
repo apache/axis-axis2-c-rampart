@@ -34,6 +34,8 @@ saml_assertion_create(axutil_env_t *env)
 		assertion->issuer = NULL;
 		assertion->issue_instant = NULL;
 		assertion->signature = NULL;
+		assertion->sign_ctx = NULL;
+		assertion->ori_xml = NULL;
 	}
 	return assertion;
 }
@@ -42,6 +44,8 @@ AXIS2_EXTERN void AXIS2_CALL
 saml_assertion_free(saml_assertion_t *assertion, axutil_env_t *env)
 {	
 	int i = 0, size = 0;
+
+	
 	if (assertion->major_version)
 	{
 		AXIS2_FREE(env->allocator, assertion->major_version);
@@ -78,7 +82,7 @@ saml_assertion_free(saml_assertion_t *assertion, axutil_env_t *env)
 		size = axutil_array_list_size(assertion->conditions, env);
 		for (i = 0; i < size; i++)
 		{
-			cond = axutil_array_list_get(assertion->conditions, env, i);
+			cond = (saml_condition_t*)axutil_array_list_get(assertion->conditions, env, i);
 			if (cond)
 			{
 				saml_condition_free(cond, env);
@@ -307,14 +311,15 @@ saml_assertion_to_om(saml_assertion_t *assertion,
 				}
 			}		
 		}
-		if (assertion->signature)
+		/*if (assertion->signature)
 		{
 																			
-		}
-		/*if (assertion->sign_ctx)
-		{
-			oxs_xml_sig_sign(env, assertion->sign_ctx, n, &assertion->signature); 
 		}*/
+		if (assertion->sign_ctx)
+		{
+			//oxs_xml_sig_sign(env, assertion->sign_ctx, n, &assertion->signature); 
+			saml_assertion_sign(assertion, n, env);
+		}
 	}	
 	return n;
 }
@@ -551,7 +556,7 @@ saml_assertion_unsign(saml_assertion_t *a, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_sign(saml_assertion_t *a, axutil_env_t *env, oxs_sign_ctx_t *sign_ctx, axiom_node_t **node)
+saml_assertion_sign(saml_assertion_t *a, axiom_node_t *node, axutil_env_t *env)
 {
 	 axiom_node_t *n= NULL;
 	 oxs_sign_part_t* sig_part = NULL;
@@ -567,12 +572,12 @@ saml_assertion_sign(saml_assertion_t *a, axutil_env_t *env, oxs_sign_ctx_t *sign
 			sig_part = axutil_array_list_get(sig_parts, env, i);
 			if(sig_part)
 			{
-				oxs_sign_part_set_node(sig_part, env, *node);
+				oxs_sign_part_set_node(sig_part, env, node);
 			}
 		 }
 	 }
 
-	 oxs_xml_sig_sign(env, a->sign_ctx, *node, &n);
+	 oxs_xml_sig_sign(env, a->sign_ctx, node, &n);
      /*Finally build KeyInfo*/
 	 oxs_xml_key_info_build(env, n, oxs_sign_ctx_get_certificate(a->sign_ctx, env), OXS_KIBP_X509DATA_X509CERTIFICATE);
 	 return AXIS2_SUCCESS;

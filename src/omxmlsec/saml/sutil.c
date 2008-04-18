@@ -23,12 +23,16 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
 	oxs_sign_part_t* sig_part = NULL;
 	oxs_transform_t *tr = NULL;	
 	axutil_array_list_t *sig_parts = NULL, *trans = NULL;
-	
+	axiom_namespace_t *ns = NULL;
 	trans = axutil_array_list_create(env, SAML_ARRAY_LIST_DEF);
 
 	/*create transform sor SAML XML signature with identifier*/
 	tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_ENVELOPED_SIGNATURE);
 	axutil_array_list_add(trans, env, tr);
+
+    /*Create the EXCL-C14N Transformation*/
+    tr = oxs_transforms_factory_produce_transform(env, OXS_HREF_TRANSFORM_XML_EXC_C14N);
+    axutil_array_list_add(trans, env, tr);
 
 	sig_part = oxs_sign_part_create(env);
 	oxs_sign_part_set_digest_mtd(sig_part, env, OXS_HREF_SHA1);
@@ -36,7 +40,9 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
 	
 	oxs_sign_part_set_transforms(sig_part, env, trans);
 	oxs_sign_part_set_id_name(sig_part, env, id);
-	oxs_sign_part_set_sign_namespace(sig_part,env, NULL);
+
+	//ns = axiom_namespace_create(env, "", "");
+	//oxs_sign_part_set_sign_namespace(sig_part,env, ns);
 
 	sig_parts = axutil_array_list_create(env, SAML_ARRAY_LIST_DEF);
 	axutil_array_list_add(sig_parts, env, sig_part);

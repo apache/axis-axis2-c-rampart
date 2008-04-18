@@ -204,10 +204,10 @@ saml_attr_build(saml_attr_t *attr, axiom_node_t *node, axutil_env_t *env)
         axutil_hash_this(hi, NULL, NULL, &v);
 		if (v)
 		{
-			axis2_char_t *attr_val = NULL;
+			axis2_char_t *attr_local_name = NULL;
 			axiom_attribute_t *attr = (axiom_attribute_t*)v;			
-			attr_val = axiom_attribute_get_value(attr, env);			
-			if (0 != axutil_strcmp(attr_val, SAML_ATTRIBUTE_NAME) && 0 != axutil_strcmp(attr_val, SAML_ATTRIBUTE_NAMESPACE))
+			attr_local_name = axiom_attribute_get_localname(attr, env);			
+			if (0 != axutil_strcmp(attr_local_name, SAML_ATTRIBUTE_NAME) && 0 != axutil_strcmp(attr_local_name, SAML_ATTRIBUTE_NAMESPACE))
 			{
 				return AXIS2_FALSE;
 			}           	
@@ -218,11 +218,13 @@ saml_attr_build(saml_attr_t *attr, axiom_node_t *node, axutil_env_t *env)
 	{
 		while(AXIS2_TRUE == axiom_child_element_iterator_has_next(ci, env))
 		{
+		
 			fcn = axiom_child_element_iterator_next(ci, env);
 			fce = axiom_node_get_data_element(fcn, env);
 			if (strcmp(axiom_element_get_localname(fce, env), SAML_ATTRIBUTE_VALUE) == 0)
 			{
-				axutil_array_list_add(attr->attr_value, env, axiom_node_get_first_child(fcn, env));									
+				axiom_node_t *temp = axiom_node_get_first_child(fcn, env);
+				axutil_array_list_add(attr->attr_value, env, temp);									
 			}		
 			else
 			{
@@ -258,13 +260,15 @@ saml_attr_to_om(saml_attr_t *sattr, axiom_node_t *parent, axutil_env_t *env)
 		}
 		if (sattr->attr_value)
 		{			
+			size = axutil_array_list_size(sattr->attr_value, env);
+			
 			for (i = 0; i < size; i++)
 			{
 				ns = axiom_namespace_create(env, SAML_NMSP_URI, SAML_PREFIX);
 				ce = axiom_element_create(env, n, SAML_ATTRIBUTE_VALUE, ns, &cn);
 				if (ce)
 				{
-					axiom_node_add_child(cn, env, axutil_array_list_get(sattr->attr_value, env, i));
+					axiom_node_add_child(cn, env, (axiom_node_t*)axutil_array_list_get(sattr->attr_value, env, i));
 				}
 			}
 		}

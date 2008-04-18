@@ -28,6 +28,11 @@ rampart_saml_token_create_sign_part(const axutil_env_t *env,
                             rampart_saml_token_t *saml);
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_saml_token_validate(const axutil_env_t *env, 
+                            rampart_context_t *rampart_context, 
+                            axiom_node_t *assertion);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_supporting_token_build(const axutil_env_t *env, 
                          rampart_context_t *rampart_context,                         
                          axiom_node_t *sec_node, 
@@ -114,10 +119,33 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_validate(const axutil_env_t *env, 
                             rampart_context_t *rampart_context, 
                             axiom_node_t *assertion)
-{
-	/* At the moment SAML validation is not done. But we need to validate the signature of SAML tokens.
-	We can look at this after the PKS12 integration*/
-    return AXIS2_SUCCESS;
+{	
+    axis2_status_t status = AXIS2_FAILURE;
+    oxs_sign_ctx_t *sign_ctx = NULL;
+	oxs_x509_cert_t *certificate = NULL; 
+	axiom_node_t *sig_node = NULL;
+
+	/* Need to get the certificate of the STS */
+	if (!certificate)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rs] Certificate cannot be found for the STS");			
+        return AXIS2_FAILURE;
+	}
+	/*Create sign context*/
+    sign_ctx = oxs_sign_ctx_create(env);
+    
+    /*Set the Certificate*/
+    oxs_sign_ctx_set_certificate(sign_ctx, env, certificate);
+	sig_node = oxs_axiom_get_node_by_local_name(env, assertion, OXS_NODE_SIGNATURE);
+	if (!sig_node)
+	{    
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][rs] No Signature node in the SAML Assertion");			
+        return AXIS2_FAILURE;
+	}
+    status = oxs_xml_sig_verify(env, sign_ctx, sig_node, assertion);	
+    return status;
 }
 
 AXIS2_EXTERN char * AXIS2_CALL
