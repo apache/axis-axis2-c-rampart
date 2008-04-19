@@ -41,8 +41,8 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
 	oxs_sign_part_set_transforms(sig_part, env, trans);
 	oxs_sign_part_set_id_name(sig_part, env, id);
 
-	//ns = axiom_namespace_create(env, "", "");
-	//oxs_sign_part_set_sign_namespace(sig_part,env, ns);
+	/*ns = axiom_namespace_create(env, "", "");
+	oxs_sign_part_set_sign_namespace(sig_part,env, ns);*/
 
 	sig_parts = axutil_array_list_create(env, SAML_ARRAY_LIST_DEF);
 	axutil_array_list_add(sig_parts, env, sig_part);
