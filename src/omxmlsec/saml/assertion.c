@@ -317,7 +317,7 @@ saml_assertion_to_om(saml_assertion_t *assertion,
 		}*/
 		if (assertion->sign_ctx)
 		{
-			//oxs_xml_sig_sign(env, assertion->sign_ctx, n, &assertion->signature); 
+		  /*oxs_xml_sig_sign(env, assertion->sign_ctx, n, &assertion->signature); */
 			saml_assertion_sign(assertion, n, env);
 		}
 	}	

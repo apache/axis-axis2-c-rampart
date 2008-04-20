@@ -23,7 +23,6 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
 	oxs_sign_part_t* sig_part = NULL;
 	oxs_transform_t *tr = NULL;	
 	axutil_array_list_t *sig_parts = NULL, *trans = NULL;
-	axiom_namespace_t *ns = NULL;
 	trans = axutil_array_list_create(env, SAML_ARRAY_LIST_DEF);
 
 	/*create transform sor SAML XML signature with identifier*/
