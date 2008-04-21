@@ -513,7 +513,7 @@ rampart_shb_build_message(
      * Sample node to be added to the security header. This is for testing
      * TODO: Remove later*/
 
-    if(1){
+    if(0){
         axiom_node_t *my_token = NULL;
         axutil_array_list_t *token_list = NULL;
         axis2_char_t *buf = "<MyToken/>";
