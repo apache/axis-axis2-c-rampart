@@ -40,7 +40,7 @@ oxs_token_build_transform_element(const axutil_env_t *env,
     transform_ele = axiom_element_create(env, parent, OXS_NODE_TRANSFORM, ns_obj, &transform_node);
     if (!transform_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating transform element");
         return NULL;
     }
@@ -93,7 +93,7 @@ oxs_token_get_transform(const axutil_env_t *env, axiom_node_t *transform_node)
     transform_ele = axiom_node_get_data_element(transform_node, env);
     if (!transform_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving digest method element");
         return NULL;
     }

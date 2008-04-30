@@ -415,7 +415,7 @@ oxs_key_for_algo(oxs_key_t *key,
         cprop = (openssl_cipher_property_t *)oxs_get_cipher_property_for_url(env, key_algo);
         if (!cprop)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "openssl_get_cipher_property failed");
             return AXIS2_FAILURE;
         }
@@ -435,7 +435,7 @@ oxs_key_for_algo(oxs_key_t *key,
     ret = openssl_generate_random_data(env, key_buf, size);
     if (ret == AXIS2_FAILURE)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "generate_random_data failed");
         return AXIS2_FAILURE;
     }

@@ -95,11 +95,11 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
             if(tr_func){
                 output_dtype = (*tr_func)(env, tr_input, input_dtype, &tr_output);
             }else{
-                oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Cannot get the transform implementation for %s", tr_id);
+                oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Cannot get the transform implementation for %s", tr_id);
             }
             /*If the output data type is unknown OR the output is NULL its an error*/
             if((output_dtype == OXS_TRANSFORM_TYPE_UNKNOWN) || (!tr_output)){
-                oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Transform failed for %s", tr_id);
+                oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Transform failed for %s", tr_id);
                 return NULL;
             }
 		}/*eof for loop*/
@@ -117,7 +117,7 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
 		}
 		else{
             /*Error*/
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported transform data type  %d", output_dtype);
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported transform data type  %d", output_dtype);
         }
 	}else{
         /*No transforms defined. Thus we simply direct the node, to make the digest*/
@@ -127,7 +127,7 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
     if(0 == axutil_strcmp( OXS_HREF_SHA1 , digest_mtd)){
         digest = openssl_sha1(env, serialized_node, axutil_strlen(serialized_node));
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported digest method  %s", digest_mtd);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported digest method  %s", digest_mtd);
         return NULL;
     }
 	
@@ -450,7 +450,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
     if(reffed_node){
         oxs_sign_part_set_node(sign_part, env, reffed_node);
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find node with Id=%s ", ref_id2 );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find node with Id=%s ", ref_id2 );
 		AXIS2_FREE(env->allocator, ref_id2);
 		ref_id2 = NULL;
         return AXIS2_FAILURE; /*No such node. Its an error*/
@@ -484,7 +484,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
                 tr = oxs_transforms_factory_produce_transform(env, tr_id);
                 if(!tr) {
                     /*The transform not supported*/
-                    oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Cannot produce the transform for %s", tr_id);
+                    oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Cannot produce the transform for %s", tr_id);
                     return AXIS2_FAILURE;
                 }
                 /*Add the transform to the list*/
@@ -492,7 +492,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
             }else{
                 /*<ds:Transforms> cant have any other element*/
                 /*NOTE: Removed this check for interop testing*/
-                /*oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"<ds:Transforms> cannot have node %s ", node_name );
+                /*oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"<ds:Transforms> cannot have node %s ", node_name );
                 return AXIS2_FAILURE;*/
             }
             /*Set the next node to be processed*/
@@ -524,7 +524,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
         axiom_util_get_next_sibling_element(axiom_node_get_data_element(child_node, env), env,
                                             child_node, &child_node);
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:DigestMethod> " );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:DigestMethod> " );
         return AXIS2_FAILURE;
     }
 
@@ -536,7 +536,7 @@ oxs_xml_sig_process_ref_node(const axutil_env_t *env,
         digest_val = oxs_token_get_digest_value(env, child_node);
         oxs_sign_part_set_digest_val(sign_part, env, digest_val);
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:DigestValue> " );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:DigestValue> " );
         return AXIS2_FAILURE;
     }
 
@@ -572,7 +572,7 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
                             OXS_NODE_SIGNEDINFO, NULL,NULL);*/
 
     if(!signed_info_node){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:SignedInfo> " );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:SignedInfo> " );
         return AXIS2_FAILURE;
     }
     /*Create the list for sign parts*/
@@ -604,7 +604,7 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
             sign_part = oxs_sign_part_create(env);
             status = oxs_xml_sig_process_ref_node(env, sign_part, cur_node, scope_node);
             if(status == AXIS2_FAILURE){
-                oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"<ds:Reference> node processing failed " );
+                oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"<ds:Reference> node processing failed " );
                 return AXIS2_FAILURE;
             }
 
@@ -632,14 +632,14 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
         sig_val = oxs_token_get_signature_value(env, sig_val_node);
         if(!sig_val)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find signature value. " );
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find signature value. " );
             return AXIS2_FAILURE;
         }
         /*We now remove \n in this text.Otherwise verifications failed.*/
         newline_removed = oxs_util_get_newline_removed_string(env,sig_val);
         if(!newline_removed)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot Remove new lines. " );
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot Remove new lines. " );
             return AXIS2_FAILURE;
         }
         oxs_sign_ctx_set_sig_val(sign_ctx, env, newline_removed);
@@ -649,7 +649,7 @@ oxs_xml_sig_process_signature_node(const axutil_env_t *env,
         newline_removed = NULL;
     }else{
         /*Error the node should be the ds:SignatureValue*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:SignatureValue> " );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot find <ds:SignatureValue> " );
         return AXIS2_FAILURE;
     }
 
@@ -684,7 +684,7 @@ oxs_xml_sig_verify_sign_part(const axutil_env_t *env,
         AXIS2_LOG_INFO(env->log, "[oxs][xml_sig] Digest verification success for node Id= %s ", id );
         status = AXIS2_SUCCESS;
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Digest verification failed for node Id= %s  ", id );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Digest verification failed for node Id= %s  ", id );
         status =  AXIS2_FAILURE;
     }
 
@@ -742,7 +742,7 @@ oxs_xml_sig_verify(const axutil_env_t *env,
     status = oxs_xml_sig_process_signature_node(env, sign_ctx, signature_node, scope_node);
     if(status != AXIS2_SUCCESS){
         /*Something went wrong while processing the Signature node!!! :(*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"<ds:Signature> node processing failed " );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"<ds:Signature> node processing failed " );
         return AXIS2_FAILURE;
     }
 
@@ -790,7 +790,7 @@ oxs_xml_sig_verify(const axutil_env_t *env,
     content = NULL;
 
     if(AXIS2_FAILURE == status){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature is not valid " );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature is not valid " );
         return AXIS2_FAILURE;
     }else{
         return AXIS2_SUCCESS;

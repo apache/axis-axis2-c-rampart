@@ -51,7 +51,7 @@ oxs_token_build_digest_value_element(const axutil_env_t *env,
     digest_value_ele = axiom_element_create(env, parent, OXS_NODE_DIGEST_VALUE, ns_obj, &digest_value_node);
     if (!digest_value_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating digest value element");
         return NULL;
     }

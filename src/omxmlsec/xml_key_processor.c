@@ -43,7 +43,7 @@ oxs_xml_key_process_X509SKI(const axutil_env_t *env,
 
     node_name = axiom_util_get_localname(X509SKI_node, env);
     if(0 != axutil_strcmp(node_name, OXS_NODE_X509_SKI)){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_SKI, node_name);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_SKI, node_name);
         return AXIS2_FAILURE;
     }
 
@@ -65,7 +65,7 @@ oxs_xml_key_process_X509SubjectName(const axutil_env_t *env,
 
     node_name = axiom_util_get_localname(X509_subj_name_node, env);
     if(0 != axutil_strcmp(node_name, OXS_NODE_X509_SUBJECT_NAME)){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_SUBJECT_NAME, node_name);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_SUBJECT_NAME, node_name);
         return AXIS2_FAILURE;
     }
 
@@ -89,7 +89,7 @@ oxs_xml_key_process_X509IssuerSerial(const axutil_env_t *env,
 
     node_name = axiom_util_get_localname(X509_issuer_serial_node, env);
     if(0 != axutil_strcmp(node_name, OXS_NODE_X509_ISSUER_SERIAL)){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_ISSUER_SERIAL, node_name);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_ISSUER_SERIAL, node_name);
         return AXIS2_FAILURE;
     }
 
@@ -121,7 +121,7 @@ oxs_xml_key_process_X509Certificate(const axutil_env_t *env,
     oxs_x509_cert_t *_cert = NULL;
     node_name = axiom_util_get_localname(X509_cert_node, env);
     if(0 != axutil_strcmp(node_name, OXS_NODE_X509_CERTIFICATE)){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_CERTIFICATE, node_name);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_CERTIFICATE, node_name);
         return AXIS2_FAILURE;
     }
     /*Get contents*/
@@ -148,7 +148,7 @@ oxs_xml_key_process_X509Data(const axutil_env_t *env,
 
     node_name = axiom_util_get_localname(X509_data_node, env);
     if(0 != axutil_strcmp(node_name, OXS_NODE_X509_DATA)){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_DATA, node_name);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,"Invalid node. Expected %s. Found", OXS_NODE_X509_DATA, node_name);
         return AXIS2_FAILURE;
     }
     child_node = axiom_node_get_first_element( X509_data_node, env);

@@ -39,7 +39,7 @@ oxs_token_build_reference_list_element(const axutil_env_t *env,
     axiom_node_add_child(parent, env, reference_list_node);
     if (!reference_list_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating ReferenceList element");
         return NULL;
     }
@@ -87,7 +87,7 @@ oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_lis
 
     if (!ref_list_node)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "reference list node is NULL");
         return NULL;
     }
@@ -100,7 +100,7 @@ oxs_token_get_reference_list_data(const axutil_env_t *env, axiom_node_t *ref_lis
     qname = NULL;
 
     if(!iter){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "There are no children for %s", OXS_NODE_DATA_REFERENCE);
         return NULL;
     }

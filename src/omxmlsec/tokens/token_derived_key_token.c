@@ -45,7 +45,7 @@ oxs_token_build_derived_key_token_element(const axutil_env_t *env,
     derived_key_token_ele = axiom_element_create(env, parent, OXS_NODE_DERIVED_KEY_TOKEN, ns_obj, &derived_key_token_node);
     if (!derived_key_token_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating %s Token element", OXS_NODE_DERIVED_KEY_TOKEN);
         return NULL;
     }

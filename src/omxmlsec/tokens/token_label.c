@@ -50,7 +50,7 @@ oxs_token_build_label_element(const axutil_env_t *env,
     label_ele = axiom_element_create(env, parent, OXS_NODE_LABEL, ns_obj, &label_node);
     if (!label_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_LABEL);
         return NULL;
     }

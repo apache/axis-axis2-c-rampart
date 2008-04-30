@@ -42,7 +42,7 @@ oxs_token_build_reference_element(const axutil_env_t *env,
     reference_ele = axiom_element_create(env, parent, OXS_NODE_REFERENCE, ns_obj, &reference_node);
     if (!reference_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating Reference element");
         return NULL;
     }
@@ -71,7 +71,7 @@ oxs_token_get_reference(const axutil_env_t *env, axiom_node_t *ref_node)
     reference_ele = axiom_node_get_data_element(ref_node, env);
     if (!reference_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving data reference element");
         return NULL;
     }
@@ -90,7 +90,7 @@ oxs_token_get_reference_value_type(const axutil_env_t *env, axiom_node_t *ref_no
     reference_ele = axiom_node_get_data_element(ref_node, env);
     if (!reference_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving data reference element");
         return NULL;
     }

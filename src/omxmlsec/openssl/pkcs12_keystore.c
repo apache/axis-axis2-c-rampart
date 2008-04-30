@@ -43,7 +43,7 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
     keystore = (pkcs12_keystore_t*)AXIS2_MALLOC(env->allocator, sizeof(pkcs12_keystore_t));
     if(!keystore)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
         return NULL;
     }
     
@@ -56,7 +56,7 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
         
     if(!openssl_pkcs12_load(env, keystore->keystore_file, &keystore->keystore))
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                           "Error loading pkcs12 keystore from file");
         return NULL;
     }
@@ -69,7 +69,7 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
             &own_cert,
             &other_certs))
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "PKCS12 Key Store Parsing failed.");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "PKCS12 Key Store Parsing failed.");
         AXIS2_FREE(env->allocator, keystore);
         return NULL;        
     }
@@ -188,7 +188,7 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_is
     
     if(!issuer || !(serial_number > 0))
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
                 "Invalid arguments to get_certificate_for_issuer_serial.");
         return NULL;
     }
@@ -219,7 +219,7 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_th
     
     if(!thumbprint)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
                 "Invalid arguments to get_certificate_for_issuer_serial.");
         return NULL;
     }
@@ -248,7 +248,7 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_su
     
     if(!ski)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA, 
                 "Invalid arguments to get_certificate_for_issuer_serial.");
         return NULL;
     }

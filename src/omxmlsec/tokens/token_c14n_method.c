@@ -41,7 +41,7 @@ oxs_token_build_c14n_method_element(const axutil_env_t *env,
     c14n_method_ele = axiom_element_create(env, parent, OXS_NODE_CANONICALIZATION_METHOD, ns_obj, &c14n_method_node);
     if (!c14n_method_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating c14n method element");
         return NULL;
     }
@@ -74,7 +74,7 @@ oxs_token_get_c14n_method(const axutil_env_t *env, axiom_node_t *c14n_mtd_node)
     c14n_mtd_ele = axiom_node_get_data_element(c14n_mtd_node, env);
     if (!c14n_mtd_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving c14n method element");
         return NULL;
     }

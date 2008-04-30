@@ -35,7 +35,7 @@ oxs_token_get_signature_confirmation_value(const axutil_env_t *env, axiom_node_t
     signature_confirmation_ele = axiom_node_get_data_element(signature_confirmation_node, env);
     if (!signature_confirmation_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving SignatureConfirmation method element");
         return NULL;
     }
@@ -61,7 +61,7 @@ oxs_token_get_signature_confirmation_id(const axutil_env_t *env, axiom_node_t *s
     signature_confirmation_ele = axiom_node_get_data_element(signature_confirmation_node, env);
     if (!signature_confirmation_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving SignatureConfirmation method element");
         return NULL;
     }
@@ -94,7 +94,7 @@ oxs_token_build_signature_confirmation_element(const axutil_env_t *env,
     signature_confirmation_ele = axiom_element_create(env, parent, OXS_NODE_SIGNATURE_CONFIRMATION, ns_obj, &signature_confirmation_node);
     if (!signature_confirmation_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error %s element", OXS_NODE_SIGNATURE_CONFIRMATION);
         return NULL;
     }

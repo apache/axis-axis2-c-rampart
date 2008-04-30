@@ -56,7 +56,7 @@ openssl_pem_buf_read_pkey(const axutil_env_t *env,
     ret += len;
     if ((bio = BIO_new_mem_buf(buff, ilen)) == NULL)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "BIO memeory allocation failure");
         return AXIS2_FAILURE;
     }
@@ -74,7 +74,7 @@ openssl_pem_buf_read_pkey(const axutil_env_t *env,
     buff = NULL;
 
     if(!*pkey){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "private key is NULL");
         return AXIS2_FAILURE;
     }

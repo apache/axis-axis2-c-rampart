@@ -104,7 +104,7 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
             /* Here we load both key and the certificate*/
             status = openssl_x509_load_from_pkcs12(env, filename, password, &cert, &prvkey, &ca);
             if(AXIS2_FAILURE == status){
-                oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+                oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                           "Error reading the certificate");
                 return AXIS2_FAILURE;
             }
@@ -188,7 +188,7 @@ oxs_key_mgr_load_key(const axutil_env_t *env,
 
     /*If this fails to get anything return failure*/
     if((!cert) && (!pubkey) && (!prvkey)){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "Error reading the key");
         return AXIS2_FAILURE;
     }
@@ -350,7 +350,7 @@ oxs_key_mgr_read_pkcs12_key_store(const axutil_env_t *env,
 
     status = openssl_x509_load_from_pkcs12(env, filename, password, &c, &pkey, &ca);
     if(AXIS2_FAILURE == status){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "Error reading the PKCS12 Key Store");
         return AXIS2_FAILURE;
     }

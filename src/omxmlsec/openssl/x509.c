@@ -54,7 +54,7 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
     }
     else
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "New line removed buffer creation failed.");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT, "New line removed buffer creation failed.");
         return AXIS2_FAILURE;
     }
 
@@ -68,13 +68,13 @@ openssl_x509_load_from_buffer(const axutil_env_t *env,
 
     if (decoded_len < 0)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "axutil_base64_decode_binary failed");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT, "axutil_base64_decode_binary failed");
         return AXIS2_FAILURE;
     }
 
     if ((mem = BIO_new_mem_buf(buff, ilen)) == NULL)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "Cannot create a new memory buffer");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT, "Cannot create a new memory buffer");
         return AXIS2_FAILURE;
     }
 
@@ -281,21 +281,21 @@ openssl_x509_get_subject_key_identifier(const axutil_env_t *env,
     /*Get ext by ID*/
     index = X509_get_ext_by_NID(cert, NID_subject_key_identifier, -1);
     if (index < 0) {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "The extenension index of NID_subject_key_identifier is not valid");
         return NULL;
     }
     /*Get the extension*/
     ext = X509_get_ext(cert, index);
     if (ext == NULL) {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "The extension for NID_subject_key_identifier is NULL");
         return NULL;
     }
     /*Subject Key Identifier*/
     key_id = (ASN1_OCTET_STRING *)X509V3_EXT_d2i(ext);
     if (key_id == NULL) {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "The SubjectKeyIdentifier is NULL");
         return NULL;
     }

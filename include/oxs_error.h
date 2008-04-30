@@ -45,7 +45,7 @@ extern "C"
 #define LINE_NUMBER __LINE__
 #define FILE_NAME __FILE__
 
-#define ERROR_LOCATION FILE_NAME,LINE_NUMBER,FUNCTION_NAME
+#define OXS_ERROR_LOCATION FILE_NAME,LINE_NUMBER,FUNCTION_NAME
 
     /*Error codes*/
 #define OXS_ERROR_DEFAULT               0

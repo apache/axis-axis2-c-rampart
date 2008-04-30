@@ -40,7 +40,7 @@ oxs_token_build_data_reference_element(const axutil_env_t *env,
     data_reference_ele = axiom_element_create(env, parent, OXS_NODE_DATA_REFERENCE, ns_obj, &data_reference_node);
     if (!data_reference_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating data reference element");
         return NULL;
     }
@@ -66,7 +66,7 @@ oxs_token_get_data_reference(const axutil_env_t *env, axiom_node_t *data_ref_nod
     data_reference_ele = axiom_node_get_data_element(data_ref_node, env);
     if (!data_reference_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving data reference element");
         return NULL;
     }

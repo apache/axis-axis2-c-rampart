@@ -39,7 +39,7 @@ oxs_transforms_exc_c14n(const axutil_env_t *env,
     oxs_tr_dtype_t output_dtype = OXS_TRANSFORM_TYPE_UNKNOWN;
 
     if(input_dtype != OXS_TRANSFORM_TYPE_NODE){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Transform expects a NODE.");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Transform expects a NODE.");
         return OXS_TRANSFORM_TYPE_UNKNOWN;
     }
 
@@ -61,7 +61,7 @@ oxs_transforms_enveloped_xmldsig(const axutil_env_t *env,
 	axiom_node_t *sig_node = NULL, *child_node = NULL;
 
     if(input_dtype != OXS_TRANSFORM_TYPE_NODE){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Transform expects a NODE.");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Transform expects a NODE.");
         return OXS_TRANSFORM_TYPE_UNKNOWN;
     }
 	child_node = axiom_node_get_first_element(input, env);	
@@ -148,7 +148,7 @@ oxs_transforms_STR(const axutil_env_t *env,
                 {
 					axutil_qname_free(embeded_qname, env);
 					axutil_qname_free(key_qname, env);
-                    oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Unrecognized reference type  NODE.");
+                    oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Unrecognized reference type  NODE.");
                     return OXS_TRANSFORM_TYPE_UNKNOWN;   
                 }
             }
@@ -167,7 +167,7 @@ oxs_transforms_STR(const axutil_env_t *env,
         return output_dtype;
     }
     *output = NULL;
-    oxs_error(env, ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Referenced node couln't be found in the specifed scope.");
+    oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED, "Referenced node couln't be found in the specifed scope.");
     return OXS_TRANSFORM_TYPE_UNKNOWN;    
 }
 

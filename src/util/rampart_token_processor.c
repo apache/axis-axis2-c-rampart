@@ -54,7 +54,7 @@ rampart_token_process_security_token_reference(const axutil_env_t *env,
     }else if(0 == axutil_strcmp(child_name, OXS_NODE_X509_DATA)){
         status = rampart_token_process_x509_data(env, child_node, cert);
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Unsupported child %s of wsse:SecurityTokenReference ", child_name);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Unsupported child %s of wsse:SecurityTokenReference ", child_name);
         /*We do not support*/
         return AXIS2_FAILURE;
     }
@@ -82,7 +82,7 @@ rampart_token_process_direct_ref(const axutil_env_t *env,
     /*Find the token with the id=ref_id within the scope of scope_node*/
     bst_node = oxs_axiom_get_node_by_id(env, scope_node, "Id", ref_id, OXS_WSU_XMLNS);
     if(!bst_node){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Error retrieving element with ID=%s", ref_id);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Error retrieving element with ID=%s", ref_id);
         return AXIS2_FAILURE;
     }
 
@@ -92,7 +92,7 @@ rampart_token_process_direct_ref(const axutil_env_t *env,
     if(_cert){
         status =  AXIS2_SUCCESS;
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT, "Cannot load certificate from string =%s", data);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT, "Cannot load certificate from string =%s", data);
         status =  AXIS2_FAILURE;
     }
 
@@ -117,7 +117,7 @@ rampart_token_process_embedded(const axutil_env_t *env,
     bst_node = axiom_node_get_first_element(embed_node, env);
 
     if(!bst_node){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "BST element is not found");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "BST element is not found");
         return AXIS2_FAILURE;
     }
 

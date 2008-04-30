@@ -50,7 +50,7 @@ oxs_token_build_nonce_element(const axutil_env_t *env,
     nonce_ele = axiom_element_create(env, parent, OXS_NODE_NONCE, ns_obj, &nonce_node);
     if (!nonce_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_NONCE);
         return NULL;
     }

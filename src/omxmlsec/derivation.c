@@ -50,7 +50,7 @@ oxs_derivation_get_the_referenced_base_key(const axutil_env_t *env,
     /*Search for an element with the val(@Id)=@URI*/
     refed_node =  oxs_axiom_get_node_by_id(env, root_node, OXS_ATTR_ID, id, NULL);
     if(!refed_node){
-      oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot find the referenced key for the derived key");    
+      oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot find the referenced key for the derived key");    
       return NULL;
     }
     
@@ -111,7 +111,7 @@ oxs_derivation_extract_derived_key_from_token(const axutil_env_t *env,
     /*Now derive the key using the base_key and other parematers*/
     status = oxs_derivation_derive_key(env, base_key, derived_key, AXIS2_FALSE);     
     if(AXIS2_FAILURE == status){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot derive the key from given element");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA, "Cannot derive the key from given element");
         oxs_key_free(derived_key, env);
         derived_key = NULL;
     }

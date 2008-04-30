@@ -37,17 +37,17 @@ openssl_hmac_sha1(const axutil_env_t *env,
     unsigned int hashed_len;
 
     if(!secret){
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] No key to sign ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] No key to sign ");
        return AXIS2_FAILURE; 
     }
     
     if(!input){
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] Nothing to sign ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] Nothing to sign ");
        return AXIS2_FAILURE; 
     }
     
     if(!output){
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] The buffer to place signature is NULL ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"[oxs][openssl] The buffer to place signature is NULL ");
        return AXIS2_FAILURE; 
     }
 
@@ -93,19 +93,19 @@ openssl_p_hash(const axutil_env_t *env,
 
     if(!secret)
 	{
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] No key to derive ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] No key to derive ");
        return AXIS2_FAILURE; 
     }
     
     if(!seed)
 	{
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] lable+seed is empty ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] lable+seed is empty ");
        return AXIS2_FAILURE; 
     }
     
     if(!output)
 	{
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] The buffer to place hash is NULL ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] The buffer to place hash is NULL ");
        return AXIS2_FAILURE; 
     }
 	
@@ -167,13 +167,13 @@ openssl_p_sha1(const axutil_env_t *env,
 
 	if(!derived_key)
 	{
-       oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] derived key is null ");
+       oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] derived key is null ");
        return status; 
 	}
 
 	if (!secret)
 	{
-		oxs_error(env, ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] secret is not valid ");
+		oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_KEY_DERIVATION_FAILED,"[oxs][openssl] secret is not valid ");
 		return status;
 	}
 

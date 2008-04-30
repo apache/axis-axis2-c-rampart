@@ -51,7 +51,7 @@ oxs_token_build_signature_value_element(const axutil_env_t *env,
     signature_value_ele = axiom_element_create(env, parent, OXS_NODE_SIGNATURE_VALUE, ns_obj, &signature_value_node);
     if (!signature_value_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating signature value element");
         return NULL;
     }

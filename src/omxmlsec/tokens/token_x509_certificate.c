@@ -50,7 +50,7 @@ oxs_token_build_x509_certificate_element(const axutil_env_t *env,
     x509_certificate_ele = axiom_element_create(env, parent, OXS_NODE_X509_CERTIFICATE, ns_obj, &x509_certificate_node);
     if (!x509_certificate_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_X509_CERTIFICATE);
         return NULL;
     }

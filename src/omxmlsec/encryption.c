@@ -49,7 +49,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
                 oxs_ctx_get_enc_mtd_algorithm(enc_ctx, env));
     if (!cprop)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Cipher property is NULL");
         return AXIS2_FAILURE;
     }
@@ -64,7 +64,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
     oc_ctx = openssl_cipher_ctx_create(env);
     if (!oc_ctx)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "openssl_cipher_ctx_create failed");
         return AXIS2_FAILURE;
     }
@@ -80,7 +80,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
     cipher_name = (axis2_char_t*)openssl_cipher_property_get_name(cprop, env);
     if (!cipher_name)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "oxs_get_cipher failed");
 
         return AXIS2_FAILURE;
@@ -107,7 +107,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
         /*Encrypt*/
         enclen = openssl_bc_crypt(env, oc_ctx, input, output, OPENSSL_ENCRYPT);
         if (enclen < 0){
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
                       "openssl_block_cipher_crypt FAILED");
             return AXIS2_FAILURE;
         }
@@ -119,7 +119,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
                                           enclen);
         if (ret < 0)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "axutil_base64_encode_binary failed");
             return AXIS2_FAILURE;
         }
@@ -154,7 +154,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
                             (char*)oxs_buffer_get_data(input, env));
         if (decoded_len < 0)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED,
                       "axutil_base64_decode_binary failed");
             return AXIS2_FAILURE;
         }
@@ -167,7 +167,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
 
         if (enclen < 0)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DECRYPT_FAILED,
                       "openssl_block_cipher_crypt FAILED");
             return AXIS2_FAILURE;
         }
@@ -181,7 +181,7 @@ oxs_encryption_symmetric_crypt(const axutil_env_t *env,
     }
     else
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Invalid operation type %d", 
                   oxs_ctx_get_operation(enc_ctx, env));
 
@@ -237,7 +237,7 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     status = oxs_key_mgr_load_key(env, asym_ctx, password);
     if (status == AXIS2_FAILURE)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "Key loading failed for Key encryption");
 
         return AXIS2_FAILURE;

@@ -286,7 +286,7 @@ security_context_token_get_token(
     token_ele = axiom_element_create(env, NULL, OXS_NODE_SECURITY_CONTEXT_TOKEN, ns_obj_sc, &sct_token);
     if (!token_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityContextToken element");
         return NULL;
     }
@@ -304,7 +304,7 @@ security_context_token_get_token(
     identifier_ele = axiom_element_create(env, sct_token, OXS_NODE_IDENTIFIER, ns_obj_sc, &identifier_node);
     if(!identifier_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityContextToken element");
         return NULL;
     }

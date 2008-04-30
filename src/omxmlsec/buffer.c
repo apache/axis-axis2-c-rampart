@@ -59,7 +59,7 @@ oxs_buffer_create(const axutil_env_t *env)
     status = oxs_buffer_set_max_size(buffer, env, OXS_BUFFER_INITIAL_SIZE);
     if (status == AXIS2_FAILURE)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_DEFAULT,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                   "oxs_buffer_set_max_size");
 		AXIS2_FREE(env->allocator, buffer);
         return NULL;
@@ -115,7 +115,7 @@ oxs_buffer_remove_head(
     {
         if (!buffer->data)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "oxs_buffer_remove_head failed. data is NULL");
             return  AXIS2_FAILURE;
         }
@@ -132,7 +132,7 @@ oxs_buffer_remove_head(
     {
         if (!buffer->data)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "oxs_buffer_remove_head failed");
             return  AXIS2_FAILURE;
         }
@@ -163,7 +163,7 @@ oxs_buffer_remove_tail(
     {
         if (buffer->data)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "");
             return  AXIS2_FAILURE;
         }
@@ -189,7 +189,7 @@ oxs_buffer_populate(
         oxs_buffer_set_max_size(buffer, env, size);
         if (!data)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "data is NULL");
             return AXIS2_FAILURE;
         }
@@ -216,7 +216,7 @@ oxs_buffer_append(
         oxs_buffer_set_max_size(buffer, env,  buffer->size + size);
         if (!data)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "data is NULL");
             return AXIS2_FAILURE;
         }
@@ -242,7 +242,7 @@ oxs_buffer_prepend(
     {
         if (!data)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "Passed data is NULL");
             return AXIS2_FAILURE;
         }
@@ -274,7 +274,7 @@ oxs_buffer_read_file(
     f = fopen(filename, "rb");
     if (f == NULL)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "");
         return AXIS2_FAILURE;
     }
@@ -295,7 +295,7 @@ oxs_buffer_read_file(
         if (status == AXIS2_FAILURE)
         {
             fclose(f);
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "");
             return AXIS2_FAILURE;
         }
@@ -323,7 +323,7 @@ oxs_buffer_set_size(
     status = oxs_buffer_set_max_size(buffer, env,  size);
     if (status == AXIS2_FAILURE)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "oxs_buffer_set_max_size failed");
         return AXIS2_FAILURE;
     }
@@ -389,7 +389,7 @@ oxs_buffer_set_max_size(
 
     if (new_data == NULL)
     {
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                   "");
         return AXIS2_FAILURE;
     }
@@ -401,7 +401,7 @@ oxs_buffer_set_max_size(
     {
         if (buffer->data == NULL)
         {
-            oxs_error(env, ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+            oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
                       "");
             return AXIS2_FAILURE;
         }

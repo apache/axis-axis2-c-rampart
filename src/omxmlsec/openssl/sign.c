@@ -48,7 +48,7 @@ openssl_sig_sign(const axutil_env_t *env,
     /*open_pkey = oxs_sign_ctx_get_private_key(sign_ctx, env);*/
     pkey = openssl_pkey_get_key(prvkey, env);
     if(!pkey){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"Cannot load the private key" );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIGN_FAILED,"Cannot load the private key" );
     }
 
     /*TODO: Set the digest according to the signature method*/
@@ -92,7 +92,7 @@ openssl_sig_verify(const axutil_env_t *env,
     /*Get the publickey*/
     pkey = openssl_pkey_get_key(pubkey, env);
     if(!pkey){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot load the public key" );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Cannot load the public key" );
     }
     /*TODO Set the digest according to the signature method*/
     digest = EVP_sha1();
@@ -104,7 +104,7 @@ openssl_sig_verify(const axutil_env_t *env,
     ret = EVP_VerifyInit(&md_ctx, digest);
     if(ret != 1) {
         /*Error*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyInit failed" );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyInit failed" );
         return AXIS2_FAILURE;
     }
     ret = EVP_VerifyUpdate(&md_ctx,
@@ -112,7 +112,7 @@ openssl_sig_verify(const axutil_env_t *env,
                            oxs_buffer_get_size(input_buf, env));
     if(ret != 1) {
         /*Error*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyUpdate failed" );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"EVP_VerifyUpdate failed" );
         return AXIS2_FAILURE;
     }
 
@@ -122,11 +122,11 @@ openssl_sig_verify(const axutil_env_t *env,
                           pkey);
     if(ret == 0){
         /*Error. Signature verification FAILED */
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature verification FAILED." );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Signature verification FAILED." );
         status = AXIS2_FAILURE;
     }else if(ret < 0){
         /*Erorr. Some other error*/
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Error occured while verifying the signature." );
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,"Error occured while verifying the signature." );
         status = AXIS2_FAILURE;
     }else{
         /*SUCCESS. */

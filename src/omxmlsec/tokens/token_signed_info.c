@@ -38,7 +38,7 @@ oxs_token_build_signed_info_element(const axutil_env_t *env,
     signed_info_ele = axiom_element_create(env, parent, OXS_NODE_SIGNEDINFO, ns_obj, &signed_info_node);
     if (!signed_info_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating SignedInfo element");
         return NULL;
     }

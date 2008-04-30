@@ -355,14 +355,14 @@ oxs_xml_enc_decrypt_node(const axutil_env_t *env,
     /*Decrypt*/
     status = oxs_xml_enc_decrypt_data(env, enc_ctx, enc_type_node, result_buf);
     if(AXIS2_FAILURE == status){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED, "Data encryption failed");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED, "Data encryption failed");
         return AXIS2_FAILURE;
     }
     decrypted_data = axutil_strmemdup(oxs_buffer_get_data(result_buf, env), oxs_buffer_get_size(result_buf, env), env);
     /*De-serialize the decrypted content to build the node*/
     deserialized_node = (axiom_node_t*)oxs_axiom_deserialize_node(env, decrypted_data);
     if(!deserialized_node){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,"Cannot deserialize a node from the content.\n%s", decrypted_data);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,"Cannot deserialize a node from the content.\n%s", decrypted_data);
         return AXIS2_FAILURE;
     }
     /*Assign deserialized_node to the reference passed*/
@@ -490,7 +490,7 @@ oxs_xml_enc_encrypt_key(const axutil_env_t *env,
     input = NULL;
 
     if(AXIS2_FAILURE == status){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED,
                   "Assymmetric key encryption failed");
         return AXIS2_FAILURE;
     }
@@ -573,14 +573,14 @@ oxs_xml_enc_decrypt_key(const axutil_env_t *env,
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_ENCRYPTION_METHOD,OXS_ENC_NS,OXS_XENC);
     enc_mtd_algo = oxs_token_get_encryption_method(env, enc_mtd_node);
     if(!enc_mtd_algo){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED, "Cannot find the Encryption method");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED, "Cannot find the Encryption method");
         return AXIS2_FAILURE;
     }
     /*Get cipher data*/
     cd_node = oxs_axiom_get_first_child_node_by_name(env, encrypted_key_node, OXS_NODE_CIPHER_DATA,OXS_ENC_NS,OXS_XENC);
     cipher_val = oxs_token_get_cipher_value_from_cipher_data(env, cd_node);
     if(!cipher_val){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED, "Cannot find the cipher value for key decryption");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ENCRYPT_FAILED, "Cannot find the cipher value for key decryption");
         return AXIS2_FAILURE;
     }
 

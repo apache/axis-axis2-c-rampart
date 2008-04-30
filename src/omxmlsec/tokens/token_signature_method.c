@@ -41,7 +41,7 @@ oxs_token_build_signature_method_element(const axutil_env_t *env,
     signature_method_ele = axiom_element_create(env, parent, OXS_NODE_SIGNATURE_METHOD, ns_obj, &signature_method_node);
     if (!signature_method_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating signature method element");
         return NULL;
     }
@@ -74,7 +74,7 @@ oxs_token_get_signature_method(const axutil_env_t *env, axiom_node_t *enc_mtd_no
     enc_mtd_ele = axiom_node_get_data_element(enc_mtd_node, env);
     if (!enc_mtd_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error retrieving signature method element");
         return NULL;
     }

@@ -53,7 +53,7 @@ rampart_token_build_security_token_reference(const axutil_env_t *env,
     }else if(RTBP_X509DATA_ISSUER_SERIAL == pattern){
         status = rampart_token_build_x509_data_issuer_serial(env, stref_node, cert);
     }else{
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Unsupported pattern %d to build wsse:SecurityTokenReference ", pattern);
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Unsupported pattern %d to build wsse:SecurityTokenReference ", pattern);
         /*We do not support*/
         return AXIS2_FAILURE;
     }
@@ -75,7 +75,7 @@ rampart_token_build_embedded(const axutil_env_t *env,
     /*Get data from the certificate*/
     data = oxs_x509_cert_get_data(cert, env);
     if(!data){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Cannot get data from the x509 certificate");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Cannot get data from the x509 certificate");
         return AXIS2_FAILURE;
     }
     embedded_node = oxs_token_build_embedded_element(env, parent, "ID");
@@ -94,7 +94,7 @@ rampart_token_build_key_identifier(const axutil_env_t *env,
 
     ki = oxs_x509_cert_get_key_identifier(cert, env);
     if(!ki){
-        oxs_error(env, ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Cannot get key identifier from the x509 certificate");
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_ELEMENT_FAILED, "Cannot get key identifier from the x509 certificate");
         return AXIS2_FAILURE;
     }
     ki_node = oxs_token_build_key_identifier_element(env, parent, OXS_ENCODING_BASE64BINARY,

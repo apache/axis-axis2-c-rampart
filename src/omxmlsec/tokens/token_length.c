@@ -50,7 +50,7 @@ oxs_token_build_length_element(const axutil_env_t *env,
     length_ele = axiom_element_create(env, parent, OXS_NODE_LENGTH, ns_obj, &length_node);
     if (!length_ele)
     {
-        oxs_error(env, ERROR_LOCATION,
+        oxs_error(env, OXS_ERROR_LOCATION,
                   OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_LENGTH);
         return NULL;
     }
