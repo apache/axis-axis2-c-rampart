@@ -39,7 +39,7 @@ do
 done
 
 #SAML Sample
-sh saml.sh
+#sh saml.sh
   
 killall axis2_http_server
 echo "DONE"
