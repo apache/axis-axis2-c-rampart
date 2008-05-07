@@ -63,6 +63,7 @@ cp -d $AXIS2C_HOME/lib/libomopenssl.* $BIN_DIR/lib
 cp -d $AXIS2C_HOME/lib/libsaml.* $BIN_DIR/lib
 cp -d $AXIS2C_HOME/lib/libsecconv.* $BIN_DIR/lib
 cp -d $AXIS2C_HOME/lib/libtrust.* $BIN_DIR/lib
+cp -d $AXIS2C_HOME/lib/libmod_rampart.* $BIN_DIR/lib
 
 echo "Strip binaries"
 strip $BIN_DIR/lib/*.so

@@ -10,6 +10,8 @@ cp lib/* $R_HOME/lib
 
 echo "Copy sample service"
 cp -r bin/samples/server/sec_echo $R_HOME/services
+cp -r bin/samples/server/secconv_echo $R_HOME/services
+cp -r bin/samples/server/saml_sts $R_HOME/services
 
 echo "Copy samples"
 rm -rf $R_HOME/bin/samples/rampart
