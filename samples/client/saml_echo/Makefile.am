@@ -1,7 +1,7 @@
 prgbindir=$(prefix)/bin/samples/rampart/client/saml_echo
 prgbin_PROGRAMS = saml_echo 
 datadir=$(prefix)/bin/samples/rampart/client/saml_echo
-#data_DATA= README update_n_run.sh deploy_client_repo.sh
+data_DATA= update_n_run.sh
 #samplesdir=$(prefix)/samples/client/echo
 #samples_DATA=echo.c README.txt Makefile.am Makefile.in
 saml_echo_SOURCES = echo.c 

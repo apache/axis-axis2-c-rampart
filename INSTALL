@@ -28,7 +28,7 @@ Getting Rampart/C binary distribution working on Linux
 ======================================================
 1. Copy modules/rampart to $AXIS2C_HOME/modules
 2. Copy lib/* to $AXIS2C_HOME/lib
-3. Copy bin/samples/server/sec_echo to $AXIS2C_HOME/services/
+3. Copy bin/samples/server/* to $AXIS2C_HOME/services/
 4. Engage rampart as described in section "Engaging Rampart/C with axis2/C"
 5. Copy bin/samples/* to $AXIS2C_HOME/bin/samples/rampart. This will copy callback modules etc.
 6. Go to bin/samples/client/sec_echo/ and deploy the client repo 

@@ -73,6 +73,8 @@ echo "Copy samples"
 cp -r $AXIS2C_HOME/bin/samples/rampart/secpolicy/* $BIN_DIR/bin/samples/secpolicy/
 cp -r $AXIS2C_HOME/bin/samples/rampart/* $BIN_DIR/bin/samples
 cp -r $AXIS2C_HOME/services/sec_echo $BIN_DIR/bin/samples/server/
+cp -r $AXIS2C_HOME/services/saml_sts $BIN_DIR/bin/samples/server/
+cp -r $AXIS2C_HOME/services/secconv_echo $BIN_DIR/bin/samples/server/
 cp samples/server/sec_echo/services.xml $BIN_DIR/bin/samples/server/sec_echo/services.xml
 cp samples/server/sec_echo/server_axis2.xml $BIN_DIR/bin/samples/server/sec_echo/server_axis2.xml
 

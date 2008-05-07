@@ -6,6 +6,7 @@ then
     echo "Usage : $0 scenarioX server-port"
     exit
 fi
+
     S_i=$1
     _PORT=$2
     echo "-------------------------------------------------------------------------"
@@ -18,7 +19,14 @@ fi
     echo ">Start server @ $_PORT"
     ./axis2_http_server -p$_PORT &
     echo ">Go to client directory"
-    cd $_SMPL_DIR/../client/sec_echo
+    if [ $S_i = 'scenario14' ]
+    then
+        echo "SAML"
+        cd $_SMPL_DIR/../client/saml_echo
+    else
+        echo "****"
+        cd $_SMPL_DIR/../client/sec_echo
+    fi
     echo ">Run the sample"
     sh update_n_run.sh
     echo ">Jump back to samples dir :$_SMPL_DIR"
