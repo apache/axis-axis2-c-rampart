@@ -27,4 +27,4 @@ INCLUDES = @AXIS2INC@ \
 		   -I$(AXIS2C_HOME)/include \
             -I ../../../include 
 
-EXTRA_DIST = update_n_run.sh
+EXTRA_DIST = update_n_run.sh update_n_run.bat
