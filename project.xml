@@ -129,16 +129,30 @@
   <contributors>
     <contributor>
       <name>James Clark</name>
-      <email>jjc AT public.jclark.com</email>
+      <email>jjc AT public DOT jclark DOT com</email>
       <roles>
     <role>Technical Adviser</role>
       </roles>
     </contributor>
     <contributor>
       <name>Sanjiva Weerawarne</name>
-      <email>sanjiva AT wso2.com</email>
+      <email>sanjiva AT wso2 DOT com</email>
       <roles>
     <role>Technical Adviser</role>
+      </roles>
+    </contributor>
+    <contributor>
+      <name>Kasun Indrasiri</name>
+      <email>kasun147 AT gmail DOT com</email>
+      <roles>
+    <role>Contributor : WS-Trust Implementation</role>
+      </roles>
+    </contributor>
+    <contributor>
+      <name>Prasad Perera</name>
+      <email>prasadcse0 AT gmail DOT com</email>
+      <roles>
+    <role>Contributor : WS-Trust Implementation</role>
       </roles>
     </contributor>
   </contributors>
