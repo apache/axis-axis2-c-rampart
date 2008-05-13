@@ -361,7 +361,6 @@ rampart_context_set_policy_node(rampart_context_t *rampart_context,
                                 const axutil_env_t *env,
                                 axiom_node_t *policy_node)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,policy_node,AXIS2_FAILURE);
 
     rampart_context->policy_node = policy_node;
@@ -374,7 +373,6 @@ rampart_context_set_prv_key(rampart_context_t *rampart_context,
                             void *prv_key)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,prv_key,AXIS2_FAILURE);
 
     rampart_context->prv_key = prv_key;
@@ -386,7 +384,6 @@ rampart_context_set_prv_key_type(rampart_context_t *rampart_context,
                                  const axutil_env_t *env,
                                  axis2_key_type_t type)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
 
     rampart_context->prv_key_type = type;
@@ -398,7 +395,6 @@ rampart_context_set_certificate(rampart_context_t *rampart_context,
                                 const axutil_env_t *env,
                                 void *certificate)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,certificate,AXIS2_FAILURE);
 
     rampart_context->certificate = certificate;
@@ -410,7 +406,6 @@ rampart_context_set_certificate_type(rampart_context_t *rampart_context,
                                      const axutil_env_t *env,
                                      axis2_key_type_t type)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
 
     rampart_context->certificate_type = type;
@@ -422,7 +417,6 @@ rampart_context_set_receiver_certificate(rampart_context_t *rampart_context,
         const axutil_env_t *env,
         void *receiver_certificate)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,receiver_certificate,AXIS2_FAILURE);
 
     rampart_context->receiver_certificate = receiver_certificate;
@@ -434,7 +428,6 @@ rampart_context_set_receiver_certificate_type(rampart_context_t *rampart_context
         const axutil_env_t *env,
         axis2_key_type_t type)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,type,AXIS2_FAILURE);
 
     rampart_context->receiver_certificate_type = type;
@@ -447,7 +440,6 @@ rampart_context_set_user(rampart_context_t *rampart_context,
                          axis2_char_t *user)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,user,AXIS2_FAILURE);
 
     rampart_context->user = user;
@@ -461,7 +453,6 @@ rampart_context_set_password(rampart_context_t *rampart_context,
                              axis2_char_t *password)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,password,AXIS2_FAILURE);
 
     rampart_context->password = password;
@@ -475,7 +466,6 @@ rampart_context_set_prv_key_password(rampart_context_t *rampart_context,
                                      axis2_char_t *prv_key_password)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,prv_key_password,AXIS2_FAILURE);
 
     rampart_context->prv_key_password = prv_key_password;
@@ -488,7 +478,6 @@ rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                   password_callback_fn pwcb_function,
                                   void *ctx)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,pwcb_function,AXIS2_FAILURE);
 
     rampart_context->pwcb_function = pwcb_function;
@@ -501,7 +490,6 @@ rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
         const axutil_env_t *env,
         rampart_is_replayed_fn is_replayed_function)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, is_replayed_function, AXIS2_FAILURE);
     rampart_context->is_replayed_function = is_replayed_function;
 
@@ -514,7 +502,6 @@ rampart_context_set_password_type(rampart_context_t *rampart_context,
                                   axis2_char_t *password_type)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,password_type,AXIS2_FAILURE);
 
     rampart_context->password_type = password_type;
@@ -528,7 +515,6 @@ rampart_context_set_ttl(rampart_context_t *rampart_context,
                         int ttl)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,ttl,AXIS2_FAILURE);
 
     rampart_context->ttl = ttl;
@@ -541,7 +527,6 @@ rampart_context_set_rd_val(rampart_context_t *rampart_context,
                            axis2_char_t *rd_val)
 {
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, rd_val, AXIS2_FAILURE);
 
     rampart_context->rd_val = rd_val;
@@ -553,9 +538,6 @@ rampart_context_set_private_key_file(rampart_context_t *rampart_context,
                                      const axutil_env_t *env,
                                      axis2_char_t *private_key_file)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     rampart_context->private_key_file = private_key_file;
     return AXIS2_SUCCESS;
 }
@@ -565,9 +547,6 @@ rampart_context_set_certificate_file(rampart_context_t *rampart_context,
                                      const axutil_env_t *env,
                                      axis2_char_t *certificate_file)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     rampart_context->certificate_file = certificate_file;
     return AXIS2_SUCCESS;
 }
@@ -577,8 +556,6 @@ rampart_context_set_reciever_certificate_file(rampart_context_t *rampart_context
         const axutil_env_t *env,
         axis2_char_t *reciever_certificate_file)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     rampart_context->reciever_certificate_file = reciever_certificate_file;
     return AXIS2_SUCCESS;
@@ -593,8 +570,6 @@ rampart_context_get_policy_node(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->policy_node;
 }
 
@@ -603,8 +578,6 @@ rampart_context_get_prv_key(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->prv_key;
 }
 
@@ -613,8 +586,6 @@ rampart_context_get_prv_key_type(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->prv_key_type;
 }
 
@@ -623,8 +594,6 @@ rampart_context_get_certificate(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->certificate;
 }
 
@@ -633,8 +602,6 @@ rampart_context_get_certificate_type(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->certificate_type;
 }
 
@@ -644,8 +611,6 @@ rampart_context_get_receiver_certificate(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->receiver_certificate;
 }
 
@@ -654,8 +619,6 @@ rampart_context_get_receiver_certificate_type(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->receiver_certificate_type;
 }
 
@@ -666,8 +629,6 @@ rampart_context_get_user(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->user;
 }
 
@@ -676,8 +637,6 @@ rampart_context_get_password(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->password;
 }
 
@@ -686,8 +645,6 @@ rampart_context_get_prv_key_password(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->prv_key_password;
 }
 
@@ -696,8 +653,6 @@ rampart_context_get_pwcb_function(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->pwcb_function;
 }
 
@@ -706,8 +661,6 @@ rampart_context_get_replay_detect_function(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->is_replayed_function;
 }
 
@@ -717,8 +670,6 @@ rampart_context_get_ctx(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_context->ctx;
 }
 
@@ -727,8 +678,6 @@ rampart_context_get_ttl(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
-
     return rampart_context->ttl;
 }
 
@@ -737,8 +686,6 @@ rampart_context_get_rd_val(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env,AXIS2_FAILURE);
-
     return rampart_context->rd_val;
 }
 
@@ -747,8 +694,6 @@ rampart_context_get_password_type(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env,NULL);
-
     return rampart_context->password_type;
 }
 
@@ -759,8 +704,6 @@ rampart_context_get_secpolicy(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->secpolicy;
 }
 
@@ -769,7 +712,6 @@ rampart_context_set_secpolicy(rampart_context_t *rampart_context,
                               const axutil_env_t *env,
                               rp_secpolicy_t *secpolicy)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,secpolicy,AXIS2_FAILURE);
 
     rampart_context->secpolicy = secpolicy;
@@ -782,8 +724,6 @@ rampart_context_get_password_callback(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->password_callback_module;
 }
 
@@ -793,7 +733,6 @@ rampart_context_set_password_callback(rampart_context_t *rampart_context,
                                       const axutil_env_t *env,
                                       rampart_callback_t *password_callback_module)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,password_callback_module,AXIS2_FAILURE);
 
     rampart_context->password_callback_module = password_callback_module;
@@ -808,8 +747,6 @@ rampart_context_get_auth_password_function(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->authenticate_with_password;
 }
 
@@ -819,7 +756,6 @@ rampart_context_set_auth_password_function(rampart_context_t *rampart_context,
         const axutil_env_t *env,
         auth_password_func authenticate_with_password)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,authenticate_with_password,AXIS2_FAILURE);
 
     rampart_context->authenticate_with_password = authenticate_with_password;
@@ -833,8 +769,6 @@ rampart_context_get_auth_digest_function(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->authenticate_with_digest;
 }
 
@@ -844,7 +778,6 @@ rampart_context_set_auth_digest_function(rampart_context_t *rampart_context,
         const axutil_env_t *env,
         auth_digest_func authenticate_with_digest)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,authenticate_with_digest,AXIS2_FAILURE);
 
     rampart_context->authenticate_with_digest = authenticate_with_digest;
@@ -856,8 +789,6 @@ rampart_context_get_authn_provider(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_context->authn_provider;
 }
 
@@ -866,7 +797,6 @@ rampart_context_set_authn_provider(rampart_context_t *rampart_context,
                                    const axutil_env_t *env,
                                    rampart_authn_provider_t *authn_provider)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,authn_provider,AXIS2_FAILURE);
 
     rampart_context->authn_provider = authn_provider;
@@ -878,8 +808,6 @@ rampart_context_get_replay_detector(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return (void*)rampart_context->replay_detector;
 }
 
@@ -888,7 +816,6 @@ rampart_context_set_replay_detector(rampart_context_t *rampart_context,
                                    const axutil_env_t *env,
                                    void *replay_detector)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,replay_detector,AXIS2_FAILURE);
 
     rampart_context->replay_detector = (rampart_replay_detector_t*)replay_detector;
@@ -900,8 +827,6 @@ rampart_context_get_sct_provider(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return (void*)rampart_context->sct_provider;
 }
 
@@ -910,7 +835,6 @@ rampart_context_set_sct_provider(rampart_context_t *rampart_context,
                                    const axutil_env_t *env,
                                    void *sct_provider)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error,sct_provider,AXIS2_FAILURE);
 
     rampart_context->sct_provider= (rampart_sct_provider_t*)sct_provider;
@@ -923,8 +847,6 @@ rampart_context_get_encryption_session_key(rampart_context_t *rampart_context,
 {
     oxs_key_t* key = NULL;
     int i = 0;
-
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
 
     /*Repeat thru all the keys and find the matching one*/
     for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
@@ -1014,7 +936,6 @@ AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
 rampart_context_get_keys(rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
     return rampart_context->key_list;
 }
 
@@ -1025,8 +946,6 @@ rampart_context_get_key(rampart_context_t *rampart_context,
 {   
     oxs_key_t* key = NULL;
     int i = 0;
-
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
 
     /*Repeat thru all the derived keys and find the matching one*/
     for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
@@ -1051,8 +970,6 @@ rampart_context_get_key_using_hash(rampart_context_t *rampart_context,
     oxs_key_t* key = NULL;
     int i = 0;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-
     /*Repeat thru all the derived keys and find the matching one*/
     for(i=0 ; i < axutil_array_list_size(rampart_context->key_list, env); i++)
     {
@@ -1075,8 +992,6 @@ rampart_context_get_require_timestamp(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-
     return rampart_context->require_timestamp;
 }
 
@@ -1085,8 +1000,6 @@ rampart_context_get_require_ut(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FALSE);
-
     return rampart_context->require_ut;
 }
 
@@ -1096,8 +1009,6 @@ rampart_context_get_binding_type(
     const axutil_env_t *env)
 {
     rp_property_t *property = NULL;
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     property = rp_secpolicy_get_binding(rampart_context->secpolicy,env);
     if(!property)
@@ -1453,8 +1364,6 @@ rampart_context_get_algorithmsuite(
 {
     rp_binding_commons_t *binding_commons = NULL;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     binding_commons = rampart_context_get_binding_commons(rampart_context,env);
 
     if(!binding_commons)
@@ -1731,8 +1640,6 @@ rampart_context_is_include_timestamp(
     const axutil_env_t *env)
 {
     rp_binding_commons_t *binding_commons = NULL;
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
     binding_commons = rampart_context_get_binding_commons(rampart_context,env);
 
@@ -2771,8 +2678,6 @@ rampart_context_get_layout(
     rp_binding_commons_t *binding_commons = NULL;
     rp_layout_t *layout = NULL;
 
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     binding_commons = rampart_context_get_binding_commons(rampart_context,env);
 
     if(!binding_commons)
@@ -2789,7 +2694,6 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_increment_ref(rampart_context_t *rampart_context,
                               const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     rampart_context->ref++;
     return AXIS2_SUCCESS;
 }
