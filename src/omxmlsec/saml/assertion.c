@@ -19,7 +19,7 @@
 
 
 AXIS2_EXTERN saml_assertion_t * AXIS2_CALL 
-saml_assertion_create(axutil_env_t *env)
+saml_assertion_create(const axutil_env_t *env)
 {		
 	saml_assertion_t *assertion = AXIS2_MALLOC(env->allocator, sizeof(saml_assertion_t));
 	if (assertion)
@@ -41,7 +41,7 @@ saml_assertion_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_assertion_free(saml_assertion_t *assertion, axutil_env_t *env)
+saml_assertion_free(saml_assertion_t *assertion, const axutil_env_t *env)
 {	
 	int i = 0, size = 0;
 
@@ -116,7 +116,7 @@ saml_assertion_free(saml_assertion_t *assertion, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_build(saml_assertion_t *assertion, 
-					 axiom_node_t *node, axutil_env_t *env)
+					 axiom_node_t *node, const axutil_env_t *env)
 {			
 	axiom_element_t *element = NULL;	
 	axiom_child_element_iterator_t *ci = NULL;
@@ -224,7 +224,7 @@ saml_assertion_build(saml_assertion_t *assertion,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_assertion_to_om(saml_assertion_t *assertion, 
-					 axiom_node_t *parent, axutil_env_t *env)
+					 axiom_node_t *parent, const axutil_env_t *env)
 {
 	int i = 0, size = 0;
 	axiom_element_t *e = NULL, *ce = NULL;
@@ -325,20 +325,20 @@ saml_assertion_to_om(saml_assertion_t *assertion,
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_assetion_get_assertion_id(saml_assertion_t *a, axutil_env_t *env)
+saml_assetion_get_assertion_id(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->assertion_id;
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_assetion_get_conditions(saml_assertion_t *a, axutil_env_t *env)
+saml_assetion_get_conditions(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->conditions;;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_conditions(saml_assertion_t *a, 
-							  axutil_env_t *env, axutil_array_list_t *list)
+							  const axutil_env_t *env, axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
 	saml_condition_t *cond = NULL;
@@ -365,7 +365,7 @@ saml_assertion_set_conditions(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_add_condition(saml_assertion_t *a, 
-							 axutil_env_t *env, saml_condition_t *cond)
+							 const axutil_env_t *env, saml_condition_t *cond)
 {
 	if (!a->conditions)
 	{
@@ -377,7 +377,7 @@ saml_assertion_add_condition(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_remove_condition(saml_assertion_t *a, 
-								axutil_env_t *env, int index)
+								const axutil_env_t *env, int index)
 {
 	saml_condition_t *cond = NULL;
 	if (a->conditions && axutil_array_list_size(a->conditions, env) > index)
@@ -396,14 +396,14 @@ saml_assertion_remove_condition(saml_assertion_t *a,
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_assertion_get_statements(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_get_statements(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->statements;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_statements(saml_assertion_t *a, 
-							  axutil_env_t *env, axutil_array_list_t *list)
+							  const axutil_env_t *env, axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
 	saml_stmt_t *stmt = NULL;
@@ -430,7 +430,7 @@ saml_assertion_set_statements(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_add_statement(saml_assertion_t *a, 
-							 axutil_env_t *env, saml_stmt_t *stmt)
+							 const axutil_env_t *env, saml_stmt_t *stmt)
 {
 	if (!a->statements)
 	{
@@ -442,7 +442,7 @@ saml_assertion_add_statement(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_remove_statement(saml_assertion_t *a, 
-								axutil_env_t *env, int index)
+								const axutil_env_t *env, int index)
 {
 	saml_stmt_t *stmt = NULL;
 	if (a->statements && axutil_array_list_size(a->statements, env) > index)
@@ -462,7 +462,7 @@ saml_assertion_remove_statement(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_minor_version(saml_assertion_t *a, 
-								 axutil_env_t *env, int version)
+								 const axutil_env_t *env, int version)
 {
 	if (!a->minor_version)
 	{
@@ -474,7 +474,7 @@ saml_assertion_set_minor_version(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_issuer(saml_assertion_t *a, 
-						  axutil_env_t *env, axis2_char_t *issuer)
+						  const axutil_env_t *env, axis2_char_t *issuer)
 {
 	if (a->issuer)
 	{
@@ -486,7 +486,7 @@ saml_assertion_set_issuer(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_issue_instant(saml_assertion_t *a, 
-								 axutil_env_t *env, axutil_date_time_t *instant)
+								 const axutil_env_t *env, axutil_date_time_t *instant)
 {
 	if (a->issue_instant)
 	{
@@ -498,7 +498,7 @@ saml_assertion_set_issue_instant(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_not_before(saml_assertion_t *a, 
-							  axutil_env_t *env, axutil_date_time_t *time)
+							  const axutil_env_t *env, axutil_date_time_t *time)
 {
 	if (a->not_before)
 	{
@@ -510,7 +510,7 @@ saml_assertion_set_not_before(saml_assertion_t *a,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_not_on_or_after(saml_assertion_t *a, 
-								   axutil_env_t *env, axutil_date_time_t *time)
+								   const axutil_env_t *env, axutil_date_time_t *time)
 {
 	if (a->not_on_or_after)
 	{
@@ -521,31 +521,31 @@ saml_assertion_set_not_on_or_after(saml_assertion_t *a,
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_assertion_get_issuer(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_get_issuer(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->issuer;
 }
 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_issue_instant(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_get_issue_instant(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->issue_instant;
 }
 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_not_before(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_get_not_before(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->not_before;
 }
 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_not_on_or_after(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_get_not_on_or_after(saml_assertion_t *a, const axutil_env_t *env)
 {
 	return a->not_on_or_after;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_unsign(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_unsign(saml_assertion_t *a, const axutil_env_t *env)
 {
 	if (a->sign_ctx)
 	{
@@ -556,7 +556,7 @@ saml_assertion_unsign(saml_assertion_t *a, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_sign(saml_assertion_t *a, axiom_node_t *node, axutil_env_t *env)
+saml_assertion_sign(saml_assertion_t *a, axiom_node_t *node, const axutil_env_t *env)
 {
 	 axiom_node_t *n= NULL;
 	 oxs_sign_part_t* sig_part = NULL;
@@ -584,13 +584,13 @@ saml_assertion_sign(saml_assertion_t *a, axiom_node_t *node, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_signature_verify(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_signature_verify(saml_assertion_t *a, const axutil_env_t *env)
 {			
 	return oxs_xml_sig_verify(env, a->sign_ctx, a->signature, a->ori_xml);
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_is_sign_set(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_is_sign_set(saml_assertion_t *a, const axutil_env_t *env)
 {
 	if (a->sign_ctx)
 	{
@@ -600,7 +600,7 @@ saml_assertion_is_sign_set(saml_assertion_t *a, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_is_signed(saml_assertion_t *a, axutil_env_t *env)
+saml_assertion_is_signed(saml_assertion_t *a, const axutil_env_t *env)
 {
 	if (a->signature)
 	{
@@ -609,7 +609,7 @@ saml_assertion_is_signed(saml_assertion_t *a, axutil_env_t *env)
 	return AXIS2_FALSE;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_default_signature(saml_assertion_t *a, axutil_env_t *env, oxs_sign_ctx_t *sign_ctx)
+AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_default_signature(saml_assertion_t *a, const axutil_env_t *env, oxs_sign_ctx_t *sign_ctx)
 {
 	if (a->sign_ctx)
 	{
@@ -620,7 +620,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_default_signature(saml_assertion_
 	return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_signature(saml_assertion_t *a, axutil_env_t *env, oxs_sign_ctx_t *sign_ctx)
+AXIS2_EXTERN int AXIS2_CALL saml_assertion_set_signature(saml_assertion_t *a, const axutil_env_t *env, oxs_sign_ctx_t *sign_ctx)
 {
 	if (a->sign_ctx)
 	{

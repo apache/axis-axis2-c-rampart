@@ -18,7 +18,7 @@
 #include <saml.h>
 
 AXIS2_EXTERN saml_stmt_t * AXIS2_CALL 
-saml_stmt_create(axutil_env_t *env)
+saml_stmt_create(const axutil_env_t *env)
 {
 	saml_stmt_t *stmt = AXIS2_MALLOC(env->allocator, sizeof(saml_stmt_t));
 	if (stmt)
@@ -30,7 +30,7 @@ saml_stmt_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_stmt_free(saml_stmt_t *stmt, axutil_env_t *env)
+saml_stmt_free(saml_stmt_t *stmt, const axutil_env_t *env)
 {
 	if (stmt->type == SAML_STMT_AUTHENTICATIONSTATEMENT)
 	{
@@ -56,7 +56,7 @@ saml_stmt_free(saml_stmt_t *stmt, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, axutil_env_t *env)
+saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, const axutil_env_t *env)
 {
 	axis2_char_t *locname = NULL;
 	axiom_element_t *element = NULL;	
@@ -94,7 +94,7 @@ saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, axutil_env_t *env)
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_stmt_to_om(saml_stmt_t *stmt, axiom_node_t *parent, axutil_env_t *env)
+saml_stmt_to_om(saml_stmt_t *stmt, axiom_node_t *parent, const axutil_env_t *env)
 {
 	if (stmt->type == SAML_STMT_AUTHENTICATIONSTATEMENT)
 	{
@@ -116,26 +116,26 @@ saml_stmt_to_om(saml_stmt_t *stmt, axiom_node_t *parent, axutil_env_t *env)
 }
 
 AXIS2_EXTERN saml_stmt_type_t AXIS2_CALL 
-saml_stmt_get_type(saml_stmt_t *stmt, axutil_env_t *env)
+saml_stmt_get_type(saml_stmt_t *stmt, const axutil_env_t *env)
 {
 	return stmt->type;
 }
 
 AXIS2_EXTERN saml_stmt_t * AXIS2_CALL 
-saml_stmt_get_stmt(saml_stmt_t *stmt, axutil_env_t *env)
+saml_stmt_get_stmt(saml_stmt_t *stmt, const axutil_env_t *env)
 {
 	return stmt->stmt;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_set_type(saml_stmt_t *stmt, axutil_env_t *env, saml_stmt_type_t type)
+saml_stmt_set_type(saml_stmt_t *stmt, const axutil_env_t *env, saml_stmt_type_t type)
 {
 	stmt->type = type;
 	return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_set_stmt(saml_stmt_t *stmt, axutil_env_t *env, 
+saml_stmt_set_stmt(saml_stmt_t *stmt, const axutil_env_t *env, 
 				   void *st, saml_stmt_type_t type)
 {
 	if (stmt->type == SAML_STMT_AUTHENTICATIONSTATEMENT)

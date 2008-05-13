@@ -18,7 +18,7 @@
 #include <saml.h>
 #include <saml_req.h>
 
-AXIS2_EXTERN saml_subject_query_t* AXIS2_CALL saml_subject_query_create(axutil_env_t *env)
+AXIS2_EXTERN saml_subject_query_t* AXIS2_CALL saml_subject_query_create(const axutil_env_t *env)
 {
 	saml_subject_query_t *subject_query = NULL;
 		
@@ -31,7 +31,7 @@ AXIS2_EXTERN saml_subject_query_t* AXIS2_CALL saml_subject_query_create(axutil_e
 	return subject_query;
 }
 
-AXIS2_EXTERN void AXIS2_CALL saml_subject_query_free(saml_subject_query_t *subject_query, axutil_env_t *env)
+AXIS2_EXTERN void AXIS2_CALL saml_subject_query_free(saml_subject_query_t *subject_query, const axutil_env_t *env)
 {
 	if(subject_query->subject)
 	{
@@ -42,7 +42,7 @@ AXIS2_EXTERN void AXIS2_CALL saml_subject_query_free(saml_subject_query_t *subje
 }
 
 
-AXIS2_EXTERN saml_authentication_query_t* AXIS2_CALL saml_authentication_query_create(axutil_env_t *env)
+AXIS2_EXTERN saml_authentication_query_t* AXIS2_CALL saml_authentication_query_create(const axutil_env_t *env)
 {
 	saml_authentication_query_t *authentication_query = NULL;
 	
@@ -56,7 +56,7 @@ AXIS2_EXTERN saml_authentication_query_t* AXIS2_CALL saml_authentication_query_c
 	return authentication_query;
 }
 
-AXIS2_EXTERN void AXIS2_CALL saml_authentication_query_free(saml_authentication_query_t *auth_query, axutil_env_t *env)
+AXIS2_EXTERN void AXIS2_CALL saml_authentication_query_free(saml_authentication_query_t *auth_query, const axutil_env_t *env)
 {
 	if(auth_query->auth_method)
 	{
@@ -70,7 +70,7 @@ AXIS2_EXTERN void AXIS2_CALL saml_authentication_query_free(saml_authentication_
 	auth_query = NULL;
 }
 
-AXIS2_EXTERN saml_attr_query_t* AXIS2_CALL saml_attr_query_create(axutil_env_t *env)
+AXIS2_EXTERN saml_attr_query_t* AXIS2_CALL saml_attr_query_create(const axutil_env_t *env)
 {
 	saml_attr_query_t *attribute_query = NULL;
 	attribute_query = (saml_attr_query_t *)AXIS2_MALLOC(env->allocator, 
@@ -86,7 +86,7 @@ AXIS2_EXTERN saml_attr_query_t* AXIS2_CALL saml_attr_query_create(axutil_env_t *
 	return attribute_query;
 }
 
-AXIS2_EXTERN void AXIS2_CALL saml_attr_query_free(saml_attr_query_t *attr_query, axutil_env_t *env)
+AXIS2_EXTERN void AXIS2_CALL saml_attr_query_free(saml_attr_query_t *attr_query, const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	saml_attr_desig_t *attr_desig = NULL;
@@ -116,7 +116,7 @@ AXIS2_EXTERN void AXIS2_CALL saml_attr_query_free(saml_attr_query_t *attr_query,
 	attr_query = NULL;
 }
 
-AXIS2_EXTERN saml_autho_decision_query_t* AXIS2_CALL saml_autho_decision_query_create(axutil_env_t *env)
+AXIS2_EXTERN saml_autho_decision_query_t* AXIS2_CALL saml_autho_decision_query_create(const axutil_env_t *env)
 {
 	saml_autho_decision_query_t *autho_decision_query = NULL;
 	
@@ -135,7 +135,7 @@ AXIS2_EXTERN saml_autho_decision_query_t* AXIS2_CALL saml_autho_decision_query_c
 }
 
 AXIS2_EXTERN void AXIS2_CALL saml_autho_decision_query_free(saml_autho_decision_query_t* autho_decision_query, 
-														   axutil_env_t *env)
+														   const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	saml_action_t *action = NULL;
@@ -170,7 +170,7 @@ AXIS2_EXTERN void AXIS2_CALL saml_autho_decision_query_free(saml_autho_decision_
 
 AXIS2_EXTERN int AXIS2_CALL saml_subject_query_build(saml_subject_query_t* subject_query, 
 													 axiom_node_t *node, 
-													 axutil_env_t *env)
+													 const axutil_env_t *env)
 
 {
 
@@ -215,7 +215,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_subject_query_build(saml_subject_query_t* subje
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_subject_query_to_om(saml_subject_query_t *subject_query, 
 															   axiom_node_t *parent, 
-															   axutil_env_t *env)
+															   const axutil_env_t *env)
 {
 
 	axiom_element_t *e = NULL;
@@ -235,7 +235,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_subject_query_to_om(saml_subject_quer
 
 AXIS2_EXTERN int AXIS2_CALL saml_authentication_query_build(saml_authentication_query_t* authentication_query, 
 															axiom_node_t *node, 
-															axutil_env_t *env)
+															const axutil_env_t *env)
 {
 	axutil_hash_t *attr_hash = NULL;
 	axiom_element_t *element = NULL;
@@ -306,7 +306,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_authentication_query_build(saml_authentication_
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_authentication_query_to_om(saml_authentication_query_t *authentication_query, 
 																	  axiom_node_t *parent, 
-																	  axutil_env_t *env)
+																	  const axutil_env_t *env)
 {
 	axiom_element_t *e = NULL;
 	axiom_node_t *n = NULL;	
@@ -332,7 +332,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_authentication_query_to_om(saml_authe
 
 AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_build(saml_autho_decision_query_t* autho_decision_query, 
 															axiom_node_t *node, 
-															axutil_env_t *env)
+															const axutil_env_t *env)
 {
 	axutil_hash_t *attr_hash = NULL;
 	axiom_element_t *element = NULL;
@@ -422,7 +422,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_build(saml_autho_decision_
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_autho_decision_query_to_om(saml_autho_decision_query_t *autho_decision_query, 
 																	  axiom_node_t *parent, 
-																	  axutil_env_t *env)
+																	  const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	axiom_element_t *e = NULL;
@@ -467,7 +467,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_autho_decision_query_to_om(saml_autho
 
 AXIS2_EXTERN int AXIS2_CALL saml_attr_query_build(saml_attr_query_t* attribute_query, 
 												  axiom_node_t *node, 
-												  axutil_env_t *env)
+												  const axutil_env_t *env)
 {
 	axutil_hash_t *attr_hash = NULL;
 	axiom_element_t *element = NULL;
@@ -548,7 +548,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_attr_query_build(saml_attr_query_t* attribute_q
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_attr_query_to_om(saml_attr_query_t *attribute_query, 
 															axiom_node_t *parent, 
-															axutil_env_t *env)
+															const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	axiom_element_t *e = NULL;
@@ -585,7 +585,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_attr_query_to_om(saml_attr_query_t *a
 
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_query_build(saml_query_t *query, axiom_node_t *node, axutil_env_t *env)
+AXIS2_EXTERN int AXIS2_CALL saml_query_build(saml_query_t *query, axiom_node_t *node, const axutil_env_t *env)
 {
 	if(!axutil_strcmp(query->type,SAML_SUBJECT_QUERY))
 	{
@@ -635,7 +635,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_query_build(saml_query_t *query, axiom_node_t *
 		return AXIS2_FAILURE;
 }
 
-AXIS2_EXTERN saml_query_t* AXIS2_CALL saml_query_create(axutil_env_t *env)
+AXIS2_EXTERN saml_query_t* AXIS2_CALL saml_query_create(const axutil_env_t *env)
 {
 	saml_query_t* query = NULL;
 	query = AXIS2_MALLOC(env->allocator, sizeof(saml_query_t));
@@ -648,7 +648,7 @@ AXIS2_EXTERN saml_query_t* AXIS2_CALL saml_query_create(axutil_env_t *env)
 }
 
 
-AXIS2_EXTERN void AXIS2_CALL saml_query_free(saml_query_t *query, axutil_env_t *env)
+AXIS2_EXTERN void AXIS2_CALL saml_query_free(saml_query_t *query, const axutil_env_t *env)
 {
 	if(query->type)
 	{
@@ -687,7 +687,7 @@ AXIS2_EXTERN void AXIS2_CALL saml_query_free(saml_query_t *query, axutil_env_t *
 	}
 	
 }
-AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_query_to_om(saml_query_t *query, axiom_node_t *parent, axutil_env_t *env)
+AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_query_to_om(saml_query_t *query, axiom_node_t *parent, const axutil_env_t *env)
 {
 	
 	if(!axutil_strcmp(query->type,SAML_SUBJECT_QUERY))
@@ -712,7 +712,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_query_to_om(saml_query_t *query, axio
 
 
 AXIS2_EXTERN int AXIS2_CALL saml_auth_query_set_authentication_method(saml_authentication_query_t *authentication_query,
-																	  axutil_env_t *env,
+																	  const axutil_env_t *env,
 																	  axis2_char_t *authentication_mtd)
 {
 	if(authentication_query->auth_method)
@@ -723,7 +723,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_auth_query_set_authentication_method(saml_authe
 	return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_attr_query_set_resource(saml_attr_query_t *attr_query, axutil_env_t *env, axis2_char_t *resource)
+AXIS2_EXTERN int AXIS2_CALL saml_attr_query_set_resource(saml_attr_query_t *attr_query, const axutil_env_t *env, axis2_char_t *resource)
 {
 	if(attr_query->resource)
 	{
@@ -735,7 +735,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_attr_query_set_resource(saml_attr_query_t *attr
 }
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_auth_query_get_authentication_method(saml_authentication_query_t *authentication_query,
-															axutil_env_t *env)
+															const axutil_env_t *env)
 {
 	if(authentication_query)
 		return authentication_query->auth_method;
@@ -745,7 +745,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_auth_query_get_authentication_method(
 }
 
 
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_attr_query_get_resource(saml_attr_query_t *attr_query, axutil_env_t *env)
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_attr_query_get_resource(saml_attr_query_t *attr_query, const axutil_env_t *env)
 {
 	if(attr_query)
 		return attr_query->resource;
@@ -754,7 +754,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_attr_query_get_resource(saml_attr_que
 }
 
 
-AXIS2_EXTERN int AXIS2_CALL saml_attr_query_set_designators(saml_attr_query_t *attr_query, axutil_env_t *env,
+AXIS2_EXTERN int AXIS2_CALL saml_attr_query_set_designators(saml_attr_query_t *attr_query, const axutil_env_t *env,
 															axutil_array_list_t *attr_desigs)
 {
 	if(attr_query->attr_desigs)
@@ -766,7 +766,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_attr_query_set_designators(saml_attr_query_t *a
 }
 
 AXIS2_EXTERN axutil_array_list_t*  AXIS2_CALL saml_attr_query_get_designators(saml_attr_query_t *attr_query, 
-															axutil_env_t *env)
+															const axutil_env_t *env)
 {
 	if(attr_query)
 		return attr_query->attr_desigs;
@@ -775,7 +775,7 @@ AXIS2_EXTERN axutil_array_list_t*  AXIS2_CALL saml_attr_query_get_designators(sa
 }
 
 
-AXIS2_EXTERN int AXIS2_CALL saml_attr_query_add_designators(saml_attr_query_t *attr_query, axutil_env_t *env,
+AXIS2_EXTERN int AXIS2_CALL saml_attr_query_add_designators(saml_attr_query_t *attr_query, const axutil_env_t *env,
 															saml_attr_desig_t *desig)
 {
 	if(!attr_query->attr_desigs)
@@ -786,7 +786,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_attr_query_add_designators(saml_attr_query_t *a
 	return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_attr_query_remove_designator(saml_attr_query_t *attr_query, axutil_env_t *env, int index)
+AXIS2_EXTERN int AXIS2_CALL saml_attr_query_remove_designator(saml_attr_query_t *attr_query, const axutil_env_t *env, int index)
 {
 	saml_attr_desig_t *desig;
 
@@ -804,7 +804,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_attr_query_remove_designator(saml_attr_query_t 
 }							
 
 AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_set_resource(saml_autho_decision_query_t *autho_dec_query,
-														 axutil_env_t *env,
+														 const axutil_env_t *env,
 														 axis2_char_t *resource)
 {
 	if(autho_dec_query->resource)
@@ -816,7 +816,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_set_resource(saml_autho_de
 	return AXIS2_SUCCESS;
 }
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_autho_decision_query_get_resource(saml_autho_decision_query_t *autho_dec_query,
-														  axutil_env_t *env)
+														  const axutil_env_t *env)
 {
 	if(autho_dec_query)
 		return autho_dec_query->resource;
@@ -825,7 +825,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_autho_decision_query_get_resource(sam
 }
 
 AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_set_actions(saml_autho_decision_query_t *autho_dec_query,
-														axutil_env_t *env,
+														const axutil_env_t *env,
 														axutil_array_list_t *actions)
 {
 	if(autho_dec_query->saml_actions)
@@ -836,7 +836,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_set_actions(saml_autho_dec
 	return AXIS2_SUCCESS;
 }
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL saml_autho_decision_query_get_actions(saml_autho_decision_query_t *autho_dec_query,
-														axutil_env_t *env)
+														const axutil_env_t *env)
 {
 	if(autho_dec_query)
 		return autho_dec_query->saml_actions;
@@ -845,7 +845,7 @@ AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL saml_autho_decision_query_get_actio
 }
 
 AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_add_action(saml_autho_decision_query_t *autho_dec_query,
-													     		 axutil_env_t *env,
+													     		 const axutil_env_t *env,
 																 saml_action_t *action)
 {
 	if(!autho_dec_query->saml_actions)
@@ -860,7 +860,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_add_action(saml_autho_deci
 	return AXIS2_FAILURE;
 }
 AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_remove_action(saml_autho_decision_query_t *autho_dec_query,
-															  axutil_env_t *env,
+															  const axutil_env_t *env,
 															  int index)
 {
 	saml_action_t *act;
@@ -876,7 +876,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_remove_action(saml_autho_decisio
 	return AXIS2_FAILURE;
 }
 AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_set_evidence(saml_autho_decision_query_t *autho_dec_query,
-																   axutil_env_t *env,
+																   const axutil_env_t *env,
 																   saml_evidence_t *evidence)
 {
 	if(autho_dec_query->evidence)
@@ -888,14 +888,14 @@ AXIS2_EXTERN int AXIS2_CALL saml_autho_decision_query_set_evidence(saml_autho_de
 }
 
 AXIS2_EXTERN saml_evidence_t* AXIS2_CALL saml_autho_decision_query_get_evidence(saml_autho_decision_query_t *autho_dec_query,
-														axutil_env_t *env)
+														const axutil_env_t *env)
 {
 	if(autho_dec_query)
 		return autho_dec_query->evidence;
 	else
 		return NULL;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_query_set_subject(saml_query_t* query, axutil_env_t *env,
+AXIS2_EXTERN int AXIS2_CALL saml_query_set_subject(saml_query_t* query, const axutil_env_t *env,
 												   saml_subject_t *subject)
 {
 	saml_subject_query_t *sub_q = NULL;
@@ -953,7 +953,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_query_set_subject(saml_query_t* query, axutil_e
 }
 
 AXIS2_EXTERN saml_subject_t* AXIS2_CALL saml_query_get_subject(saml_query_t* query,
-															   axutil_env_t *env)
+															   const axutil_env_t *env)
 {
 	saml_subject_query_t *sub_q = NULL;
 	saml_authentication_query_t *authent_q;
@@ -1000,7 +1000,7 @@ AXIS2_EXTERN saml_subject_t* AXIS2_CALL saml_query_get_subject(saml_query_t* que
 	return NULL;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_query_set_type(saml_query_t *query, axutil_env_t *env,
+AXIS2_EXTERN int AXIS2_CALL saml_query_set_type(saml_query_t *query, const axutil_env_t *env,
 												axis2_char_t *type)
 {
 	if(query->type)
@@ -1011,7 +1011,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_query_set_type(saml_query_t *query, axutil_env_
 	return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_query_set_query(saml_query_t *query, axutil_env_t *env, void *spec_query,
+AXIS2_EXTERN int AXIS2_CALL saml_query_set_query(saml_query_t *query, const axutil_env_t *env, void *spec_query,
 														axis2_char_t *type)
 {
 	if(query->query)

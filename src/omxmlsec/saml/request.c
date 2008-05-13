@@ -17,7 +17,7 @@
 #include <saml.h>
 #include <saml_req.h>
 
-AXIS2_EXTERN saml_artifact_t* AXIS2_CALL saml_artifact_create(axutil_env_t *env)
+AXIS2_EXTERN saml_artifact_t* AXIS2_CALL saml_artifact_create(const axutil_env_t *env)
 {
 	saml_artifact_t *artifact = NULL;
 	
@@ -28,7 +28,7 @@ AXIS2_EXTERN saml_artifact_t* AXIS2_CALL saml_artifact_create(axutil_env_t *env)
 	}
 	return artifact;
 }
-AXIS2_EXTERN void AXIS2_CALL saml_artifact_free(saml_artifact_t *artifact, axutil_env_t *env)
+AXIS2_EXTERN void AXIS2_CALL saml_artifact_free(saml_artifact_t *artifact, const axutil_env_t *env)
 {
 	if(artifact->artifact)
 	{
@@ -37,14 +37,14 @@ AXIS2_EXTERN void AXIS2_CALL saml_artifact_free(saml_artifact_t *artifact, axuti
 	AXIS2_FREE(env->allocator, artifact);
 	artifact = NULL;
 }
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_artifact_get_data(saml_artifact_t *artifact, axutil_env_t *env)
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_artifact_get_data(saml_artifact_t *artifact, const axutil_env_t *env)
 {
 	if(artifact)
 		return artifact->artifact;
 	else
 		return NULL;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_artifact_set_data(saml_artifact_t *artifact, axutil_env_t *env, axis2_char_t *data)
+AXIS2_EXTERN int AXIS2_CALL saml_artifact_set_data(saml_artifact_t *artifact, const axutil_env_t *env, axis2_char_t *data)
 {
 	if(artifact->artifact)
 	{
@@ -56,7 +56,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_artifact_set_data(saml_artifact_t *artifact, ax
 }
 
 
-AXIS2_EXTERN saml_request_t* AXIS2_CALL saml_request_create(axutil_env_t *env)
+AXIS2_EXTERN saml_request_t* AXIS2_CALL saml_request_create(const axutil_env_t *env)
 {
 	saml_request_t *request = NULL;
 
@@ -78,7 +78,7 @@ AXIS2_EXTERN saml_request_t* AXIS2_CALL saml_request_create(axutil_env_t *env)
 	}
 	return request;
 }
-AXIS2_EXTERN void AXIS2_CALL saml_request_free(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN void AXIS2_CALL saml_request_free(saml_request_t *request, const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	saml_artifact_t *artifact = NULL;
@@ -156,7 +156,7 @@ AXIS2_EXTERN void AXIS2_CALL saml_request_free(saml_request_t *request, axutil_e
 
 AXIS2_EXTERN int AXIS2_CALL saml_request_build(saml_request_t *request, 
 											   axiom_node_t *node, 
-											   axutil_env_t *env)
+											   const axutil_env_t *env)
 {
 	/*populate the saml request struct from the axiom om node struct*/
 	axutil_hash_t *attr_hash = NULL;
@@ -317,7 +317,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_build(saml_request_t *request,
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_request_to_om(saml_request_t *request, 
 														 axiom_node_t *parent, 
-														 axutil_env_t *env)
+														 const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	axiom_element_t *element = NULL, *ce = NULL;
@@ -423,7 +423,7 @@ AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_request_to_om(saml_request_t *request
 	}
 	return n;
 }
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_request_get_id(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_request_get_id(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request)
 	{
@@ -432,7 +432,7 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL saml_request_get_id(saml_request_t *reques
 	else
 		return NULL;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_minor_version(saml_request_t *request, axutil_env_t *env, int version)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_minor_version(saml_request_t *request, const axutil_env_t *env, int version)
 {
 	if(request->minor_version)
 	{
@@ -443,7 +443,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_minor_version(saml_request_t *reque
 	return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_major_version(saml_request_t *request, axutil_env_t *env, int version)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_major_version(saml_request_t *request, const axutil_env_t *env, int version)
 {
 	if(request->major_version)
 	{
@@ -455,7 +455,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_major_version(saml_request_t *reque
 
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_issue_instant(saml_request_t *request, axutil_env_t *env, axutil_date_time_t *date_time)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_issue_instant(saml_request_t *request, const axutil_env_t *env, axutil_date_time_t *date_time)
 {
 	if(request->issue_instant)
 	{
@@ -464,7 +464,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_issue_instant(saml_request_t *reque
 	request->issue_instant = date_time;
 	return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN  axutil_date_time_t* AXIS2_CALL saml_request_get_issue_instant(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN  axutil_date_time_t* AXIS2_CALL saml_request_get_issue_instant(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request)
 		return request->issue_instant;
@@ -472,7 +472,7 @@ AXIS2_EXTERN  axutil_date_time_t* AXIS2_CALL saml_request_get_issue_instant(saml
 		return NULL;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_respond_withs(saml_request_t *request, axutil_env_t *env, axutil_array_list_t *responds)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_respond_withs(saml_request_t *request, const axutil_env_t *env, axutil_array_list_t *responds)
 {
 	int size = 0, i = 0;
 	axutil_qname_t *respond = NULL;
@@ -491,7 +491,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_respond_withs(saml_request_t *reque
 	return  AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN  axutil_array_list_t* AXIS2_CALL saml_request_get_respond_withs(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN  axutil_array_list_t* AXIS2_CALL saml_request_get_respond_withs(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request)
 		return request->saml_responds;
@@ -499,7 +499,7 @@ AXIS2_EXTERN  axutil_array_list_t* AXIS2_CALL saml_request_get_respond_withs(sam
 		return NULL;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_add_respond_with(saml_request_t *request, axutil_env_t *env, axutil_qname_t *respond)
+AXIS2_EXTERN int AXIS2_CALL saml_request_add_respond_with(saml_request_t *request, const axutil_env_t *env, axutil_qname_t *respond)
 {
 	if(!request->saml_responds)
 	{
@@ -513,7 +513,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_add_respond_with(saml_request_t *reques
 	return AXIS2_FAILURE;
 	
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_remove_respond_with(saml_request_t *request, axutil_env_t *env, int index)
+AXIS2_EXTERN int AXIS2_CALL saml_request_remove_respond_with(saml_request_t *request, const axutil_env_t *env, int index)
 {
 	axutil_qname_t *qname;
 	if(request->saml_responds)
@@ -527,7 +527,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_remove_respond_with(saml_request_t *req
 	}
 	return AXIS2_FAILURE;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_query(saml_request_t *request, axutil_env_t *env, saml_query_t *query)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_query(saml_request_t *request, const axutil_env_t *env, saml_query_t *query)
 {
 	if(request->query)
 	{
@@ -536,7 +536,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_query(saml_request_t *request, axut
 	request->query = query;
 	return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN saml_query_t* AXIS2_CALL saml_request_get_query(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN saml_query_t* AXIS2_CALL saml_request_get_query(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request)
 		return request->query;
@@ -544,7 +544,7 @@ AXIS2_EXTERN saml_query_t* AXIS2_CALL saml_request_get_query(saml_request_t *req
 		return NULL;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_id_refs(saml_request_t *request, axutil_env_t *env, axutil_array_list_t *id_refs)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_id_refs(saml_request_t *request, const axutil_env_t *env, axutil_array_list_t *id_refs)
 {
 	int size = 0, i = 0;
 	if(request->saml_asserion_id_ref)
@@ -562,7 +562,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_id_refs(saml_request_t *request, ax
 	request->saml_asserion_id_ref = id_refs;
 	return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL saml_request_get_id_refs(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL saml_request_get_id_refs(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request)
 		return request->saml_asserion_id_ref;
@@ -570,7 +570,7 @@ AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL saml_request_get_id_refs(saml_reque
 		return NULL;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_add_id_refs(saml_request_t *request, axutil_env_t *env, axis2_char_t *id_reference)
+AXIS2_EXTERN int AXIS2_CALL saml_request_add_id_refs(saml_request_t *request, const axutil_env_t *env, axis2_char_t *id_reference)
 {
 	if(!request->saml_asserion_id_ref)
 	{
@@ -583,7 +583,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_add_id_refs(saml_request_t *request, ax
 	}
 	return AXIS2_FAILURE;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_remove_id_refs(saml_request_t *request, axutil_env_t *env, int index)
+AXIS2_EXTERN int AXIS2_CALL saml_request_remove_id_refs(saml_request_t *request, const axutil_env_t *env, int index)
 {
 	axis2_char_t *id_ref;
 	if(request->saml_asserion_id_ref)
@@ -597,7 +597,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_remove_id_refs(saml_request_t *request,
 	}
 	return AXIS2_FAILURE;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_artifacts(saml_request_t *request, axutil_env_t *env, axutil_array_list_t *artifacts)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_artifacts(saml_request_t *request, const axutil_env_t *env, axutil_array_list_t *artifacts)
 {
 	int size = 0, i = 0;
 	saml_artifact_t *artifact = NULL;
@@ -615,7 +615,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_artifacts(saml_request_t *request, 
 	request->saml_artifacts = artifacts;
 	return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN axutil_array_list_t*  AXIS2_CALL saml_request_get_artifacts(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN axutil_array_list_t*  AXIS2_CALL saml_request_get_artifacts(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request)
 		return	request->saml_artifacts;
@@ -623,7 +623,7 @@ AXIS2_EXTERN axutil_array_list_t*  AXIS2_CALL saml_request_get_artifacts(saml_re
 		return NULL;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_add_artifact(saml_request_t *request, axutil_env_t *env, saml_artifact_t *artifact)
+AXIS2_EXTERN int AXIS2_CALL saml_request_add_artifact(saml_request_t *request, const axutil_env_t *env, saml_artifact_t *artifact)
 {
 	if(!request->saml_artifacts)
 	{
@@ -636,7 +636,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_add_artifact(saml_request_t *request, a
 	}
 	return AXIS2_FAILURE;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_remove_artifact(saml_request_t *request, axutil_env_t *env, int index)
+AXIS2_EXTERN int AXIS2_CALL saml_request_remove_artifact(saml_request_t *request, const axutil_env_t *env, int index)
 {
 	saml_artifact_t *ar;
 	if(request->saml_artifacts)
@@ -650,7 +650,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_remove_artifact(saml_request_t *request
 	}
 	return AXIS2_FAILURE;
 }
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL saml_request_check_validity(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL saml_request_check_validity(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request->query)
 		return AXIS2_TRUE;
@@ -672,7 +672,7 @@ AXIS2_EXTERN axis2_bool_t AXIS2_CALL saml_request_check_validity(saml_request_t 
 		return AXIS2_FALSE;
 }
 
-AXIS2_EXTERN int AXIS2_CALL saml_request_set_signature(saml_request_t *request, axutil_env_t *env, oxs_sign_ctx_t *sig_ctx)
+AXIS2_EXTERN int AXIS2_CALL saml_request_set_signature(saml_request_t *request, const axutil_env_t *env, oxs_sign_ctx_t *sig_ctx)
 {
 	if(request->sig_ctx)
 	{
@@ -681,7 +681,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_set_signature(saml_request_t *request, 
 	request->sig_ctx = sig_ctx;
 	return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_unsign(saml_request_t *request, axutil_env_t *env)
+AXIS2_EXTERN int AXIS2_CALL saml_request_unsign(saml_request_t *request, const axutil_env_t *env)
 {
 	if(request->sig_ctx)
 	{
@@ -689,7 +689,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_unsign(saml_request_t *request, axutil_
 	}
 	return AXIS2_SUCCESS;
 }
-AXIS2_EXTERN int AXIS2_CALL saml_request_sign(saml_request_t *request, axiom_node_t *node, axutil_env_t *env)
+AXIS2_EXTERN int AXIS2_CALL saml_request_sign(saml_request_t *request, axiom_node_t *node, const axutil_env_t *env)
 {
 	axiom_node_t *n= NULL;
 	oxs_sign_part_t* sig_part = NULL;
@@ -716,7 +716,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_request_sign(saml_request_t *request, axiom_nod
 
 
 }
-AXIS2_EXTERN void AXIS2_CALL saml_request_set_default_signature(saml_request_t *request, axutil_env_t *env, oxs_sign_ctx_t *sig_ctx)
+AXIS2_EXTERN void AXIS2_CALL saml_request_set_default_signature(saml_request_t *request, const axutil_env_t *env, oxs_sign_ctx_t *sig_ctx)
 {
 	if(request->sig_ctx)
 	{
@@ -729,13 +729,13 @@ AXIS2_EXTERN void AXIS2_CALL saml_request_set_default_signature(saml_request_t *
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_request_signature_verify(saml_request_t *request, axutil_env_t *env)
+saml_request_signature_verify(saml_request_t *request, const axutil_env_t *env)
 {			
 	return oxs_xml_sig_verify(env, request->sig_ctx, request->signature, request->original_xml);
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_request_is_sign_set(saml_request_t *request, axutil_env_t *env)
+saml_request_is_sign_set(saml_request_t *request, const axutil_env_t *env)
 {
 	if (request->sig_ctx)
 	{
@@ -745,7 +745,7 @@ saml_request_is_sign_set(saml_request_t *request, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-saml_request_is_signed(saml_request_t *request, axutil_env_t *env)
+saml_request_is_signed(saml_request_t *request, const axutil_env_t *env)
 {
 	if (request->signature)
 	{

@@ -18,7 +18,7 @@
 #include <saml.h>
 #include <saml_req.h>
 
-AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_ctx, axutil_env_t *env, axis2_char_t *id)
+AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_ctx, const axutil_env_t *env, axis2_char_t *id)
 {
 	oxs_sign_part_t* sig_part = NULL;
 	oxs_transform_t *tr = NULL;	

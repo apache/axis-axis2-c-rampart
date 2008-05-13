@@ -19,7 +19,7 @@
 
 
 AXIS2_EXTERN saml_named_id_t * AXIS2_CALL 
-saml_named_id_create(axutil_env_t *env)
+saml_named_id_create(const axutil_env_t *env)
 {
 	saml_named_id_t *named_id = AXIS2_MALLOC(env->allocator, sizeof(saml_named_id_t));
 	if (named_id)
@@ -49,7 +49,7 @@ saml_named_id_create(axutil_env_t *env)
 
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_named_id_free(saml_named_id_t *named_id, axutil_env_t *env)
+saml_named_id_free(saml_named_id_t *named_id, const axutil_env_t *env)
 {
 	if (named_id->format)									
 	{														
@@ -68,7 +68,7 @@ saml_named_id_free(saml_named_id_t *named_id, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_named_id_build(saml_named_id_t *named_id, axiom_node_t *node, 
-					axutil_env_t *env)
+					const axutil_env_t *env)
 {	
 	axutil_hash_t *attr_hash = NULL;
 	axutil_hash_index_t *hi = NULL;
@@ -116,7 +116,7 @@ saml_named_id_build(saml_named_id_t *named_id, axiom_node_t *node,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_named_id_to_om(saml_named_id_t *id, axiom_node_t *parent, 
-					axutil_env_t *env)
+					const axutil_env_t *env)
 {
 	axiom_element_t *e = NULL;
 	axiom_node_t *n = NULL;
@@ -145,26 +145,26 @@ saml_named_id_to_om(saml_named_id_t *id, axiom_node_t *parent,
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_named_id_get_name(saml_named_id_t *id, axutil_env_t *env)
+saml_named_id_get_name(saml_named_id_t *id, const axutil_env_t *env)
 {
 	return id->name;
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_named_id_get_format(saml_named_id_t *id, axutil_env_t *env)
+saml_named_id_get_format(saml_named_id_t *id, const axutil_env_t *env)
 {
 	return id->format;
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_named_id_get_name_qualifier(saml_named_id_t *id, 
-								 axutil_env_t *env)
+								 const axutil_env_t *env)
 {
 	return id->name_qualifier;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_named_id_set_name(saml_named_id_t *id, axutil_env_t *env, 
+saml_named_id_set_name(saml_named_id_t *id, const axutil_env_t *env, 
 					   axis2_char_t *name)
 {
 	if (id->name)
@@ -176,7 +176,7 @@ saml_named_id_set_name(saml_named_id_t *id, axutil_env_t *env,
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_named_id_set_format(saml_named_id_t *id, axutil_env_t *env, 
+saml_named_id_set_format(saml_named_id_t *id, const axutil_env_t *env, 
 						 axis2_char_t *format)
 {
 	if (id->format)
@@ -188,7 +188,7 @@ saml_named_id_set_format(saml_named_id_t *id, axutil_env_t *env,
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_named_id_set_name_qualifier(saml_named_id_t *id, axutil_env_t *env, 
+saml_named_id_set_name_qualifier(saml_named_id_t *id, const axutil_env_t *env, 
 								 axis2_char_t *qualifier)
 {
 	if (id->name_qualifier)
@@ -201,7 +201,7 @@ saml_named_id_set_name_qualifier(saml_named_id_t *id, axutil_env_t *env,
 
 
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
-saml_subject_create(axutil_env_t *env)
+saml_subject_create(const axutil_env_t *env)
 {
 	saml_subject_t *subject = AXIS2_MALLOC(env->allocator, sizeof(saml_subject_t));
 	if (subject)
@@ -215,7 +215,7 @@ saml_subject_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_subject_free(saml_subject_t *subject, axutil_env_t *env)
+saml_subject_free(saml_subject_t *subject, const axutil_env_t *env)
 {
 	/*if (subject->named_id)
 	{
@@ -238,7 +238,7 @@ saml_subject_free(saml_subject_t *subject, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_build(saml_subject_t *subject, axiom_node_t *node, 
-				   axutil_env_t *env)
+				   const axutil_env_t *env)
 {
 	axiom_element_t *element = NULL;
 	axiom_node_t *cn = NULL, *ccn = NULL;
@@ -306,7 +306,7 @@ saml_subject_build(saml_subject_t *subject, axiom_node_t *node,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_subject_to_om(saml_subject_t *subject, axiom_node_t *parent, 
-				   axutil_env_t *env)
+				   const axutil_env_t *env)
 {
 	int i = 0, size = 0;
 	axiom_element_t *e = NULL, *ce = NULL, *cce = NULL;
@@ -361,33 +361,33 @@ saml_subject_to_om(saml_subject_t *subject, axiom_node_t *parent,
 }
 
 AXIS2_EXTERN saml_named_id_t * AXIS2_CALL 
-saml_subject_get_named_id(saml_subject_t *subject, axutil_env_t *env)
+saml_subject_get_named_id(saml_subject_t *subject, const axutil_env_t *env)
 {
 	return subject->named_id;
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_subject_get_confirmation_methods(saml_subject_t *subject, 
-									  axutil_env_t *env)
+									  const axutil_env_t *env)
 {
 	return subject->confirmation_methods;
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_subject_get_confirmation_data(saml_subject_t *subject, axutil_env_t *env)
+saml_subject_get_confirmation_data(saml_subject_t *subject, const axutil_env_t *env)
 {
 	return subject->confirmation_data;
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_subject_get_key_info(saml_subject_t *subject, axutil_env_t *env)
+saml_subject_get_key_info(saml_subject_t *subject, const axutil_env_t *env)
 {
 	return subject->key_info;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_set_named_id(saml_subject_t *subject, 
-						  axutil_env_t *env, saml_named_id_t *named_id)
+						  const axutil_env_t *env, saml_named_id_t *named_id)
 {
 	if (subject->named_id)
 	{
@@ -399,7 +399,7 @@ saml_subject_set_named_id(saml_subject_t *subject,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_set_confirmation_methods(saml_subject_t *subject, 
-									  axutil_env_t *env, 
+									  const axutil_env_t *env, 
 									  axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
@@ -412,7 +412,7 @@ saml_subject_set_confirmation_methods(saml_subject_t *subject,
 			val =  axutil_array_list_get(subject->confirmation_methods, env, i);
 			if (val)
 			{
-				AXIS2_FREE(env->allocator, env);
+				AXIS2_FREE(env->allocator, val);
 			}
 		}
 		axutil_array_list_free(subject->confirmation_methods, env);
@@ -428,7 +428,7 @@ saml_subject_set_confirmation_methods(saml_subject_t *subject,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_add_confirmation(saml_subject_t *subject, 
-							  axutil_env_t *env, axis2_char_t *sub_confirmation)
+							  const axutil_env_t *env, axis2_char_t *sub_confirmation)
 {
 	if (!subject->confirmation_methods)
 	{
@@ -440,7 +440,7 @@ saml_subject_add_confirmation(saml_subject_t *subject,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_remove_subject_confiirmation(saml_subject_t *subject, 
-										  axutil_env_t *env, int index)
+										  const axutil_env_t *env, int index)
 {
 	axis2_char_t *val = NULL;
 	if (subject->confirmation_methods && axutil_array_list_size(subject->confirmation_methods, env) > index)
@@ -460,7 +460,7 @@ saml_subject_remove_subject_confiirmation(saml_subject_t *subject,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_set_key_info(saml_subject_t *subject, 
-						  axutil_env_t *env, axiom_node_t *node)
+						  const axutil_env_t *env, axiom_node_t *node)
 {
 	if (subject->key_info)
 	{
@@ -471,7 +471,7 @@ saml_subject_set_key_info(saml_subject_t *subject,
 }
 
 AXIS2_EXTERN saml_subject_stmt_t * AXIS2_CALL 
-saml_subject_stmt_create(axutil_env_t *env)
+saml_subject_stmt_create(const axutil_env_t *env)
 {
 	saml_subject_stmt_t *stmt = AXIS2_MALLOC(env->allocator, sizeof(saml_subject_stmt_t));
 	if (stmt)
@@ -487,7 +487,7 @@ saml_subject_stmt_create(axutil_env_t *env)
 
 AXIS2_EXTERN void AXIS2_CALL 
 saml_subject_stmt_free(saml_subject_stmt_t *subject_stmt,
-					   axutil_env_t *env)
+					   const axutil_env_t *env)
 {
 	saml_subject_free(subject_stmt->subject, env);
 	AXIS2_FREE(env->allocator, subject_stmt);
@@ -495,7 +495,7 @@ saml_subject_stmt_free(saml_subject_stmt_t *subject_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_stmt_build(saml_subject_stmt_t *subject_stmt, 
-						axiom_node_t *node, axutil_env_t *env)
+						axiom_node_t *node, const axutil_env_t *env)
 {
 	axiom_element_t *element = NULL;	
 	axiom_node_t *first_enode = NULL;
@@ -514,7 +514,7 @@ saml_subject_stmt_build(saml_subject_stmt_t *subject_stmt,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_subject_stmt_to_om(saml_subject_stmt_t *subject_stmt, 
-						axiom_node_t *parent, axutil_env_t *env)
+						axiom_node_t *parent, const axutil_env_t *env)
 {
 	axiom_element_t *e = NULL;
 	axiom_node_t *n = NULL;
@@ -530,7 +530,7 @@ saml_subject_stmt_to_om(saml_subject_stmt_t *subject_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_stmt_set_subject(saml_subject_stmt_t *subject_stmt, 
-							  axutil_env_t *env, saml_subject_t *subject)
+							  const axutil_env_t *env, saml_subject_t *subject)
 {
 	saml_subject_free(subject_stmt->subject, env);
 	subject_stmt->subject = subject;
@@ -539,7 +539,7 @@ saml_subject_stmt_set_subject(saml_subject_stmt_t *subject_stmt,
 
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
 saml_subject_stmt_get_subject(saml_subject_stmt_t *subject_stmt, 
-							  axutil_env_t *env)
+							  const axutil_env_t *env)
 {
 	return subject_stmt->subject;	
 }

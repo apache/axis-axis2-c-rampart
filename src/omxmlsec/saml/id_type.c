@@ -19,7 +19,7 @@
 #include <axutil_uuid_gen.h>
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_id_generate_random_bytes(axutil_env_t *env)
+saml_id_generate_random_bytes(const axutil_env_t *env)
 {
 	return	axutil_uuid_gen(env);
 }

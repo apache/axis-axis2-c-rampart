@@ -19,7 +19,7 @@
 
 
 AXIS2_EXTERN saml_action_t * AXIS2_CALL 
-saml_action_create(axutil_env_t *env)
+saml_action_create(const axutil_env_t *env)
 {
 	saml_action_t *action = AXIS2_MALLOC(env->allocator, sizeof(saml_action_t));
 	if (action)
@@ -31,7 +31,7 @@ saml_action_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_action_free(saml_action_t *action, axutil_env_t *env)
+saml_action_free(saml_action_t *action, const axutil_env_t *env)
 {
 	if (action->data)
 	{
@@ -46,7 +46,7 @@ saml_action_free(saml_action_t *action, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_action_build(saml_action_t *action, 
-				  axiom_node_t *node, axutil_env_t *env)
+				  axiom_node_t *node, const axutil_env_t *env)
 {
 	axiom_element_t *element = NULL;	
 	if (axiom_node_get_node_type(node, env) != AXIOM_ELEMENT || (element = (axiom_element_t *)axiom_node_get_data_element(node, env)) == NULL)
@@ -63,7 +63,7 @@ saml_action_build(saml_action_t *action,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_action_to_om(saml_action_t *action, 
-				  axiom_node_t *parent, axutil_env_t *env)
+				  axiom_node_t *parent, const axutil_env_t *env)
 {
 	axiom_element_t *e = NULL;
 	axiom_node_t *n = NULL;	
@@ -91,20 +91,20 @@ saml_action_to_om(saml_action_t *action,
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_action_get_data(saml_action_t *action, axutil_env_t *env)
+saml_action_get_data(saml_action_t *action, const axutil_env_t *env)
 {
 	return action->data;
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_action_get_namespace(saml_action_t *action, axutil_env_t *env)
+saml_action_get_namespace(saml_action_t *action, const axutil_env_t *env)
 {
 	return action->name_space;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_action_set_data(saml_action_t *action, 
-					 axutil_env_t *env, axis2_char_t *data)
+					 const axutil_env_t *env, axis2_char_t *data)
 {
 	if (action->data)
 	{
@@ -116,7 +116,7 @@ saml_action_set_data(saml_action_t *action,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_action_set_namespace(saml_action_t *action, 
-						  axutil_env_t *env, axis2_char_t *name_space)
+						  const axutil_env_t *env, axis2_char_t *name_space)
 {
 	if (action->name_space)
 	{
@@ -127,7 +127,7 @@ saml_action_set_namespace(saml_action_t *action,
 }
 
 AXIS2_EXTERN saml_evidence_t * AXIS2_CALL 
-saml_evidence_create(axutil_env_t *env)
+saml_evidence_create(const axutil_env_t *env)
 {
 	saml_evidence_t *evidence = (saml_evidence_t *)AXIS2_MALLOC(env->allocator, sizeof(saml_evidence_t));
 	if (evidence)
@@ -139,7 +139,7 @@ saml_evidence_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_evidence_free(saml_evidence_t *evidence, axutil_env_t *env)
+saml_evidence_free(saml_evidence_t *evidence, const axutil_env_t *env)
 {
 	int i = 0, size = 0;
 	char *val = NULL;
@@ -173,7 +173,7 @@ saml_evidence_free(saml_evidence_t *evidence, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_build(saml_evidence_t *evidence, 
-					axiom_node_t *node, axutil_env_t *env)
+					axiom_node_t *node, const axutil_env_t *env)
 {
 	axiom_element_t *element = NULL;
 	axiom_element_t *fce = NULL;
@@ -212,7 +212,7 @@ saml_evidence_build(saml_evidence_t *evidence,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_evidence_to_om(saml_evidence_t *evidence, 
-					axiom_node_t *parent, axutil_env_t *env)
+					axiom_node_t *parent, const axutil_env_t *env)
 {
 	int size = 0, i = 0;
 	axiom_element_t *e = NULL, *ce = NULL;
@@ -247,20 +247,20 @@ saml_evidence_to_om(saml_evidence_t *evidence,
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_evidence_get_assertions(saml_evidence_t *evidence, axutil_env_t *env)
+saml_evidence_get_assertions(saml_evidence_t *evidence, const axutil_env_t *env)
 {
 	return evidence->assertions;
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_evidence_get_assertion_ids(saml_evidence_t *evidence, axutil_env_t *env)
+saml_evidence_get_assertion_ids(saml_evidence_t *evidence, const axutil_env_t *env)
 {
 	return evidence->assertion_ids;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_set_assertions(saml_evidence_t *evidence, 
-							 axutil_env_t * env, axutil_array_list_t *list)
+							 const axutil_env_t *env, axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
 	saml_assertion_t *a = NULL;
@@ -282,7 +282,7 @@ saml_evidence_set_assertions(saml_evidence_t *evidence,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_remove_assertion(saml_evidence_t *evidence, 
-							   axutil_env_t * env, int index)
+							   const axutil_env_t *env, int index)
 {
 	saml_assertion_t *a = NULL;
 	if (evidence->assertions && axutil_array_list_size(evidence->assertions, env) > index)
@@ -302,7 +302,7 @@ saml_evidence_remove_assertion(saml_evidence_t *evidence,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_add_assertion(saml_evidence_t *evidence, 
-							axutil_env_t * env, saml_assertion_t *assertion)
+							const axutil_env_t *env, saml_assertion_t *assertion)
 {
 	if (!evidence->assertions)
 	{
@@ -314,7 +314,7 @@ saml_evidence_add_assertion(saml_evidence_t *evidence,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_set_assertion_ids(saml_evidence_t *evidence, 
-								axutil_env_t * env, axutil_array_list_t *list)
+								const axutil_env_t *env, axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
 	axis2_char_t *a = NULL;
@@ -336,7 +336,7 @@ saml_evidence_set_assertion_ids(saml_evidence_t *evidence,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_remove_assertion_id(saml_evidence_t *evidence, 
-								  axutil_env_t * env, int index)
+								  const axutil_env_t *env, int index)
 {
 	axis2_char_t *a = NULL;
 	if (evidence->assertion_ids && axutil_array_list_size(evidence->assertion_ids, env) > index)
@@ -356,7 +356,7 @@ saml_evidence_remove_assertion_id(saml_evidence_t *evidence,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_add_assertion_id(saml_evidence_t *evidence, 
-							   axutil_env_t * env, axis2_char_t *assertion_id)
+							   const axutil_env_t *env, axis2_char_t *assertion_id)
 {
 	if (!evidence->assertion_ids)
 	{
@@ -368,7 +368,7 @@ saml_evidence_add_assertion_id(saml_evidence_t *evidence,
 
 
 AXIS2_EXTERN saml_auth_desicion_stmt_t * AXIS2_CALL 
-saml_auth_desicion_stmt_create(axutil_env_t *env)
+saml_auth_desicion_stmt_create(const axutil_env_t *env)
 {
 	saml_auth_desicion_stmt_t *auth_des_stmt = AXIS2_MALLOC(env->allocator, sizeof(saml_auth_desicion_stmt_t));
 	if (auth_des_stmt)
@@ -386,7 +386,7 @@ saml_auth_desicion_stmt_create(axutil_env_t *env)
 
 AXIS2_EXTERN void AXIS2_CALL 
 saml_auth_desicion_stmt_free(saml_auth_desicion_stmt_t *auth_des_stmt, 
-							 axutil_env_t *env)
+							 const axutil_env_t *env)
 {
 	if (auth_des_stmt->decision)
 	{
@@ -423,7 +423,7 @@ saml_auth_desicion_stmt_free(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_build(saml_auth_desicion_stmt_t *auth_des_stmt, 
-							  axiom_node_t *node, axutil_env_t *env)
+							  axiom_node_t *node, const axutil_env_t *env)
 {
 	axutil_hash_t *attr_hash = NULL;
 	axutil_hash_index_t *hi = NULL;
@@ -496,7 +496,7 @@ saml_auth_desicion_stmt_build(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_auth_desicion_stmt_to_om(saml_auth_desicion_stmt_t *auth_des_stmt, 
-							  axiom_node_t *parent, axutil_env_t *env)
+							  axiom_node_t *parent, const axutil_env_t *env)
 {
 	int i = 0, size = 0;
 	axiom_element_t *e = NULL;
@@ -542,33 +542,33 @@ saml_auth_desicion_stmt_to_om(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_resource(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env)
+									 const axutil_env_t *env)
 {
 	return auth_des_stmt->resource;
 }
 
-AXIS2_EXTERN axis2_char_t * AXIS2_CALL saml_auth_desicion_stmt_get_desicion(saml_auth_desicion_stmt_t *auth_des_stmt, axutil_env_t *env)
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL saml_auth_desicion_stmt_get_desicion(saml_auth_desicion_stmt_t *auth_des_stmt, const axutil_env_t *env)
 {
 	return auth_des_stmt->decision;
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_actions(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t *env)
+									const axutil_env_t *env)
 {
 	return auth_des_stmt->action;
 }
 
 AXIS2_EXTERN saml_evidence_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_evidence(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env)
+									 const axutil_env_t *env)
 {
 	return auth_des_stmt->evidence;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_resource(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env, axis2_char_t *resource)
+									 const axutil_env_t *env, axis2_char_t *resource)
 {
 	if (auth_des_stmt->resource)
 	{
@@ -580,7 +580,7 @@ saml_auth_desicion_stmt_set_resource(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_desicion(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env, axis2_char_t *desicion)
+									 const axutil_env_t *env, axis2_char_t *desicion)
 {
 	if (auth_des_stmt->decision)
 	{
@@ -592,7 +592,7 @@ saml_auth_desicion_stmt_set_desicion(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_actions(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t * env, axutil_array_list_t *list)
+									const axutil_env_t *env, axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
 	saml_action_t *action = NULL;
@@ -614,7 +614,7 @@ saml_auth_desicion_stmt_set_actions(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_remove_action(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									  axutil_env_t * env, int index)
+									  const axutil_env_t *env, int index)
 {
 	saml_action_t *action = NULL;
 	if (auth_des_stmt->action && axutil_array_list_size(auth_des_stmt->action, env) > index)
@@ -634,7 +634,7 @@ saml_auth_desicion_stmt_remove_action(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_add_action(saml_auth_desicion_stmt_t *auth_des_stmt, 
-								   axutil_env_t * env, saml_action_t *action)
+								   const axutil_env_t *env, saml_action_t *action)
 {
 	if (!auth_des_stmt->action)
 	{
@@ -646,7 +646,7 @@ saml_auth_desicion_stmt_add_action(saml_auth_desicion_stmt_t *auth_des_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_subject(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t * env, saml_subject_t *subject)
+									const axutil_env_t *env, saml_subject_t *subject)
 {
 	if (auth_des_stmt->subject)
 	{

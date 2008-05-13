@@ -18,7 +18,7 @@
 #include <saml.h>
 
 AXIS2_EXTERN saml_attr_desig_t * AXIS2_CALL 
-saml_attr_desig_create(axutil_env_t *env)
+saml_attr_desig_create(const axutil_env_t *env)
 {
 	saml_attr_desig_t *attr_desig = AXIS2_MALLOC(env->allocator, sizeof(saml_attr_desig_t));
 	if (attr_desig)
@@ -30,7 +30,7 @@ saml_attr_desig_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_attr_desig_free(saml_attr_desig_t *attr_desig, axutil_env_t *env)
+saml_attr_desig_free(saml_attr_desig_t *attr_desig, const axutil_env_t *env)
 {
 	if (attr_desig->attr_name)
 	{
@@ -45,7 +45,7 @@ saml_attr_desig_free(saml_attr_desig_t *attr_desig, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_desig_build(saml_attr_desig_t *attr_desig, 
-					  axiom_node_t *node, axutil_env_t *env)
+					  axiom_node_t *node, const axutil_env_t *env)
 {
 	axutil_hash_t *attr_hash = NULL;
 	axutil_hash_index_t *hi = NULL;
@@ -80,7 +80,7 @@ saml_attr_desig_build(saml_attr_desig_t *attr_desig,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_attr_desig_to_om(saml_attr_desig_t *attr_desig, 
-					  axiom_node_t *parent, axutil_env_t *env)
+					  axiom_node_t *parent, const axutil_env_t *env)
 {
 	axiom_element_t *e = NULL;
 	axiom_node_t *n = NULL;
@@ -106,20 +106,20 @@ saml_attr_desig_to_om(saml_attr_desig_t *attr_desig,
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_desig_get_name(saml_attr_desig_t *attr_desig, axutil_env_t *env)
+saml_attr_desig_get_name(saml_attr_desig_t *attr_desig, const axutil_env_t *env)
 {
 	return attr_desig->attr_name;
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_desig_get_namespace(saml_attr_desig_t *attr_desig, axutil_env_t *env)
+saml_attr_desig_get_namespace(saml_attr_desig_t *attr_desig, const axutil_env_t *env)
 {
 	return attr_desig->attr_nmsp;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_desig_set_name(saml_attr_desig_t *attr_desig, 
-						 axutil_env_t *env, axis2_char_t *name)
+						 const axutil_env_t *env, axis2_char_t *name)
 {
 	if (attr_desig->attr_name)
 	{
@@ -131,7 +131,7 @@ saml_attr_desig_set_name(saml_attr_desig_t *attr_desig,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_desig_set_namespace(saml_attr_desig_t *attr_desig, 
-							  axutil_env_t *env, axis2_char_t *name_space)
+							  const axutil_env_t *env, axis2_char_t *name_space)
 {
 	if (attr_desig->attr_nmsp)
 	{
@@ -142,7 +142,7 @@ saml_attr_desig_set_namespace(saml_attr_desig_t *attr_desig,
 }
 
 AXIS2_EXTERN saml_attr_t * AXIS2_CALL 
-saml_attr_create(axutil_env_t *env)
+saml_attr_create(const axutil_env_t *env)
 {
 	saml_attr_t *attr = AXIS2_MALLOC(env->allocator, sizeof(saml_attr_t));
 	if (attr)
@@ -155,7 +155,7 @@ saml_attr_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_attr_free(saml_attr_t *attr, axutil_env_t *env)
+saml_attr_free(saml_attr_t *attr, const axutil_env_t *env)
 {
 	/*int i = 0;
 	char *val = NULL;*/
@@ -181,7 +181,7 @@ saml_attr_free(saml_attr_t *attr, axutil_env_t *env)
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_build(saml_attr_t *attr, axiom_node_t *node, axutil_env_t *env)
+saml_attr_build(saml_attr_t *attr, axiom_node_t *node, const axutil_env_t *env)
 {
 	axutil_hash_t *attr_hash = NULL;
 	axutil_hash_index_t *hi = NULL;
@@ -236,7 +236,7 @@ saml_attr_build(saml_attr_t *attr, axiom_node_t *node, axutil_env_t *env)
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_attr_to_om(saml_attr_t *sattr, axiom_node_t *parent, axutil_env_t *env)
+saml_attr_to_om(saml_attr_t *sattr, axiom_node_t *parent, const axutil_env_t *env)
 {
 	int i = 0, size = 0;
 	axiom_element_t *e = NULL, *ce = NULL;
@@ -277,19 +277,19 @@ saml_attr_to_om(saml_attr_t *sattr, axiom_node_t *parent, axutil_env_t *env)
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_get_name(saml_attr_t *attr_stmt, axutil_env_t *env)
+saml_attr_get_name(saml_attr_t *attr_stmt, const axutil_env_t *env)
 {
 	return attr_stmt->attr_name;
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_get_namespace(saml_attr_t *attr_stmt, axutil_env_t *env)
+saml_attr_get_namespace(saml_attr_t *attr_stmt, const axutil_env_t *env)
 {
 	return attr_stmt->attr_nmsp;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_set_name(saml_attr_t *attr_stmt, axutil_env_t *env, axis2_char_t *name)
+saml_attr_set_name(saml_attr_t *attr_stmt, const axutil_env_t *env, axis2_char_t *name)
 {
 	if (attr_stmt->attr_name)
 	{
@@ -301,7 +301,7 @@ saml_attr_set_name(saml_attr_t *attr_stmt, axutil_env_t *env, axis2_char_t *name
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_set_namespace(saml_attr_t *attr_stmt, 
-						axutil_env_t *env, axis2_char_t *name_space)
+						const axutil_env_t *env, axis2_char_t *name_space)
 {
 	if (attr_stmt->attr_nmsp)
 	{
@@ -313,7 +313,7 @@ saml_attr_set_namespace(saml_attr_t *attr_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_set_values(saml_attr_t *attr, 
-						  axutil_env_t *env, axutil_array_list_t *list)
+						  const axutil_env_t *env, axutil_array_list_t *list)
 {
 	/*int i = 0, size = 0;
 	axis2_char_t *val = NULL;*/
@@ -335,7 +335,7 @@ saml_attr_set_values(saml_attr_t *attr,
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_remove_value(saml_attr_t *attr, axutil_env_t *env, int index)
+saml_attr_remove_value(saml_attr_t *attr, const axutil_env_t *env, int index)
 {
 	/*axis2_char_t *val = NULL;*/
 	if (attr->attr_value && axutil_array_list_size(attr->attr_value, env) > index)
@@ -355,7 +355,7 @@ saml_attr_remove_value(saml_attr_t *attr, axutil_env_t *env, int index)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_add_value(saml_attr_t *attr, 
-						 axutil_env_t *env, axiom_node_t *value)
+						 const axutil_env_t *env, axiom_node_t *value)
 {
 	if (!attr->attr_value)
 	{
@@ -367,7 +367,7 @@ saml_attr_add_value(saml_attr_t *attr,
 
 
 AXIS2_EXTERN saml_attr_stmt_t * AXIS2_CALL 
-saml_attr_stmt_create(axutil_env_t *env)
+saml_attr_stmt_create(const axutil_env_t *env)
 {	
 	saml_attr_stmt_t *attr_stmt = AXIS2_MALLOC(env->allocator, sizeof(saml_attr_stmt_t));
 	if (attr_stmt)
@@ -379,7 +379,7 @@ saml_attr_stmt_create(axutil_env_t *env)
 }
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_attr_stmt_free(saml_attr_stmt_t *attr_stmt, axutil_env_t *env)
+saml_attr_stmt_free(saml_attr_stmt_t *attr_stmt, const axutil_env_t *env)
 {
 	int i = 0, size = 0;
 	saml_attr_t *attr = NULL;
@@ -401,7 +401,7 @@ saml_attr_stmt_free(saml_attr_stmt_t *attr_stmt, axutil_env_t *env)
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_build(saml_attr_stmt_t *attr_stmt, 
-					 axiom_node_t *node, axutil_env_t *env)
+					 axiom_node_t *node, const axutil_env_t *env)
 {
 	axiom_element_t *element = NULL;	
 	axiom_element_t *fce = NULL;
@@ -441,7 +441,7 @@ saml_attr_stmt_build(saml_attr_stmt_t *attr_stmt,
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_attr_stmt_to_om(saml_attr_stmt_t *attr_stmt, 
-					 axiom_node_t *parent, axutil_env_t *env)
+					 axiom_node_t *parent, const axutil_env_t *env)
 {	
 	int i = 0, size = 0;
 	axiom_element_t *e = NULL;
@@ -468,20 +468,20 @@ saml_attr_stmt_to_om(saml_attr_stmt_t *attr_stmt,
 }
 
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
-saml_attr_stmt_get_subject(saml_attr_stmt_t *attr_stmt, axutil_env_t *env)
+saml_attr_stmt_get_subject(saml_attr_stmt_t *attr_stmt, const axutil_env_t *env)
 {
 	return attr_stmt->subject;
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_attr_stmt_get_attributes(saml_attr_stmt_t *attr_stmt, axutil_env_t *env)
+saml_attr_stmt_get_attributes(saml_attr_stmt_t *attr_stmt, const axutil_env_t *env)
 {
 	return attr_stmt->attribute;
 }
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_set_subject(saml_attr_stmt_t *attr_stmt, 
-						   axutil_env_t *env, saml_subject_t *subject)
+						   const axutil_env_t *env, saml_subject_t *subject)
 {
 	if (attr_stmt->subject)
 	{
@@ -493,7 +493,7 @@ saml_attr_stmt_set_subject(saml_attr_stmt_t *attr_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_set_attributes(saml_attr_stmt_t *attr_stmt, 
-							  axutil_env_t *env, axutil_array_list_t *list)
+							  const axutil_env_t *env, axutil_array_list_t *list)
 {
 	int i = 0, size = 0;
 	saml_attr_t *attr = NULL;
@@ -515,7 +515,7 @@ saml_attr_stmt_set_attributes(saml_attr_stmt_t *attr_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_remove_attribute(saml_attr_stmt_t *attr_stmt, 
-								axutil_env_t *env, int index)
+								const axutil_env_t *env, int index)
 {
 	saml_attr_t *attr = NULL;
 	if (attr_stmt->attribute && axutil_array_list_size(attr_stmt->attribute, env) > index)
@@ -535,7 +535,7 @@ saml_attr_stmt_remove_attribute(saml_attr_stmt_t *attr_stmt,
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_add_attribute(saml_attr_stmt_t *attr_stmt, 
-							 axutil_env_t *env, saml_attr_t *attribute)
+							 const axutil_env_t *env, saml_attr_t *attribute)
 {
 	if (!attr_stmt->attribute)
 	{
