@@ -206,14 +206,14 @@ typedef struct saml_response
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_request_t *AXIS2_CALL 
-saml_request_create(axutil_env_t *env);
+saml_request_create(const axutil_env_t *env);
 
 /* 
  * Free a saml request
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_request_free(saml_request_t *request, axutil_env_t *env);
+saml_request_free(saml_request_t *request, const axutil_env_t *env);
 
 /* 
 * Build the saml request from a axiom node.
@@ -222,7 +222,7 @@ saml_request_free(saml_request_t *request, axutil_env_t *env);
 */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_request_build(saml_request_t *request, axiom_node_t *node, 
-				   axutil_env_t *env);
+				   const axutil_env_t *env);
 
 /* 
 * Serialize a saml request to a om node.
@@ -232,14 +232,14 @@ saml_request_build(saml_request_t *request, axiom_node_t *node,
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
 saml_request_to_om(saml_request_t *request, axiom_node_t *parent, 
-				   axutil_env_t *env); 
+				   const axutil_env_t *env); 
 /*
 * Return the unique ID of the request. 
 * @param request SAML Request object
 * @param env pointer to environment struct
 */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
-saml_request_get_id(saml_request_t *request, axutil_env_t *env);
+saml_request_get_id(saml_request_t *request, const axutil_env_t *env);
 
 /* 
  * Set the information required to sign the message.
@@ -248,7 +248,7 @@ saml_request_get_id(saml_request_t *request, axutil_env_t *env);
  * @param sign_ctx oxs_sign_ctx_t object which contains the sign information
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_set_signature(saml_request_t *request, axutil_env_t *env, 
+saml_request_set_signature(saml_request_t *request, const axutil_env_t *env, 
 						   oxs_sign_ctx_t *sig_ctx);
 /* 
  * Set the default information required to sign the message. 
@@ -259,7 +259,7 @@ saml_request_set_signature(saml_request_t *request, axutil_env_t *env,
  * all other information are set to default settings.
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_request_set_default_signature(saml_request_t *request, axutil_env_t *env, 
+saml_request_set_default_signature(saml_request_t *request, const axutil_env_t *env, 
 								   oxs_sign_ctx_t *sig_ctx);
 /* 
  * Remove the information set for signing or verifying the Request.
@@ -267,7 +267,7 @@ saml_request_set_default_signature(saml_request_t *request, axutil_env_t *env,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_unsign(saml_request_t *request, axutil_env_t *env);
+saml_request_unsign(saml_request_t *request, const axutil_env_t *env);
 
 /* 
  * Sign the Request using the information set in the 
@@ -276,7 +276,7 @@ saml_request_unsign(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_sign(saml_request_t *request, axiom_node_t *node, axutil_env_t *env);
+saml_request_sign(saml_request_t *request, axiom_node_t *node, const axutil_env_t *env);
 
 /* 
  * Set the minor version of the Request
@@ -285,7 +285,7 @@ saml_request_sign(saml_request_t *request, axiom_node_t *node, axutil_env_t *env
  * @param version minor version number
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_set_minor_version(saml_request_t *request, axutil_env_t *env,
+saml_request_set_minor_version(saml_request_t *request, const axutil_env_t *env,
 							   int version);
 /* 
  * Set the major version of the assertion
@@ -295,7 +295,7 @@ saml_request_set_minor_version(saml_request_t *request, axutil_env_t *env,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_request_set_major_version(saml_request_t *request, 
-							   axutil_env_t *env, int version);
+							   const axutil_env_t *env, int version);
 /* 
  * Set the issue instant of the Request
  * @param request SAML Request object
@@ -304,7 +304,7 @@ saml_request_set_major_version(saml_request_t *request,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_request_set_issue_instant(saml_request_t *request, 
-							   axutil_env_t *env, axutil_date_time_t *date_time);
+							   const axutil_env_t *env, axutil_date_time_t *date_time);
 
 /*
  * Return the time instant of the Request
@@ -312,7 +312,7 @@ saml_request_set_issue_instant(saml_request_t *request,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axutil_date_time_t* AXIS2_CALL 
-saml_request_get_issue_instant(saml_request_t *request, axutil_env_t *ev);
+saml_request_get_issue_instant(saml_request_t *request, const  axutil_env_t *env);
 
 /*
  * Set the set of qname respond with references in Request
@@ -322,7 +322,7 @@ saml_request_get_issue_instant(saml_request_t *request, axutil_env_t *ev);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_request_set_respond_withs(saml_request_t *request, 
-							   axutil_env_t *env, axutil_array_list_t *responds);
+							   const axutil_env_t *env, axutil_array_list_t *responds);
 
 /*
  * Return the set of qname respond with references in Request
@@ -330,7 +330,7 @@ saml_request_set_respond_withs(saml_request_t *request,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL 
-saml_request_get_respond_withs(saml_request_t *request, axutil_env_t *env);
+saml_request_get_respond_withs(saml_request_t *request, const axutil_env_t *env);
 
 /*
  * Add a qname object respond with to the Request
@@ -338,7 +338,7 @@ saml_request_get_respond_withs(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_add_respond_with(saml_request_t *request, axutil_env_t *env,
+saml_request_add_respond_with(saml_request_t *request, const axutil_env_t *env,
 							  axutil_qname_t *respond);
 /*
  * Remove a qname object at the specified index
@@ -347,7 +347,7 @@ saml_request_add_respond_with(saml_request_t *request, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_remove_respond_with(saml_request_t *request, axutil_env_t *env, int index);
+saml_request_remove_respond_with(saml_request_t *request, const axutil_env_t *env, int index);
 
 /*
  * Set the SAML Query of SAML Request.
@@ -356,7 +356,7 @@ saml_request_remove_respond_with(saml_request_t *request, axutil_env_t *env, int
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_set_query(saml_request_t *request, axutil_env_t *env, saml_query_t *query);
+saml_request_set_query(saml_request_t *request, const axutil_env_t *env, saml_query_t *query);
 
 /*
  * Returns the SAML Query of SAML Request.
@@ -364,7 +364,7 @@ saml_request_set_query(saml_request_t *request, axutil_env_t *env, saml_query_t 
  * @param env pointer to the environemt struct
  */
 AXIS2_EXTERN saml_query_t* AXIS2_CALL 
-saml_request_get_query(saml_request_t *request, axutil_env_t *env);
+saml_request_get_query(saml_request_t *request, const axutil_env_t *env);
 
 /*
  * Set the set of Identifer References of the Request.
@@ -373,7 +373,7 @@ saml_request_get_query(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_set_id_refs(saml_request_t *request, axutil_env_t *env,
+saml_request_set_id_refs(saml_request_t *request, const axutil_env_t *env,
 						 axutil_array_list_t *id_refs);
 /*
  * Returne the list of Identifier references of the Request
@@ -381,7 +381,7 @@ saml_request_set_id_refs(saml_request_t *request, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL 
-saml_request_get_id_refs(saml_request_t *request, axutil_env_t *env);
+saml_request_get_id_refs(saml_request_t *request, const axutil_env_t *env);
 
 /*
  * Add an Id Reference to the SAML Request.
@@ -390,7 +390,7 @@ saml_request_get_id_refs(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_add_id_refs(saml_request_t *request, axutil_env_t *env, 
+saml_request_add_id_refs(saml_request_t *request, const axutil_env_t *env, 
 						 axis2_char_t *id_reference);
 /*
  * Remove an Id Reference at the specified index.
@@ -400,7 +400,7 @@ saml_request_add_id_refs(saml_request_t *request, axutil_env_t *env,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_request_remove_id_refs(saml_request_t *request, 
-							axutil_env_t *env, int index);
+							const axutil_env_t *env, int index);
 /*
  * Set the set of SAML Assertion Artifact objects of the Request.
  * @param request SAML Request
@@ -409,14 +409,14 @@ saml_request_remove_id_refs(saml_request_t *request,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_request_set_artifacts(saml_request_t *request, 
-						   axutil_env_t *env, axutil_array_list_t *artifacts);
+						   const axutil_env_t *env, axutil_array_list_t *artifacts);
 /*
  * Returns the list of SAML Assertion Artifacts of the Request
  * @param request SAML Request
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axutil_array_list_t*  AXIS2_CALL 
-saml_request_get_artifacts(saml_request_t *request, axutil_env_t *env);
+saml_request_get_artifacts(saml_request_t *request, const axutil_env_t *env);
 
 /*
  * Add a SAML Assertion Artifact to the Request
@@ -425,7 +425,7 @@ saml_request_get_artifacts(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_add_artifact(saml_request_t *request, axutil_env_t *env,
+saml_request_add_artifact(saml_request_t *request, const axutil_env_t *env,
 						  saml_artifact_t *artifact);
 /* 
  * Remove a SAML Assertion Artifact at the specified index
@@ -434,7 +434,7 @@ saml_request_add_artifact(saml_request_t *request, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_request_remove_artifact(saml_request_t *request, axutil_env_t *env,
+saml_request_remove_artifact(saml_request_t *request, const axutil_env_t *env,
 							 int index);
 /*
  * Check the validity of the recieved Request
@@ -442,20 +442,20 @@ saml_request_remove_artifact(saml_request_t *request, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL 
-saml_request_check_validity(saml_request_t *request, axutil_env_t *env);
+saml_request_check_validity(saml_request_t *request, const axutil_env_t *env);
 
 /* 
  *  Creates a saml Response.
  *  @param env pointer to environment struct
  */
-AXIS2_EXTERN saml_response_t* saml_response_create(axutil_env_t *env);
+AXIS2_EXTERN saml_response_t* saml_response_create(const axutil_env_t *env);
 
 /* 
  * Free a saml Response
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void saml_response_free(saml_response_t *response, 
-									 axutil_env_t *env);
+									 const axutil_env_t *env);
 /* 
 * Build the saml response from a axiom node.
 * @param request response to be populated
@@ -463,7 +463,7 @@ AXIS2_EXTERN void saml_response_free(saml_response_t *response,
 */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_build(saml_response_t *response, axiom_node_t *node, 
-					axutil_env_t *env);
+					const axutil_env_t *env);
 /* 
 * Serialize a saml response to a om node.
 * @param request response to be serialized
@@ -472,14 +472,14 @@ saml_response_build(saml_response_t *response, axiom_node_t *node,
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
 saml_response_to_om(saml_response_t *response, axiom_node_t *parent, 
-					axutil_env_t *env);
+					const axutil_env_t *env);
 /*
 * Returns the unique ID of the response. 
 * @param request SAML response object
 * @param env pointer to environment struct
 */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
-saml_response_get_id(saml_response_t *response, axutil_env_t *env);
+saml_response_get_id(saml_response_t *response, const axutil_env_t *env);
 
 /* 
  * Set the information required to sign the message.
@@ -489,10 +489,10 @@ saml_response_get_id(saml_response_t *response, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_set_signature(saml_response_t *response, 
-							axutil_env_t *env, oxs_sign_ctx_t *sig_ctx);
+							const axutil_env_t *env, oxs_sign_ctx_t *sig_ctx);
 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_response_unset_signature(saml_response_t *response, axutil_env_t *env);
+saml_response_unset_signature(saml_response_t *response, const axutil_env_t *env);
 
 /* 
  * Sign the response using the information set in the 
@@ -503,7 +503,7 @@ saml_response_unset_signature(saml_response_t *response, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_sign(saml_response_t *response, axiom_node_t *node, 
-				   axutil_env_t *env);
+				   const axutil_env_t *env);
 
 /* 
  * Set the default information required to sign the message. 
@@ -515,7 +515,7 @@ saml_response_sign(saml_response_t *response, axiom_node_t *node,
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_response_set_default_signature(saml_response_t *response, 
-									axutil_env_t *env, oxs_sign_ctx_t *sig_ctx);
+									const axutil_env_t *env, oxs_sign_ctx_t *sig_ctx);
 
 /* 
  * Set the minor version of the response
@@ -525,7 +525,7 @@ saml_response_set_default_signature(saml_response_t *response,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_set_minor_version(saml_response_t *response, 
-								axutil_env_t *env, int version);
+								const axutil_env_t *env, int version);
 /* 
  * Set the major version of the response
  * @param response SAML response object
@@ -534,7 +534,7 @@ saml_response_set_minor_version(saml_response_t *response,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_set_major_version(saml_response_t *response, 
-								axutil_env_t *env, int version);
+								const axutil_env_t *env, int version);
 /* 
  * Set the issue instant of the response
  * @param response SAML response object
@@ -543,14 +543,14 @@ saml_response_set_major_version(saml_response_t *response,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_set_issue_instant(saml_response_t *response, 
-								axutil_env_t *env, axutil_date_time_t *date_time);
+								const axutil_env_t *env, axutil_date_time_t *date_time);
 /*
  * Returns the time instant of the response
  * @param response SAML response object
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN  axutil_date_time_t* AXIS2_CALL 
-saml_response_get_issue_instant(saml_response_t *response, axutil_env_t *ev);
+saml_response_get_issue_instant(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Set the SAML recepient of the response
@@ -559,7 +559,7 @@ saml_response_get_issue_instant(saml_response_t *response, axutil_env_t *ev);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_response_set_recepient(saml_response_t *response, axutil_env_t *env,
+saml_response_set_recepient(saml_response_t *response, const axutil_env_t *env,
 							axis2_char_t *recepient);
 /*
  * Returns the SAML response recepient.
@@ -567,7 +567,7 @@ saml_response_set_recepient(saml_response_t *response, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
-saml_response_get_recepient(saml_response_t *response, axutil_env_t *env);
+saml_response_get_recepient(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Set the status of the SAML response.
@@ -576,7 +576,7 @@ saml_response_get_recepient(saml_response_t *response, axutil_env_t *env);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_response_set_status(saml_response_t *response, axutil_env_t *env,
+saml_response_set_status(saml_response_t *response, const axutil_env_t *env,
 						 saml_status_t *status);
 /*
  * Returns the status of the recieved SAML response
@@ -584,7 +584,7 @@ saml_response_set_status(saml_response_t *response, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN saml_status_t* AXIS2_CALL 
-saml_response_get_status(saml_response_t *response, axutil_env_t *env);
+saml_response_get_status(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Set the set of SAML Assertion of the SAML response
@@ -594,7 +594,7 @@ saml_response_get_status(saml_response_t *response, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_set_assertions(saml_response_t *response, 
-							 axutil_env_t *env, axutil_array_list_t *assertions);
+							 const axutil_env_t *env, axutil_array_list_t *assertions);
 
 /*
  * Returns the set of SAML Assertions of response
@@ -602,7 +602,7 @@ saml_response_set_assertions(saml_response_t *response,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL 
-saml_response_get_assertions(saml_response_t *response, axutil_env_t *env);
+saml_response_get_assertions(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Add a SAML assertion to the response
@@ -611,7 +611,7 @@ saml_response_get_assertions(saml_response_t *response, axutil_env_t *env);
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_response_add_assertion(saml_response_t *response, axutil_env_t *env,
+saml_response_add_assertion(saml_response_t *response, const axutil_env_t *env,
 							saml_assertion_t *assertion);
 
 /* 
@@ -621,7 +621,7 @@ saml_response_add_assertion(saml_response_t *response, axutil_env_t *env,
  * @param env pointer to the environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_response_remove_assertion(saml_response_t *response, axutil_env_t *env, int index);
+saml_response_remove_assertion(saml_response_t *response, const axutil_env_t *env, int index);
 
 /*
  * Set the request reference of the SAML response
@@ -631,14 +631,14 @@ saml_response_remove_assertion(saml_response_t *response, axutil_env_t *env, int
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_response_set_in_reponses_to(saml_response_t *response, 
-								 axutil_env_t *env, axis2_char_t *request_response);
+								 const axutil_env_t *env, axis2_char_t *request_response);
 
 /* 
  *  Creates a saml query.
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_query_t* AXIS2_CALL 
-saml_query_create(axutil_env_t *env);
+saml_query_create(const axutil_env_t *env);
 
 /* 
  * Build the saml query from an axiom node.
@@ -647,7 +647,7 @@ saml_query_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_query_build(saml_query_t *query, axiom_node_t *node, axutil_env_t *env);
+saml_query_build(saml_query_t *query, axiom_node_t *node, const axutil_env_t *env);
 
 
 /* 
@@ -657,14 +657,14 @@ saml_query_build(saml_query_t *query, axiom_node_t *node, axutil_env_t *env);
 * @param env pointer to environment struct
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
-saml_query_to_om(saml_query_t *query, axiom_node_t *parent, axutil_env_t *env);
+saml_query_to_om(saml_query_t *query, axiom_node_t *parent, const axutil_env_t *env);
 
 /* 
  * Free a saml query
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_query_free(saml_query_t *query, axutil_env_t *env);
+saml_query_free(saml_query_t *query, const axutil_env_t *env);
 
 /* 
  *  Creates a saml subject query.
@@ -672,14 +672,14 @@ saml_query_free(saml_query_t *query, axutil_env_t *env);
  */
 
 AXIS2_EXTERN saml_subject_query_t* AXIS2_CALL 
-saml_subject_query_create(axutil_env_t *env);
+saml_subject_query_create(const axutil_env_t *env);
 
 /* 
  * Free a saml subject query
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_subject_query_free(saml_subject_query_t* subject_query, axutil_env_t *env);
+saml_subject_query_free(saml_subject_query_t* subject_query, const axutil_env_t *env);
 
 /* 
  * Build the saml subject query from an axiom node.
@@ -689,7 +689,7 @@ saml_subject_query_free(saml_subject_query_t* subject_query, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_query_build(saml_subject_query_t* subject_query, 
-						 axiom_node_t *node, axutil_env_t *env);
+						 axiom_node_t *node, const axutil_env_t *env);
 
 /* 
 * Serialize a saml subject query to a om node.
@@ -699,13 +699,13 @@ saml_subject_query_build(saml_subject_query_t* subject_query,
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
 saml_subject_query_to_om(saml_subject_query_t *subject_query, 
-						 axiom_node_t *parent, axutil_env_t *env);
+						 axiom_node_t *parent, const axutil_env_t *env);
 /* 
  *  Creates a saml authentication query.
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_authentication_query_t* AXIS2_CALL 
-saml_authentication_query_create(axutil_env_t *env);
+saml_authentication_query_create(const axutil_env_t *env);
 
 /* 
  * Free a saml authentication query
@@ -713,7 +713,7 @@ saml_authentication_query_create(axutil_env_t *env);
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_authentication_query_free(saml_authentication_query_t *authentication_query, 
-							   axutil_env_t *env);
+							   const axutil_env_t *env);
 /* 
  * Build the saml authentication query from an axiom node.
  * @param query SAML authentication query to be populated
@@ -722,7 +722,7 @@ saml_authentication_query_free(saml_authentication_query_t *authentication_query
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_authentication_query_build(saml_authentication_query_t* authentication_query, 
-								axiom_node_t *node, axutil_env_t *env);
+								axiom_node_t *node, const axutil_env_t *env);
 
 /* 
 * Serialize a saml authentication query to a om node.
@@ -732,7 +732,7 @@ saml_authentication_query_build(saml_authentication_query_t* authentication_quer
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
 saml_authentication_query_to_om(saml_authentication_query_t *authentication_query, 
-								axiom_node_t *parent, axutil_env_t *env);
+								axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Set authetication method of saml authentication query.
@@ -743,7 +743,7 @@ saml_authentication_query_to_om(saml_authentication_query_t *authentication_quer
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_query_set_authentication_method(
 	saml_authentication_query_t *authentication_query,
-	axutil_env_t *env, 
+	const axutil_env_t *env, 
 	axis2_char_t *authentication_mtd);
 
 /*
@@ -754,21 +754,21 @@ saml_auth_query_set_authentication_method(
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_query_get_authentication_method(
 	saml_authentication_query_t *authentication_query,
-	axutil_env_t *env);
+	const axutil_env_t *env);
 
 /* 
  *  Creates a saml attribute query.
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_attr_query_t* AXIS2_CALL 
-saml_attr_query_create(axutil_env_t *env);
+saml_attr_query_create(const axutil_env_t *env);
 
 /* 
  * Free a saml attribute query
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL
-saml_attr_query_free(saml_attr_query_t* attribute_query, axutil_env_t *env);
+saml_attr_query_free(saml_attr_query_t* attribute_query, const axutil_env_t *env);
 
 /* 
  * Build the saml attribute query from an axiom node.
@@ -778,7 +778,7 @@ saml_attr_query_free(saml_attr_query_t* attribute_query, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_query_build(saml_attr_query_t* attribute_query, 
-					  axiom_node_t *node, axutil_env_t *env);
+					  axiom_node_t *node, const axutil_env_t *env);
 
 /* 
 * Serialize a saml attribute to a om node.
@@ -788,7 +788,7 @@ saml_attr_query_build(saml_attr_query_t* attribute_query,
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
 saml_attr_query_to_om(saml_attr_query_t *attribute_query, 
-					  axiom_node_t *parent, axutil_env_t *env);
+					  axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Returns the saml subject of the saml query.
@@ -797,7 +797,7 @@ saml_attr_query_to_om(saml_attr_query_t *attribute_query,
  */
 AXIS2_EXTERN saml_subject_t* AXIS2_CALL 
 saml_query_get_subject(saml_query_t* query,
-						axutil_env_t *env);
+						const axutil_env_t *env);
 /*
  * Set the subject of a saml query.
  * @param query saml query
@@ -805,7 +805,7 @@ saml_query_get_subject(saml_query_t* query,
  * @param subject saml subject
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_query_set_subject(saml_query_t *query, axutil_env_t *env,
+saml_query_set_subject(saml_query_t *query, const axutil_env_t *env,
 					   saml_subject_t *subject);
 /*
  * Set the type of the saml query.
@@ -814,7 +814,7 @@ saml_query_set_subject(saml_query_t *query, axutil_env_t *env,
  * @param type type of the saml query
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_query_set_type(saml_query_t *query, axutil_env_t *env, axis2_char_t *type);
+saml_query_set_type(saml_query_t *query, const axutil_env_t *env, axis2_char_t *type);
 
 /*
  * Set the saml specific query object of saml query
@@ -826,7 +826,7 @@ saml_query_set_type(saml_query_t *query, axutil_env_t *env, axis2_char_t *type);
  * authentication query, athorization decision query
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_query_set_query(saml_query_t *query, axutil_env_t *env,
+saml_query_set_query(saml_query_t *query, const axutil_env_t *env,
 					 void *spec_query, 
 					 axis2_char_t *type);
 
@@ -838,7 +838,7 @@ saml_query_set_query(saml_query_t *query, axutil_env_t *env,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_query_set_resource(saml_attr_query_t *attr_query, 
-							 axutil_env_t *env, axis2_char_t *resource);
+							 const axutil_env_t *env, axis2_char_t *resource);
 
 /*
  * Returns the saml resource required of saml attribute query.
@@ -846,7 +846,7 @@ saml_attr_query_set_resource(saml_attr_query_t *attr_query,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
-saml_attr_query_get_resource(saml_attr_query_t *attr_query, axutil_env_t *env);
+saml_attr_query_get_resource(saml_attr_query_t *attr_query, const axutil_env_t *env);
 
 /*
  * Set a set of attribute designators of the saml attribute query.
@@ -855,7 +855,7 @@ saml_attr_query_get_resource(saml_attr_query_t *attr_query, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_query_set_designators(saml_attr_query_t *attr_query,  
-								axutil_env_t *env,
+								const axutil_env_t *env,
 								axutil_array_list_t *saml_designators);
 /*
  * Returns the set of attribute designators of saml attribute query.
@@ -863,7 +863,7 @@ saml_attr_query_set_designators(saml_attr_query_t *attr_query,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL 
-saml_attr_query_get_designators(saml_attr_query_t *attr_query, axutil_env_t *env);
+saml_attr_query_get_designators(saml_attr_query_t *attr_query, const axutil_env_t *env);
 
 /*
  * Add a saml attribute designator to the saml attribute query.
@@ -872,7 +872,7 @@ saml_attr_query_get_designators(saml_attr_query_t *attr_query, axutil_env_t *env
  * @param desig saml attribute designator object
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_query_add_designators(saml_attr_query_t *attr_query, axutil_env_t *env,
+saml_attr_query_add_designators(saml_attr_query_t *attr_query, const axutil_env_t *env,
 								saml_attr_desig_t *desig);
 /*
  * Remove saml attribute designator at the specified index.
@@ -881,7 +881,7 @@ saml_attr_query_add_designators(saml_attr_query_t *attr_query, axutil_env_t *env
  * @param index the specified index to remove
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_query_remove_designator(saml_attr_query_t *attr_query, axutil_env_t *env,
+saml_attr_query_remove_designator(saml_attr_query_t *attr_query, const axutil_env_t *env,
 								  int index);
 
 /* 
@@ -889,7 +889,7 @@ saml_attr_query_remove_designator(saml_attr_query_t *attr_query, axutil_env_t *e
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_autho_decision_query_t* AXIS2_CALL 
-saml_autho_decision_query_create(axutil_env_t *env);
+saml_autho_decision_query_create(const axutil_env_t *env);
 
 /* 
  * Free a saml authorizaion decision query
@@ -897,7 +897,7 @@ saml_autho_decision_query_create(axutil_env_t *env);
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_autho_decision_query_free(saml_autho_decision_query_t* autho_decision_query, 
-							   axutil_env_t *env);
+							   const axutil_env_t *env);
 
 /* 
  * Build the saml authorization decision query from an axiom node.
@@ -907,7 +907,7 @@ saml_autho_decision_query_free(saml_autho_decision_query_t* autho_decision_query
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_autho_decision_query_build(saml_autho_decision_query_t* autho_decision_query, 
-								axiom_node_t *node, axutil_env_t *env);
+								axiom_node_t *node, const axutil_env_t *env);
 
 /* 
 * Serialize a saml authorization decision query to a om node.
@@ -917,7 +917,7 @@ saml_autho_decision_query_build(saml_autho_decision_query_t* autho_decision_quer
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
 saml_autho_decision_query_to_om(saml_autho_decision_query_t *autho_decision_query, 
-								axiom_node_t *parent, axutil_env_t *env);
+								axiom_node_t *parent, const axutil_env_t *env);
 /*
  * Set the resource required of saml authorization decision query.
  * @param autho_dec_query saml authorization decision query
@@ -927,7 +927,7 @@ saml_autho_decision_query_to_om(saml_autho_decision_query_t *autho_decision_quer
 AXIS2_EXTERN int AXIS2_CALL 
 saml_autho_decision_query_set_resource(
 			saml_autho_decision_query_t *autho_dec_query,
-			axutil_env_t *env,
+			const axutil_env_t *env,
 			axis2_char_t *resource);
 /*
  * Returns the saml resource of saml authorization decision query.
@@ -936,7 +936,7 @@ saml_autho_decision_query_set_resource(
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
 saml_autho_decision_query_get_resource(saml_autho_decision_query_t *autho_dec_query,
-														 axutil_env_t *env);
+														 const axutil_env_t *env);
 /*
  * Set a set of action of saml authorization decision query.
  * @param autho_dec_query saml authorization decision query
@@ -946,7 +946,7 @@ saml_autho_decision_query_get_resource(saml_autho_decision_query_t *autho_dec_qu
 AXIS2_EXTERN int AXIS2_CALL 
 saml_autho_decision_query_set_actions(
 			saml_autho_decision_query_t *autho_dec_query,
-			axutil_env_t *env,
+			const axutil_env_t *env,
 			axutil_array_list_t *actions);
 /*
  * Returns the set of actions of saml authorization decision query.
@@ -956,7 +956,7 @@ saml_autho_decision_query_set_actions(
 AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL 
 saml_autho_decision_query_get_actions(
 			saml_autho_decision_query_t *autho_dec_query,
-			axutil_env_t *env);
+			const axutil_env_t *env);
 														
 /*
  * Add a saml action to saml authorization decision query.
@@ -967,7 +967,7 @@ saml_autho_decision_query_get_actions(
 AXIS2_EXTERN int AXIS2_CALL 
 saml_autho_decision_query_add_action(
 			saml_autho_decision_query_t *autho_dec_query,
-			axutil_env_t *env,
+			const axutil_env_t *env,
 			saml_action_t *action);
 /*
  * Remove a saml action at the the specified index.
@@ -977,7 +977,7 @@ saml_autho_decision_query_add_action(
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_autho_decision_remove_action(saml_autho_decision_query_t *autho_dec_query,
-								  axutil_env_t *env,
+								  const axutil_env_t *env,
 								  int index);
 /*
  * Set a saml evidence of the saml authorization decision query.
@@ -988,7 +988,7 @@ saml_autho_decision_remove_action(saml_autho_decision_query_t *autho_dec_query,
 AXIS2_EXTERN int AXIS2_CALL 
 saml_autho_decision_query_set_evidence(
 			saml_autho_decision_query_t *autho_dec_query,
-			axutil_env_t *env,
+			const axutil_env_t *env,
 			saml_evidence_t *evidence);
 /*
  * Returns the saml evidence of saml authorization decision query.
@@ -998,7 +998,7 @@ saml_autho_decision_query_set_evidence(
 AXIS2_EXTERN saml_evidence_t* AXIS2_CALL 
 saml_autho_decision_query_get_evidence(
 			saml_autho_decision_query_t *autho_dec_query,
-			axutil_env_t *env);
+			const axutil_env_t *env);
 	
 /* 
  * Build the saml status from an axiom node.
@@ -1007,7 +1007,7 @@ saml_autho_decision_query_get_evidence(
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_status_build(saml_status_t *status, axiom_node_t *node, axutil_env_t *env);
+saml_status_build(saml_status_t *status, axiom_node_t *node, const axutil_env_t *env);
 
 /* 
 * Serialize a saml status to a om node.
@@ -1017,21 +1017,21 @@ saml_status_build(saml_status_t *status, axiom_node_t *node, axutil_env_t *env);
 */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL saml_status_to_om(saml_status_t *status, 
 														axiom_node_t *parent, 
-														axutil_env_t *env);
+														const axutil_env_t *env);
 
 /* 
  *  Creates a saml status.
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_status_t* AXIS2_CALL 
-saml_status_create(axutil_env_t *env);
+saml_status_create(const axutil_env_t *env);
 
 /* 
  * Free a saml status
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void 
-saml_status_free(saml_status_t *status, axutil_env_t *env);
+saml_status_free(saml_status_t *status, const axutil_env_t *env);
 
 /*
  * Set the saml status value to be returned in saml status.
@@ -1041,7 +1041,7 @@ saml_status_free(saml_status_t *status, axutil_env_t *env);
 */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_status_set_status_value(saml_status_t *status, 
-							 axutil_env_t *env, axutil_qname_t *qname);
+							 const axutil_env_t *env, axutil_qname_t *qname);
 
 /*
  * Returns the saml status value of saml status.
@@ -1049,7 +1049,7 @@ saml_status_set_status_value(saml_status_t *status,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_qname_t* AXIS2_CALL 
-saml_status_get_status_value(saml_status_t *status, axutil_env_t *env);
+saml_status_get_status_value(saml_status_t *status, const axutil_env_t *env);
 
 /*
  * Set the status message of saml status
@@ -1058,7 +1058,7 @@ saml_status_get_status_value(saml_status_t *status, axutil_env_t *env);
  * @param msg status message to be set in saml status
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_status_set_status_msg(saml_status_t *status, axutil_env_t *env,
+saml_status_set_status_msg(saml_status_t *status, const axutil_env_t *env,
 						   axis2_char_t *msg);
 /*
  * Set the status code of saml status object.
@@ -1067,7 +1067,7 @@ saml_status_set_status_msg(saml_status_t *status, axutil_env_t *env,
  * @param code status code to be set in saml status
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_status_set_status_code(saml_status_t *status, axutil_env_t *env,
+saml_status_set_status_code(saml_status_t *status, const axutil_env_t *env,
 							axis2_char_t *code);
 /*
  * Returns the status message of saml status.
@@ -1075,7 +1075,7 @@ saml_status_set_status_code(saml_status_t *status, axutil_env_t *env,
  * @env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
-saml_status_get_status_msg(saml_status_t *status, axutil_env_t *env);
+saml_status_get_status_msg(saml_status_t *status, const axutil_env_t *env);
 /* 
  * Set the saml status detail of saml status.
  * @param status saml status struct
@@ -1084,28 +1084,28 @@ saml_status_get_status_msg(saml_status_t *status, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_status_set_status_detail(saml_status_t *status, axiom_node_t *det, 
-							  axutil_env_t *env);
+							  const axutil_env_t *env);
 /*
  * Returns the saml status detail node of saml status
  * @param status saml status struct
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL 
-saml_status_get_status_detail(saml_status_t *status, axutil_env_t *env);
+saml_status_get_status_detail(saml_status_t *status, const axutil_env_t *env);
 
 /* 
  *  Creates a saml artifact.
  *  @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_artifact_t* AXIS2_CALL 
-saml_artifact_create(axutil_env_t *env);
+saml_artifact_create(const axutil_env_t *env);
 
 /* 
  * Free a saml artifact
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_artifact_free(saml_artifact_t *artifact, axutil_env_t *env);
+saml_artifact_free(saml_artifact_t *artifact, const axutil_env_t *env);
 
 /*
  * Returns the data value of saml artifact.
@@ -1113,7 +1113,7 @@ saml_artifact_free(saml_artifact_t *artifact, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
-saml_artifact_get_data(saml_artifact_t *artifact, axutil_env_t *env);
+saml_artifact_get_data(saml_artifact_t *artifact, const axutil_env_t *env);
 
 /*
  * Set data value of saml artifact.
@@ -1122,7 +1122,7 @@ saml_artifact_get_data(saml_artifact_t *artifact, axutil_env_t *env);
  * @data data value to be set in smal artifact
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_artifact_set_data(saml_artifact_t *artifact, axutil_env_t *env, 
+saml_artifact_set_data(saml_artifact_t *artifact, const axutil_env_t *env, 
 					   axis2_char_t *data);
 /*
  * Verify a signed saml response.
@@ -1130,7 +1130,7 @@ saml_artifact_set_data(saml_artifact_t *artifact, axutil_env_t *env,
  * @param env pointer to environement struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_response_signature_verify(saml_response_t *response, axutil_env_t *env);
+saml_response_signature_verify(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Check whether the saml response has to sign.
@@ -1138,7 +1138,7 @@ saml_response_signature_verify(saml_response_t *response, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_response_is_sign_set(saml_response_t *response, axutil_env_t *env);
+saml_response_is_sign_set(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Check whether the recieved response is signed.
@@ -1146,7 +1146,7 @@ saml_response_is_sign_set(saml_response_t *response, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_response_is_signed(saml_response_t *response, axutil_env_t *env);
+saml_response_is_signed(saml_response_t *response, const axutil_env_t *env);
 
 /*
  * Verify a signed saml request.
@@ -1154,7 +1154,7 @@ saml_response_is_signed(saml_response_t *response, axutil_env_t *env);
  * @param env pointer to environement struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_request_signature_verify(saml_request_t *request, axutil_env_t *env);
+saml_request_signature_verify(saml_request_t *request, const axutil_env_t *env);
 
 /*
  * Check whether the saml request has to sign.
@@ -1162,7 +1162,7 @@ saml_request_signature_verify(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_request_is_sign_set(saml_request_t *request, axutil_env_t *env);
+saml_request_is_sign_set(saml_request_t *request, const axutil_env_t *env);
 
 /*
  * Check whether the recieved request is signed.
@@ -1170,7 +1170,7 @@ saml_request_is_sign_set(saml_request_t *request, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_request_is_signed(saml_request_t *request, axutil_env_t *env);
+saml_request_is_signed(saml_request_t *request, const axutil_env_t *env);
 
 #ifdef __cplusplus
 }

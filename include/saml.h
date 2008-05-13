@@ -389,14 +389,14 @@ struct saml_assertion_s
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_assertion_t *AXIS2_CALL 
-saml_assertion_create(axutil_env_t *env);
+saml_assertion_create(const axutil_env_t *env);
 
 /* 
  * Free a saml assertion
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_assertion_free(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_free(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Build the saml assertion from a axiom node.
@@ -405,7 +405,7 @@ saml_assertion_free(saml_assertion_t *assertion, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_build(saml_assertion_t *a, 
-					 axiom_node_t *node, axutil_env_t *env);
+					 axiom_node_t *node, const axutil_env_t *env);
 
 /* 
  * Serialize a saml assertion to a om node.
@@ -415,7 +415,7 @@ saml_assertion_build(saml_assertion_t *a,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_assertion_to_om(saml_assertion_t *assertion, 
-					 axiom_node_t *parent, axutil_env_t *env);
+					 axiom_node_t *parent, const axutil_env_t *env);
 
 /* 
  * Returns all the condition in the assertion.
@@ -423,7 +423,7 @@ saml_assertion_to_om(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_assetion_get_conditions(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assetion_get_conditions(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Returns all the statements in the assertion.
@@ -431,7 +431,7 @@ saml_assetion_get_conditions(saml_assertion_t *assertion, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_assertion_get_statements(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_get_statements(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Set the conditions for the assertion. If there are conditions already 
@@ -442,7 +442,7 @@ saml_assertion_get_statements(saml_assertion_t *assertion, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_conditions(saml_assertion_t *assertion, 
-							  axutil_env_t *env, axutil_array_list_t *list);
+							  const axutil_env_t *env, axutil_array_list_t *list);
 
 /* 
  * Add a condition to the assertin.
@@ -452,7 +452,7 @@ saml_assertion_set_conditions(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_add_condition(saml_assertion_t *assertion, 
-							 axutil_env_t *env, saml_condition_t *cond);
+							 const axutil_env_t *env, saml_condition_t *cond);
 
 /*
  * Remove a condition from the assertion.
@@ -461,7 +461,7 @@ saml_assertion_add_condition(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_remove_condition(saml_assertion_t *assertion, 
-								axutil_env_t *env, int index);
+								const axutil_env_t *env, int index);
 
 /* 
  * Set the statements for the assertion. If there are statements already 
@@ -472,7 +472,7 @@ saml_assertion_remove_condition(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_statements(saml_assertion_t *assertion, 
-							  axutil_env_t *env, axutil_array_list_t *list);
+							  const axutil_env_t *env, axutil_array_list_t *list);
 
 /* 
  * Add a statement to the assertin.
@@ -482,7 +482,7 @@ saml_assertion_set_statements(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_add_statement(saml_assertion_t *assertion, 
-							 axutil_env_t *env, saml_stmt_t *stmt);
+							 const axutil_env_t *env, saml_stmt_t *stmt);
 
 /*
  * Remove a statement from the assertion.
@@ -491,7 +491,7 @@ saml_assertion_add_statement(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_remove_statement(saml_assertion_t *assertion, 
-								axutil_env_t *env, int index);
+								const axutil_env_t *env, int index);
 
 /* 
  * Set the minor vertion of the assertion
@@ -501,7 +501,7 @@ saml_assertion_remove_statement(saml_assertion_t *assertion,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_minor_version(saml_assertion_t *assertion, 
-								 axutil_env_t *env, int version);
+								 const axutil_env_t *env, int version);
 
 /* 
  * Set the minor vertion of the assertion
@@ -510,7 +510,7 @@ saml_assertion_set_minor_version(saml_assertion_t *assertion,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_issuer(saml_assertion_t *assertion, 
-						  axutil_env_t *env, axis2_char_t *issuer);
+						  const axutil_env_t *env, axis2_char_t *issuer);
 
 /* 
  * Set the issuer of the assertion
@@ -520,7 +520,7 @@ saml_assertion_set_issuer(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_issue_instant(saml_assertion_t *assertion, 
-								 axutil_env_t *env, axutil_date_time_t *instant);
+								 const axutil_env_t *env, axutil_date_time_t *instant);
 
 /* 
  * Specifies the time instant at which the validity interval begins.
@@ -530,7 +530,7 @@ saml_assertion_set_issue_instant(saml_assertion_t *assertion,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_not_before(saml_assertion_t *assertion, 
-							  axutil_env_t *env, axutil_date_time_t *time);
+							  const axutil_env_t *env, axutil_date_time_t *time);
 
 /* 
  * Specifies the time instant at which the validity interval has ended
@@ -540,7 +540,7 @@ saml_assertion_set_not_before(saml_assertion_t *assertion,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_not_on_or_after(saml_assertion_t *assertion, 
-								   axutil_env_t *env, axutil_date_time_t *time);
+								   const axutil_env_t *env, axutil_date_time_t *time);
 
 /* 
  * Return SAML authority that created the assertion. The name of the issuer 
@@ -549,7 +549,7 @@ saml_assertion_set_not_on_or_after(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_assertion_get_issuer(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_get_issuer(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /*
  * Return the time instant of issue.
@@ -557,7 +557,7 @@ saml_assertion_get_issuer(saml_assertion_t *assertion, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_issue_instant(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_get_issue_instant(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Get the time instant at which the validity interval begins.
@@ -565,7 +565,7 @@ saml_assertion_get_issue_instant(saml_assertion_t *assertion, axutil_env_t *env)
  * @param env pointer to environment struct
  */ 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_not_before(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_get_not_before(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Get the time instant at which the validity interval has ended
@@ -573,7 +573,7 @@ saml_assertion_get_not_before(saml_assertion_t *assertion, axutil_env_t *env);
  * @param env pointer to environment struct
  */ 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_not_on_or_after(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_get_not_on_or_after(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* sign methods */
 
@@ -585,7 +585,7 @@ saml_assertion_get_not_on_or_after(saml_assertion_t *assertion, axutil_env_t *en
  * @return AXIS2_TRUE if signed.
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_is_signed(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_is_signed(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /*
  * Get weather a assertion is set to be signed. This applies when building 
@@ -595,7 +595,7 @@ saml_assertion_is_signed(saml_assertion_t *assertion, axutil_env_t *env);
  * @return AXIS2_TRUE if the object model is set to be signed.
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_is_sign_set(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_is_sign_set(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /*
  * Verify the assertion according to the sign context set in the 
@@ -604,7 +604,7 @@ saml_assertion_is_sign_set(saml_assertion_t *assertion, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_signature_verify(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_signature_verify(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Sign the assertion using the information set in the 
@@ -614,7 +614,7 @@ saml_assertion_signature_verify(saml_assertion_t *assertion, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL
 saml_assertion_sign(saml_assertion_t *assertion, 
-					axiom_node_t *node, axutil_env_t *env);
+					axiom_node_t *node, const axutil_env_t *env);
 
 /* 
  * Remove the information set for signing or verifying the assertion.
@@ -622,7 +622,7 @@ saml_assertion_sign(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_unsign(saml_assertion_t *assertion, axutil_env_t *env);
+saml_assertion_unsign(saml_assertion_t *assertion, const axutil_env_t *env);
 
 /* 
  * Set the information required to sign the message. 
@@ -632,7 +632,7 @@ saml_assertion_unsign(saml_assertion_t *assertion, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_default_signature(saml_assertion_t *assertion, 
-					axutil_env_t *env, oxs_sign_ctx_t *sign_ctx);
+					const axutil_env_t *env, oxs_sign_ctx_t *sign_ctx);
 
 /* 
  * Set the information required to sign the message.
@@ -642,7 +642,7 @@ saml_assertion_set_default_signature(saml_assertion_t *assertion,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_assertion_set_signature(saml_assertion_t *assertion, 
-					axutil_env_t *env, oxs_sign_ctx_t *sign_ctx);
+					const axutil_env_t *env, oxs_sign_ctx_t *sign_ctx);
 
 
 /* statement */
@@ -654,7 +654,7 @@ saml_assertion_set_signature(saml_assertion_t *assertion,
  * @return saml_stmt object to hold other staments
  */
 AXIS2_EXTERN saml_stmt_t * AXIS2_CALL 
-saml_stmt_create(axutil_env_t *env);
+saml_stmt_create(const axutil_env_t *env);
 
 /* 
  * Free a saml statment. 
@@ -662,7 +662,7 @@ saml_stmt_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_stmt_free(saml_stmt_t *stmt, axutil_env_t *env);
+saml_stmt_free(saml_stmt_t *stmt, const axutil_env_t *env);
 
 /* 
  * Build a saml statement from a XML node. The statement types that are 
@@ -672,7 +672,7 @@ saml_stmt_free(saml_stmt_t *stmt, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, axutil_env_t *env);
+saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize a statement to a axiom node.
@@ -681,7 +681,7 @@ saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_stmt_to_om(saml_stmt_t *stmt, axiom_node_t *parent, axutil_env_t *env);
+saml_stmt_to_om(saml_stmt_t *stmt, axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Get the type of the statement. 
@@ -690,7 +690,7 @@ saml_stmt_to_om(saml_stmt_t *stmt, axiom_node_t *parent, axutil_env_t *env);
  * @return statment type as saml_stmt_type_t
  */
 AXIS2_EXTERN saml_stmt_type_t AXIS2_CALL 
-saml_stmt_get_type(saml_stmt_t *stmt, axutil_env_t *env);
+saml_stmt_get_type(saml_stmt_t *stmt, const axutil_env_t *env);
 
 /*
  * Return the specific stament in this statement. 
@@ -698,7 +698,7 @@ saml_stmt_get_type(saml_stmt_t *stmt, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_stmt_t * AXIS2_CALL 
-saml_stmt_get_stmt(saml_stmt_t *stmt, axutil_env_t *env);
+saml_stmt_get_stmt(saml_stmt_t *stmt, const axutil_env_t *env);
 
 /* 
  * Set the type of statement.
@@ -707,7 +707,7 @@ saml_stmt_get_stmt(saml_stmt_t *stmt, axutil_env_t *env);
  * @param type type of the statement as saml_stmt_type_t 
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_set_type(saml_stmt_t *stmt, axutil_env_t *env, saml_stmt_type_t type);
+saml_stmt_set_type(saml_stmt_t *stmt, const axutil_env_t *env, saml_stmt_type_t type);
 
 /*
  * Set the statement. If a statment is already specified it will be freed.
@@ -717,13 +717,13 @@ saml_stmt_set_type(saml_stmt_t *stmt, axutil_env_t *env, saml_stmt_type_t type);
  * @param type type of the statement as saml_stmt_type_t 
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_set_stmt(saml_stmt_t *stmt, axutil_env_t *env, 
+saml_stmt_set_stmt(saml_stmt_t *stmt, const axutil_env_t *env, 
 				   void *st, saml_stmt_type_t type);
 
 
-/*AXIS2_EXTERN int AXIS2_CALL saml_id_init(saml_id_t *id, axutil_env_t *env);*/
-AXIS2_EXTERN axis2_char_t * AXIS2_CALL saml_id_generate_random_bytes(axutil_env_t *env);
-/*AXIS2_EXTERN void AXIS2_CALL saml_id_uninit(saml_id_t *id, axutil_env_t *env);*/
+/*AXIS2_EXTERN int AXIS2_CALL saml_id_init(saml_id_t *id, const axutil_env_t *env);*/
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL saml_id_generate_random_bytes(const axutil_env_t *env);
+/*AXIS2_EXTERN void AXIS2_CALL saml_id_uninit(saml_id_t *id, const axutil_env_t *env);*/
 
 
 /* AuthorityBinding */
@@ -733,7 +733,7 @@ AXIS2_EXTERN axis2_char_t * AXIS2_CALL saml_id_generate_random_bytes(axutil_env_
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_auth_binding_t * AXIS2_CALL 
-saml_auth_binding_create(axutil_env_t *env);
+saml_auth_binding_create(const axutil_env_t *env);
 
 /*
  * Free a SAML Autherity binding.
@@ -741,7 +741,7 @@ saml_auth_binding_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_auth_binding_free(saml_auth_binding_t *auth_bind, axutil_env_t *env);
+saml_auth_binding_free(saml_auth_binding_t *auth_bind, const axutil_env_t *env);
 
 /*
  * Create a SAML autherity binding from a XML node.
@@ -751,7 +751,7 @@ saml_auth_binding_free(saml_auth_binding_t *auth_bind, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_binding_build(saml_auth_binding_t *auth_bind, 
-						axiom_node_t *node, axutil_env_t *env);
+						axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize an auth binding to axiom node
@@ -761,7 +761,7 @@ saml_auth_binding_build(saml_auth_binding_t *auth_bind,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_auth_binding_to_om(saml_auth_binding_t *auth_binding, 
-						axiom_node_t *parent, axutil_env_t *env);
+						axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Return the type of SAML protocol queries to which the authority described 
@@ -771,7 +771,7 @@ saml_auth_binding_to_om(saml_auth_binding_t *auth_binding,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_binding_get_authoity_kind(saml_auth_binding_t *auth_bind, 
-									axutil_env_t *env);
+									const axutil_env_t *env);
 
 /*
  * Return the URI identifying the SAML protocol binding to use in 
@@ -781,7 +781,7 @@ saml_auth_binding_get_authoity_kind(saml_auth_binding_t *auth_bind,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_binding_get_binding(saml_auth_binding_t *auth_binding, 
-							  axutil_env_t *env);
+							  const axutil_env_t *env);
 
 /*
  * Return a URI describing how to locate and communicate with the authority
@@ -790,7 +790,7 @@ saml_auth_binding_get_binding(saml_auth_binding_t *auth_binding,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_binding_get_location(saml_auth_binding_t *auth_bind, 
-							   axutil_env_t *env);
+							   const axutil_env_t *env);
 
 /*
  * Set the type of SAML protocol queries to which the authority described 
@@ -801,7 +801,7 @@ saml_auth_binding_get_location(saml_auth_binding_t *auth_bind,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_binding_set_authority_kind(saml_auth_binding_t *auth_bind, 
-									 axutil_env_t *env, axis2_char_t *auth_kind);
+									 const axutil_env_t *env, axis2_char_t *auth_kind);
 
 /*
  * Set the URI identifying the SAML protocol binding to use in 
@@ -812,7 +812,7 @@ saml_auth_binding_set_authority_kind(saml_auth_binding_t *auth_bind,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_binding_set_binding(saml_auth_binding_t *auth_bind, 
-							  axutil_env_t *env, axis2_char_t *binding);
+							  const axutil_env_t *env, axis2_char_t *binding);
 
 /*
  * Set a URI describing how to locate and communicate with the authority
@@ -822,7 +822,7 @@ saml_auth_binding_set_binding(saml_auth_binding_t *auth_bind,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_binding_set_location(saml_auth_binding_t *auth_bind, 
-							   axutil_env_t *env, axis2_char_t *location);
+							   const axutil_env_t *env, axis2_char_t *location);
 
 
 /* subject locality */
@@ -832,7 +832,7 @@ saml_auth_binding_set_location(saml_auth_binding_t *auth_bind,
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN saml_subject_locality_t * AXIS2_CALL 
-saml_subject_locality_create(axutil_env_t *env);
+saml_subject_locality_create(const axutil_env_t *env);
 
 /*
  * Free a SAML subject locality.
@@ -841,7 +841,7 @@ saml_subject_locality_create(axutil_env_t *env);
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_subject_locality_free(saml_subject_locality_t *sub_locality, 
-						   axutil_env_t *env);
+						   const axutil_env_t *env);
 
 /*
  * Populate a SAML subject locality from a XML node containing a SAML 
@@ -852,7 +852,7 @@ saml_subject_locality_free(saml_subject_locality_t *sub_locality,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_locality_build(saml_subject_locality_t *sub_locality, 
-							axiom_node_t *node, axutil_env_t *env);
+							axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize a subject locality to an axiom node.
@@ -862,7 +862,7 @@ saml_subject_locality_build(saml_subject_locality_t *sub_locality,
  */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL 
 saml_subject_locality_to_om(saml_subject_locality_t *sub_locality, 
-							axiom_node_t *parent, axutil_env_t *env);
+							axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Return the IP address of the system entity that was authenticated.
@@ -872,7 +872,7 @@ saml_subject_locality_to_om(saml_subject_locality_t *sub_locality,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_subject_locality_get_ip(saml_subject_locality_t *sub_locality, 
-							 axutil_env_t *env);
+							 const axutil_env_t *env);
 
 /*
  * Return the DNS address of the system entity that was authenticated.
@@ -882,7 +882,7 @@ saml_subject_locality_get_ip(saml_subject_locality_t *sub_locality,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_subject_locality_get_dns(saml_subject_locality_t *sub_locality, 
-							  axutil_env_t *env);
+							  const axutil_env_t *env);
 
 /*
  * Set the IP address of the system entity that was authenticated.
@@ -892,7 +892,7 @@ saml_subject_locality_get_dns(saml_subject_locality_t *sub_locality,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_locality_set_ip(saml_subject_locality_t *sub_locality, 
-							 axutil_env_t *env, axis2_char_t *ip);
+							 const axutil_env_t *env, axis2_char_t *ip);
 
 /*
  * Set the DNS address of the system entity that was authenticated.
@@ -902,7 +902,7 @@ saml_subject_locality_set_ip(saml_subject_locality_t *sub_locality,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_locality_set_dns(saml_subject_locality_t *sub_locality, 
-							  axutil_env_t *env, axis2_char_t *dns);
+							  const axutil_env_t *env, axis2_char_t *dns);
 
 
 /* subject */
@@ -912,7 +912,7 @@ saml_subject_locality_set_dns(saml_subject_locality_t *sub_locality,
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
-saml_subject_create(axutil_env_t *env);
+saml_subject_create(const axutil_env_t *env);
 
 /*
  * Free a SAML subject
@@ -920,7 +920,7 @@ saml_subject_create(axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_subject_free(saml_subject_t *subject, axutil_env_t *env);
+saml_subject_free(saml_subject_t *subject, const axutil_env_t *env);
 
 /*
  * Populates a SAML subject from a XML node containing a SAML subject.
@@ -930,7 +930,7 @@ saml_subject_free(saml_subject_t *subject, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_build(saml_subject_t *subject, 
-				   axiom_node_t *node, axutil_env_t *env);
+				   axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize a SAML subject to a axiom node.
@@ -940,7 +940,7 @@ saml_subject_build(saml_subject_t *subject,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_subject_to_om(saml_subject_t *subject, 
-				   axiom_node_t *parent, axutil_env_t *env);
+				   axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Return the named id of the subject.
@@ -949,7 +949,7 @@ saml_subject_to_om(saml_subject_t *subject,
  * @return named id object
  */
 AXIS2_EXTERN saml_named_id_t * AXIS2_CALL 
-saml_subject_get_named_id(saml_subject_t *subject, axutil_env_t *env);
+saml_subject_get_named_id(saml_subject_t *subject, const axutil_env_t *env);
 
 /*
  * Return the list of confirmation methods. Array list contains string values.
@@ -959,7 +959,7 @@ saml_subject_get_named_id(saml_subject_t *subject, axutil_env_t *env);
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_subject_get_confirmation_methods(saml_subject_t *subject, 
-									  axutil_env_t *env);
+									  const axutil_env_t *env);
 
 /*
  * Return the list of confirmation data. Array list contains string values.
@@ -968,7 +968,7 @@ saml_subject_get_confirmation_methods(saml_subject_t *subject,
  * @return list containing the subject confirmation data
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_subject_get_confirmation_data(saml_subject_t *subject, axutil_env_t *env);
+saml_subject_get_confirmation_data(saml_subject_t *subject, const axutil_env_t *env);
 
 /*
  * Return an axiom node containing the key info of this subject. The axiom node 
@@ -977,7 +977,7 @@ saml_subject_get_confirmation_data(saml_subject_t *subject, axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_subject_get_key_info(saml_subject_t *subject, axutil_env_t *env);
+saml_subject_get_key_info(saml_subject_t *subject, const axutil_env_t *env);
 
 /*
  * Set the named id of the subject.
@@ -987,7 +987,7 @@ saml_subject_get_key_info(saml_subject_t *subject, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_set_named_id(saml_subject_t *subject, 
-						  axutil_env_t *env, saml_named_id_t *named_id);
+						  const axutil_env_t *env, saml_named_id_t *named_id);
 
 /*
  * Set the confirmation as a array list. The array list should contain 
@@ -999,7 +999,7 @@ saml_subject_set_named_id(saml_subject_t *subject,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_set_confirmation_methods(saml_subject_t *subject, 
-									  axutil_env_t *env, 
+									  const axutil_env_t *env, 
 									  axutil_array_list_t *list);
 /* 
  * Add a subject confirmation to this subject.
@@ -1009,7 +1009,7 @@ saml_subject_set_confirmation_methods(saml_subject_t *subject,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_add_confirmation(saml_subject_t *subject, 
-							  axutil_env_t *env, 
+							  const axutil_env_t *env, 
 							  axis2_char_t *sub_confirmation);
 
 /* 
@@ -1020,7 +1020,7 @@ saml_subject_add_confirmation(saml_subject_t *subject,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_remove_subject_confiirmation(saml_subject_t *subject, 
-										  axutil_env_t *env, int index);
+										  const axutil_env_t *env, int index);
 
 /* 
  * Set an XML Signature keyinfo element that provides access to a cryptographic 
@@ -1031,7 +1031,7 @@ saml_subject_remove_subject_confiirmation(saml_subject_t *subject,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_set_key_info(saml_subject_t *subject, 
-						  axutil_env_t *env, axiom_node_t *node);
+						  const axutil_env_t *env, axiom_node_t *node);
 
 /* subject statement */
 
@@ -1043,7 +1043,7 @@ saml_subject_set_key_info(saml_subject_t *subject,
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_stmt_build(saml_subject_stmt_t *subject_stmt, 
-						axiom_node_t *node, axutil_env_t *env);
+						axiom_node_t *node, const axutil_env_t *env);
 
 /* 
  * Free a subject statement object
@@ -1052,7 +1052,7 @@ saml_subject_stmt_build(saml_subject_stmt_t *subject_stmt,
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_subject_stmt_free(saml_subject_stmt_t *subject_stmt, 
-					   axutil_env_t *env);
+					   const axutil_env_t *env);
 
 /* 
  * Create a subject statment object
@@ -1060,7 +1060,7 @@ saml_subject_stmt_free(saml_subject_stmt_t *subject_stmt,
  * @return a subject statement object
  */
 AXIS2_EXTERN saml_subject_stmt_t * AXIS2_CALL 
-saml_subject_stmt_create(axutil_env_t *env);
+saml_subject_stmt_create(const axutil_env_t *env);
 
 /*
  * Serialize a subject statment to an axiom node
@@ -1070,7 +1070,7 @@ saml_subject_stmt_create(axutil_env_t *env);
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_subject_stmt_to_om(saml_subject_stmt_t *subject_stmt, 
-						axiom_node_t *parent, axutil_env_t *env);
+						axiom_node_t *parent, const axutil_env_t *env);
 
 /* 
  * Set the subject of the subject statement
@@ -1080,7 +1080,7 @@ saml_subject_stmt_to_om(saml_subject_stmt_t *subject_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_subject_stmt_set_subject(saml_subject_stmt_t *subject_stmt, 
-							  axutil_env_t *env, saml_subject_t *subject);
+							  const axutil_env_t *env, saml_subject_t *subject);
 
 /*
  * Set the subject of the subject statement
@@ -1090,7 +1090,7 @@ saml_subject_stmt_set_subject(saml_subject_stmt_t *subject_stmt,
  */
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
 saml_subject_stmt_get_subject(saml_subject_stmt_t *subject_stmt, 
-							  axutil_env_t *env);
+							  const axutil_env_t *env);
 
 /* auth desicin statement */
 /*
@@ -1099,7 +1099,7 @@ saml_subject_stmt_get_subject(saml_subject_stmt_t *subject_stmt,
  * @return an autherization decision statement object
  */
 AXIS2_EXTERN saml_auth_desicion_stmt_t * AXIS2_CALL 
-saml_auth_desicion_stmt_create(axutil_env_t *env);
+saml_auth_desicion_stmt_create(const axutil_env_t *env);
 
 /*
  * Free an autherization decision statement object.
@@ -1108,7 +1108,7 @@ saml_auth_desicion_stmt_create(axutil_env_t *env);
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_auth_desicion_stmt_free(saml_auth_desicion_stmt_t *auth_des_stmt, 
-							 axutil_env_t *env);
+							 const axutil_env_t *env);
 
 /*
  * Populates an saml_auth_desicion_stmt_t object from a XML node containing
@@ -1119,7 +1119,7 @@ saml_auth_desicion_stmt_free(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_build(saml_auth_desicion_stmt_t *auth_des_stmt, 
-							  axiom_node_t *node, axutil_env_t *env);
+							  axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize an saml_auth_desicion_stmt_t object to a axiom node.
@@ -1129,7 +1129,7 @@ saml_auth_desicion_stmt_build(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_auth_desicion_stmt_to_om(saml_auth_desicion_stmt_t *auth_des_stmt, 
-							  axiom_node_t *parent, axutil_env_t *env);
+							  axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Get the subject which is in this autheization decision statement.
@@ -1138,7 +1138,7 @@ saml_auth_desicion_stmt_to_om(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_subject(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t *env);
+									const axutil_env_t *env);
 /*
  * Return a URI reference identifying the resource to which access 
  * authorization is sought.
@@ -1147,7 +1147,7 @@ saml_auth_desicion_stmt_get_subject(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_resource(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env);
+									 const axutil_env_t *env);
 
 /*
  * Return the decision rendered by the SAML authority with respect to 
@@ -1157,7 +1157,7 @@ saml_auth_desicion_stmt_get_resource(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_desicion(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env);
+									 const axutil_env_t *env);
 
 /* 
  * Return the list of actions authorized to be performed on the specified 
@@ -1167,7 +1167,7 @@ saml_auth_desicion_stmt_get_desicion(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_actions(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t *env);
+									const axutil_env_t *env);
 
 /*
  * Return the list of assertions that the SAML authority relied on in making 
@@ -1177,7 +1177,7 @@ saml_auth_desicion_stmt_get_actions(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN saml_evidence_t * AXIS2_CALL 
 saml_auth_desicion_stmt_get_evidence(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env);
+									 const axutil_env_t *env);
 
 /*
  * Set a URI reference identifying the resource to which access 
@@ -1188,7 +1188,7 @@ saml_auth_desicion_stmt_get_evidence(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_resource(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env, axis2_char_t *resource);
+									 const axutil_env_t *env, axis2_char_t *resource);
 
 /*
  * Set the decision rendered by the SAML authority with respect to 
@@ -1200,7 +1200,7 @@ saml_auth_desicion_stmt_set_resource(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_desicion(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									 axutil_env_t *env, axis2_char_t *desicion);
+									 const axutil_env_t *env, axis2_char_t *desicion);
 
 /* 
  * Set the list of actions authorized to be performed on the specified 
@@ -1211,7 +1211,7 @@ saml_auth_desicion_stmt_set_desicion(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_actions(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t * env, axutil_array_list_t *list);
+									const axutil_env_t *env, axutil_array_list_t *list);
 
 /*
  * Remove an action in the specified index.
@@ -1220,7 +1220,7 @@ saml_auth_desicion_stmt_set_actions(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_remove_action(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									  axutil_env_t * env, int index);
+									  const axutil_env_t *env, int index);
 
 /*
  * Add an action.
@@ -1230,7 +1230,7 @@ saml_auth_desicion_stmt_remove_action(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_add_action(saml_auth_desicion_stmt_t *auth_des_stmt, 
-								   axutil_env_t * env, saml_action_t *action);
+								   const axutil_env_t *env, saml_action_t *action);
 
 /*
  * Set the subject of the autherization decision object
@@ -1240,7 +1240,7 @@ saml_auth_desicion_stmt_add_action(saml_auth_desicion_stmt_t *auth_des_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_desicion_stmt_set_subject(saml_auth_desicion_stmt_t *auth_des_stmt, 
-									axutil_env_t * env, saml_subject_t *subject);
+									const axutil_env_t *env, saml_subject_t *subject);
 
 /* auth statement */
 
@@ -1250,7 +1250,7 @@ saml_auth_desicion_stmt_set_subject(saml_auth_desicion_stmt_t *auth_des_stmt,
  * @return autherization statement object
  */ 
 AXIS2_EXTERN saml_auth_stmt_t * AXIS2_CALL 
-saml_auth_stmt_create(axutil_env_t *env);
+saml_auth_stmt_create(const axutil_env_t *env);
 
 /*
  * Free a autherization statement.
@@ -1258,7 +1258,7 @@ saml_auth_stmt_create(axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_auth_stmt_free(saml_auth_stmt_t *auth_stmt, axutil_env_t *env);
+saml_auth_stmt_free(saml_auth_stmt_t *auth_stmt, const axutil_env_t *env);
 
 /*
  * Populates an auth_stmt from a om node containing a autherization statement
@@ -1268,7 +1268,7 @@ saml_auth_stmt_free(saml_auth_stmt_t *auth_stmt, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_build(saml_auth_stmt_t *auth_stmt, 
-					 axiom_node_t *node, axutil_env_t *env);
+					 axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize an autherization statement to an om node
@@ -1278,7 +1278,7 @@ saml_auth_stmt_build(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL 
 saml_auth_stmt_to_om(saml_auth_stmt_t *auth_stmt, 
-					 axiom_node_t *parent, axutil_env_t *env);
+					 axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Return a URI reference that specifies the type of authentication that 
@@ -1289,7 +1289,7 @@ saml_auth_stmt_to_om(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_stmt_get_auth_method(saml_auth_stmt_t *auth_stmt, 
-							   axutil_env_t *env);
+							   const axutil_env_t *env);
 
 /*
  * Return the time at which the authentication took place.
@@ -1299,7 +1299,7 @@ saml_auth_stmt_get_auth_method(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
 saml_auth_stmt_get_auth_instant(saml_auth_stmt_t *auth_stmt, 
-								axutil_env_t *env);
+								const axutil_env_t *env);
 
 /*
  * Return a list of additional information about the subject of 
@@ -1310,7 +1310,7 @@ saml_auth_stmt_get_auth_instant(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_auth_stmt_get_auth_bindings(saml_auth_stmt_t *auth_stmt, 
-								 axutil_env_t *env);
+								 const axutil_env_t *env);
 
 /*
  * Return the IP address of the system entity that was authenticated.
@@ -1320,7 +1320,7 @@ saml_auth_stmt_get_auth_bindings(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_stmt_get_subject_ip(saml_auth_stmt_t *auth_stmt, 
-							  axutil_env_t *env);
+							  const axutil_env_t *env);
 /*
  * Return the DNS address of the system entity that was authenticated.
  * @param auth_stmt autherization statment object
@@ -1329,7 +1329,7 @@ saml_auth_stmt_get_subject_ip(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
 saml_auth_stmt_get_subject_dns(saml_auth_stmt_t *auth_stmt, 
-							   axutil_env_t *env);
+							   const axutil_env_t *env);
 
 /* 
  * Set the subject of the autherization statement
@@ -1339,7 +1339,7 @@ saml_auth_stmt_get_subject_dns(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_set_subject(saml_auth_stmt_t *auth_stmt, 
-						   axutil_env_t *env, saml_subject_t *subject);
+						   const axutil_env_t *env, saml_subject_t *subject);
 
 /*
  * Set a URI reference that specifies the type of authentication that 
@@ -1350,7 +1350,7 @@ saml_auth_stmt_set_subject(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_set_auth_method(saml_auth_stmt_t *auth_stmt, 
-							   axutil_env_t *env, axis2_char_t *method);
+							   const axutil_env_t *env, axis2_char_t *method);
 
 /*
  * Set the time at which the authentication took place.
@@ -1360,7 +1360,7 @@ saml_auth_stmt_set_auth_method(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_set_auth_instant(saml_auth_stmt_t *auth_stmt, 
-								axutil_env_t *env, axutil_date_time_t *dt);
+								const axutil_env_t *env, axutil_date_time_t *dt);
 
 /*
  * Set a list of additional information about the subject of 
@@ -1371,7 +1371,7 @@ saml_auth_stmt_set_auth_instant(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_set_auth_bindings(saml_auth_stmt_t *auth_stmt, 
-								 axutil_env_t *env, axutil_array_list_t *list);
+								 const axutil_env_t *env, axutil_array_list_t *list);
 
 /*
  * Add a additional information about the subject of 
@@ -1382,7 +1382,7 @@ saml_auth_stmt_set_auth_bindings(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_add_auth_binding(saml_auth_stmt_t *auth_stmt, 
-								axutil_env_t *env, saml_auth_binding_t *bind);
+								const axutil_env_t *env, saml_auth_binding_t *bind);
 
 /*
  * Remove an authority binding from a auth_statement.
@@ -1392,7 +1392,7 @@ saml_auth_stmt_add_auth_binding(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_remove_auth_binding(saml_auth_stmt_t *auth_stmt, 
-								   axutil_env_t *env, int index);
+								   const axutil_env_t *env, int index);
 
 /*
  * Set the DNS address of the system entity that was authenticated.
@@ -1402,7 +1402,7 @@ saml_auth_stmt_remove_auth_binding(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_set_subject_dns(saml_auth_stmt_t *auth_stmt, 
-							   axutil_env_t *env, axis2_char_t *dns);
+							   const axutil_env_t *env, axis2_char_t *dns);
 
 /*
  * Set the IP address of the system entity that was authenticated.
@@ -1412,7 +1412,7 @@ saml_auth_stmt_set_subject_dns(saml_auth_stmt_t *auth_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_auth_stmt_set_subject_ip(saml_auth_stmt_t *auth_stmt, 
-							  axutil_env_t *env, axis2_char_t *ip);
+							  const axutil_env_t *env, axis2_char_t *ip);
 
 /* attribute statement */
 
@@ -1422,7 +1422,7 @@ saml_auth_stmt_set_subject_ip(saml_auth_stmt_t *auth_stmt,
  * @return saml attribute object
  */
 AXIS2_EXTERN saml_attr_stmt_t * AXIS2_CALL 
-saml_attr_stmt_create(axutil_env_t *env);
+saml_attr_stmt_create(const axutil_env_t *env);
 
 /*
  * Free an attribute statement.
@@ -1430,7 +1430,7 @@ saml_attr_stmt_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_attr_stmt_free(saml_attr_stmt_t *attr_stmt, axutil_env_t *env);
+saml_attr_stmt_free(saml_attr_stmt_t *attr_stmt, const axutil_env_t *env);
 
 /* 
  * Populates a attribute statement object from a axiom node containing a 
@@ -1441,7 +1441,7 @@ saml_attr_stmt_free(saml_attr_stmt_t *attr_stmt, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_build(saml_attr_stmt_t *attr_stmt, 
-					 axiom_node_t *node, axutil_env_t *env);
+					 axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize an saml_attr_stmt to an om node
@@ -1451,7 +1451,7 @@ saml_attr_stmt_build(saml_attr_stmt_t *attr_stmt,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_attr_stmt_to_om(saml_attr_stmt_t *attr_stmt, 
-					 axiom_node_t *parent, axutil_env_t *env);
+					 axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Get the saml subject in this attribute statement.
@@ -1460,7 +1460,7 @@ saml_attr_stmt_to_om(saml_attr_stmt_t *attr_stmt,
  * @return saml subject
  */
 AXIS2_EXTERN saml_subject_t * AXIS2_CALL 
-saml_attr_stmt_get_subject(saml_attr_stmt_t *attr_stmt, axutil_env_t *env);
+saml_attr_stmt_get_subject(saml_attr_stmt_t *attr_stmt, const axutil_env_t *env);
 
 /*
  * Get the list of attributes in this attribute statement.
@@ -1469,7 +1469,7 @@ saml_attr_stmt_get_subject(saml_attr_stmt_t *attr_stmt, axutil_env_t *env);
  * @return array list containing the attribute objects
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_attr_stmt_get_attributes(saml_attr_stmt_t *attr_stmt, axutil_env_t *env);
+saml_attr_stmt_get_attributes(saml_attr_stmt_t *attr_stmt, const axutil_env_t *env);
 
 /*
  * Set the subject of this attribute statement
@@ -1479,7 +1479,7 @@ saml_attr_stmt_get_attributes(saml_attr_stmt_t *attr_stmt, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_set_subject(saml_attr_stmt_t *attr_stmt, 
-						   axutil_env_t *env, saml_subject_t *subject);
+						   const axutil_env_t *env, saml_subject_t *subject);
 
 /*
  * Set the attributes of the attribute statement as a list. If the attribute 
@@ -1490,7 +1490,7 @@ saml_attr_stmt_set_subject(saml_attr_stmt_t *attr_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_set_attributes(saml_attr_stmt_t *attr_stmt, 
-							  axutil_env_t *env, axutil_array_list_t *list);
+							  const axutil_env_t *env, axutil_array_list_t *list);
 
 /*
  * Add an attribute to the attribute statement       
@@ -1500,7 +1500,7 @@ saml_attr_stmt_set_attributes(saml_attr_stmt_t *attr_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_add_attribute(saml_attr_stmt_t *attr_stmt, 
-							 axutil_env_t *env, saml_attr_t *attribute);
+							 const axutil_env_t *env, saml_attr_t *attribute);
 
 /* 
  * Remove an attribute at the given index.
@@ -1510,7 +1510,7 @@ saml_attr_stmt_add_attribute(saml_attr_stmt_t *attr_stmt,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_stmt_remove_attribute(saml_attr_stmt_t *attr_stmt, 
-								axutil_env_t *env, int index);
+								const axutil_env_t *env, int index);
 
 /* condition */
 
@@ -1521,7 +1521,7 @@ saml_attr_stmt_remove_attribute(saml_attr_stmt_t *attr_stmt,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_condition_t * AXIS2_CALL 
-saml_condition_create(axutil_env_t *env);
+saml_condition_create(const axutil_env_t *env);
 
 /*
  * Free a condition object. The specific condition which is in this conditions 
@@ -1530,7 +1530,7 @@ saml_condition_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_condition_free(saml_condition_t *cond, axutil_env_t *env);
+saml_condition_free(saml_condition_t *cond, const axutil_env_t *env);
 
 /*
  * Populates a condition from a om node containing a condition. After this a 
@@ -1541,7 +1541,7 @@ saml_condition_free(saml_condition_t *cond, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_condition_build(saml_condition_t *cond, 
-					 axiom_node_t *node, axutil_env_t *env);
+					 axiom_node_t *node, const axutil_env_t *env);
 
 /* 
  * Serialize a condition to a om node. 
@@ -1551,7 +1551,7 @@ saml_condition_build(saml_condition_t *cond,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_condition_to_om(saml_condition_t *cond, 
-					 axiom_node_t *parent, axutil_env_t * env);
+					 axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Set the specific condition for this condition.
@@ -1562,7 +1562,7 @@ saml_condition_to_om(saml_condition_t *cond,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_condition_set_condition(saml_condition_t *cond, 
-							 axutil_env_t *env, void * condition, 
+							 const axutil_env_t *env, void * condition, 
 							 saml_cond_type_t type);
 
 /*
@@ -1573,7 +1573,7 @@ saml_condition_set_condition(saml_condition_t *cond,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_condition_set_type(saml_condition_t *cond, 
-						axutil_env_t *env, saml_cond_type_t type);
+						const axutil_env_t *env, saml_cond_type_t type);
 
 /*
  * Get the specific condtion in this generic condition.
@@ -1581,7 +1581,7 @@ saml_condition_set_type(saml_condition_t *cond,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void * AXIS2_CALL 
-saml_condition_get_condition(saml_condition_t *cond, axutil_env_t *env);
+saml_condition_get_condition(saml_condition_t *cond, const axutil_env_t *env);
 
 /*
  * Get the type of the specific condtion in this generic condition.
@@ -1589,7 +1589,7 @@ saml_condition_get_condition(saml_condition_t *cond, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_cond_type_t AXIS2_CALL 
-saml_condition_get_type(saml_condition_t *cond, axutil_env_t *env);
+saml_condition_get_type(saml_condition_t *cond, const axutil_env_t *env);
 
 /* audio restriction */
 
@@ -1601,7 +1601,7 @@ saml_condition_get_type(saml_condition_t *cond, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_audi_restriction_cond_build(saml_audi_restriction_cond_t *arc, 
-								 axiom_node_t *node, axutil_env_t *env);
+								 axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize an saml_audi_restriction_cond_t object in to an om node.
@@ -1611,7 +1611,7 @@ saml_audi_restriction_cond_build(saml_audi_restriction_cond_t *arc,
  */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL 
 saml_audi_restriction_cond_to_om(saml_audi_restriction_cond_t *arc, 
-								 axiom_node_t *parent, axutil_env_t * env);
+								 axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Free a saml_aud_restriction_conf object.
@@ -1620,7 +1620,7 @@ saml_audi_restriction_cond_to_om(saml_audi_restriction_cond_t *arc,
  */
 AXIS2_EXTERN void AXIS2_CALL 
 saml_audi_restriction_cond_free(saml_audi_restriction_cond_t *arc, 
-								axutil_env_t * env);
+								const axutil_env_t *env);
 
 /*
  * Create a saml_aud_restriction_conf object.
@@ -1628,7 +1628,7 @@ saml_audi_restriction_cond_free(saml_audi_restriction_cond_t *arc,
  * @return a ponter to saml_aud_restriction_conf object
  */
 AXIS2_EXTERN saml_audi_restriction_cond_t * AXIS2_CALL 
-saml_audi_restriction_cond_create(axutil_env_t *env);
+saml_audi_restriction_cond_create(const axutil_env_t *env);
 
 /*
  * Return a list of URI references that identifies a list of intended audiences.
@@ -1637,7 +1637,7 @@ saml_audi_restriction_cond_create(axutil_env_t *env);
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
 saml_audi_restriction_cond_get_audiences(saml_audi_restriction_cond_t *arc, 
-										 axutil_env_t * env);
+										 const axutil_env_t *env);
 
 /*
  * Set a list of URI references that identifies a list of intended audiences.
@@ -1646,7 +1646,7 @@ saml_audi_restriction_cond_get_audiences(saml_audi_restriction_cond_t *arc,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_audi_restriction_cond_set_audiences(saml_audi_restriction_cond_t *cond, 
-										 axutil_env_t * env, axutil_array_list_t *list);
+										 const axutil_env_t *env, axutil_array_list_t *list);
 
 /*
  * Remove a URI reference that identifies an intended audiences.
@@ -1656,7 +1656,7 @@ saml_audi_restriction_cond_set_audiences(saml_audi_restriction_cond_t *cond,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_audi_restriction_cond_remove_audiences(saml_audi_restriction_cond_t *cond, 
-											axutil_env_t * env, int index);
+											const axutil_env_t *env, int index);
 
 /*
  * Ad a URI reference that identifies an intended audiences.
@@ -1666,7 +1666,7 @@ saml_audi_restriction_cond_remove_audiences(saml_audi_restriction_cond_t *cond,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_audi_restriction_cond_add_audience(saml_audi_restriction_cond_t *cond, 
-										axutil_env_t * env, axis2_char_t *audience);
+										const axutil_env_t *env, axis2_char_t *audience);
 
 
 /* action */
@@ -1677,7 +1677,7 @@ saml_audi_restriction_cond_add_audience(saml_audi_restriction_cond_t *cond,
  * @return pointer to saml_action_t 
  */
 AXIS2_EXTERN saml_action_t * AXIS2_CALL 
-saml_action_create(axutil_env_t *env);
+saml_action_create(const axutil_env_t *env);
 
 /*
  * Free a saml_action_t.
@@ -1685,7 +1685,7 @@ saml_action_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_action_free(saml_action_t *action, axutil_env_t *env);
+saml_action_free(saml_action_t *action, const axutil_env_t *env);
 
 /*
  * Populates a saml action from a om node containing a saml action.
@@ -1694,7 +1694,7 @@ saml_action_free(saml_action_t *action, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_action_build(saml_action_t *action, axiom_node_t *node, axutil_env_t *env);
+saml_action_build(saml_action_t *action, axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize a action_t object to an om node.
@@ -1704,7 +1704,7 @@ saml_action_build(saml_action_t *action, axiom_node_t *node, axutil_env_t *env);
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_action_to_om(saml_action_t *action, 
-				  axiom_node_t *parent, axutil_env_t *env);
+				  axiom_node_t *parent, const axutil_env_t *env);
 
 /*
  * Get an action sought to be performed on the specified resource.
@@ -1712,7 +1712,7 @@ saml_action_to_om(saml_action_t *action,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_action_get_data(saml_action_t *action, axutil_env_t *env);
+saml_action_get_data(saml_action_t *action, const axutil_env_t *env);
 
 /*
  * Get a URI reference representing the namespace in which the name of the 
@@ -1721,7 +1721,7 @@ saml_action_get_data(saml_action_t *action, axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_action_get_namespace(saml_action_t *action, axutil_env_t *env);
+saml_action_get_namespace(saml_action_t *action, const axutil_env_t *env);
 
 /*
  * Set an action sought to be performed on the specified resource.
@@ -1730,7 +1730,7 @@ saml_action_get_namespace(saml_action_t *action, axutil_env_t *env);
  * @param data an action to be performed
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_action_set_data(saml_action_t *action, axutil_env_t *env, 
+saml_action_set_data(saml_action_t *action, const axutil_env_t *env, 
 					 axis2_char_t *data);
 
 /*
@@ -1741,53 +1741,53 @@ saml_action_set_data(saml_action_t *action, axutil_env_t *env,
  * @param name_space a URI reference
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_action_set_namespace(saml_action_t *action, axutil_env_t *env, 
+saml_action_set_namespace(saml_action_t *action, const axutil_env_t *env, 
 						  axis2_char_t *name_space);
 
 /* evidence */
 AXIS2_EXTERN saml_evidence_t * AXIS2_CALL 
-saml_evidence_create(axutil_env_t *env);
+saml_evidence_create(const axutil_env_t *env);
 
 AXIS2_EXTERN void AXIS2_CALL 
-saml_evidence_free(saml_evidence_t *evidence, axutil_env_t *env);
+saml_evidence_free(saml_evidence_t *evidence, const axutil_env_t *env);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_build(saml_evidence_t *evidence, 
-					axiom_node_t *node, axutil_env_t *env);
+					axiom_node_t *node, const axutil_env_t *env);
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_evidence_to_om(saml_evidence_t *evidence, axiom_node_t *parent, 
-					axutil_env_t *env);
+					const axutil_env_t *env);
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_evidence_get_assertions(saml_evidence_t *evidence, axutil_env_t *env);
+saml_evidence_get_assertions(saml_evidence_t *evidence, const axutil_env_t *env);
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_evidence_get_assertion_ids(saml_evidence_t *evidence, axutil_env_t *env);
+saml_evidence_get_assertion_ids(saml_evidence_t *evidence, const axutil_env_t *env);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_set_assertions(saml_evidence_t *evidence, 
-							 axutil_env_t * env, axutil_array_list_t *list);
+							 const axutil_env_t *env, axutil_array_list_t *list);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_remove_assertion(saml_evidence_t *evidence, 
-							   axutil_env_t * env, int index);
+							   const axutil_env_t *env, int index);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_add_assertion(saml_evidence_t *evidence, 
-							axutil_env_t * env, saml_assertion_t *assertion);
+							const axutil_env_t *env, saml_assertion_t *assertion);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_set_assertion_ids(saml_evidence_t *evidence, 
-								axutil_env_t * env, axutil_array_list_t *list);
+								const axutil_env_t *env, axutil_array_list_t *list);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_remove_assertion_id(saml_evidence_t *evidence, 
-								  axutil_env_t * env, int index);
+								  const axutil_env_t *env, int index);
 
 AXIS2_EXTERN int AXIS2_CALL 
 saml_evidence_add_assertion_id(saml_evidence_t *evidence, 
-							   axutil_env_t * env, axis2_char_t *assertion_id);
+							   const axutil_env_t *env, axis2_char_t *assertion_id);
 
 /* atrribute designature */
 
@@ -1797,7 +1797,7 @@ saml_evidence_add_assertion_id(saml_evidence_t *evidence,
  * @return pointer to saml_attr_desig_t
  */
 AXIS2_EXTERN saml_attr_desig_t * AXIS2_CALL 
-saml_attr_desig_create(axutil_env_t *env);
+saml_attr_desig_create(const axutil_env_t *env);
 
 /* 
  * Free a saml_attr_desig_t. 
@@ -1805,7 +1805,7 @@ saml_attr_desig_create(axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_attr_desig_free(saml_attr_desig_t *attr_desig, axutil_env_t *env);
+saml_attr_desig_free(saml_attr_desig_t *attr_desig, const axutil_env_t *env);
 
 /*
  * Populates a saml_attr_desig_t from a om node contailing a saml attriibute desgnator
@@ -1815,7 +1815,7 @@ saml_attr_desig_free(saml_attr_desig_t *attr_desig, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_desig_build(saml_attr_desig_t *attr_desig, 
-					  axiom_node_t *node, axutil_env_t *env);
+					  axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize a saml_attr_desig_t to an om node.
@@ -1825,7 +1825,7 @@ saml_attr_desig_build(saml_attr_desig_t *attr_desig,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_attr_desig_to_om(saml_attr_desig_t *attr_desig, 
-					  axiom_node_t *parent, axutil_env_t *env);
+					  axiom_node_t *parent, const axutil_env_t *env);
 
 /* 
  * Get the name of the attribute.
@@ -1834,7 +1834,7 @@ saml_attr_desig_to_om(saml_attr_desig_t *attr_desig,
  * @return a string name of the attribute
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_desig_get_name(saml_attr_desig_t *attr_desig, axutil_env_t *env);
+saml_attr_desig_get_name(saml_attr_desig_t *attr_desig, const axutil_env_t *env);
 
 /*
  * Get the namespace in which the AttributeName elements are interpreted.
@@ -1843,7 +1843,7 @@ saml_attr_desig_get_name(saml_attr_desig_t *attr_desig, axutil_env_t *env);
  * @return a string representing a namespace
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_desig_get_namespace(saml_attr_desig_t *attr_desig, axutil_env_t *env);
+saml_attr_desig_get_namespace(saml_attr_desig_t *attr_desig, const axutil_env_t *env);
 
 /* 
  * Set the name of the attribute.
@@ -1853,7 +1853,7 @@ saml_attr_desig_get_namespace(saml_attr_desig_t *attr_desig, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_desig_set_name(saml_attr_desig_t *attr_desig, 
-						 axutil_env_t *env, axis2_char_t *name);
+						 const axutil_env_t *env, axis2_char_t *name);
 
 /*
  * Set the namespace in which the AttributeName elements are interpreted.
@@ -1863,7 +1863,7 @@ saml_attr_desig_set_name(saml_attr_desig_t *attr_desig,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_attr_desig_set_namespace(saml_attr_desig_t *attr_desig, 
-							  axutil_env_t *env, axis2_char_t *name_space);
+							  const axutil_env_t *env, axis2_char_t *name_space);
 
 /* attribute */
 
@@ -1873,7 +1873,7 @@ saml_attr_desig_set_namespace(saml_attr_desig_t *attr_desig,
  * @return pointer to saml_attr_t
  */
 AXIS2_EXTERN saml_attr_t * AXIS2_CALL 
-saml_attr_create(axutil_env_t *env);
+saml_attr_create(const axutil_env_t *env);
 
 /*
  * Free a saml_attr_t.
@@ -1881,7 +1881,7 @@ saml_attr_create(axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_attr_free(saml_attr_t *attr, axutil_env_t *env);
+saml_attr_free(saml_attr_t *attr, const axutil_env_t *env);
 
 /*
  * Populates a saml_attr_t from an om node containing a saml attribute.
@@ -1890,7 +1890,7 @@ saml_attr_free(saml_attr_t *attr, axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_build(saml_attr_t *attr, axiom_node_t *node, axutil_env_t *env);
+saml_attr_build(saml_attr_t *attr, axiom_node_t *node, const axutil_env_t *env);
 
 /*
  * Serialize a saml_attr_t in to an om node.
@@ -1899,7 +1899,7 @@ saml_attr_build(saml_attr_t *attr, axiom_node_t *node, axutil_env_t *env);
  * @param env pointer to environment struct 
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_attr_to_om(saml_attr_t *attr, axiom_node_t *parent, axutil_env_t *env);
+saml_attr_to_om(saml_attr_t *attr, axiom_node_t *parent, const axutil_env_t *env);
 
 /* 
  * Get the name of the attribute.
@@ -1908,7 +1908,7 @@ saml_attr_to_om(saml_attr_t *attr, axiom_node_t *parent, axutil_env_t *env);
  * @return a string name of the attribute
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_get_name(saml_attr_t *attr, axutil_env_t *env);
+saml_attr_get_name(saml_attr_t *attr, const axutil_env_t *env);
 
 /*
  * Get the namespace in which the AttributeName elements are interpreted.
@@ -1917,7 +1917,7 @@ saml_attr_get_name(saml_attr_t *attr, axutil_env_t *env);
  * @return a string representing a namespace
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_attr_get_namespace(saml_attr_t *attr_stmt, axutil_env_t *env);
+saml_attr_get_namespace(saml_attr_t *attr_stmt, const axutil_env_t *env);
 
 /* 
  * Set the name of the attribute.
@@ -1926,7 +1926,7 @@ saml_attr_get_namespace(saml_attr_t *attr_stmt, axutil_env_t *env);
  * @param name a string name of the attribute
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_set_name(saml_attr_t *attr, axutil_env_t *env, axis2_char_t *name);
+saml_attr_set_name(saml_attr_t *attr, const axutil_env_t *env, axis2_char_t *name);
 
 /*
  * Set the namespace in which the AttributeName elements are interpreted.
@@ -1935,7 +1935,7 @@ saml_attr_set_name(saml_attr_t *attr, axutil_env_t *env, axis2_char_t *name);
  * @param name_space a string representing a namespace
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_set_namespace(saml_attr_t *attr, axutil_env_t *env, 
+saml_attr_set_namespace(saml_attr_t *attr, const axutil_env_t *env, 
 						axis2_char_t *name_space);
 
 /*
@@ -1945,7 +1945,7 @@ saml_attr_set_namespace(saml_attr_t *attr, axutil_env_t *env,
  * @param list a om node list
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_set_values(saml_attr_t *attr, axutil_env_t *env, 
+saml_attr_set_values(saml_attr_t *attr, const axutil_env_t *env, 
 					 axutil_array_list_t *list);
 
 /*
@@ -1955,7 +1955,7 @@ saml_attr_set_values(saml_attr_t *attr, axutil_env_t *env,
  * @param index index number of the om node to be removed
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_remove_value(saml_attr_t *attr, axutil_env_t *env, int index);
+saml_attr_remove_value(saml_attr_t *attr, const axutil_env_t *env, int index);
 
 /*
  * Add a om node to the attribute value list.
@@ -1964,7 +1964,7 @@ saml_attr_remove_value(saml_attr_t *attr, axutil_env_t *env, int index);
  * @param value an om node
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_attr_add_value(saml_attr_t *attr, axutil_env_t *env, axiom_node_t *value);
+saml_attr_add_value(saml_attr_t *attr, const axutil_env_t *env, axiom_node_t *value);
 
 
 /*named id*/
@@ -1975,7 +1975,7 @@ saml_attr_add_value(saml_attr_t *attr, axutil_env_t *env, axiom_node_t *value);
  * @return saml named id object
  */
 AXIS2_EXTERN saml_named_id_t * AXIS2_CALL 
-saml_named_id_create(axutil_env_t *env);
+saml_named_id_create(const axutil_env_t *env);
 
 /*
  * Free a saml named id object
@@ -1983,7 +1983,7 @@ saml_named_id_create(axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_named_id_free(saml_named_id_t *named_id, axutil_env_t *env);
+saml_named_id_free(saml_named_id_t *named_id, const axutil_env_t *env);
 
 /*
  * Build a saml named id from an om node containing a saml named identifier
@@ -1993,7 +1993,7 @@ saml_named_id_free(saml_named_id_t *named_id, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_named_id_build(saml_named_id_t *named_id, axiom_node_t *node, 
-					axutil_env_t *env);
+					const axutil_env_t *env);
 
 /*
  * Serialize a named id object in to an om node.
@@ -2003,7 +2003,7 @@ saml_named_id_build(saml_named_id_t *named_id, axiom_node_t *node,
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
 saml_named_id_to_om(saml_named_id_t *id, axiom_node_t *parent, 
-					axutil_env_t *env);
+					const axutil_env_t *env);
 
 /* 
  * Get the name of the named identifier.
@@ -2012,7 +2012,7 @@ saml_named_id_to_om(saml_named_id_t *id, axiom_node_t *parent,
  * @return name as a string
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_named_id_get_name(saml_named_id_t *id, axutil_env_t *env);
+saml_named_id_get_name(saml_named_id_t *id, const axutil_env_t *env);
 
 /*
  * Get a URI reference representing the format in which the <NameIdentifier> 
@@ -2022,7 +2022,7 @@ saml_named_id_get_name(saml_named_id_t *id, axutil_env_t *env);
  * @return format as a URI string
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_named_id_get_format(saml_named_id_t *id, axutil_env_t *env);
+saml_named_id_get_format(saml_named_id_t *id, const axutil_env_t *env);
 
 /*
  * Get the security or administrative domain that qualifies the name of the 
@@ -2032,7 +2032,7 @@ saml_named_id_get_format(saml_named_id_t *id, axutil_env_t *env);
  * @return string representing the domain
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_named_id_get_name_qualifier(saml_named_id_t *id, axutil_env_t *env);
+saml_named_id_get_name_qualifier(saml_named_id_t *id, const axutil_env_t *env);
 
 /* 
  * Set the name of the named identifier.
@@ -2042,7 +2042,7 @@ saml_named_id_get_name_qualifier(saml_named_id_t *id, axutil_env_t *env);
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_named_id_set_name(saml_named_id_t *id, 
-					   axutil_env_t *env, axis2_char_t *name);
+					   const axutil_env_t *env, axis2_char_t *name);
 
 /*
  * Set a URI reference representing the format in which the <NameIdentifier> 
@@ -2053,7 +2053,7 @@ saml_named_id_set_name(saml_named_id_t *id,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_named_id_set_format(saml_named_id_t *id, 
-						 axutil_env_t *env, axis2_char_t *format);
+						 const axutil_env_t *env, axis2_char_t *format);
 
 /*
  * Set the security or administrative domain that qualifies the name of the 
@@ -2064,11 +2064,11 @@ saml_named_id_set_format(saml_named_id_t *id,
  */
 AXIS2_EXTERN int AXIS2_CALL 
 saml_named_id_set_name_qualifier(saml_named_id_t *id, 
-								 axutil_env_t *env, axis2_char_t *qualifier);
+								 const axutil_env_t *env, axis2_char_t *qualifier);
 
 
 /* private method */
-AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_ctx, axutil_env_t *env, axis2_char_t *id);
+AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_ctx, const axutil_env_t *env, axis2_char_t *id);
 
 #ifdef __cplusplus
 }
