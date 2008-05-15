@@ -69,7 +69,7 @@ int main(int argc, char** argv)
         printf("Using client_home : %s\n", client_home);
     }
 
-    if (axutil_strcmp(address, "-h") == 0)
+    if ((axutil_strcmp(argv[1], "-h") == 0) || (axutil_strcmp(argv[1], "--help") == 0))
     {
         printf("Usage : %s [endpoint_url] [client_home]\n", argv[0]);
         printf("use -h for help\n");
@@ -310,3 +310,6 @@ get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context
     rampart_issued_token_set_token(token, env, saml, RP_PROPERTY_SAML_TOKEN);
     return token;
 }
+
+
+

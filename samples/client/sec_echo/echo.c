@@ -56,7 +56,7 @@ int main(int argc, char** argv)
         printf("Using client_home : %s\n", client_home);
     }
 
-    if (axutil_strcmp(address, "-h") == 0)
+    if ((axutil_strcmp(argv[1], "-h") == 0) || (axutil_strcmp(argv[1], "--help") == 0))
     {
         printf("Usage : %s [endpoint_url] [client_home]\n", argv[0]);
         printf("use -h for help\n");
