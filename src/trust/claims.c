@@ -19,9 +19,9 @@
 
 struct trust_claims
 {
-    axiom_children_iterator_t *children;
     axis2_char_t *attr_dialect;
     axis2_char_t *wst_ns_uri;
+    axutil_array_list_t * claim_list;
     
 };
 
@@ -34,6 +34,7 @@ trust_claims_create(
     claims = (trust_claims_t*)AXIS2_MALLOC(env->allocator, sizeof(trust_claims_t));
     claims->attr_dialect = NULL;
     claims->wst_ns_uri = NULL;
+    claims->claim_list = axutil_array_list_create(env, 10);
     
     return claims;
 }
@@ -43,6 +44,10 @@ trust_claims_free(
         trust_claims_t *claims,
         const axutil_env_t *env)
 {
+    if(NULL != claims->claim_list)
+    {
+        axutil_array_list_free(claims->claim_list, env);
+    }
     return AXIS2_SUCCESS;
 }
 
@@ -53,28 +58,31 @@ trust_claims_deserialize(
         axiom_node_t *claims_node)
 {
     axiom_element_t *claims_ele = NULL;
-    axiom_children_iterator_t *children = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
+    axiom_children_iterator_t *children_iter = NULL;
     axis2_char_t *dialect_attr = NULL;
+    axiom_node_t * temp_node = NULL;
     
     claims_ele = axiom_node_get_data_element(claims_node, env);
-    
     if(claims_ele)
     {
-        children = axiom_element_get_children(claims_ele, env, claims_node);
-        if(children)
+        children_iter = axiom_element_get_children(claims_ele, env, claims_node);
+        if(children_iter)
         {
-            if(trust_claims_set_children(claims, env, children))
-                status = AXIS2_SUCCESS;
+            while (axiom_children_iterator_has_next(children_iter, env))
+            {
+                temp_node = axiom_children_iterator_next( children_iter, env);
+                if(axiom_node_get_node_type(temp_node, env) == AXIOM_ELEMENT)
+                {
+                    axutil_array_list_add(claims->claim_list, env, temp_node);
+                }
+            }
         }
         
         dialect_attr = axiom_element_get_attribute_value_by_name(claims_ele, env, TRUST_CLAIMS_DIALECT);
+        claims->wst_ns_uri = TRUST_WST_XMLNS;
         if(dialect_attr)
         {
-            if(status && trust_claims_set_attr_dialect(claims, env, dialect_attr))
-            {
-                return AXIS2_SUCCESS;
-            }           
+            claims->attr_dialect = dialect_attr;
         }       
     }
     
@@ -88,54 +96,27 @@ trust_claims_serialize(
         axiom_node_t *parent)
 {
     axiom_node_t *claims_node = NULL;
-    axiom_node_t *child = NULL;
+    int index = 0;
     
-    claims_node = (axiom_node_t*)trust_util_create_claims_element(env, claims->wst_ns_uri, parent, claims->attr_dialect);
+    claims_node = (axiom_node_t*)trust_util_create_claims_element(env, TRUST_WST_XMLNS, parent, claims->attr_dialect);
     if(!claims_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Claims Element creation failed!");
         return NULL;
     }
+      
     
-    while(axiom_children_iterator_has_next(claims->children, env))
+    for(index = 0; index <axutil_array_list_size(claims->claim_list, env); index++)
     {
-        child = axiom_children_iterator_next(claims->children, env);
-        if(child)
-        {
-            if(!axiom_node_add_child(claims_node, env, child))
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Claims node adding child failed!");                
-                return NULL;
-            }
-        }
-        
+        axiom_node_add_child(claims_node, env, 
+                (axiom_node_t*) axutil_array_list_get(claims->claim_list, env, index));
     }
+    
+    
     
     return claims_node;
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-trust_claims_set_children(
-        trust_claims_t *claims,
-        const axutil_env_t *env,
-        axiom_children_iterator_t *children)
-{
-    if(children)
-    {
-        claims->children = children;
-        return AXIS2_SUCCESS;
-    }
-    
-    return AXIS2_FAILURE;
-}
-
-AXIS2_EXTERN axiom_children_iterator_t * AXIS2_CALL
-trust_claims_get_children(
-        trust_claims_t *claims,
-        const axutil_env_t *env)
-{
-    return claims->children;
-}
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 trust_claims_set_attr_dialect(
@@ -159,6 +140,14 @@ trust_claims_get_attr_dialect(
         const axutil_env_t *env)
 {
     return claims->attr_dialect;
+}
+
+AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
+trust_claims_get_claim_list(
+    trust_claims_t *claims,
+    const axutil_env_t *env)
+{
+    return claims->claim_list;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL

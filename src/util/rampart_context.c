@@ -63,7 +63,7 @@ struct rampart_context_t
     rp_secpolicy_t *secpolicy;
     rampart_callback_t *password_callback_module;
     rampart_authn_provider_t *authn_provider;
-	rampart_replay_detector_t *replay_detector;
+    rampart_replay_detector_t *replay_detector;
     rampart_sct_provider_t *sct_provider;
     auth_password_func authenticate_with_password;
     auth_digest_func authenticate_with_digest;

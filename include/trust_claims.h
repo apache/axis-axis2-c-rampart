@@ -19,6 +19,7 @@
 #define TRUST_CLAIMS_H
 
 #include <axutil_utils.h>
+#include <axutil_array_list.h>
 #include <axiom.h>
 
 #include <trust_constants.h>
@@ -51,19 +52,7 @@ extern "C"
         trust_claims_t *claims,
         const axutil_env_t *env,
         axiom_node_t *parent);
-    
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    trust_claims_set_children(
-        trust_claims_t *claims,
-        const axutil_env_t *env,
-        axiom_children_iterator_t *children);
-    
-    AXIS2_EXTERN axiom_children_iterator_t * AXIS2_CALL
-    trust_claims_get_children(
-        trust_claims_t *claims,
-        const axutil_env_t *env);
-    
-    
+        
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     trust_claims_set_attr_dialect(
         trust_claims_t *claims,
@@ -72,6 +61,11 @@ extern "C"
 
     AXIS2_EXTERN axis2_char_t * AXIS2_CALL
     trust_claims_get_attr_dialect(
+        trust_claims_t *claims,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
+    trust_claims_get_claim_list(
         trust_claims_t *claims,
         const axutil_env_t *env);
 
