@@ -145,12 +145,15 @@ typedef struct saml_assertion_s saml_assertion_t;
 #define SAML_DECLARE(type)	AXIS2_EXTERN type AXIS2_CALL
 #endif
 
-typedef enum deciosion_type
+/* Defines the possible values to be reported as the status of an
+ * authorization decision statement.
+ */
+typedef enum decision_type
 {
     PERMIT = 0,
     DENY,
     INDETERMINATE
-} deciosion_type_t;
+} decision_type_t;
 
 typedef enum
 {
@@ -389,14 +392,17 @@ struct saml_assertion_s
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN saml_assertion_t *AXIS2_CALL 
-saml_assertion_create(const axutil_env_t *env);
+saml_assertion_create(
+	const axutil_env_t *env);
 
 /* 
  * Free a saml assertion
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_assertion_free(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_free(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Build the saml assertion from a axiom node.
@@ -404,8 +410,10 @@ saml_assertion_free(saml_assertion_t *assertion, const axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_build(saml_assertion_t *a, 
-					 axiom_node_t *node, const axutil_env_t *env);
+saml_assertion_build(
+	saml_assertion_t *a, 
+	axiom_node_t *node, 
+	const axutil_env_t *env);
 
 /* 
  * Serialize a saml assertion to a om node.
@@ -414,8 +422,10 @@ saml_assertion_build(saml_assertion_t *a,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL 
-saml_assertion_to_om(saml_assertion_t *assertion, 
-					 axiom_node_t *parent, const axutil_env_t *env);
+saml_assertion_to_om(
+	saml_assertion_t *assertion, 
+	axiom_node_t *parent, 
+	const axutil_env_t *env);
 
 /* 
  * Returns all the condition in the assertion.
@@ -423,7 +433,9 @@ saml_assertion_to_om(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_assetion_get_conditions(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assetion_get_conditions(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Returns all the statements in the assertion.
@@ -431,7 +443,9 @@ saml_assetion_get_conditions(saml_assertion_t *assertion, const axutil_env_t *en
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
-saml_assertion_get_statements(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_get_statements(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Set the conditions for the assertion. If there are conditions already 
@@ -441,8 +455,9 @@ saml_assertion_get_statements(saml_assertion_t *assertion, const axutil_env_t *e
  * @param list array list containing the conditions
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_conditions(saml_assertion_t *assertion, 
-							  const axutil_env_t *env, axutil_array_list_t *list);
+saml_assertion_set_conditions(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, axutil_array_list_t *list);
 
 /* 
  * Add a condition to the assertin.
@@ -451,8 +466,10 @@ saml_assertion_set_conditions(saml_assertion_t *assertion,
  * @param cond a pointer to a condition to be added
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_add_condition(saml_assertion_t *assertion, 
-							 const axutil_env_t *env, saml_condition_t *cond);
+saml_assertion_add_condition(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	saml_condition_t *cond);
 
 /*
  * Remove a condition from the assertion.
@@ -460,8 +477,10 @@ saml_assertion_add_condition(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_remove_condition(saml_assertion_t *assertion, 
-								const axutil_env_t *env, int index);
+saml_assertion_remove_condition(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	int index);
 
 /* 
  * Set the statements for the assertion. If there are statements already 
@@ -471,8 +490,10 @@ saml_assertion_remove_condition(saml_assertion_t *assertion,
  * @param list array list containing the statements
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_statements(saml_assertion_t *assertion, 
-							  const axutil_env_t *env, axutil_array_list_t *list);
+saml_assertion_set_statements(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	axutil_array_list_t *list);
 
 /* 
  * Add a statement to the assertin.
@@ -481,8 +502,10 @@ saml_assertion_set_statements(saml_assertion_t *assertion,
  * @param cond a pointer to a statement to be added
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_add_statement(saml_assertion_t *assertion, 
-							 const axutil_env_t *env, saml_stmt_t *stmt);
+saml_assertion_add_statement(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	saml_stmt_t *stmt);
 
 /*
  * Remove a statement from the assertion.
@@ -490,8 +513,10 @@ saml_assertion_add_statement(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_remove_statement(saml_assertion_t *assertion, 
-								const axutil_env_t *env, int index);
+saml_assertion_remove_statement(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	int index);
 
 /* 
  * Set the minor vertion of the assertion
@@ -500,8 +525,10 @@ saml_assertion_remove_statement(saml_assertion_t *assertion,
  * @param version minor version number
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_minor_version(saml_assertion_t *assertion, 
-								 const axutil_env_t *env, int version);
+saml_assertion_set_minor_version(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	int version);
 
 /* 
  * Set the minor vertion of the assertion
@@ -509,8 +536,10 @@ saml_assertion_set_minor_version(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_issuer(saml_assertion_t *assertion, 
-						  const axutil_env_t *env, axis2_char_t *issuer);
+saml_assertion_set_issuer(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	axis2_char_t *issuer);
 
 /* 
  * Set the issuer of the assertion
@@ -519,8 +548,10 @@ saml_assertion_set_issuer(saml_assertion_t *assertion,
  * @instant time of the saml issue
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_issue_instant(saml_assertion_t *assertion, 
-								 const axutil_env_t *env, axutil_date_time_t *instant);
+saml_assertion_set_issue_instant(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	axutil_date_time_t *instant);
 
 /* 
  * Specifies the time instant at which the validity interval begins.
@@ -529,8 +560,10 @@ saml_assertion_set_issue_instant(saml_assertion_t *assertion,
  * @instant time at which validity interval begins 
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_not_before(saml_assertion_t *assertion, 
-							  const axutil_env_t *env, axutil_date_time_t *time);
+saml_assertion_set_not_before(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	axutil_date_time_t *time);
 
 /* 
  * Specifies the time instant at which the validity interval has ended
@@ -539,8 +572,10 @@ saml_assertion_set_not_before(saml_assertion_t *assertion,
  * @instant time at which validity interval has ended 
  */ 
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_not_on_or_after(saml_assertion_t *assertion, 
-								   const axutil_env_t *env, axutil_date_time_t *time);
+saml_assertion_set_not_on_or_after(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	axutil_date_time_t *time);
 
 /* 
  * Return SAML authority that created the assertion. The name of the issuer 
@@ -549,7 +584,9 @@ saml_assertion_set_not_on_or_after(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL 
-saml_assertion_get_issuer(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_get_issuer(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /*
  * Return the time instant of issue.
@@ -557,7 +594,9 @@ saml_assertion_get_issuer(saml_assertion_t *assertion, const axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_issue_instant(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_get_issue_instant(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Get the time instant at which the validity interval begins.
@@ -565,7 +604,9 @@ saml_assertion_get_issue_instant(saml_assertion_t *assertion, const axutil_env_t
  * @param env pointer to environment struct
  */ 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_not_before(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_get_not_before(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Get the time instant at which the validity interval has ended
@@ -573,7 +614,9 @@ saml_assertion_get_not_before(saml_assertion_t *assertion, const axutil_env_t *e
  * @param env pointer to environment struct
  */ 
 AXIS2_EXTERN axutil_date_time_t * AXIS2_CALL 
-saml_assertion_get_not_on_or_after(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_get_not_on_or_after(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* sign methods */
 
@@ -585,7 +628,9 @@ saml_assertion_get_not_on_or_after(saml_assertion_t *assertion, const axutil_env
  * @return AXIS2_TRUE if signed.
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_is_signed(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_is_signed(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /*
  * Get weather a assertion is set to be signed. This applies when building 
@@ -595,7 +640,9 @@ saml_assertion_is_signed(saml_assertion_t *assertion, const axutil_env_t *env);
  * @return AXIS2_TRUE if the object model is set to be signed.
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_is_sign_set(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_is_sign_set(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /*
  * Verify the assertion according to the sign context set in the 
@@ -604,7 +651,9 @@ saml_assertion_is_sign_set(saml_assertion_t *assertion, const axutil_env_t *env)
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_signature_verify(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_signature_verify(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Sign the assertion using the information set in the 
@@ -613,8 +662,10 @@ saml_assertion_signature_verify(saml_assertion_t *assertion, const axutil_env_t 
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL
-saml_assertion_sign(saml_assertion_t *assertion, 
-					axiom_node_t *node, const axutil_env_t *env);
+saml_assertion_sign(
+	saml_assertion_t *assertion, 
+	axiom_node_t *node, 
+	const axutil_env_t *env);
 
 /* 
  * Remove the information set for signing or verifying the assertion.
@@ -622,7 +673,9 @@ saml_assertion_sign(saml_assertion_t *assertion,
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_unsign(saml_assertion_t *assertion, const axutil_env_t *env);
+saml_assertion_unsign(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env);
 
 /* 
  * Set the information required to sign the message. 
@@ -631,8 +684,10 @@ saml_assertion_unsign(saml_assertion_t *assertion, const axutil_env_t *env);
  * @param sign_ctx oxs_sign_ctx_t object which contains the sign information
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_default_signature(saml_assertion_t *assertion, 
-					const axutil_env_t *env, oxs_sign_ctx_t *sign_ctx);
+saml_assertion_set_default_signature(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	oxs_sign_ctx_t *sign_ctx);
 
 /* 
  * Set the information required to sign the message.
@@ -641,8 +696,10 @@ saml_assertion_set_default_signature(saml_assertion_t *assertion,
  * @param sign_ctx oxs_sign_ctx_t object which contains the sign information
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_assertion_set_signature(saml_assertion_t *assertion, 
-					const axutil_env_t *env, oxs_sign_ctx_t *sign_ctx);
+saml_assertion_set_signature(
+	saml_assertion_t *assertion, 
+	const axutil_env_t *env, 
+	oxs_sign_ctx_t *sign_ctx);
 
 
 /* statement */
@@ -654,7 +711,8 @@ saml_assertion_set_signature(saml_assertion_t *assertion,
  * @return saml_stmt object to hold other staments
  */
 AXIS2_EXTERN saml_stmt_t * AXIS2_CALL 
-saml_stmt_create(const axutil_env_t *env);
+saml_stmt_create(
+	const axutil_env_t *env);
 
 /* 
  * Free a saml statment. 
@@ -662,7 +720,9 @@ saml_stmt_create(const axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN void AXIS2_CALL 
-saml_stmt_free(saml_stmt_t *stmt, const axutil_env_t *env);
+saml_stmt_free(
+	saml_stmt_t *stmt, 
+	const axutil_env_t *env);
 
 /* 
  * Build a saml statement from a XML node. The statement types that are 
@@ -672,7 +732,10 @@ saml_stmt_free(saml_stmt_t *stmt, const axutil_env_t *env);
  * @param env pointer to environment struct
  */
 AXIS2_EXTERN int AXIS2_CALL 
-saml_stmt_build(saml_stmt_t *stmt, axiom_node_t *node, const axutil_env_t *env);
+saml_stmt_build(
+	saml_stmt_t *stmt, 
+	axiom_node_t *node, 
+	const axutil_env_t *env);
 
 /*
  * Serialize a statement to a axiom node.
