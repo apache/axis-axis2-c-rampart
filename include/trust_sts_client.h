@@ -38,7 +38,7 @@
 #include <trust_util.h>
 #include <trust_policy_util.h>
 #include <trust_token.h>
-
+#include <rampart_config.h>
 #include <trust_rst.h>
 #include <trust_rstr.h>
 #include <trust_context.h>

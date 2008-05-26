@@ -35,6 +35,7 @@
 #include <rampart_handler_util.h>
 #include <rampart_config.h>
 #include <axis2_options.h>
+#include <openssl_pkcs12_keystore.h>
 
 /*This method sets all the configurations
  loads required modules and start rampart.*/
@@ -52,7 +53,10 @@ set_rampart_user_properties(
     const axutil_env_t *env,
     rampart_context_t *rampart_context);
 
-
+axis2_status_t AXIS2_CALL
+rampart_engine_retrieve_key_mgr_prop_from_policy(
+	rampart_context_t *rampart_context, 
+	const axutil_env_t *env);
 
 AXIS2_EXTERN rampart_context_t *AXIS2_CALL
 rampart_engine_build_configuration(
@@ -70,6 +74,17 @@ rampart_engine_build_configuration(
     neethi_policy_t *policy = NULL;
     axutil_property_t *property = NULL;
     void *value = NULL;
+
+	/* Key Manager related */
+    oxs_key_mgr_t *key_mgr = NULL;
+    axis2_char_t *password = NULL;
+    axis2_char_t *enc_user = NULL;
+    axis2_char_t *pkcs12_file = NULL;
+    axis2_char_t *pkcs12_password = NULL;
+    password_callback_fn password_function = NULL;
+    rampart_callback_t *password_callback = NULL;
+    void *param = NULL;
+    pkcs12_keystore_t *key_store = NULL;
 
     is_server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
 
@@ -175,6 +190,56 @@ rampart_engine_build_configuration(
             rampart_context = NULL;
             return NULL;
         }
+    	 /* Retrieve the password for obtaining private keys */
+        enc_user = rampart_context_get_encryption_user(rampart_context, env);
+        if(!enc_user)
+        {
+            enc_user = rampart_context_get_user(rampart_context, env);
+        }
+        if(enc_user)
+        {
+            password_function = rampart_context_get_pwcb_function(rampart_context, env);
+            if(password_function)
+            {
+                password = (*password_function)(env, enc_user, param);
+            }
+            else
+            {
+                password_callback = rampart_context_get_password_callback(
+                                        rampart_context, env);
+                if(password_callback)
+                {
+					password = rampart_callback_password(env, password_callback, enc_user);
+					if((pkcs12_file = rampart_context_get_pkcs12_file_name(rampart_context, env)))
+					{
+					    pkcs12_password = rampart_callback_pkcs12_password(env, password_callback, enc_user);
+						key_store = pkcs12_keystore_create(env, pkcs12_file, pkcs12_password);
+				        if(!key_store)
+				        {
+				        	AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+				        							"[rampart][engine] PKCS12 KeyStore creation failed.");
+				        	return NULL;	
+				        }
+					}
+                }
+            }
+        }  
+        
+		key_mgr = rampart_context_get_key_mgr(rampart_context, env);
+		if (!key_mgr)
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+						"[rampart][engine] Key mgr creation failed.");
+			return NULL;
+		}		
+		
+        oxs_key_mgr_set_key_store(key_mgr, env, key_store);
+		        
+		if (password)
+		{
+			oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
+		}
+		rampart_engine_retrieve_key_mgr_prop_from_policy(rampart_context, env);
     }
 
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
@@ -393,4 +458,39 @@ set_rampart_user_properties(
             rampart_context_set_sct_provider(rampart_context,env,(void*)sct_provider);
     }
     return status;
+}
+
+axis2_status_t AXIS2_CALL
+rampart_engine_retrieve_key_mgr_prop_from_policy(rampart_context_t *rampart_context, 
+												 const axutil_env_t *env)
+{	
+	axis2_char_t *value = NULL;
+	rp_rampart_config_t *config = NULL;    
+	oxs_key_mgr_t *key_mgr = NULL;
+	rp_secpolicy_t *secpolicy = NULL;
+	secpolicy = rampart_context_get_secpolicy(rampart_context, env);
+    config = rp_secpolicy_get_rampart_config(secpolicy, env);
+    if (!config)
+        return AXIS2_FAILURE;    
+
+	key_mgr = rampart_context_get_key_mgr(rampart_context, env);
+
+	value = rp_rampart_config_get_certificate_file(config, env);
+	if (value)
+	{
+		oxs_key_mgr_set_certificate_file(key_mgr, env, value);
+	}
+
+	value = rp_rampart_config_get_private_key_file(config, env);
+	if (value)
+	{
+		oxs_key_mgr_set_private_key_file(key_mgr, env, value);
+	}
+
+	value = rp_rampart_config_get_receiver_certificate_file(config, env);
+	if (value)
+	{
+		oxs_key_mgr_set_reciever_certificate_file(key_mgr, env, value);
+	}
+	return AXIS2_SUCCESS;
 }

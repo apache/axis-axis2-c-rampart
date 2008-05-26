@@ -41,6 +41,7 @@
 #include <axutil_array_list.h>
 #include <rampart_saml_token.h>
 #include <rampart_issued_token.h>
+#include <oxs_key_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -1520,6 +1521,21 @@ extern "C"
     rampart_context_get_algorithmsuite(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+	AXIS2_EXTERN oxs_key_mgr_t * AXIS2_CALL
+    rampart_context_get_key_mgr(
+    	rampart_context_t *rampart_context,
+    	const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_key_mgr(rampart_context_t *rampart_context, 
+							  const axutil_env_t *env, 
+                              oxs_key_mgr_t *key_mgr); 
+    
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_pkcs12_file_name(
+    	rampart_context_t *rampart_context,
+    	const axutil_env_t *env);
 
     /**
      * Set the a node list to the context. These nodes will be append to

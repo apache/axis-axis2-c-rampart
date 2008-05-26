@@ -78,45 +78,6 @@ extern "C"
                       const axutil_env_t *env);
 
     /**
-    *Returns the filename. This is usually the filename of the certificate or the PKCS12 file
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_asym_ctx_get_file_name(const oxs_asym_ctx_t *ctx,
-                               const axutil_env_t *env);
-
-    /**
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_asym_ctx_get_pem_buf(const oxs_asym_ctx_t *ctx,
-                             const axutil_env_t *env);
-    /**
-    *Returns the password. Usually the password for the keystore. But alternatively may kepe the
-    *password for the private key in a PEM file.
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_asym_ctx_get_password(const oxs_asym_ctx_t *ctx,
-                              const axutil_env_t *env);
-
-    /**
-    *Get the format. Can be either PEM or PKCS12
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN oxs_asym_ctx_format_t AXIS2_CALL
-    oxs_asym_ctx_get_format(const oxs_asym_ctx_t *ctx,
-                            const axutil_env_t *env);
-
-    /**
     *Get the algorithm used to encrypt
     *@ctx pointer to the OMXMLSec asymmetric context struct
     *@env pointer to environment struct
@@ -166,49 +127,6 @@ extern "C"
     oxs_asym_ctx_get_certificate(const oxs_asym_ctx_t *ctx,
                                  const axutil_env_t *env);
 
-    /**
-    * Set the file name. May be a PKCS12 file or a X509 certificate in PEM format.
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_asym_ctx_set_file_name(oxs_asym_ctx_t *ctx,
-                               const axutil_env_t *env,
-                               axis2_char_t *file_name);
-    /**
-    *Set the base46 encoded certificate/key.
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_asym_ctx_set_pem_buf(oxs_asym_ctx_t *ctx,
-                             const axutil_env_t *env,
-                             axis2_char_t *pem_buf);
-    /**
-    * Set the password. Usually the password for the keystore. But alternatively may kepe the
-    *password for the private key in a PEM file.
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@password the password
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_asym_ctx_set_password(oxs_asym_ctx_t *ctx,
-                              const axutil_env_t *env,
-                              axis2_char_t *password);
-    /**
-    * Sets the format. Can be either PEM or PKCS12
-    *@ctx pointer to the OMXMLSec asymmetric context struct
-    *@env pointer to environment struct
-    *@format Can be either PEM or PKCS12
-    *@return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
-    */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_asym_ctx_set_format(oxs_asym_ctx_t *ctx,
-                            const axutil_env_t *env,
-                            oxs_asym_ctx_format_t format);
     /**
     * Sets the algorithm   used to encrypt
     *@ctx pointer to the OMXMLSec asymmetric context struct

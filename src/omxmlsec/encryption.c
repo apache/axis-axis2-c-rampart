@@ -211,7 +211,6 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     openssl_pkey_t *pkey = NULL;
     oxs_asym_ctx_operation_t operation = -1;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_char_t *password = NULL;
     axis2_char_t *algorithm = NULL;
     axis2_char_t *padding = NULL;
 
@@ -230,17 +229,6 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
     else if ((axutil_strcmp(OXS_HREF_RSA_PKCS1, algorithm)) == 0)
     {
         padding = OPENSSL_RSA_PKCS1_PADDING;
-    }
-
-    /*Load the key using key manager*/
-    password = oxs_asym_ctx_get_password(asym_ctx, env);
-    status = oxs_key_mgr_load_key(env, asym_ctx, password);
-    if (status == AXIS2_FAILURE)
-    {
-        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
-                  "Key loading failed for Key encryption");
-
-        return AXIS2_FAILURE;
     }
 
     /*Check for the operation and call appropriate method*/

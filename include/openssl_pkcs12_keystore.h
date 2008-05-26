@@ -81,6 +81,11 @@ extern "C" {
         pkcs12_keystore_t *keystore,
         const axutil_env_t *env,
         axis2_char_t *ski);
+
+	AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL 
+    pkcs12_keystore_get_other_certificate(
+    	pkcs12_keystore_t *keystore,
+    	const axutil_env_t *env);
     
         
 #ifdef __cplusplus

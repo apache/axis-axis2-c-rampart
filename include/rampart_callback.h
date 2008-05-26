@@ -69,8 +69,23 @@ extern "C"
                                           const axutil_env_t *env,
                                           const axis2_char_t *username,
                                           void *param);
-
-        /**
+		/**
+		 * Returns a password for PKCS12 key store
+		 * By providing a function to this pointer user can write
+		 * cutom password callback module to support PKCS12
+		 * key store usage.
+		 * @param callback rampart callback pointer
+		 * @param env pointer to environment struct, must not be null
+		 * @param username The username of the owner of the key store
+		 * @param any parameter that is to be passed to the callback function.
+		 * @returns returns password if any. Otherwise NULL
+		 */
+		axis2_char_t *(AXIS2_CALL*
+					   callback_pkcs12_password)(rampart_callback_t *callback,
+							   					const axutil_env_t *env,
+												const axis2_char_t *username,
+												void *param);
+		/**
          * Free function of the rampart callback
          * @param callback rampart callback pointer
          * @param env environment must not be null
@@ -94,6 +109,9 @@ extern "C"
 
 #define RAMPART_CALLBACK_CALLBACK_PASSWORD(callback, env, username, param) \
       ((callback)->ops->callback_password(callback, env, username, param))
+
+#define RAMPART_CALLBACK_CALLBACK_PKCS12_PASSWORD(callback, env, username, param) \
+	  ((callback)->ops->callback_pkcs12_password(callback, env, username, param))
 
     /** @} */
 #ifdef __cplusplus

@@ -32,6 +32,7 @@
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <oxs_asym_ctx.h>
+#include <oxs_key_mgr.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -65,7 +66,7 @@ extern "C"
      * @param env pointer to environment struct
      * @param file_name the file name 
      **/
-    AXIS2_EXTERN oxs_asym_ctx_format_t AXIS2_CALL
+    AXIS2_EXTERN oxs_key_mgr_format_t AXIS2_CALL
     oxs_util_get_format_by_file_extension(const axutil_env_t *env,
                                           axis2_char_t *file_name);
 

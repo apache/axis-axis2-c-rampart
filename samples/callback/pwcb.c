@@ -94,8 +94,27 @@ get_sample_password(rampart_callback_t *rcb,
         /*sprintf(pw, "%s%s",  username, "12345");*/
     }
     return pw;
-};
+}
 
+axis2_char_t * AXIS2_CALL
+get_pkcs12_sample_password(
+	rampart_callback_t *rcb,
+	const axutil_env_t *env,
+	const axis2_char_t *username,
+	const void *param)
+{
+	axis2_char_t *pw = NULL;
+	if(0 == axutil_strcmp(username, "a"))
+	{
+		pw = "a12345";
+	}
+	else if (0 == axutil_strcmp(username, "b"))
+	{
+		pw = "b12345";
+	}
+
+	return pw;
+}
 
 /**
  * Following block distinguish the exposed part of the dll.
@@ -116,6 +135,7 @@ axis2_get_instance(rampart_callback_t **inst,
 
     rcb->ops->callback_password = get_sample_password;
     rcb->ops->free = my_free_function;
+	rcb->ops->callback_pkcs12_password = get_pkcs12_sample_password;
 
     *inst = rcb;
 

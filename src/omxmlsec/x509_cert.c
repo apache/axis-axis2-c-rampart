@@ -31,6 +31,7 @@ struct oxs_x509_cert_t
     axis2_char_t *date;
     axis2_char_t *hash;
     axis2_char_t *data;
+	axis2_char_t *common_name;
     openssl_pkey_t *public_key;
 };
 
@@ -61,6 +62,7 @@ oxs_x509_cert_create(const axutil_env_t *env)
     x509_cert->hash =NULL;
     x509_cert->data =NULL;
     x509_cert->public_key =NULL;
+	x509_cert->common_name = NULL;
 
     return x509_cert;
 }
@@ -103,6 +105,11 @@ oxs_x509_cert_free(oxs_x509_cert_t *x509_cert,
         x509_cert->public_key = NULL;
     }
 
+	if(x509_cert->common_name){
+        	AXIS2_FREE(env->allocator, x509_cert->common_name);
+        	x509_cert->common_name = NULL;
+    }
+
     AXIS2_FREE(env->allocator,  x509_cert);
     x509_cert = NULL;
 
@@ -123,6 +130,7 @@ oxs_x509_cert_copy_to(oxs_x509_cert_t *x509_cert,
     oxs_x509_cert_set_hash(to, env, x509_cert->hash);
     oxs_x509_cert_set_data(to, env, x509_cert->data);
     oxs_x509_cert_set_public_key(to, env, x509_cert->public_key);
+	oxs_x509_cert_set_common_name(to, env, x509_cert->common_name);
 
     return AXIS2_SUCCESS;
 }
@@ -181,6 +189,27 @@ oxs_x509_cert_get_public_key(oxs_x509_cert_t *x509_cert,
                              const axutil_env_t *env)
 {
     return x509_cert->public_key;
+}
+
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+oxs_x509_cert_get_common_name(oxs_x509_cert_t *x509_cert,
+							  const axutil_env_t *env)
+{
+	return x509_cert->common_name;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_x509_cert_set_common_name(oxs_x509_cert_t *x509_cert,
+		const axutil_env_t *env,
+		axis2_char_t *common_name)
+{
+	if(x509_cert->common_name)
+	{
+		AXIS2_FREE(env->allocator, x509_cert->common_name);
+		x509_cert->common_name = NULL;
+	}
+	x509_cert->common_name = axutil_strdup(env,common_name);
+	return AXIS2_SUCCESS;
 }
 
 /*Setters*/

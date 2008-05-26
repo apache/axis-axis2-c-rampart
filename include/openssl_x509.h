@@ -56,7 +56,8 @@ extern "C" {
         OPENSSL_X509_INFO_VERSION ,
         OPENSSL_X509_INFO_PUBKEY ,
         OPENSSL_X509_INFO_PUBKEY_ALGO ,
-        OPENSSL_X509_INFO_DATA_CERT
+        OPENSSL_X509_INFO_DATA_CERT,
+		OPENSSL_X509_INFO_COMMON_NAME
     } openssl_x509_info_type_t;
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -111,6 +112,11 @@ extern "C" {
     openssl_x509_get_info(const axutil_env_t *env,
                           openssl_x509_info_type_t type,
                           X509 *cert);
+	
+	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    openssl_x509_get_common_name(
+    	const axutil_env_t *env,
+    	X509 *cert);
 
     AXIS2_EXTERN void AXIS2_CALL
     openssl_x509_print(const axutil_env_t *env,

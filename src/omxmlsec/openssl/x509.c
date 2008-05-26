@@ -407,6 +407,60 @@ openssl_x509_get_info(const axutil_env_t *env,
     return result;
 }
 
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+openssl_x509_get_common_name(
+	const axutil_env_t *env,
+	X509 *cert)
+{
+	X509_NAME *subject = NULL;
+	int pos = -1;
+	X509_NAME_ENTRY *entry = NULL;
+	ASN1_STRING *entry_str;
+	BIO *out = NULL;
+	unsigned char *data= NULL;
+	axis2_char_t *result = NULL;
+	int n = 0;
+	
+	out = BIO_new(BIO_s_mem());
+	subject = X509_get_subject_name(cert);
+	pos = X509_NAME_get_index_by_NID(subject, NID_commonName, -1);
+	
+	if(pos < 0)
+	{
+		oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
+		                  "No Common Name in given X509 Certificate!");
+		return NULL;
+	}
+	
+	if (X509_NAME_get_index_by_NID(subject, NID_commonName, pos) >= 0)
+	{
+		/* Handling multiple common names. */
+	}	
+
+	if ((entry = X509_NAME_get_entry(subject, pos)) == 0)
+	{
+		oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
+				  "Error occured during when retrieving common name from X509_NAME!");
+		return NULL;		   
+	}
+	
+	if ((entry_str = X509_NAME_ENTRY_get_data(entry)) == 0)
+	{
+		oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
+						  "Error occured during when retrieving common name from X509_NAME_ENTRY!");
+		return NULL;
+	}
+	
+	ASN1_TIME_print(out, entry_str);
+	n = BIO_get_mem_data(out, &data);
+	result = axutil_strndup( env, data, n);
+
+	BIO_free(out);
+	out = NULL;
+	
+	return result;
+}
+
 AXIS2_EXTERN void  AXIS2_CALL
 openssl_x509_print(const axutil_env_t *env,
                    X509 *cert)

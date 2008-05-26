@@ -127,13 +127,13 @@ openssl_rsa_prv_decrypt(
     oxs_buffer_t *out)
 {
     unsigned char *decrypted = NULL;
-    int ret;
+    int ret = -1;
     EVP_PKEY *key = NULL;
     int pad = RSA_PKCS1_PADDING;
 
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
 
-    key = (EVP_PKEY *)openssl_pkey_get_key(pkey, env);
+    key = openssl_pkey_get_key(pkey, env);
 
     /*Set padding. This is the only diff btwn RSA-v1.5 and RSA-OAEP*/
     if(0 == axutil_strcmp(padding, OPENSSL_RSA_PKCS1_OAEP_PADDING  ) ){

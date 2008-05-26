@@ -38,12 +38,23 @@
 #include <openssl_pkey.h>
 #include <openssl_x509.h>
 #include <openssl_pkcs12.h>
+#include <axis2_key_type.h>
+#include <openssl_pkcs12.h>
+#include <openssl_pkcs12_keystore.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+	typedef struct oxs_key_mgr_t oxs_key_mgr_t;
+	/* Enum which is used to specify the key format. */
+	typedef enum  {
+	        OXS_KEY_MGR_FORMAT_UNKNOWN=0,
+	        OXS_KEY_MGR_FORMAT_PEM,
+	        OXS_KEY_MGR_FORMAT_PKCS12
+	}oxs_key_mgr_format_t;
+	
     /**
      * Loads keys/certificates from a keystore or a PEm file depending on information available in the @ctx
      * @ctx pointer to the OMXMLSec asymmetric encryption context struct
@@ -52,9 +63,10 @@ extern "C"
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE	
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_key_mgr_load_key(const axutil_env_t *env,
-                         oxs_asym_ctx_t *ctx,
-                         axis2_char_t *password);
+	oxs_key_mgr_load_key(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+	    oxs_asym_ctx_t *ctx);
     /**
      * Loads a private key from a string buffer @pem_buf which of PEM format.
      * -----BEGIN RSA PRIVATE KEY-----
@@ -119,7 +131,188 @@ extern "C"
                                       axis2_char_t *password,
                                       oxs_x509_cert_t **cert,
                                       openssl_pkey_t **prv_key);
+	
+	/**
+	 * Creates the key manager strucutre.
+	 * @env pointer to environment struct
+	 * @return pointer to the key manager (oxs_key_mgr_t *)
+	 */
+	AXIS2_EXTERN oxs_key_mgr_t * AXIS2_CALL
+	oxs_key_mgr_create(const axutil_env_t *env);
 
+	/**
+	 * Free the key manager struct
+	 * @key_mgr pointer to key manager struct which is going to free
+	 * @env pointer to environment struct
+	 * @return status of the free operation
+	 */
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_free(oxs_key_mgr_t *key_mgr, 
+					const axutil_env_t *env);
+	
+	/**
+	 * Set the password used to encrypt the private key (if any)
+	 * @key_mgr Pointer to key manager struct
+	 * @env pointer to environment struct
+	 * @password password used to encrypt the private key
+	 * @return status of the operation
+	 */
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_prv_key_password(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_char_t *password);
+
+	/**
+	 * Return the private key file password
+	 * @key_mgr pointer to key manager struct
+	 * @env pointer to environment struct
+	 * @return password of the private key file
+	 */
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	oxs_key_mgr_get_prv_key_password(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	/**
+	 * Returns the private key file location
+	 * @key_mgr pointer to key manager struct
+	 * @env pointer to environment struct
+	 * @return location of the private key file
+	 */
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	oxs_key_mgr_get_private_key_file(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	oxs_key_mgr_get_certificate_file(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	oxs_key_mgr_get_reciever_certificate_file(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_private_key_file(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_char_t *file_name);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_certificate_file(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_char_t *file_name);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_reciever_certificate_file(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_char_t *file_name);
+
+
+	AXIS2_EXTERN void *AXIS2_CALL
+	oxs_key_mgr_get_certificate(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
+	oxs_key_mgr_get_certificate_type(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN void *AXIS2_CALL
+	oxs_key_mgr_get_prv_key(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
+	oxs_key_mgr_get_prv_key_type(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN void *AXIS2_CALL
+	oxs_key_mgr_get_receiver_certificate(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
+	oxs_key_mgr_get_receiver_certificate_type(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_certificate(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env, 
+		void *certificate);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_certificate_type(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_key_type_t type);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_prv_key(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env, 
+		void *key);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_prv_key_type(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_key_type_t type);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_receiver_certificate(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		void *certificate);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_receiver_certificate_type(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		axis2_key_type_t type);
+	
+	AXIS2_EXTERN oxs_key_mgr_format_t AXIS2_CALL
+	oxs_key_mgr_get_format(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_format(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		oxs_key_mgr_format_t format);
+
+	AXIS2_EXTERN void * AXIS2_CALL
+	oxs_key_mgr_get_pem_buf(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_pem_buf(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		void *pem_buf);
+	
+	AXIS2_EXTERN pkcs12_keystore_t* AXIS2_CALL
+	oxs_key_mgr_get_key_store(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env);
+	
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	oxs_key_mgr_set_key_store(
+		oxs_key_mgr_t *key_mgr,
+		const axutil_env_t *env,
+		pkcs12_keystore_t *key_store);
+	
     /** @} */
 #ifdef __cplusplus
 }

@@ -234,6 +234,22 @@ rampart_callback_password(const axutil_env_t *env,
     return password;
 }
 
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+rampart_callback_pkcs12_password(
+	const axutil_env_t *env,
+	rampart_callback_t *callback_module,
+	const axis2_char_t *username)
+{
+	axis2_char_t *password = NULL;
+	void *cb_prop_val = NULL;
+
+	/*Get the password through the callback module*/
+	password = RAMPART_CALLBACK_CALLBACK_PKCS12_PASSWORD(callback_module, env, username, cb_prop_val);
+
+	AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][ramaprt_util] Password taken from the callback module. SUCCESS");
+	return password;
+}
+
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_generate_nonce(const axutil_env_t *env, int length)
 {

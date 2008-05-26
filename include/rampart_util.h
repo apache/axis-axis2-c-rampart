@@ -163,6 +163,19 @@ extern "C" {
                               rampart_callback_t *callback_module,
                               const axis2_char_t *username);
 
+	/**
+	 * Get the password for pkcs12 key store.
+	 * @env pointer to environment struct
+	 * @callback pointer to rampart callback module
+	 * @username name of the pkcs12 owner
+	 * @return the password for the user or NULL if username is incorrect
+	 */
+	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+	rampart_callback_pkcs12_password(
+				const axutil_env_t *env,
+				rampart_callback_t *callback_module,
+				const axis2_char_t *username);	
+
     /**
      * Generates the nonce. Nonce is a base64 encoded random string.
      * User MUST free memory

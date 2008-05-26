@@ -41,7 +41,8 @@ extern "C"
     {
         AXIS2_KEY_TYPE_UNKNOWN = 0,
         AXIS2_KEY_TYPE_PEM,
-        AXIS2_KEY_TYPE_DER
+        AXIS2_KEY_TYPE_DER,
+		AXIS2_KEY_TYPE_OTHER
     }axis2_key_type_t;
 
 

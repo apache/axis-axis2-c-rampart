@@ -82,7 +82,7 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
     
     if(own_cert)
     {
-        pkcs12_keystore_populate_oxs_cert(env, own_cert);
+         keystore->cert = pkcs12_keystore_populate_oxs_cert(env, own_cert);
     }
     
     if(other_certs)
@@ -129,6 +129,7 @@ oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_populate_oxs_cert(
     axis2_char_t *x509_cert_subject = NULL;
     axis2_char_t *x509_cert_finger = NULL;
     axis2_char_t *x509_cert_key_id = NULL;
+	axis2_char_t *x509_common_name = NULL;
     EVP_PKEY *pub_key = NULL;
     openssl_pkey_t *open_pubkey = NULL;
     oxs_x509_cert_t *cert_out = NULL;
@@ -139,6 +140,7 @@ oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_populate_oxs_cert(
     x509_cert_subject = openssl_x509_get_info(env, OPENSSL_X509_INFO_SUBJECT ,cert_in);
     x509_cert_finger = openssl_x509_get_info(env, OPENSSL_X509_INFO_FINGER, cert_in);
     x509_cert_key_id = openssl_x509_get_subject_key_identifier(env, cert_in);
+	x509_common_name = openssl_x509_get_common_name(env,cert_in);
     
     cert_out = oxs_x509_cert_create(env);
     if(!cert_out)
@@ -153,6 +155,7 @@ oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_populate_oxs_cert(
     oxs_x509_cert_set_fingerprint(cert_out, env, x509_cert_finger);
     oxs_x509_cert_set_serial_number(cert_out, env, openssl_x509_get_serial(env, cert_in));
     oxs_x509_cert_set_key_identifier(cert_out, env, x509_cert_key_id);
+	oxs_x509_cert_set_common_name(cert_out, env, x509_common_name);
     
     openssl_x509_get_pubkey(env, cert_in, &pub_key);
     open_pubkey = openssl_pkey_create(env);
@@ -175,6 +178,20 @@ AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_owner_certificate(
     const axutil_env_t *env)
 {
     return keystore->cert;
+}
+
+AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL 
+pkcs12_keystore_get_other_certificate(
+	pkcs12_keystore_t *keystore,
+	const axutil_env_t *env)
+{
+	oxs_x509_cert_t *cert = NULL;
+	if(axutil_array_list_size(keystore->other_certs, env) == 1)
+	{
+		cert = (oxs_x509_cert_t *)axutil_array_list_get(keystore->other_certs, env, 0); 
+	}
+	
+	return cert;
 }
 
 AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_certificate_for_issuer_serial(

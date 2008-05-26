@@ -31,23 +31,23 @@ openssl_pkcs12_load(const axutil_env_t *env,
                     axis2_char_t *filename,
                     PKCS12 **p12)
 {
-    FILE *fp = NULL;
-
+     BIO *in = NULL;
     SSLeay_add_all_algorithms();
     ERR_load_crypto_strings();
-    if (!(fp = fopen(filename, "rb"))) {
+    if (!(in = BIO_new_file(filename, "rb"))) {
         fprintf(stderr, "Error opening file %s\n", filename);
         return AXIS2_FAILURE;
     }
     /*Load pkcs store*/
-    *p12 = d2i_PKCS12_fp(fp, NULL);
-    fclose (fp);
+    *p12 = d2i_PKCS12_bio(in, NULL);
+    
 
     if (!p12) {
         fprintf(stderr, "Error reading PKCS#12 file %s\n", filename);
         ERR_print_errors_fp(stderr);
         return AXIS2_FAILURE;
     }
+    BIO_free(in);
     return AXIS2_SUCCESS;
 }
 

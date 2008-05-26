@@ -22,6 +22,7 @@
 #include <oxs_buffer.h>
 #include <oxs_asym_ctx.h>
 #include <openssl_util.h>
+#include <oxs_key_mgr.h>
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 oxs_util_generate_nonce(const axutil_env_t *env, int length)
@@ -66,7 +67,7 @@ oxs_util_generate_id(const axutil_env_t *env,
 
 }
 
-AXIS2_EXTERN oxs_asym_ctx_format_t AXIS2_CALL
+AXIS2_EXTERN oxs_key_mgr_format_t AXIS2_CALL
 oxs_util_get_format_by_file_extension(const axutil_env_t *env,
                                       axis2_char_t *file_name)
 {
@@ -81,7 +82,7 @@ oxs_util_get_format_by_file_extension(const axutil_env_t *env,
         return OXS_ASYM_CTX_FORMAT_PEM;
     }
 
-    if((strcmp(extension, ".pfx") == 0) ){
+    if((strcmp(extension, ".pfx") == 0) || (strcmp(extension, ".p12") == 0) ){
         return OXS_ASYM_CTX_FORMAT_PKCS12;
     }else{
         /*Its safe to assume that PEM can be in any extensions. e.g. .cert, .cer, .pem*/

@@ -273,6 +273,15 @@ extern "C"
     oxs_x509_cert_copy_to(oxs_x509_cert_t *x509_cert,
                           const axutil_env_t *env,
                           oxs_x509_cert_t *to);
+
+	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    oxs_x509_cert_get_common_name(oxs_x509_cert_t *x509_cert,
+    					  const axutil_env_t *env);
+    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_x509_cert_set_common_name(oxs_x509_cert_t *x509_cert,
+    		const axutil_env_t *env,
+    		axis2_char_t *common_name);
     /** @} */
 #ifdef __cplusplus
 }
