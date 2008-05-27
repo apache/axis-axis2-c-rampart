@@ -181,14 +181,12 @@ rampart_sig_prepare_key_info_for_asym_binding(const axutil_env_t *env,
 				axis2_bool_t is_direct_reference)
 {
     axiom_node_t *key_info_node = NULL;
+	oxs_key_mgr_t *key_mgr = NULL;
     /*axis2_bool_t is_direct_reference = AXIS2_TRUE;*/
     axis2_status_t status = AXIS2_FAILURE;
 
     /*Now we must build the Key Info element*/
-    key_info_node = oxs_token_build_key_info_element(env, sig_node);
-
-	oxs_key_mgr_t *key_mgr = NULL;
-    
+    key_info_node = oxs_token_build_key_info_element(env, sig_node);    
     if(is_direct_reference)
     {
         axiom_node_t *str_node = NULL;
