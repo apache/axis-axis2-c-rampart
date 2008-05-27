@@ -58,7 +58,7 @@ openssl_pkey_create(const axutil_env_t *env)
     pkey->key   = NULL;
     pkey->name = NULL ;
     pkey->type = OPENSSL_PKEY_TYPE_UNKNOWN;
-    pkey->ref = 0;
+    pkey->ref = 1;
     return pkey;
 }
 

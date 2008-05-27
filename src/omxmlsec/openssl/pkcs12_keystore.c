@@ -22,8 +22,8 @@ struct pkcs12_keystore{
     char *keystore_file;
     char *keystore_password;
     PKCS12 *keystore;
-    oxs_x509_cert_t *cert;
-    axutil_array_list_t *other_certs; 
+    X509 *cert;
+    STACK_OF(X509) *other_certs;
     openssl_pkey_t *pvt_key;
 };
 
@@ -33,10 +33,7 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
     axis2_char_t *password)
 {
     pkcs12_keystore_t *keystore = NULL;
-    X509 *own_cert = NULL;
-    STACK_OF(X509) *other_certs = NULL;
-    EVP_PKEY *pvt_key = NULL;
-        
+    EVP_PKEY *pvt_key = NULL;    
     SSLeay_add_all_algorithms();
     ERR_load_crypto_strings();
     
@@ -66,31 +63,19 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
             keystore->keystore_password, 
             keystore->keystore, 
             &pvt_key,
-            &own_cert,
-            &other_certs))
+            &keystore->cert,
+            &keystore->other_certs))
     {
         oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "PKCS12 Key Store Parsing failed.");
         AXIS2_FREE(env->allocator, keystore);
         return NULL;        
     }
-    
+    /* We only populate this sinse openssl_pkey_t is ref counted. */	
     if(pvt_key)
     {
         keystore->pvt_key = openssl_pkey_create(env);
-        openssl_pkey_populate(keystore->pvt_key, env, pvt_key, (axis2_char_t*)keystore->keystore_file, OPENSSL_PKEY_TYPE_PRIVATE_KEY);
-    }
-    
-    if(own_cert)
-    {
-         keystore->cert = pkcs12_keystore_populate_oxs_cert(env, own_cert);
-    }
-    
-    if(other_certs)
-    {
-        keystore->other_certs = pkcs12_keystore_populate_cert_array(env, other_certs);
-    }
-    
-    
+        openssl_pkey_populate(keystore->pvt_key, env, pvt_key, (axis2_char_t*)keystore->keystore_file, OPENSSL_PKEY_TYPE_PRIVATE_KEY);		
+    }       
     return keystore;    
 }
 
@@ -169,15 +154,24 @@ oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_populate_oxs_cert(
 AXIS2_EXTERN openssl_pkey_t * AXIS2_CALL pkcs12_keystore_get_owner_private_key(
     pkcs12_keystore_t *keystore,
     const axutil_env_t *env)
-{
-    return keystore->pvt_key;
+{		
+	if (keystore->pvt_key)
+	{
+		/* We are always having a pointer */
+		openssl_pkey_increment_ref(keystore->pvt_key, env);
+	}
+	return keystore->pvt_key;
 }
 
 AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL pkcs12_keystore_get_owner_certificate(
     pkcs12_keystore_t *keystore, 
     const axutil_env_t *env)
 {
-    return keystore->cert;
+	if (!keystore->cert)
+	{
+		return NULL;
+	}
+	return pkcs12_keystore_populate_oxs_cert(env, keystore->cert);
 }
 
 AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL 
@@ -185,12 +179,14 @@ pkcs12_keystore_get_other_certificate(
 	pkcs12_keystore_t *keystore,
 	const axutil_env_t *env)
 {
+	axutil_array_list_t *other_certs; 
 	oxs_x509_cert_t *cert = NULL;
-	if(axutil_array_list_size(keystore->other_certs, env) == 1)
-	{
-		cert = (oxs_x509_cert_t *)axutil_array_list_get(keystore->other_certs, env, 0); 
-	}
 	
+	other_certs = pkcs12_keystore_populate_cert_array(env, keystore->other_certs);
+	if(other_certs && axutil_array_list_size(other_certs, env) == 1)
+	{
+		cert = (oxs_x509_cert_t *)axutil_array_list_get(other_certs, env, 0); 
+	}	
 	return cert;
 }
 
