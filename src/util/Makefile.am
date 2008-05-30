@@ -13,6 +13,7 @@ librampart_util_la_SOURCES = rampart_crypto_util.c \
 
 librampart_util_la_LIBADD  = -lssl \
 			     -lcrypto \
+				 -lsaml \
 				@OPENSSLLIB@
 
 INCLUDES = -I$(top_builddir)/include \
