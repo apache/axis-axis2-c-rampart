@@ -327,20 +327,8 @@ extern "C"
     rampart_context_set_certificate_file(rampart_context_t *rampart_context,
                                          const axutil_env_t *env,
                                          axis2_char_t *certificate_file);
-    /**
-     *
-     * @param rampart_context
-     * @param env pointer to environment struct,Must not be NULL.
-     * @param reciever_cerficate_file
-     * @returns status of the op.                                                                                                        
-     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
-     */
-
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_set_reciever_certificate_file(rampart_context_t *rampart_context,
-            const axutil_env_t *env,
-            axis2_char_t *reciever_certificate_file);
-    /**
+    
+	/**
      *
      * @param rampart_context
      * @param env pointer to environment struct,Must not be NULL.
