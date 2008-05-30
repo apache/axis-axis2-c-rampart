@@ -2774,7 +2774,7 @@ rampart_context_set_signature_token_id(
 AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
 rampart_context_get_saml_token(rampart_context_t *rampart_context,
                                         const axutil_env_t *env, 
-										rp_property_type_t token_type)
+										rampart_st_type_t token_type)
 {
 	rampart_saml_token_t *saml = NULL;
 	int i = 0, size = 0;

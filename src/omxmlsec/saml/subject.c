@@ -16,7 +16,8 @@
  */
 
 #include <saml.h>
-
+#include <oxs_xml_encryption.h>
+#include <oxs_tokens.h>
 
 AXIS2_EXTERN saml_named_id_t * AXIS2_CALL 
 saml_named_id_create(const axutil_env_t *env)
@@ -348,12 +349,7 @@ saml_subject_to_om(saml_subject_t *subject, axiom_node_t *parent,
 			}
 			if (subject->key_info)
 			{
-				ns = axiom_namespace_create(env, SAML_NMSP_URI, SAML_PREFIX);
-				cce = axiom_element_create(env, cn, SAML_KEY_INFO, ns, &ccn);
-				if (cce)
-				{
-					axiom_node_add_child(cn, env, subject->key_info);
-				}
+				axiom_node_add_child(cn, env, subject->key_info);
 			}
 		}
 	}
@@ -383,6 +379,45 @@ AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 saml_subject_get_key_info(saml_subject_t *subject, const axutil_env_t *env)
 {
 	return subject->key_info;
+}
+
+AXIS2_EXTERN int AXIS2_CALL
+saml_subject_set_session_key(saml_subject_t *subject, axutil_env_t *env,
+							 axis2_char_t *certificate_file, oxs_key_t *session_key, 
+							 axis2_char_t *algorithm)
+{
+	axiom_node_t *key_info = NULL;    
+    axis2_status_t status = AXIS2_FAILURE;
+    oxs_asym_ctx_t * asym_ctx = NULL;        
+	oxs_x509_cert_t *cert = NULL;
+
+    key_info = oxs_token_build_key_info_element(env, NULL);
+
+    asym_ctx = oxs_asym_ctx_create(env);
+    oxs_asym_ctx_set_algorithm(asym_ctx, env, algorithm);
+    oxs_asym_ctx_set_operation(asym_ctx, env,
+                               OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
+
+	cert = oxs_key_mgr_load_x509_cert_from_pem_file(env, certificate_file);
+	if (!cert)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[oxs][saml]Cannot load the certificate to encrypt the ses. key.");
+        return AXIS2_FAILURE;
+	}
+    oxs_asym_ctx_set_certificate(asym_ctx, env, cert);    
+    status = oxs_xml_enc_encrypt_key(env,
+                            asym_ctx,
+                            key_info,
+                            session_key,
+                            NULL);
+	if (status == AXIS2_FAILURE)
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[oxs][saml]Session key encryption failed");
+        return AXIS2_FAILURE;
+	}
+	subject->key_info = key_info;    
+	saml_subject_add_confirmation(subject, env, SAML_SUB_CONFIRMATION_HOLDER_OF_KEY);
+    return AXIS2_SUCCESS;											
 }
 
 AXIS2_EXTERN int AXIS2_CALL 

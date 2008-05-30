@@ -42,6 +42,15 @@ typedef enum
     RAMPART_ST_CONFIR_TYPE_HOLDER_OF_KEY
 } rampart_st_confir_type_t;
 
+typedef enum
+{
+    RAMPART_ST_TYPE_UNSPECIFIED = 0,
+    RAMPART_ST_TYPE_SIGNED_SUPPORTING_TOKEN,
+    RAMPART_ST_TYPE_SIGNATURE_TOKEN,
+    RAMPART_ST_TYPE_ENCRYPTION_TOKEN,
+    RAMPART_ST_TYPE_PROTECTION_TOKEN
+} rampart_st_type_t;
+
 typedef struct rampart_saml_token_t rampart_saml_token_t;
 
     /**
@@ -170,7 +179,7 @@ rampart_saml_token_is_added_to_header(rampart_saml_token_t *tok,
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_set_token_type(rampart_saml_token_t *tok,
 								  const axutil_env_t *env,
-								  rp_property_type_t token_type);
+								  rampart_st_type_t token_type);
     /**
      *
      * @param tok
@@ -178,9 +187,19 @@ rampart_saml_token_set_token_type(rampart_saml_token_t *tok,
      * returns
      */
 
-AXIS2_EXTERN rp_property_type_t AXIS2_CALL
+AXIS2_EXTERN rampart_st_type_t AXIS2_CALL
 rampart_saml_token_get_token_type(rampart_saml_token_t *tok,
 								  const axutil_env_t *env);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_saml_token_set_session_key(rampart_saml_token_t *tok, 
+								   const axutil_env_t *env,
+								   oxs_key_t *key);
+
+
+AXIS2_EXTERN oxs_key_t * AXIS2_CALL
+rampart_saml_token_get_session_key(rampart_saml_token_t *tok, 
+								   const axutil_env_t *env);
 #ifdef __cplusplus
 }
 #endif

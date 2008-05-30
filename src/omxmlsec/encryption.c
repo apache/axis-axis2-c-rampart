@@ -244,6 +244,12 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
 
         /*Operation is PUB ENCRYPT; Get the public key from the context*/
         x509_cert = oxs_asym_ctx_get_certificate(asym_ctx, env);
+		if (!x509_cert)
+		{
+			oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+                  "Certificate not set");
+			return AXIS2_FAILURE;
+		}	
         pkey = oxs_x509_cert_get_public_key(x509_cert, env);
 
         /* Encrypt using the public key. Then base64 encode and populate the
@@ -291,17 +297,21 @@ oxs_encryption_asymmetric_crypt(const axutil_env_t *env,
         oxs_buffer_populate(dec_enc_buf, env, decoded_encrypted_str, ret);
         declen = openssl_rsa_prv_decrypt(env, pkey, padding, dec_enc_buf,
                                          result);
-
         /*Free*/
         AXIS2_FREE(env->allocator, decoded_encrypted_str);
         decoded_encrypted_str = NULL;
         oxs_buffer_free(dec_enc_buf, env);
         dec_enc_buf = NULL;
-
+		if (declen < 0)
+		{
+			return AXIS2_FAILURE;
+		}
     }
     else
-    {
-        /**/
+    {		
+		oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_INVALID_DATA,
+              "Operation not supported.");
+		return AXIS2_FAILURE;
     }
 
     return AXIS2_SUCCESS;

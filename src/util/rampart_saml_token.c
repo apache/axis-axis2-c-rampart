@@ -37,7 +37,8 @@ struct rampart_saml_token_t
     axis2_bool_t is_token_added;
 	/* specify weather this is a protection token, supporting token,
 	encryption token or signature token */
-	rp_property_type_t token_type;
+	/*rp_property_type_t token_type;*/
+    rampart_st_type_t tok_type;
 };
 
 AXIS2_EXTERN rampart_saml_token_t *AXIS2_CALL
@@ -53,7 +54,8 @@ rampart_saml_token_create(const axutil_env_t *env, axiom_node_t *assertion,
         tok->is_token_added = AXIS2_FALSE;
         tok->key = NULL;
         tok->str = NULL;
-		tok->token_type = RP_PROPERTY_UNKNOWN;
+		tok->type = type;
+		tok->tok_type = RAMPART_ST_TYPE_UNSPECIFIED;
 	}
 	return tok;
 }
@@ -114,19 +116,21 @@ AXIS2_EXTERN int AXIS2_CALL
 rampart_saml_token_set_str(rampart_saml_token_t *tok, const axutil_env_t *env, 
                            axiom_node_t *str)
 {
-    if (tok->str)
-    {
-        axiom_node_detach(str, env);
-        axiom_node_free_tree(str, env);
-    }
-    tok->str = str;
+	if (str)
+	{
+		tok->str = oxs_axiom_clone_node(env, str);
+	}    
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
 rampart_saml_token_get_str(rampart_saml_token_t *tok, const axutil_env_t *env)
 {
-    return tok->str;
+	if (tok->str)
+	{
+		return oxs_axiom_clone_node(env, tok->str);
+	}
+    return NULL;
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
@@ -144,18 +148,40 @@ rampart_saml_token_set_is_added_to_header(rampart_saml_token_t *tok,
     return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN rp_property_type_t AXIS2_CALL
+AXIS2_EXTERN rampart_st_type_t AXIS2_CALL
 rampart_saml_token_get_token_type(rampart_saml_token_t *tok,
 								  const axutil_env_t *env)
 {
-	return tok->token_type;
+	return tok->tok_type;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_saml_token_set_token_type(rampart_saml_token_t *tok,
 								  const axutil_env_t *env,
-								  rp_property_type_t token_type)
+								  rampart_st_type_t token_type)
 {
-	tok->token_type = token_type;
+	tok->tok_type = token_type;
 	return AXIS2_SUCCESS;
 }
+
+AXIS2_EXTERN oxs_key_t * AXIS2_CALL
+rampart_saml_token_get_session_key(rampart_saml_token_t *tok, 
+								   const axutil_env_t *env)
+{
+	return tok->key;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_saml_token_set_session_key(rampart_saml_token_t *tok, 
+								   const axutil_env_t *env,
+								   oxs_key_t *key)
+{
+	if (tok->key)
+	{
+		oxs_key_free(tok->key, env);
+	}
+	tok->key = key;
+	return AXIS2_SUCCESS;
+}
+
+

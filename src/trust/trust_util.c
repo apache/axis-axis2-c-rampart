@@ -274,7 +274,8 @@ trust_util_create_claims_element(
     
     if (dialect_uri)
     {
-        dialect_attr = axiom_attribute_create(env, TRUST_CLAIMS_DIALECT, dialect_uri, wst_ns);
+		wst_ns = axiom_namespace_create(env, wst_ns_uri, TRUST_WST);
+        dialect_attr = axiom_attribute_create(env, TRUST_CLAIMS_DIALECT, dialect_uri, NULL);
         if (dialect_attr)
         {
             status = axiom_element_add_attribute(claims_ele, env, dialect_attr, claims_node);

@@ -174,7 +174,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
-
+    rampart_saml_token_t *saml = NULL;
     oxs_key_t *derived_key = NULL;
 
     axis2_bool_t signature_protection = AXIS2_FALSE;
@@ -262,6 +262,21 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     token_type = rp_property_get_type(token, env);
     use_derived_keys = rampart_context_check_is_derived_keys (env, token);
 
+    if(token_type == RP_PROPERTY_SAML_TOKEN)
+    {
+        /* We need to obtain the saml here because it is used in many parts of the code*/
+        saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_ENCRYPTION_TOKEN);
+		if (!saml)
+		{
+			saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_PROTECTION_TOKEN);
+		}
+        if (!saml)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_encryption] SAML not set.");                
+            return AXIS2_FAILURE;
+        }
+    }
     session_key = rampart_context_get_encryption_session_key(rampart_context, env);
     if(!session_key)
     {
@@ -282,6 +297,17 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             oxs_key_populate(session_key, env,
                    oxs_buffer_get_data(key_buf, env), "for-algo",
                    oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
+            rampart_context_set_encryption_session_key(rampart_context, env, session_key);
+        }
+        if(token_type == RP_PROPERTY_SAML_TOKEN)
+        {			
+			session_key = rampart_saml_token_get_session_key(saml, env);
+			if (!session_key)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption] SAML session key not specified.");                
+                return AXIS2_FAILURE;
+			}
             rampart_context_set_encryption_session_key(rampart_context, env, session_key);
         }
         else
@@ -383,6 +409,27 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                     key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
                 }
             }
+            else if (token_type == RP_PROPERTY_SAML_TOKEN)
+            {
+                if(rampart_context_is_token_include(rampart_context,
+                                                token, token_type, server_side, AXIS2_FALSE, env))
+                {
+					axiom_node_t *assertion = NULL;
+                    /*set the AttachedReference to key_reference_node*/
+                    key_reference_node = rampart_saml_token_get_str(saml, env);						
+					if (!key_reference_node)
+					{
+						assertion = rampart_saml_token_get_assertion(saml, env);
+						key_reference_node = oxs_saml_token_build_key_identifier_reference_local(env, NULL, assertion);
+					}
+                }
+                else
+                {                    
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption] SAML session key not specified.");                
+                    return AXIS2_FAILURE;                    
+                }
+            }
             else
             {
                 if(server_side)
@@ -471,6 +518,32 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                 axiom_node_add_child(sec_node, env, security_context_token_node);
             }
         }
+    }
+    else if (token_type == RP_PROPERTY_SAML_TOKEN)
+    {
+        if(rampart_context_is_token_include(rampart_context,
+                                        token, token_type, server_side, AXIS2_FALSE, env))
+        {
+            axiom_node_t *assertion = NULL;
+            /*include the security context token*/            
+            if (!rampart_saml_token_is_added_to_header(saml, env))
+                assertion = rampart_saml_token_get_assertion(saml, env);
+                if(!assertion)
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_encryption] Cannot get SAML token");
+			        for(j=0 ; j < axutil_array_list_size(id_list, env); j++)
+			        {
+				        axis2_char_t *id = NULL;
+				        id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
+				        AXIS2_FREE(env->allocator, id);
+			        }
+			        axutil_array_list_free(id_list, env);
+			        id_list = NULL;
+                    return AXIS2_FAILURE;
+                }
+                axiom_node_add_child(sec_node, env, assertion);
+        }        
     }
     else
     {
@@ -988,6 +1061,7 @@ rampart_enc_encrypt_signature(
     axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *key_reference_node = NULL;
     axiom_node_t *key_reference_for_encrypted_data = NULL;
+    rampart_saml_token_t *saml = NULL;
 
     session_key = rampart_context_get_encryption_session_key(rampart_context, env);
 
@@ -1024,6 +1098,33 @@ rampart_enc_encrypt_signature(
         {
             /*get the unattachedReference and set to key_reference_node*/
             key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_TRUE, rampart_context, msg_ctx);
+        }
+    }
+    else if(token_type == RP_PROPERTY_SAML_TOKEN)
+    {
+        saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_ENCRYPTION_TOKEN);
+		if (!saml)
+		{
+			saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_PROTECTION_TOKEN);
+		}
+        if (!saml)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][rampart_encryption] SAML not set.");                
+            return AXIS2_FAILURE;
+        }
+        if(rampart_context_is_token_include(rampart_context,
+                                        token, token_type, server_side, AXIS2_FALSE, env))
+        {
+            /*set the AttachedReference to key_reference_node*/
+            key_reference_node = rampart_saml_token_get_str(saml, env);
+        }
+        else
+        {
+            /*get the unattachedReference and set to key_reference_node*/
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[rampart][rampart_encryption] SAML not set.");                
+            return AXIS2_FAILURE;
         }
     }
     else
@@ -1095,7 +1196,8 @@ rampart_enc_encrypt_signature(
     }
     else if((rampart_context_get_binding_type(rampart_context,env)) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
-        if((AXIS2_TRUE == use_derived_keys) || (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN) || (server_side))
+        if((AXIS2_TRUE == use_derived_keys) || (token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN) || (server_side) || 
+            (token_type == RP_PROPERTY_SAML_TOKEN))
         {
             /*We need to create a new reference list and then attach it before the EncryptedData(signature)*/
             axiom_node_t *ref_list_node = NULL;
@@ -1156,7 +1258,7 @@ rampart_enc_encrypt_signature(
     /*If we have used a derrived key, we need to attach it to the Securuty Header*/
     if(AXIS2_TRUE == use_derived_keys)
     {
-        if((token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN) || 
+        if((token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN) || token_type == RP_PROPERTY_SAML_TOKEN ||
             (server_side && (rampart_context_get_binding_type(rampart_context,env) == RP_PROPERTY_SYMMETRIC_BINDING)))
         {
             oxs_derivation_build_derived_key_token_with_stre(env, derived_key, sec_node, key_reference_node);

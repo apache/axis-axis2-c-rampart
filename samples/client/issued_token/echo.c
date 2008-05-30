@@ -305,7 +305,7 @@ get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context
         }
 	}
     saml = rampart_saml_token_create(env, assertion, RAMPART_ST_CONFIR_TYPE_SENDER_VOUCHES);
-	rampart_saml_token_set_token_type(saml, env, RP_PROPERTY_SIGNED_SUPPORTING_TOKEN);
+	rampart_saml_token_set_token_type(saml, env, RAMPART_ST_TYPE_SIGNED_SUPPORTING_TOKEN);
     token = rampart_issued_token_create(env);
     rampart_issued_token_set_token(token, env, saml, RP_PROPERTY_SAML_TOKEN);
     return token;

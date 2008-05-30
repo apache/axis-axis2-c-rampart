@@ -167,7 +167,7 @@ saml_assertion_build(saml_assertion_t *assertion,
 				if (attr_val)
 				{
 					assertion->not_on_or_after = axutil_date_time_create(env);
-					axutil_date_time_deserialize_date_time(assertion->not_before, env, attr_val);
+					axutil_date_time_deserialize_date_time(assertion->not_on_or_after, env, attr_val);
 				}				
 				if ((cci = axiom_element_get_child_elements(ce, env, cn)) != NULL)
 				{

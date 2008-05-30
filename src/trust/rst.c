@@ -334,6 +334,7 @@ trust_rst_populate_rst(
     claims_ele = axiom_element_get_first_child_with_qname(rst_ele, env, claims_qname, rst_node, &claims_node);
     if (claims_ele)
     {
+		claims = trust_claims_create(env);
         if(AXIS2_SUCCESS == trust_claims_deserialize(claims, env, claims_node))
         {
             rst->claims = claims;

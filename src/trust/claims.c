@@ -83,7 +83,11 @@ trust_claims_deserialize(
         if(dialect_attr)
         {
             claims->attr_dialect = dialect_attr;
-        }       
+        } 
+		else
+		{	
+			return AXIS2_FAILURE;
+		}
     }
     
     return AXIS2_FAILURE;

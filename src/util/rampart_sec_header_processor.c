@@ -201,7 +201,8 @@ static oxs_key_t*
 rampart_shp_get_key_for_key_info(const axutil_env_t* env, 
                                  axiom_node_t* key_info_node, 
                                  rampart_context_t* rampart_context, 
-                                 axis2_msg_ctx_t *msg_ctx)
+                                 axis2_msg_ctx_t *msg_ctx,
+								 axis2_bool_t *is_signature)
 {
     oxs_key_t *key = NULL;
     axiom_node_t *str_node = NULL;
@@ -223,7 +224,7 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
     if(!ref_node)
     {
         axis2_char_t *value_type = NULL;
-        axis2_char_t *given_hash = NULL;
+        axis2_char_t *value = NULL;
         oxs_key_t *key = NULL;
 
         ref_node = oxs_axiom_get_first_child_node_by_name(env, str_node, OXS_NODE_KEY_IDENTIFIER, OXS_WSSE_XMLNS, NULL);
@@ -233,23 +234,72 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
             return NULL;
         }
         value_type = oxs_axiom_get_attribute_value_of_node_by_name(env, ref_node, OXS_ATTR_VALUE_TYPE, NULL);
-        if(axutil_strcmp(value_type, OXS_X509_ENCRYPTED_KEY_SHA1) != 0)
+        if(axutil_strcmp(value_type, OXS_X509_ENCRYPTED_KEY_SHA1) == 0)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to identify Key Identifier %s", value_type);
-            return NULL;
-        }
-        given_hash = oxs_axiom_get_node_content(env, ref_node);
-        if(!given_hash)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to get value of EncryptedKeySHA1");
-            return NULL;
-        }
+			value = oxs_axiom_get_node_content(env, ref_node);
+			if(!value)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to get value of EncryptedKeySHA1");
+				return NULL;
+			}
 
-        key = rampart_context_get_key_using_hash(rampart_context, env, given_hash);
-        if(!key)
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Cannot get key corresponding to EncryptedKeySHA1");
+			key = rampart_context_get_key_using_hash(rampart_context, env, value);
+			if(!key)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Cannot get key corresponding to EncryptedKeySHA1");
+			}            
         }
+		/* SAML token reference */
+		else if(axutil_strcmp(value_type, OXS_ST_KEY_ID_VALUE_TYPE) == 0)
+		{
+			axiom_node_t *assertion = NULL;						
+			rampart_saml_token_t *saml = NULL;
+            rampart_st_type_t tok_type;                        
+            void *param = NULL;
+			oxs_key_mgr_t *key_mgr = NULL;
+			openssl_pkey_t *pvt_key = NULL;
+
+			key_mgr = rampart_context_get_key_mgr(rampart_context, env);
+            pvt_key = oxs_key_mgr_get_prv_key(key_mgr, env);
+			if (!pvt_key)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Cannot load private key");
+				return NULL;					
+			}                        
+            
+			assertion = oxs_saml_token_get_from_key_identifer_reference(env, ref_node, NULL);
+			if (!assertion)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Cannot get key SAML Assertion");
+				return NULL;					
+			}
+			if (is_signature)
+            {
+                tok_type = RAMPART_ST_TYPE_SIGNATURE_TOKEN;
+            }
+            else
+            {
+                tok_type = RAMPART_ST_TYPE_ENCRYPTION_TOKEN;
+            }
+			saml = rampart_saml_add_token(rampart_context, env, assertion, str_node, tok_type); 
+			key = rampart_saml_token_get_session_key(saml, env);
+			if (!key) 
+			{
+				key = saml_assertion_get_session_key(env, assertion, 
+                               pvt_key);
+				rampart_saml_token_set_session_key(saml, env, key);
+				oxs_key_set_name(key, env, "for-algo");
+			}            
+			if(!key)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Cannot get key corresponding to EncryptedKeySHA1");
+			}
+		}
+		else 
+		{
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp]Failed to identify Key Identifier %s", value_type);
+            return NULL;
+		}
         return key;        
     }
     else
@@ -889,7 +939,7 @@ rampart_shp_process_reference_list(
             oxs_key_t *key_to_decrypt = NULL;
 
             /*Get the sesison key*/
-            key_to_decrypt = rampart_shp_get_key_for_key_info(env, key_info_node, rampart_context, msg_ctx);
+            key_to_decrypt = rampart_shp_get_key_for_key_info(env, key_info_node, rampart_context, msg_ctx, AXIS2_FALSE);
             
             /*if security context token is used, then store it. It will be used by the server to encrypt the message*/
             rampart_shp_store_token_id(env, key_info_node, rampart_context, sec_node, AXIS2_TRUE, msg_ctx);
@@ -961,7 +1011,7 @@ rampart_shp_process_sym_binding_signature(
                             OXS_NODE_KEY_INFO, OXS_DSIG_NS, NULL);
     if(key_info_node)
     {
-        key_to_verify = rampart_shp_get_key_for_key_info(env, key_info_node,rampart_context, msg_ctx);
+        key_to_verify = rampart_shp_get_key_for_key_info(env, key_info_node,rampart_context, msg_ctx, AXIS2_TRUE);
     }
 
     if(!key_to_verify)
@@ -1518,7 +1568,7 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
     oxs_key_t *derived_key = NULL;
 
     /*Get the session key.*/ 
-    session_key = rampart_shp_get_key_for_key_info(env, dk_node, rampart_context, msg_ctx);
+    session_key = rampart_shp_get_key_for_key_info(env, dk_node, rampart_context, msg_ctx, AXIS2_TRUE);
     if(!session_key)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  "[rampart][shp] On processing derived key, failed to get the session key. Cannot derive the key");
@@ -1545,6 +1595,12 @@ rampart_shp_process_saml_token(const axutil_env_t *env,
     axis2_char_t *sub_conf = NULL;
     server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
     
+	if (AXIS2_FAILURE == rampart_saml_token_validate(env, rampart_context, saml_node))
+	{
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                   "[rampart][shp] SAML Signature Verification Failed");			        
+		return AXIS2_FAILURE;
+	}
     sub_conf = rampart_saml_token_get_subject_confirmation(env, saml_node);
     if (sub_conf && axutil_strcmp(sub_conf, SAML_SUB_CONFIRMATION_SENDER_VOUCHES) == 0)
     {

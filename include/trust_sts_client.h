@@ -127,6 +127,26 @@ extern "C"
     	const axutil_env_t * env,
 	    axis2_char_t * file_path);
 
+		AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	trust_sts_client_set_auth_info(
+		trust_sts_client_t * sts_client,
+		const axutil_env_t * env,
+		axis2_char_t *username,
+		axis2_char_t *password,
+		axis2_char_t * auth_type);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	trust_sts_client_set_issued_token(
+		trust_sts_client_t * sts_client,
+		const axutil_env_t * env,
+		rampart_saml_token_t *saml_token);
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	trust_sts_client_set_issued_token_func(
+		trust_sts_client_t * sts_client,
+		const axutil_env_t * env,
+			issued_token_callback_func issue_token_func);
+
 
 
 #ifdef __cplusplus

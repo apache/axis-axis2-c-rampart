@@ -31,6 +31,7 @@
 #include <oxs_key_mgr.h>
 #include <oxs_transform.h>
 #include <oxs_x509_cert.h>
+#include <openssl_pkey.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -2132,6 +2133,16 @@ saml_named_id_set_name_qualifier(saml_named_id_t *id,
 
 /* private method */
 AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_ctx, const axutil_env_t *env, axis2_char_t *id);
+
+/* Get the session key from a assertion. Session key is inside the SAML 
+ * token as an EncryptedKey 
+ * @param env pointer to environment struct
+ * @param assertion an saml assertion node
+ * @param pvt_key private key used to encrypt the session key
+ */
+AXIS2_EXTERN oxs_key_t * AXIS2_CALL
+saml_assertion_get_session_key(axutil_env_t *env, axiom_node_t *assertion, 
+                               openssl_pkey_t *pvt_key);
 
 #ifdef __cplusplus
 }

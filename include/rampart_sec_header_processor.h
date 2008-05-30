@@ -22,6 +22,7 @@
 #include <oxs_asym_ctx.h>
 #include <oxs_xml_encryption.h>
 #include <rampart_context.h>
+#include <oxs_key_mgr.h>
 /**
   * @file rampart_sec_header_processor.h
   * @brief Processes a message depending on it's security related claims 

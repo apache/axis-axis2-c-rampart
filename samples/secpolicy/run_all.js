@@ -9,7 +9,11 @@ var axis2c_home = WshShell.ExpandEnvironmentStrings("%AXIS2C_HOME%");
 var client_repo = axis2c_home + "\\client_repo";
 
 for (var i = 1; i <= 14; i++) {
-    run(i);
+    if (i != 14 && i != 24) {
+	run (i, "\\bin\\samples\\rampart\\client\\sec_echo\\echo.exe")
+    } else if (i == 14) {
+	run(i, "\\bin\\samples\\rampart\\client\\saml_echo\\echo.exe");
+    }
 }
 
 WScript.Echo("Scenario " + 20 + ":");
@@ -24,11 +28,17 @@ s = client.StdOut.ReadAll();
 WScript.Echo(s);
 http_server.Terminate();
 
-for (var i = 21; i <= 23; i++) {
-    run(i);
+for (var i = 21; i <= 24; i++) {
+    if (i != 14 && i != 24) {
+	run (i, "\\bin\\samples\\rampart\\client\\sec_echo\\echo.exe")
+    } else if (i == 14) {
+	run(i, "\\bin\\samples\\rampart\\client\\saml_echo\\echo.exe");
+    } else if (i == 24) {
+	run(i, "\\bin\\samples\\rampart\\client\\saml_protect\\echo.exe");	
+    }    
 }
 
-function run(i)
+function run(i, file)
 {
     WScript.Echo("Scenario " + i + ":");    
     deploy(i);
@@ -37,11 +47,9 @@ function run(i)
     WScript.Sleep(3000);    		
     WScript.Echo("Started Axis2C simple HTTP server\n\n");    
     var client;
-    if (i != 14) {
-    	client = WshShell.Exec(axis2c_home + "\\bin\\samples\\rampart\\client\\sec_echo\\echo.exe http://localhost:9090/axis2/services/sec_echo/echoString " + client_repo);
-    } else if (i == 14) {
-	    client = WshShell.Exec(axis2c_home + "\\bin\\samples\\rampart\\client\\saml_echo\\echo.exe http://localhost:9090/axis2/services/sec_echo/echoString " + client_repo);
-    }	
+
+    client = WshShell.Exec(axis2c_home + file + " http://localhost:9090/axis2/services/sec_echo/echoString " + client_repo);
+
     s = client.StdOut.ReadAll();
     WScript.Echo(s);
     http_server.Terminate();

@@ -24,6 +24,9 @@
 #include <rampart_context.h>
 #include <axutil_utils.h>
 #include <axiom.h>
+#include <rampart_saml_token.h>
+#include <oxs_key_mgr.h>
+#include <rp_rampart_config.h>
 
 /**
   * @file rampart_saml.h
@@ -131,6 +134,11 @@ rampart_saml_token_fault_invalidsecuritytoken(axutil_env_t *env,
                                                   axis2_msg_ctx_t *ctx);
 
 
+AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
+rampart_saml_add_token(rampart_context_t *rampart_context, 
+					   axutil_env_t *env, axiom_node_t *assertion, 
+					   axiom_node_t *str,
+					   rampart_st_type_t type);
 #ifdef __cplusplus
 }
 #endif

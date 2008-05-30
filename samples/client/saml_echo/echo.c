@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     }
     assertion = create_saml_assertion(env);
     saml = rampart_saml_token_create(env, assertion, RAMPART_ST_CONFIR_TYPE_SENDER_VOUCHES);
-	rampart_saml_token_set_token_type(saml, env, RP_PROPERTY_SIGNED_SUPPORTING_TOKEN);
+	rampart_saml_token_set_token_type(saml, env, RAMPART_ST_TYPE_SIGNED_SUPPORTING_TOKEN);
     rampart_config_add_saml_token(client_config, env, saml);
 
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,

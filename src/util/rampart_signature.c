@@ -303,6 +303,23 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
                    oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
             rampart_context_set_signature_session_key(rampart_context, env, session_key);
         }
+		else if(token_type == RP_PROPERTY_SAML_TOKEN)
+        {
+			rampart_saml_token_t *saml = NULL;
+			saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_SIGNATURE_TOKEN);
+			if (!saml)
+			{
+				saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_PROTECTION_TOKEN);
+			}
+			session_key = rampart_saml_token_get_session_key(saml, env);
+			if (!session_key)
+			{
+				AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][rampart_signature]Session key not specified.");                
+                return AXIS2_FAILURE;
+			}
+			rampart_context_set_signature_session_key(rampart_context, env, session_key);
+        }
         else
         {
             axis2_char_t *token_id = NULL;
@@ -595,6 +612,47 @@ rampart_sig_sign_message(
             key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_FALSE, rampart_context, msg_ctx);
         }
     }
+    else if (token_type == RP_PROPERTY_SAML_TOKEN)
+    {
+        if (include)
+        {
+            axiom_node_t *assertion = NULL;
+            rampart_saml_token_t *saml = NULL;
+            /* Get the saml info from context.First check weather it is a signature token.*/
+            saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_SIGNATURE_TOKEN);            
+            if (!saml)
+            {
+                saml = rampart_context_get_saml_token(rampart_context, env, RAMPART_ST_TYPE_PROTECTION_TOKEN);            
+            }
+            if (!saml)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rampart_signature] SAML token not specified.");
+                return AXIS2_FAILURE;
+            }
+            /* If not already added to the header */
+            if (!rampart_saml_token_is_added_to_header(saml, env))            
+            {
+                assertion = rampart_saml_token_get_assertion(saml, env);
+                if (!assertion) 
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rampart_signature] SAML token not specified.");
+                    return AXIS2_FAILURE;
+                }
+				axiom_node_add_child(sec_node, env, assertion);
+                /* we are sure that key reference node is not added to the header */
+                key_reference_node = rampart_saml_token_get_str(saml, env);            
+                if (!key_reference_node)
+                {
+                    key_reference_node = oxs_saml_token_build_key_identifier_reference_local(env, NULL, assertion);
+                }                
+            }            
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rampart_signature] SAML tokens with unattached reference not supported.");
+            return AXIS2_FAILURE;
+        }
+    }
 
     sign_ctx = oxs_sign_ctx_create(env);
 
@@ -663,6 +721,26 @@ rampart_sig_sign_message(
                 oxs_axiom_interchange_nodes(env, dk_token, sig_node);
             }
         }
+		else if(token_type == RP_PROPERTY_SAML_TOKEN)
+		{
+			if(0 == axutil_strcmp(oxs_key_get_name(session_key, env), oxs_key_get_name(signed_key, env))) 
+            {
+                /*Now then... we have used the security context token to sign*/
+                axiom_node_t* key_info_node = NULL;
+                key_info_node = oxs_token_build_key_info_element(env, sig_node);
+                axiom_node_add_child(key_info_node, env, key_reference_node);
+            }
+            else
+            {
+                axiom_node_t *dk_token = NULL;
+                /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
+                rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL);
+                /*In addition we need to add a DerivedKeyToken*/
+                dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node);
+                /*We need to make DerivedKeyToken to appear before the sginature node*/
+                oxs_axiom_interchange_nodes(env, dk_token, sig_node);
+            }
+		}
         else
         {
             if(server_side)

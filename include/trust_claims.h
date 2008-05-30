@@ -69,6 +69,12 @@ extern "C"
         trust_claims_t *claims,
         const axutil_env_t *env);
 
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    trust_claims_set_claim_list(
+        trust_claims_t *claims,
+		axutil_array_list_t *claims_list,
+        const axutil_env_t *env);
+
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     trust_claims_set_wst_ns_uri(
         trust_claims_t *claims,

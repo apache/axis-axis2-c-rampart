@@ -101,6 +101,7 @@ distdir:
 	if not exist $(RAMPART_DISTDIR)\bin\samples\client\sec_echo        mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo
 	if not exist $(RAMPART_DISTDIR)\bin\samples\client\saml_echo       mkdir $(RAMPART_DISTDIR)\bin\samples\client\saml_echo
 	if not exist $(RAMPART_DISTDIR)\bin\samples\client\issued_token    mkdir $(RAMPART_DISTDIR)\bin\samples\client\issued_token
+	if not exist $(RAMPART_DISTDIR)\bin\samples\client\saml_protect    mkdir $(RAMPART_DISTDIR)\bin\samples\client\saml_protect
 	if not exist $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data   mkdir $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\data
 	if not exist $(RAMPART_DISTDIR)\bin\samples\credential_provider    mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
 	if not exist $(RAMPART_DISTDIR)\bin\samples\data                   mkdir $(RAMPART_DISTDIR)\bin\samples\data
@@ -124,6 +125,7 @@ intdirs:
 	if not exist $(RAMPART_INTDIR)\samples\client\sec_echo\ mkdir $(RAMPART_INTDIR)\samples\client\sec_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\saml_echo\ mkdir $(RAMPART_INTDIR)\samples\client\saml_echo
 	if not exist $(RAMPART_INTDIR)\samples\client\issued_token\ mkdir $(RAMPART_INTDIR)\samples\client\issued_token
+	if not exist $(RAMPART_INTDIR)\samples\client\saml_protect\ mkdir $(RAMPART_INTDIR)\samples\client\saml_protect
 	if not exist $(RAMPART_INTDIR)\samples\credential_provider\ mkdir $(RAMPART_INTDIR)\samples\credential_provider
 
 mod_rampart_sample_data:
@@ -271,6 +273,16 @@ $(RAMPART_DISTDIR)\bin\samples\client\issued_token\echo.exe : $(RAMPART_SOURCE_D
 			
 mod_rampart_samples_issued_token: $(RAMPART_DISTDIR)\bin\samples\client\issued_token\echo.exe	
 
+$(RAMPART_DISTDIR)\bin\samples\client\saml_protect\echo.exe : $(RAMPART_SOURCE_DIR)\samples\client\saml_protect\echo.c 
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
+        $(RAMPART_SOURCE_DIR)\samples\client\saml_protect\echo.c \
+        /Fo$(RAMPART_INTDIR)\samples\client\saml_protect\ /c
+	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\saml_protect\echo.obj axutil.lib axiom.lib neethi.lib \
+        axis2_parser.lib axis2_engine.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\saml_protect\echo.exe 
+	-@$(_VC_MANIFEST_EMBED_EXE)
+			
+mod_rampart_samples_saml_protect: $(RAMPART_DISTDIR)\bin\samples\client\saml_protect\echo.exe
+
 $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll : $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
         $(RAMPART_SOURCE_DIR)\samples\credential_provider\*.c \
@@ -283,7 +295,7 @@ $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll : $(RAMPART
 
 mod_rampart_samples_credential_provider: $(RAMPART_DISTDIR)\bin\samples\credential_provider\cred_provider.dll
 
-mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo mod_rampart_services_secconv_echo
+mod_rampart_samples: mod_rampart_samples_sec_echo mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_samples_saml_protect
 
 mod_rampart_copy_include:
 	xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\include $(RAMPART_DISTDIR)\include
@@ -326,7 +338,7 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+dist: distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_saml_protect mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 
