@@ -176,7 +176,8 @@ rampart_saml_token_validate(const axutil_env_t *env,
 
 AXIS2_EXTERN rampart_saml_token_t * AXIS2_CALL
 rampart_saml_add_token(rampart_context_t *rampart_context, 
-					   axutil_env_t *env, axiom_node_t *assertion, 
+					   const axutil_env_t *env, 
+					   axiom_node_t *assertion, 
 					   axiom_node_t *str,
 					   rampart_st_type_t type)
 {	
@@ -206,7 +207,6 @@ rampart_saml_add_token(rampart_context_t *rampart_context,
 	if(rp_property_get_type(binding,env) == RP_PROPERTY_SYMMETRIC_BINDING)
     {
         rp_symmetric_binding_t *sym_binding = NULL;
-        rp_property_t *token = NULL;
         sym_binding = (rp_symmetric_binding_t *)rp_property_get_value(binding,env);
         if(sym_binding)
         {

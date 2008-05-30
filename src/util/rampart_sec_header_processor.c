@@ -202,7 +202,7 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
                                  axiom_node_t* key_info_node, 
                                  rampart_context_t* rampart_context, 
                                  axis2_msg_ctx_t *msg_ctx,
-								 axis2_bool_t *is_signature)
+								 axis2_bool_t is_signature)
 {
     oxs_key_t *key = NULL;
     axiom_node_t *str_node = NULL;
@@ -255,7 +255,6 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
 			axiom_node_t *assertion = NULL;						
 			rampart_saml_token_t *saml = NULL;
             rampart_st_type_t tok_type;                        
-            void *param = NULL;
 			oxs_key_mgr_t *key_mgr = NULL;
 			openssl_pkey_t *pvt_key = NULL;
 

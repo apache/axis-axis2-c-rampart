@@ -2141,7 +2141,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
  * @param pvt_key private key used to encrypt the session key
  */
 AXIS2_EXTERN oxs_key_t * AXIS2_CALL
-saml_assertion_get_session_key(axutil_env_t *env, axiom_node_t *assertion, 
+saml_assertion_get_session_key(const axutil_env_t *env, axiom_node_t *assertion, 
                                openssl_pkey_t *pvt_key);
 
 #ifdef __cplusplus

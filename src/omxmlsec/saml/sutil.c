@@ -64,7 +64,7 @@ AXIS2_EXTERN int AXIS2_CALL saml_util_set_sig_ctx_defaults(oxs_sign_ctx_t *sig_c
 
 
 AXIS2_EXTERN oxs_key_t * AXIS2_CALL
-saml_assertion_get_session_key(axutil_env_t *env, axiom_node_t *assertion, 
+saml_assertion_get_session_key(const axutil_env_t *env, axiom_node_t *assertion, 
                                openssl_pkey_t *pvt_key)
 {
     axiom_node_t *encrypted_key_node = NULL;
