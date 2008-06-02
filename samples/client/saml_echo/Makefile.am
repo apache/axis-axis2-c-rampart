@@ -19,6 +19,7 @@ saml_echo_LDADD   = $(LDFLAGS) \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
 					-lmod_rampart \
+					-lomxmlsec \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

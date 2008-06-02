@@ -10,6 +10,7 @@ libsaml_sts_la_SOURCES = issuer.c saml_skeleton.c
 libsaml_sts_la_LIBADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
                     -L$(AXIS2C_HOME)/modules/rampart \
+					-lomxmlsec \
 		    -lmod_rampart \
 		    -ltrust	
 
