@@ -1,4 +1,4 @@
-lib_LTLIBRARIES =libsaml.la
+noinst_LTLIBRARIES =libsaml.la
 
 libsaml_la_SOURCES = assertion.c \
 			  attr_stmt.c \

@@ -18,7 +18,6 @@ issued_token_LDADD   = $(LDFLAGS) \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-					-lsaml \
 					-ltrust \
 					-lmod_rampart \
                     $(GUTHTHILA_LIBS) \
