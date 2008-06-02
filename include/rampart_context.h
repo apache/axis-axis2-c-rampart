@@ -1549,6 +1549,11 @@ extern "C"
     AXIS2_EXTERN axutil_array_list_t* AXIS2_CALL
     rampart_context_get_custom_tokens(rampart_context_t *rampart_context,
                                         const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+	rampart_context_get_receiver_certificate_file(
+	    rampart_context_t *rampart_context,
+	    const axutil_env_t *env);
 #ifdef __cplusplus
 }
 #endif
