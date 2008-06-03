@@ -299,7 +299,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                    oxs_buffer_get_size(key_buf, env), OXS_KEY_USAGE_NONE);
             rampart_context_set_encryption_session_key(rampart_context, env, session_key);
         }
-        if(token_type == RP_PROPERTY_SAML_TOKEN)
+        else if(token_type == RP_PROPERTY_SAML_TOKEN)
         {			
 			session_key = rampart_saml_token_get_session_key(saml, env);
 			if (!session_key)
