@@ -12,7 +12,7 @@ librampart_util_la_SOURCES = rampart_crypto_util.c \
 
 
 librampart_util_la_LIBADD  = -lssl \
-                      $(top_builddir)/src/omxmlsec/saml/libsaml.la \
+			    ../omxmlsec/libomxmlsec.la \
 			     -lcrypto \
 				@OPENSSLLIB@
 
