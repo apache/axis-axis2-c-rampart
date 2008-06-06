@@ -162,48 +162,72 @@ rampart_create_fault_envelope(const axutil_env_t *env,
     axutil_array_list_t *sub_codes = NULL;
     axiom_soap_body_t *body = NULL;
 
-    sub_codes = axutil_array_list_create(env, 1);
-    axutil_array_list_add(sub_codes, env, sub_code);
+    /* Creating the detailed node in the fault envelope*/
 
     ns1 = axiom_namespace_create(env, RAMPART_WSSE_XMLNS, RAMPART_WSSE);
     text_om_ele = axiom_element_create(env, NULL, "ProblemSecurityHeader", ns1, &text_om_node);
     axiom_element_set_text(text_om_ele, env, detail_node_text, text_om_node);
 
-    /*In case of SOAP v 1.1 we change the default version*/
+    /* In SOAP11 sub code is the faultcode and no soapenv:sender*/
+
     if(axis2_msg_ctx_get_is_soap_11(msg_ctx, env))
     {
-        soap_version =  AXIOM_SOAP11;
+        soap_version = AXIOM_SOAP11;
+        envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env,
+                   sub_code,
+                   reason_text,
+                   soap_version, NULL, text_om_node);
     }
 
-    envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env,
+    /* In SOAP12 we need to create subcodes. subcode/value is the faultcode 
+       in SOAP11 and fault/code/value is soapenv:Sender*/
+
+    else
+    {
+        sub_codes = axutil_array_list_create(env, 1);
+        axutil_array_list_add(sub_codes, env, sub_code);
+
+        envelope = axiom_soap_envelope_create_default_soap_fault_envelope(env,
                "soapenv:Sender",
                reason_text,
                soap_version, sub_codes, text_om_node);
 
-    body = axiom_soap_envelope_get_body(envelope, env);
-    if(body)
-    {
-        axiom_node_t *body_node = NULL;
-        body_node = axiom_soap_body_get_base_node(body, env);
-        if(body_node)
+        if(envelope)
         {
-            axiom_node_t *subcode_node = NULL;
-            subcode_node = oxs_axiom_get_node_by_local_name(env, body_node, AXIOM_SOAP12_SOAP_FAULT_SUB_CODE_LOCAL_NAME);
-            if(subcode_node)
+            body = axiom_soap_envelope_get_body(envelope, env);
+            if(body)
             {
-                axiom_element_t *subcode_ele = NULL;
-                subcode_ele = axiom_node_get_data_element(subcode_node, env);
-                if(subcode_ele)
+                axiom_node_t *body_node = NULL;
+                body_node = axiom_soap_body_get_base_node(body, env);
+                if(body_node)
                 {
-                    axiom_element_declare_namespace(subcode_ele, env, subcode_node, ns1);
+                    axiom_node_t *subcode_node = NULL;
+                    subcode_node = oxs_axiom_get_node_by_local_name(env, body_node, AXIOM_SOAP12_SOAP_FAULT_SUB_CODE_LOCAL_NAME);
+                    if(subcode_node)
+                    {
+                        axiom_element_t *subcode_ele = NULL;
+                        subcode_ele = axiom_node_get_data_element(subcode_node, env);
+                        if(subcode_ele)
+                        {
+                            axiom_element_declare_namespace(subcode_ele, env, subcode_node, ns1);
+                        }
+                    }
                 }
             }
         }
     }
 
-    axis2_msg_ctx_set_fault_soap_envelope(msg_ctx, env, envelope);
+    if(envelope)
+    {
+        axis2_msg_ctx_set_fault_soap_envelope(msg_ctx, env, envelope);
+    }
+
     /*free sub codes*/
-	axutil_array_list_free(sub_codes, env);
+    if(sub_codes)
+    {
+	    axutil_array_list_free(sub_codes, env);
+    }
+
     return;
 }
 
