@@ -81,6 +81,7 @@ rampart_engine_build_configuration(
     axis2_char_t *enc_user = NULL;
     axis2_char_t *pkcs12_file = NULL;
     axis2_char_t *pkcs12_password = NULL;
+    axis2_char_t *pkcs12_buf = NULL;
     password_callback_fn password_function = NULL;
     rampart_callback_t *password_callback = NULL;
     void *param = NULL;
@@ -223,10 +224,7 @@ rampart_engine_build_configuration(
             if(password_callback)
             {
                 password = rampart_callback_password(env, password_callback, enc_user);
-                if((pkcs12_file = rampart_context_get_pkcs12_file_name(rampart_context, env)))
-                {
-                    pkcs12_password = rampart_callback_pkcs12_password(env, password_callback, enc_user);                   
-                }
+                pkcs12_password = rampart_callback_pkcs12_password(env, password_callback, enc_user);
             }
             else
             {
@@ -236,7 +234,8 @@ rampart_engine_build_configuration(
         }
     } 
     
-    if(pkcs12_file)
+    pkcs12_file = rampart_context_get_pkcs12_file_name(rampart_context, env);
+    if(pkcs12_file && pkcs12_password)
     {
         key_store = pkcs12_keystore_create(env, pkcs12_file, pkcs12_password);
         if(!key_store)
@@ -244,14 +243,24 @@ rampart_engine_build_configuration(
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                             "[rampart][engine] PKCS12 KeyStore creation failed.");
             return NULL;	
-        }
-
-        oxs_key_mgr_set_key_store(key_mgr, env, key_store);
-
-        if (password)
+        }        
+    }
+    else if(pkcs12_password && (pkcs12_buf = (axis2_char_t*)rampart_context_get_key_store_buff(rampart_context, env)))
+    {
+        key_store = pkcs12_keystore_create_from_buffer(env, pkcs12_buf, password);
+        if(!key_store)
         {
-            oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
-        }
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                "[rampart][engine] PKCS12 KeyStore creation failed.");
+                return NULL;	
+        }  
+    }
+    
+    oxs_key_mgr_set_key_store(key_mgr, env, key_store);
+
+    if (password)
+    {
+        oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
     }
     
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
