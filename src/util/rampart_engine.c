@@ -189,59 +189,71 @@ rampart_engine_build_configuration(
             rampart_context_free(rampart_context, env);
             rampart_context = NULL;
             return NULL;
-        }
-    	 /* Retrieve the password for obtaining private keys */
-        enc_user = rampart_context_get_encryption_user(rampart_context, env);
-        if(!enc_user)
+        }  
+        
+        rampart_engine_retrieve_key_mgr_prop_from_policy(rampart_context, env);
+    }
+    
+    key_mgr = rampart_context_get_key_mgr(rampart_context, env);
+    if (!key_mgr)
+    {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                    "[rampart][engine] Key mgr creation failed.");
+            return NULL;
+    }		
+
+    /* Retrieve the password for obtaining private keys */
+    enc_user = rampart_context_get_encryption_user(rampart_context, env);
+    if(!enc_user)
+    {
+        enc_user = rampart_context_get_user(rampart_context, env);
+    }
+    if(enc_user)
+    {
+        password_function = rampart_context_get_pwcb_function(rampart_context, env);
+        if(password_function)
         {
-            enc_user = rampart_context_get_user(rampart_context, env);
+            password = (*password_function)(env, enc_user, param);
+            pkcs12_password = password;
         }
-        if(enc_user)
+        else
         {
-            password_function = rampart_context_get_pwcb_function(rampart_context, env);
-            if(password_function)
+            password_callback = rampart_context_get_password_callback(
+                                    rampart_context, env);
+            if(password_callback)
             {
-                password = (*password_function)(env, enc_user, param);
+                password = rampart_callback_password(env, password_callback, enc_user);
+                if((pkcs12_file = rampart_context_get_pkcs12_file_name(rampart_context, env)))
+                {
+                    pkcs12_password = rampart_callback_pkcs12_password(env, password_callback, enc_user);                   
+                }
             }
             else
             {
-                password_callback = rampart_context_get_password_callback(
-                                        rampart_context, env);
-                if(password_callback)
-                {
-					password = rampart_callback_password(env, password_callback, enc_user);
-					if((pkcs12_file = rampart_context_get_pkcs12_file_name(rampart_context, env)))
-					{
-					    pkcs12_password = rampart_callback_pkcs12_password(env, password_callback, enc_user);
-						key_store = pkcs12_keystore_create(env, pkcs12_file, pkcs12_password);
-				        if(!key_store)
-				        {
-				        	AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-				        							"[rampart][engine] PKCS12 KeyStore creation failed.");
-				        	return NULL;	
-				        }
-					}
-                }
+                password = rampart_context_get_password(rampart_context, env);
+                pkcs12_password = password;
             }
-        }  
-        
-		key_mgr = rampart_context_get_key_mgr(rampart_context, env);
-		if (!key_mgr)
-		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-						"[rampart][engine] Key mgr creation failed.");
-			return NULL;
-		}		
-		
-        oxs_key_mgr_set_key_store(key_mgr, env, key_store);
-		        
-		if (password)
-		{
-			oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
-		}
-		rampart_engine_retrieve_key_mgr_prop_from_policy(rampart_context, env);
-    }
+        }
+    } 
+    
+    if(pkcs12_file)
+    {
+        key_store = pkcs12_keystore_create(env, pkcs12_file, pkcs12_password);
+        if(!key_store)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][engine] PKCS12 KeyStore creation failed.");
+            return NULL;	
+        }
 
+        oxs_key_mgr_set_key_store(key_mgr, env, key_store);
+
+        if (password)
+        {
+            oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
+        }
+    }
+    
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
                AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_CONTEXT, property);

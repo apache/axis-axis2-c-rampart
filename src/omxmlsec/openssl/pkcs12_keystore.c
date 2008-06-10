@@ -27,7 +27,8 @@ struct pkcs12_keystore {
     openssl_pkey_t *pvt_key;
 };
 
-AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
+AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL 
+pkcs12_keystore_create(
         const axutil_env_t *env,
         axis2_char_t *filename,
         axis2_char_t *password) 
@@ -51,6 +52,55 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL pkcs12_keystore_create(
     keystore->pvt_key = NULL;
 
     if (!openssl_pkcs12_load(env, keystore->keystore_file, &keystore->keystore)) {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
+                "Error loading pkcs12 keystore from file");
+        return NULL;
+    }
+
+    if (!openssl_pkcs12_parse(
+            env,
+            keystore->keystore_password,
+            keystore->keystore,
+            &pvt_key,
+            &keystore->cert,
+            &keystore->other_certs)) {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "PKCS12 Key Store Parsing failed.");
+        AXIS2_FREE(env->allocator, keystore);
+        return NULL;
+    }
+    /* We only populate this since openssl_pkey_t is ref counted. */
+    if (pvt_key) {
+        keystore->pvt_key = openssl_pkey_create(env);
+        openssl_pkey_populate(keystore->pvt_key, env, pvt_key, (axis2_char_t*) keystore->keystore_file, OPENSSL_PKEY_TYPE_PRIVATE_KEY);
+    }
+    return keystore;
+}
+
+AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL 
+pkcs12_keystore_create_from_buffer(
+        const axutil_env_t *env,
+        axis2_char_t *buffer,
+        axis2_char_t *password) 
+{
+    pkcs12_keystore_t *keystore = NULL;
+    EVP_PKEY *pvt_key = NULL;
+    SSLeay_add_all_algorithms();
+    ERR_load_crypto_strings();
+
+    keystore = (pkcs12_keystore_t*) AXIS2_MALLOC(env->allocator, sizeof (pkcs12_keystore_t));
+    if (!keystore) {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
+        return NULL;
+    }
+
+    keystore->keystore_file = NULL;
+    keystore->keystore_password = password;
+    keystore->other_certs = NULL;
+    keystore->keystore = NULL;
+    keystore->cert = NULL;
+    keystore->pvt_key = NULL;
+
+    if (!openssl_pkcs12_load_from_buffer(env, buffer, &keystore->keystore)) {
         oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                 "Error loading pkcs12 keystore from file");
         return NULL;

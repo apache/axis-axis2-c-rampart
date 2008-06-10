@@ -52,6 +52,55 @@ openssl_pkcs12_load(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
+openssl_pkcs12_load_from_buffer(const axutil_env_t *env,
+                    axis2_char_t *buffer,
+                    PKCS12 **p12)
+{
+    int len = 0;    
+    BIO *in = NULL;
+    BUF_MEM* bm = NULL;
+    
+    SSLeay_add_all_algorithms();
+    ERR_load_crypto_strings();
+    
+    len = axutil_strlen(buffer);
+    
+    if (!(in = BIO_new(BIO_s_mem())))
+    {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
+        return AXIS2_FAILURE;
+    }
+    if (!(bm = BUF_MEM_new()))
+    {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
+        return AXIS2_FAILURE;        
+    }
+    if (!BUF_MEM_grow(bm, len))
+    {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_CREATION_FAILED, "Memory allocation error!");
+        return AXIS2_FAILURE; 
+    }
+    memcpy(bm->data, buffer, len);
+    BIO_set_mem_buf(in, bm, 0 /*not used*/);
+    /*if (!(in = BIO_new_mem_buf((unsigned char*)buffer, len))) {
+        fprintf(stderr, "Error creating pkcs12 from buffer.");
+        return AXIS2_FAILURE;
+    }*/
+    /*Load pkcs store*/
+    *p12 = d2i_PKCS12_bio(in, NULL);
+    
+
+    if (!p12) {
+        fprintf(stderr, "Error reading PKCS#12 from buffer: %s\n", buffer);
+        ERR_print_errors_fp(stderr);
+        return AXIS2_FAILURE;
+    }
+    BIO_free(in);
+    return AXIS2_SUCCESS;
+    
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 openssl_pkcs12_parse(const axutil_env_t *env,
                      axis2_char_t *password ,
                      PKCS12 *p12,

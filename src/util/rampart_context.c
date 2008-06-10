@@ -40,7 +40,8 @@ struct rampart_context_t
     int ttl;
     axis2_char_t *rd_val;
     int ref;
-	oxs_key_mgr_t *key_mgr;
+    oxs_key_mgr_t *key_mgr;
+    void *key_store_buf;
     /****************************/
     /* Set true when the issued token is aquired and set to the rampart conext*/
     issued_token_callback_func aquire_issued_token; 
@@ -189,7 +190,8 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->signature_token_id = NULL;
 
     rampart_context->key_list = axutil_array_list_create(env, 2);
-	rampart_context->key_mgr = oxs_key_mgr_create(env);
+    rampart_context->key_mgr = oxs_key_mgr_create(env);
+    rampart_context->key_store_buf = NULL;
 
     return rampart_context;
 }
@@ -2939,3 +2941,22 @@ rampart_context_get_key_mgr(
 	return rampart_context->key_mgr;
 }
 
+AXIS2_EXTERN void * AXIS2_CALL
+rampart_context_get_key_store_buff(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->key_store_buf;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_key_store_buff(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    void *key_store_buf)
+{
+    AXIS2_PARAM_CHECK(env->error, key_store_buf, AXIS2_FAILURE);
+    AXIS2_LOG_INFO(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Seting key store buff.");     
+    rampart_context->key_store_buf = key_store_buf;
+    return AXIS2_SUCCESS;
+}
