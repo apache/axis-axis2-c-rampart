@@ -1554,6 +1554,12 @@ extern "C"
 	rampart_context_get_receiver_certificate_file(
 	    rampart_context_t *rampart_context,
 	    const axutil_env_t *env);
+
+
+	AXIS2_EXTERN void * AXIS2_CALL
+	rampart_context_get_key_store_buff(
+	    rampart_context_t *rampart_context,
+	    const axutil_env_t *env);
 #ifdef __cplusplus
 }
 #endif
