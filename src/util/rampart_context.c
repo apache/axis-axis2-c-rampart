@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+#include "oxs_key_mgr.h"
+
+
 #include <rampart_context.h>
 #include <rampart_constants.h>
 #include <oxs_axiom.h>
@@ -41,7 +44,6 @@ struct rampart_context_t
     axis2_char_t *rd_val;
     int ref;
     oxs_key_mgr_t *key_mgr;
-    void *key_store_buf;
     /****************************/
     /* Set true when the issued token is aquired and set to the rampart conext*/
     issued_token_callback_func aquire_issued_token; 
@@ -191,8 +193,7 @@ rampart_context_create(const axutil_env_t *env)
 
     rampart_context->key_list = axutil_array_list_create(env, 2);
     rampart_context->key_mgr = oxs_key_mgr_create(env);
-    rampart_context->key_store_buf = NULL;
-
+    
     return rampart_context;
 }
 
@@ -2922,11 +2923,11 @@ rampart_context_get_endorsing_token(rampart_context_t *rampart_context,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_context_set_key_mgr(rampart_context_t *rampart_context, 
-							  const axutil_env_t *env, 
-                              oxs_key_mgr_t *key_mgr)  
+rampart_context_set_key_mgr(rampart_context_t *rampart_context,
+    const axutil_env_t *env, 
+    oxs_key_mgr_t *key_mgr)  
 {
-	if (rampart_context->key_mgr)
+    if (rampart_context->key_mgr)
         oxs_key_mgr_free(rampart_context->key_mgr, env);
     
     rampart_context->key_mgr = key_mgr;
@@ -2941,12 +2942,13 @@ rampart_context_get_key_mgr(
 	return rampart_context->key_mgr;
 }
 
+
 AXIS2_EXTERN void * AXIS2_CALL
 rampart_context_get_key_store_buff(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    return rampart_context->key_store_buf;
+    return oxs_key_mgr_get_key_store_buff(rampart_context->key_mgr, env);
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -2956,7 +2958,9 @@ rampart_context_set_key_store_buff(
     void *key_store_buf)
 {
     AXIS2_PARAM_CHECK(env->error, key_store_buf, AXIS2_FAILURE);
-    AXIS2_LOG_INFO(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Seting key store buff.");     
-    rampart_context->key_store_buf = key_store_buf;
+         
+    oxs_key_mgr_set_key_store_buff(rampart_context->key_mgr, env, key_store_buf);
+    
     return AXIS2_SUCCESS;
 }
+

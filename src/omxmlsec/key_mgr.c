@@ -56,6 +56,8 @@ struct oxs_key_mgr_t
 
     /* PKCS12 Key store */
     pkcs12_keystore_t *key_store;
+    
+    void *pkcs12_buf;
 	
     /* Buffer holding keys and certs */
     void *pem_buf;
@@ -71,19 +73,20 @@ oxs_key_mgr_create(const axutil_env_t *env)
 	key_mgr = AXIS2_MALLOC(env->allocator, sizeof(oxs_key_mgr_t));
 	if (key_mgr)
 	{
-		key_mgr->private_key_file = NULL;		
-		key_mgr->certificate_file = NULL;
-		key_mgr->reciever_certificate_file = NULL;
-		key_mgr->prv_key_password = NULL;
-		key_mgr->prv_key = NULL;
-		key_mgr->prv_key_type = AXIS2_KEY_TYPE_UNKNOWN;
-		key_mgr->certificate = NULL;
-		key_mgr->certificate_type = AXIS2_KEY_TYPE_UNKNOWN;
-		key_mgr->receiver_certificate = NULL;
-		key_mgr->receiver_certificate_type = AXIS2_KEY_TYPE_UNKNOWN;
-		key_mgr->key_store = NULL;                
-		key_mgr->pem_buf = NULL;
-		key_mgr->format = -1;
+            key_mgr->private_key_file = NULL;		
+            key_mgr->certificate_file = NULL;
+            key_mgr->reciever_certificate_file = NULL;
+            key_mgr->prv_key_password = NULL;
+            key_mgr->prv_key = NULL;
+            key_mgr->prv_key_type = AXIS2_KEY_TYPE_UNKNOWN;
+            key_mgr->certificate = NULL;
+            key_mgr->certificate_type = AXIS2_KEY_TYPE_UNKNOWN;
+            key_mgr->receiver_certificate = NULL;
+            key_mgr->receiver_certificate_type = AXIS2_KEY_TYPE_UNKNOWN;
+            key_mgr->key_store = NULL;                
+            key_mgr->pem_buf = NULL;
+            key_mgr->format = -1;
+            key_mgr->pkcs12_buf = NULL;
 	}
 	return key_mgr; 
 }
@@ -898,3 +901,25 @@ oxs_key_mgr_read_pkcs12_key_store(const axutil_env_t *env,
     }
     return AXIS2_SUCCESS;
 }
+
+AXIS2_EXTERN void * AXIS2_CALL
+oxs_key_mgr_get_key_store_buff(
+    oxs_key_mgr_t *key_mgr,
+    const axutil_env_t *env)
+{
+    return key_mgr->pkcs12_buf;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_key_mgr_set_key_store_buff(
+    oxs_key_mgr_t *key_mgr,
+    const axutil_env_t *env,
+    void *key_store_buf)
+{
+    AXIS2_PARAM_CHECK(env->error, key_store_buf, AXIS2_FAILURE);
+        
+    key_mgr->pkcs12_buf = key_store_buf;
+    
+    return AXIS2_SUCCESS;
+}
+

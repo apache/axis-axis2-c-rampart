@@ -312,6 +312,17 @@ extern "C"
 		oxs_key_mgr_t *key_mgr,
 		const axutil_env_t *env,
 		pkcs12_keystore_t *key_store);
+        
+        AXIS2_EXTERN void * AXIS2_CALL
+        oxs_key_mgr_get_key_store_buff(
+            oxs_key_mgr_t *key_mgr,
+            const axutil_env_t *env);
+        
+        AXIS2_EXTERN axis2_status_t AXIS2_CALL
+        oxs_key_mgr_set_key_store_buff(
+            oxs_key_mgr_t *key_mgr,
+            const axutil_env_t *env,
+            void *key_store_buf);
 	
     /** @} */
 #ifdef __cplusplus
