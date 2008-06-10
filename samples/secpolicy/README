@@ -58,7 +58,15 @@ Scenario    Summary
 19.			Symmetric binding with secure conversation token. 
 			Using different tokens for encryption and signature.
 			The protection token is Sign->Encrypt. Signature is Encrypted.
-20.         SAML Scenario. Cannot be run with test_scen.sh. Please use saml.sh script
+20.         SAML Scenario. Get a SAML token from samlsts and give the saml token to sec_echo service to access the service. Cannot be run with test_scen.sh. Please use saml.sh script
+
+21. Asymetric binding encryption with PKCS12 as the key store.
+
+22. Asymetric binding signature with PKCS12 as the key store.
+
+23. Symmetric binding signature and encryption with PKCS12 key store.
+
+24. SAML as a protection token for signing and encrypting a message. 
 
 FAQ:
 ---
