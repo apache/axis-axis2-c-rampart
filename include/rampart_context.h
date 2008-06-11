@@ -1560,6 +1560,12 @@ extern "C"
 	rampart_context_get_key_store_buff(
 	    rampart_context_t *rampart_context,
 	    const axutil_env_t *env);
+
+	AXIS2_EXTERN axis2_status_t AXIS2_CALL
+	rampart_context_set_key_store_buff(
+	    rampart_context_t *rampart_context,
+	    const axutil_env_t *env,
+	    void *key_store_buf);
 #ifdef __cplusplus
 }
 #endif
