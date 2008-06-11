@@ -25,9 +25,10 @@
 #include <axis2_msg_ctx.h>
 #include <axutil_param.h>
 /**
-  * @file rampart_credentials.h
-  * @brief The credentials interface for rampart. To retrieve a username and password pair.
-  */
+* @file rampart_credentials.h
+* @brief The credentials interface for rampart. To retrieve a username and password pair.
+*/
+
 /**
 * @defgroup rampart_credentials Credentials Provider 
 * @{
@@ -37,7 +38,8 @@
 extern "C"
 {
 #endif
-    enum rampart_credentials_status{
+    enum rampart_credentials_status
+    {
         RAMPART_CREDENTIALS_PW_FOUND = 0,
         RAMPART_CREDENTIALS_PW_NOT_FOUND,
         RAMPART_CREDENTIALS_USER_FOUND,
@@ -51,19 +53,9 @@ extern "C"
      * Struct to get username/password pair
      */
 
-    /**
-     * Type name for struct rampart_credentials_ops 
-     */
     typedef struct rampart_credentials_ops rampart_credentials_ops_t;
-
-    /**
-     * Type name for struct rampart_credentials
-     */
-
     typedef struct rampart_credentials rampart_credentials_t;
 
-    /**
-     */
     struct rampart_credentials_ops
     {
 
@@ -77,13 +69,13 @@ extern "C"
          * @return The status of extracting credentials 
          */
         rampart_credentials_status_t (AXIS2_CALL*
-                                      rampart_credentials_username_get)(
-                                          rampart_credentials_t *credentials,
-                                          const axutil_env_t* env,
-                                          axis2_msg_ctx_t *msg_ctx,
-                                          axis2_char_t **username,
-                                          axis2_char_t **password
-                                      );
+        rampart_credentials_username_get)(
+            rampart_credentials_t *credentials,
+            const axutil_env_t* env,
+            axis2_msg_ctx_t *msg_ctx,
+            axis2_char_t **username,
+            axis2_char_t **password);
+
         /**
          * The free function for the credentials
          * @param credentials pointer to the credentials struct
@@ -91,8 +83,9 @@ extern "C"
          * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
          */
         axis2_status_t (AXIS2_CALL*
-                        free)(rampart_credentials_t *credentials,
-                              const axutil_env_t* env);
+        free)(
+            rampart_credentials_t *credentials,
+            const axutil_env_t* env);
 
     };
 
@@ -107,7 +100,8 @@ extern "C"
       ((credentials)->ops->free (credentials, env))
 
 #define RAMPART_CREDENTIALS_USERNAME_GET(credentials, env, msg_ctx, username, password) \
-      ((credentials)->ops->rampart_credentials_username_get(credentials, env, msg_ctx, username, password))
+      ((credentials)->ops->rampart_credentials_username_get( \
+            credentials, env, msg_ctx, username, password))
 
 
 
@@ -116,5 +110,5 @@ extern "C"
 }
 #endif
 
-#endif                          /* RAMPART_CREDENTIALS_H */
+#endif /* RAMPART_CREDENTIALS_H */
 

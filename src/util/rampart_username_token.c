@@ -31,6 +31,7 @@
 #include <rampart_sec_processed_result.h>
 #include <rampart_authn_provider.h>
 #include <oxs_axiom.h>
+#include <oxs_utility.h>
 
 /** public functions*/
 
@@ -144,7 +145,7 @@ rampart_username_token_build(
             axis2_char_t *created_val = NULL;
             axis2_char_t *digest_val = NULL;
 
-            nonce_val = rampart_generate_nonce(env, 24) ;
+            nonce_val = oxs_util_generate_nonce(env, 24) ;
             created_val = rampart_generate_time(env, 0);
             digest_val = rampart_crypto_sha1(env, nonce_val, created_val, password);
 

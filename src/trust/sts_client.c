@@ -18,6 +18,7 @@
 #include <trust_sts_client.h>
 #include <axis2_op_client.h>
 #include <openssl_hmac.h>
+#include <oxs_utility.h>
 
 static void
 trust_sts_client_insert_entropy(
@@ -550,7 +551,7 @@ trust_sts_client_insert_entropy(
     }
 
     /*nonce should be created with half the size. size is in bits, have to convert it to bytes*/
-    nonce = rampart_generate_nonce(env, key_size/16);
+    nonce = oxs_util_generate_nonce(env, key_size/16);
     if(!nonce)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] cannon create nonce with length %d", key_size/16);

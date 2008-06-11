@@ -20,9 +20,9 @@
 #define RAMPART_AUTHN_PROVIDER_H
 
 /**
-  * @file rampart_authn_provider.h
-  * @brief The authentication interface of rampart. Validates a username and password pair.
-  */
+* @file rampart_authn_provider.h
+* @brief The authentication interface of rampart. Validates a username and password pair.
+*/
 
 /**
 * @defgroup rampart_authn_provider Authentication Provider 
@@ -39,7 +39,8 @@
 extern "C"
 {
 #endif
-    enum rampart_authn_provider_status{
+    enum rampart_authn_provider_status
+    {
         RAMPART_AUTHN_PROVIDER_DENIED = 0,
         RAMPART_AUTHN_PROVIDER_GRANTED,
         RAMPART_AUTHN_PROVIDER_FOUND,
@@ -55,25 +56,14 @@ extern "C"
      * @{
      */
 
-    /**
-     * Type name for struct rampart_authn_provider_ops 
-     */
     typedef struct rampart_authn_provider_ops rampart_authn_provider_ops_t;
-
-    /**
-     * Type name for struct rampart_authn_provider
-     */
-
     typedef struct rampart_authn_provider rampart_authn_provider_t;
 
-    /**
-     */
     struct rampart_authn_provider_ops
     {
-
-
         /**
-         * Check plain text passwords. If the UseranmeToken is in plain text this function will be called.
+         * Check plain text passwords. If the UseranmeToken is in plain text 
+         * this function will be called.
          * @param authn_provider the authentication provider struct
          * @param env pointer to environment struct
          * @param msg_ctx message context
@@ -82,45 +72,45 @@ extern "C"
          * @return the status of the check
          */
         rampart_authn_provider_status_t (AXIS2_CALL*
-                                         rampart_authn_provider_check_password)(
-                                             rampart_authn_provider_t *authn_provider,
-                                             const axutil_env_t* env,
-                                             axis2_msg_ctx_t *msg_ctx,
-                                             const axis2_char_t *username,
-                                             const axis2_char_t *password
-                                         );
+        rampart_authn_provider_check_password)(
+            rampart_authn_provider_t *authn_provider,
+            const axutil_env_t* env,
+            axis2_msg_ctx_t *msg_ctx,
+            const axis2_char_t *username,
+            const axis2_char_t *password);
 
         /**
-         * Check digested passwords. If the UseranmeToken is in password digest form this function will be called.
+         * Check digested passwords. If the UseranmeToken is in password digest form 
+         * this function will be called.
          * @param authn_provider the authentication provider struct
          * @param env pointer to environment struct
          * @param msg_ctx message context
          * @param username the username
-         * @param nonce the noce or the random value of the username token
+         * @param nonce the nonce or the random value of the username token
          * @param created the created value of the username token
          * @param digest the digest value of the SHA-1(password+created+nonce)
          * @return the status of the check
          */
         rampart_authn_provider_status_t (AXIS2_CALL*
-                                         rampart_authn_provider_check_password_digest)(
-                                             rampart_authn_provider_t *authn_provider,
-                                             const axutil_env_t* env,
-                                             axis2_msg_ctx_t *msg_ctx,
-                                             const axis2_char_t *username,
-                                             const axis2_char_t *nonce,
-                                             const axis2_char_t *created,
-                                             const char *digest
-                                         );
+        rampart_authn_provider_check_password_digest)(
+            rampart_authn_provider_t *authn_provider,
+            const axutil_env_t* env,
+            axis2_msg_ctx_t *msg_ctx,
+            const axis2_char_t *username,
+            const axis2_char_t *nonce,
+            const axis2_char_t *created,
+            const char *digest);
 
         /**
          * The free function to free all resources allocated
          * @param authn_provider the authentication provider struct
          * @param env pointer to environment struct
-         *
+         * @return AXIS2_SUCCESS on success. AXIS2_FAILURE otherwise.
          */
         axis2_status_t (AXIS2_CALL*
-                        free)(rampart_authn_provider_t *authn_provider,
-                              const axutil_env_t* env);
+        free)(
+            rampart_authn_provider_t *authn_provider,
+            const axutil_env_t* env);
 
     };
 
@@ -131,20 +121,21 @@ extern "C"
     };
 
     /*************************** Function macros **********************************/
-    /*TODO write the implementation*/
 #define RAMPART_AUTHN_PROVIDER_FREE(authn_provider, env) \
       ((authn_provider)->ops->free (authn_provider, env))
 
 #define RAMPART_AUTHN_PROVIDER_CHECK_PASSWORD(authn_provider, env, msg_ctx, username, password) \
-      ((authn_provider)->ops->rampart_authn_provider_check_password(authn_provider, env, msg_ctx, username, password))
+      ((authn_provider)->ops->rampart_authn_provider_check_password( \
+            authn_provider, env, msg_ctx, username, password))
 
 #define RAMPART_AUTHN_PROVIDER_CHECK_PASSWORD_DIGEST(authn_provider, env, msg_ctx, username, nonce, nonce_length, digest) \
-      ((authn_provider)->ops->rampart_authn_provider_check_password_digest(authn_provider, env, msg_ctx, username, nonce, nonce_length, digest))
+      ((authn_provider)->ops->rampart_authn_provider_check_password_digest( \
+            authn_provider, env, msg_ctx, username, nonce, nonce_length, digest))
 
     /** @} */
 #ifdef __cplusplus
 }
 #endif
 
-#endif                          /* RAMPART_AUTHN_PROVIDER_H */
+#endif /* RAMPART_AUTHN_PROVIDER_H */
 

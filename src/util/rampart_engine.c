@@ -322,7 +322,7 @@ rampart_engine_build_configuration(
 		 * this function will be used*/
         if(is_inflow)
         {
-            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list/*rampart_replay_detector_default*/);
+            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list);
         }
     }
     return rampart_context;

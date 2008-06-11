@@ -14,6 +14,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
 #include <axutil_utils_defines.h>
 #include <axis2_defines.h>
 #include <axutil_param.h>
@@ -21,9 +22,9 @@
 #define RAMPART_CALLBACK_H
 
 /**
-  * @file rampart_callback.h 
-  * @brief The callback module for a password 
-  */
+* @file rampart_callback.h 
+* @brief The callback module for a password 
+*/
 
 
 #ifdef __cplusplus
@@ -37,21 +38,9 @@ extern "C"
      * @{
      */
 
-    /**
-     * Type name for struct rampart_callback_ops 
-     */
     typedef struct rampart_callback_ops rampart_callback_ops_t;
-
-    /**
-     * Type name for struct rampart_callback
-     */
-
     typedef struct rampart_callback rampart_callback_t;
 
-    /**
-     * Only operation get_password is to get the password
-     * User should provide a function pointer to this
-     */
     struct rampart_callback_ops
     {
         /**
@@ -118,5 +107,5 @@ extern "C"
 }
 #endif
 
-#endif                          /* RAMPART_CALLBACK_H */
+#endif /* RAMPART_CALLBACK_H */
 

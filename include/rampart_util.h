@@ -1,20 +1,19 @@
 /*
- *   Copyright 2003-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
-
 
 #include <axutil_utils_defines.h>
 #include <axis2_defines.h>
@@ -27,36 +26,24 @@
 #include <rampart_callback.h>
 #include <rampart_replay_detector.h>
 #include <rampart_sct_provider.h>
+
 /**
-  * @file rampart_util.h
-  * @brief Utilities of rampart
-  */
+* @file rampart_util.h
+* @brief Utilities of rampart
+*/
 
 /**
 * @defgroup rampart_util Utils
 * @ingroup rampart_utils
 * @{
 */
+
 #ifndef RAMPART_UTIL_H
 #define RAMPART_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-
-    /**
-     * Load a DLL or .SO module
-     * User MUST free memory
-     * @param env pointer to environment struct
-     * @param module_name name of the module to be loaded
-     * @return the loaded module
-     */
-    AXIS2_EXTERN void* AXIS2_CALL
-    rampart_load_module(const axutil_env_t *env,
-                        axis2_char_t *module_name,
-                        axutil_param_t **param);
 
     /**
      * Load the credentials module
@@ -66,12 +53,13 @@ extern "C" {
      * @return the loaded credentails module
      */
     AXIS2_EXTERN rampart_credentials_t* AXIS2_CALL
-    rampart_load_credentials_module(const axutil_env_t *env,
-                                    axis2_char_t *cred_module_name);
+    rampart_load_credentials_module(
+        const axutil_env_t *env,
+        axis2_char_t *cred_module_name);
 
     /**
      * Call credentials module
-     * User MUST free memory
+     * User MUST free memory of username and password
      * @param env pointer to environment struct
      * @param cred_module the credentails module
      * @param ctx the message context
@@ -80,22 +68,24 @@ extern "C" {
      * @return the status of the operation
      */
     AXIS2_EXTERN rampart_credentials_status_t AXIS2_CALL
-    rampart_call_credentials(const axutil_env_t *env,
-                             rampart_credentials_t *cred_module,
-                             axis2_msg_ctx_t *ctx,
-                             axis2_char_t **username,
-                             axis2_char_t **password);
+    rampart_call_credentials(
+        const axutil_env_t *env,
+        rampart_credentials_t *cred_module,
+        axis2_msg_ctx_t *ctx,
+        axis2_char_t **username,
+        axis2_char_t **password);
 
     /**
      * Load authentication module
      * User MUST free memory
      * @param env pointer to environment struct
      * @param auth_module_name name of the authentication module
-     * @return creatd athenticaiton module
+     * @return created athenticaiton module
      */
     AXIS2_EXTERN rampart_authn_provider_t* AXIS2_CALL
-    rampart_load_auth_module(const axutil_env_t *env,
-                             axis2_char_t *auth_module_name);
+    rampart_load_auth_module(
+        const axutil_env_t *env,
+        axis2_char_t *auth_module_name);
 
     /**
      * Load replay detection module
@@ -105,8 +95,9 @@ extern "C" {
      * @return created replay detection module
      */
     AXIS2_EXTERN rampart_replay_detector_t* AXIS2_CALL
-    rampart_load_replay_detector(const axutil_env_t *env,
-                             axis2_char_t *replay_detector_name);
+    rampart_load_replay_detector(
+        const axutil_env_t *env,
+        axis2_char_t *replay_detector_name);
 
     /**
      * Load security context token provider
@@ -116,29 +107,9 @@ extern "C" {
      * @return created security context token provider module
      */
     AXIS2_EXTERN rampart_sct_provider_t* AXIS2_CALL
-    rampart_load_sct_provider(const axutil_env_t *env,
-                             axis2_char_t *sct_provider_name);
-
-    /**
-     * Call auth module
-     * @param env pointer to environment struct
-     * @param authp the authentication module
-     * @param  username the username in the UsernameToken
-     * @param  password the password in the UsernameToken
-     * @param  nonce the nonce in the UsernameToken
-     * @param  created the created time in the UsernameToken
-     * @param password_type  the type of the password. either plain text of digest
-     * @param msg_ctx the message context
-     */
-    AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
-    rampart_authenticate_un_pw(const axutil_env_t *env,
-                               rampart_authn_provider_t *authp,
-                               const axis2_char_t *username,
-                               const axis2_char_t *password,
-                               const axis2_char_t *nonce,/*Can be NULL if plain text*/
-                               const axis2_char_t *created,/*Can be NULL if plain text*/
-                               const axis2_char_t *password_type,
-                               axis2_msg_ctx_t *msg_ctx);
+    rampart_load_sct_provider(
+        const axutil_env_t *env,
+        axis2_char_t *sct_provider_name);
 
     /**
      * Load the password callback module
@@ -148,20 +119,47 @@ extern "C" {
      * @return the loaded callback module
      */
     AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
-    rampart_load_pwcb_module(const axutil_env_t *env,
-                             axis2_char_t *callback_module_name);
+    rampart_load_pwcb_module(
+        const axutil_env_t *env,
+        axis2_char_t *callback_module_name);
+
 
     /**
-       *@env the environment
-       *@callback_module_name the file name of the callback module (.so or .DLL)
-       *@username the name of the user to get the password
-       *@ctx The axis2 context
-       *@return the password for the user or NULL if failed
-       */
+     * Call auth module
+     * @param env pointer to environment struct
+     * @param authp the authentication module
+     * @param  username the username in the UsernameToken
+     * @param  password the password in the UsernameToken
+     * @param  nonce the nonce in the UsernameToken. Can be NULL if plain text password is used.
+     * @param  created created time in UsernameToken. Can be NULL if plain text password is used.
+     * @param password_type  the type of the password. either plain text of digest
+     * @param msg_ctx the message context
+     * @return status of the operation
+     */
+    AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
+    rampart_authenticate_un_pw(
+        const axutil_env_t *env,
+        rampart_authn_provider_t *authp,
+        const axis2_char_t *username,
+        const axis2_char_t *password,
+        const axis2_char_t *nonce,
+        const axis2_char_t *created,
+        const axis2_char_t *password_type,
+        axis2_msg_ctx_t *msg_ctx);
+
+
+    /**
+     * Gets the password of given user.
+     * @env the environment
+     * @callback_module callback module structure
+     * @username the name of the user to get the password
+     * @return the password for the user or NULL if failed
+     */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    rampart_callback_password(const axutil_env_t *env,
-                              rampart_callback_t *callback_module,
-                              const axis2_char_t *username);
+    rampart_callback_password(
+        const axutil_env_t *env,
+        rampart_callback_t *callback_module,
+        const axis2_char_t *username);
 
 	/**
 	 * Get the password for pkcs12 key store.
@@ -172,52 +170,43 @@ extern "C" {
 	 */
 	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 	rampart_callback_pkcs12_password(
-				const axutil_env_t *env,
-				rampart_callback_t *callback_module,
-				const axis2_char_t *username);	
+	    const axutil_env_t *env,
+	    rampart_callback_t *callback_module,
+	    const axis2_char_t *username);	
 
     /**
-     * Generates the nonce. Nonce is a base64 encoded random string.
-     * User MUST free memory
-     * @param env pointer to environment struct
-     * @return generated nonce
-     */
-    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    rampart_generate_nonce(const axutil_env_t *env, int length);
-
-    /**
-     * Generates the nonce. Nonce is a base64 encoded random string.
+     * Generates time.
      * User MUST free memory
      * @param ttl Time to live. The time difference between created and expired in mili seconds.
-     * @return generated nonce
+     * @return generated time
      **/
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    rampart_generate_time(const axutil_env_t *env, int ttl);
+    rampart_generate_time(
+        const axutil_env_t *env, 
+        int ttl);
 
     /**
      * Check if @dt1 < @dt2. if not returns a false
      * @param env pointer to environment struct
      * @param dt1 date time 1
      * @param dt2 date time 2
+     * @return AXIS2_SUCCESS if dt1 < dt2. AXIS2_FALSE otherwise
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_compare_date_time(const axutil_env_t *env, axis2_char_t *dt1, axis2_char_t *dt2);
-
-    /**
-     * Print or log information (Only use for debugging)
-     * @param env pointer to environment struct
-     * @param info the information to be printed
-     */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_print_info(const axutil_env_t *env, axis2_char_t* info);
+    rampart_compare_date_time(
+        const axutil_env_t *env, 
+        axis2_char_t *dt1, 
+        axis2_char_t *dt2);
 
     /**
      * check whether different keys are needed for encryption and signature
      * @param env pointer to environment struct
      * @param rampart_context rampart context
+     * @return AXIS2_TRUE if different keys are needed. AXIS2_FALSE otherwise.
      */
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    is_different_session_key_for_encryption_and_signing(const axutil_env_t *env,
+    is_different_session_key_for_encryption_and_signing(
+        const axutil_env_t *env,
         rampart_context_t *rampart_context);
 
     /* @} */
@@ -225,6 +214,6 @@ extern "C" {
 }
 #endif
 
-#endif    /* !RAMPART_UTIL_H */
+#endif    /* RAMPART_UTIL_H */
 
 
