@@ -73,6 +73,11 @@ struct rampart_context_t
     /*This is used in callback functions.*/
     void *ctx;
     
+    /* Used to store and track whether we found the clients certificate while processing
+     * the security headers key info element. found_cert_in_shp is used to track the status.
+     */
+    axis2_bool_t found_cert_in_shp;
+    oxs_x509_cert_t *receiver_cert;   
 };
 
 /*void rampart_context_set_callback_fn(axutil_env_t *env,
@@ -193,6 +198,9 @@ rampart_context_create(const axutil_env_t *env)
 
     rampart_context->key_list = axutil_array_list_create(env, 2);
     rampart_context->key_mgr = oxs_key_mgr_create(env);
+    
+    rampart_context->found_cert_in_shp = AXIS2_FALSE;
+    rampart_context->receiver_cert = NULL;
     
     return rampart_context;
 }
@@ -322,6 +330,13 @@ rampart_context_free(rampart_context_t *rampart_context,
             /*No need to free the contents*/
             axutil_array_list_free(rampart_context->custom_tokens, env);
             rampart_context->custom_tokens = NULL;
+        }
+        
+        /* Free receiver certificate we found when processing incoming security header */
+        if(rampart_context->receiver_cert && rampart_context->found_cert_in_shp)
+        {
+            oxs_x509_cert_free(rampart_context->receiver_cert, env);
+            rampart_context->receiver_cert = NULL;
         }
 
         AXIS2_FREE(env->allocator,rampart_context);
@@ -2955,12 +2970,57 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_key_store_buff(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
-    void *key_store_buf)
+    void *key_store_buf,
+    int len)
 {
     AXIS2_PARAM_CHECK(env->error, key_store_buf, AXIS2_FAILURE);
          
-    oxs_key_mgr_set_key_store_buff(rampart_context->key_mgr, env, key_store_buf);
+    oxs_key_mgr_set_key_store_buff(rampart_context->key_mgr, env, key_store_buf, len);
     
     return AXIS2_SUCCESS;
 }
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_get_found_cert_in_shp(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->found_cert_in_shp;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_found_cert_in_shp(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axis2_bool_t found_cert_in_shp)
+{
+    rampart_context->found_cert_in_shp = found_cert_in_shp;
+    return AXIS2_SUCCESS;
+}
+
+/* This certificate is set to rampart context when we process the incoming security header
+ * with key info
+ */
+AXIS2_EXTERN oxs_x509_cert_t *AXIS2_CALL
+rampart_context_get_receiver_cert_found_in_shp(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->receiver_cert;
+}
+
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_receiver_cert_found_in_shp(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    oxs_x509_cert_t *cert)
+{
+    AXIS2_PARAM_CHECK(env->error, cert, AXIS2_FAILURE);
+    
+    rampart_context->receiver_cert = cert;
+    
+    return AXIS2_SUCCESS;
+}
+
 

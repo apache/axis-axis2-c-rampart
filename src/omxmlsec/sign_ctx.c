@@ -332,10 +332,17 @@ oxs_sign_ctx_free(oxs_sign_ctx_t *sign_ctx,
         sign_ctx->sign_parts = NULL;
     }
 
+    /**
+     * in current impleemtnation we set the certificate found in the signature processing 
+     * to rampart context. Because of that rampart context must free the cert. But have to 
+     * fix the free logic when we use certificate directly from file.
+     */
+    /*
     if(sign_ctx->certificate){
         oxs_x509_cert_free(sign_ctx->certificate, env);
         sign_ctx->certificate = NULL;
-    }
+    }*/
+    
     sign_ctx->operation = OXS_SIGN_OPERATION_NONE;
 
     AXIS2_FREE(env->allocator,  sign_ctx);

@@ -52,18 +52,17 @@ openssl_pkcs12_load(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-openssl_pkcs12_load_from_buffer(const axutil_env_t *env,
-                    axis2_char_t *buffer,
-                    PKCS12 **p12)
+openssl_pkcs12_load_from_buffer(
+    const axutil_env_t *env,
+    axis2_char_t *buffer,
+    PKCS12 **p12,
+    int len)
 {
-    int len = 0;    
     BIO *in = NULL;
     BUF_MEM* bm = NULL;
     
     SSLeay_add_all_algorithms();
     ERR_load_crypto_strings();
-    
-    len = axutil_strlen(buffer);
     
     if (!(in = BIO_new(BIO_s_mem())))
     {

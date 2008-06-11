@@ -318,11 +318,31 @@ extern "C"
             oxs_key_mgr_t *key_mgr,
             const axutil_env_t *env);
         
+        AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL
+        oxs_key_mgr_get_receiver_certificate_from_ski(
+            oxs_key_mgr_t *key_mgr,
+            const axutil_env_t *env,
+            axis2_char_t *ski);
+        
+        AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL
+        oxs_key_mgr_get_receiver_certificate_from_issuer_serial(
+            oxs_key_mgr_t *key_mgr,
+            const axutil_env_t *env,
+            axis2_char_t *issuer,
+            int serial);
+        
+        AXIS2_EXTERN int AXIS2_CALL
+        oxs_key_mgr_get_key_store_buff_len(
+            oxs_key_mgr_t *key_mgr,
+            const axutil_env_t *env);
+        
         AXIS2_EXTERN axis2_status_t AXIS2_CALL
         oxs_key_mgr_set_key_store_buff(
             oxs_key_mgr_t *key_mgr,
             const axutil_env_t *env,
-            void *key_store_buf);
+            void *key_store_buf,
+            int len);
+
 	
     /** @} */
 #ifdef __cplusplus

@@ -247,7 +247,8 @@ rampart_engine_build_configuration(
     }
     else if(pkcs12_password && (pkcs12_buf = (axis2_char_t*)rampart_context_get_key_store_buff(rampart_context, env)))
     {
-        key_store = pkcs12_keystore_create_from_buffer(env, pkcs12_buf, password);
+        key_store = pkcs12_keystore_create_from_buffer(env, pkcs12_buf, password,
+                    oxs_key_mgr_get_key_store_buff_len(key_mgr, env));
         if(!key_store)
         {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,

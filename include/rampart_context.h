@@ -1443,10 +1443,11 @@ extern "C"
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
 
-	AXIS2_EXTERN axis2_status_t AXIS2_CALL
-	rampart_context_set_saml_tokens(rampart_context_t *rampart_context,
-                                        const axutil_env_t *env,
-                                        axutil_array_list_t *tokens);
+     AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_saml_tokens(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axutil_array_list_t *tokens);
     /**
      *
      * @param rampart_context
@@ -1455,10 +1456,10 @@ extern "C"
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
 
-	AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
-	rampart_context_get_issued_token_aquire_function(
-								rampart_context_t *rampart_context, 
-								const axutil_env_t *env);  
+    AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
+    rampart_context_get_issued_token_aquire_function(
+        rampart_context_t *rampart_context, 
+	const axutil_env_t *env);  
     /**
      *
      * @param rampart_context
@@ -1468,11 +1469,11 @@ extern "C"
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
 
-	AXIS2_EXTERN axis2_status_t AXIS2_CALL
-	rampart_context_set_issued_token_aquire_function(
-								rampart_context_t *rampart_context,
-								const axutil_env_t *env,
-								issued_token_callback_func issued_token_aquire);
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_issued_token_aquire_function(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        issued_token_callback_func issued_token_aquire);
     /**
      *
      * @param rampart_context
@@ -1509,17 +1510,37 @@ extern "C"
     rampart_context_get_algorithmsuite(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
-
-	AXIS2_EXTERN oxs_key_mgr_t * AXIS2_CALL
+    
+    /**
+     * Get the key manager from rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param Pointer to environment struct
+     * @returns pointer Key manager struct
+     */
+    AXIS2_EXTERN oxs_key_mgr_t * AXIS2_CALL
     rampart_context_get_key_mgr(
     	rampart_context_t *rampart_context,
     	const axutil_env_t *env);
 
+    /**
+     * Set the key manager to rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param Pointer to environment struct
+     * @param key_mgr Pointer to key manager struct.
+     * @returns status of the operation. AXIS2_SUCCESS on success AXIS2_FAILURE otherwise.
+     */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_set_key_mgr(rampart_context_t *rampart_context, 
-							  const axutil_env_t *env, 
-                              oxs_key_mgr_t *key_mgr); 
+    rampart_context_set_key_mgr(
+        rampart_context_t *rampart_context, 
+	const axutil_env_t *env, 
+        oxs_key_mgr_t *key_mgr); 
     
+    /**
+     * Get the pkcs12 file name from rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param Pointer to environment struct
+     * @returns PKCS12 file name
+     */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_pkcs12_file_name(
     	rampart_context_t *rampart_context,
@@ -1550,22 +1571,77 @@ extern "C"
     rampart_context_get_custom_tokens(rampart_context_t *rampart_context,
                                         const axutil_env_t *env);
 
-	AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-	rampart_context_get_receiver_certificate_file(
-	    rampart_context_t *rampart_context,
-	    const axutil_env_t *env);
+    /**
+     * Get the receiver certificate file name from rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns Receiver certificate file name
+     */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_receiver_certificate_file(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+      
+    /**
+     * Get the found_cert_in_shp from rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns axis2_bool_t
+     */
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_get_found_cert_in_shp(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+    
+    /**
+     * Set the certificate found status to rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param found_cert_in_shp boolean value which specify the certificate found status
+     * @returns status of the operation
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_found_cert_in_shp(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axis2_bool_t found_cert_in_shp);
+    
+    /**
+     * Get the certificate found in shp from rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns oxs_x509_cert_t Client certificate found when processing sec header, otherwise NULL
+     */   
+    AXIS2_EXTERN oxs_x509_cert_t *AXIS2_CALL
+    rampart_context_get_receiver_cert_found_in_shp(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+    
+    /**
+     * Set the found_cert_in_shp to rampart context.
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param cert pointer to the certficate
+     * @returns status of the operation
+     */    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_receiver_cert_found_in_shp(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        oxs_x509_cert_t *cert);
 
+    AXIS2_EXTERN void * AXIS2_CALL
+    rampart_context_get_key_store_buff(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
 
-	AXIS2_EXTERN void * AXIS2_CALL
-	rampart_context_get_key_store_buff(
-	    rampart_context_t *rampart_context,
-	    const axutil_env_t *env);
-
-	AXIS2_EXTERN axis2_status_t AXIS2_CALL
-	rampart_context_set_key_store_buff(
-	    rampart_context_t *rampart_context,
-	    const axutil_env_t *env,
-	    void *key_store_buf);
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_key_store_buff(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        void *key_store_buf,
+        int length);
+    
 #ifdef __cplusplus
 }
 #endif

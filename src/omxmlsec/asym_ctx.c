@@ -75,12 +75,18 @@ oxs_asym_ctx_free(oxs_asym_ctx_t *asym_ctx,
         AXIS2_FREE(env->allocator, asym_ctx->st_ref_pattern);
         asym_ctx->st_ref_pattern = NULL;
     }
-
-    if (asym_ctx->certificate)
+    
+    /**
+     * in current impleemtnation we set the certificate found in the signature processing 
+     * to rampart context. Because of that rampart context must free the cert. But have to 
+     * fix the free logic when we use certificate directly from file.
+     */
+    
+    /*if (asym_ctx->certificate)
     {
         oxs_x509_cert_free(asym_ctx->certificate, env);
         asym_ctx->certificate = NULL;
-    }
+    }*/
 
     if (asym_ctx->private_key)
     {

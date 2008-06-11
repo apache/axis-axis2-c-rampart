@@ -26,6 +26,7 @@
 #include <rampart_handler_util.h>
 #include <rampart_token_processor.h>
 #include <rampart_policy_validator.h>
+#include <oxs_constants.h>
 #include <oxs_ctx.h>
 #include <oxs_error.h>
 #include <oxs_utility.h>
@@ -74,6 +75,127 @@ rampart_shp_add_security_context_token(const axutil_env_t* env,
 
     rampart_context_add_key(rampart_context, env, key);
     return AXIS2_SUCCESS;
+}
+
+/* Get the client certificaate from key manager by giving 
+ * subject key identifier
+ */
+static oxs_x509_cert_t * get_certificate_by_key_identifier(
+    const axutil_env_t *env,
+    rampart_context_t *rampart_ctx,
+    axiom_node_t *key_id_node)
+{
+    oxs_x509_cert_t *cert = NULL;
+    axis2_char_t *value_type = NULL;
+    axiom_element_t *key_id_element = NULL;
+    axis2_char_t *ski = NULL;
+    oxs_key_mgr_t *key_mgr = NULL;   
+        
+    if(rampart_context_get_receiver_certificate_file(rampart_ctx, env))
+    {
+        /* In the client side, it is prefered to use certificate files instead 
+         * of key store, because one client normally interact with only one
+         * service. To handle this scenario, if we found reciever certificate file 
+         * specified in rampart_context we directly call the get_reciever_certificate. 
+         */
+        return rampart_context_get_receiver_certificate(rampart_ctx, env);
+    }
+    
+    key_id_element = axiom_node_get_data_element(key_id_node, env);
+    value_type = axiom_element_get_attribute_value_by_name(key_id_element, env, "ValueType");
+    
+    key_mgr = rampart_context_get_key_mgr(rampart_ctx, env);
+    if(strcmp(value_type, OXS_X509_SUBJ_KI) == 0)
+    {
+        ski = axiom_element_get_text(key_id_element, env, key_id_node);        
+        cert = oxs_key_mgr_get_receiver_certificate_from_ski(key_mgr, env, ski);
+    }
+    else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                            "[rampart][shp] Other KeyIdentifier ValueTypes are not supported.");
+        return NULL;
+    }    
+    
+    return cert;
+}
+
+/* Get the client certificaate from key manager by giving 
+ * issuer and serial number of the certificate
+ */
+static oxs_x509_cert_t * get_certificate_by_issuer_serial(
+    const axutil_env_t *env,
+    rampart_context_t *rampart_ctx,
+    axiom_node_t *x509_data_node)
+{
+    oxs_x509_cert_t *cert = NULL;
+    axiom_node_t *issuer_serial_node = NULL;
+    axiom_element_t *issuer_serial_ele = NULL;
+    axiom_child_element_iterator_t *child_itr = NULL;
+    axiom_node_t *child_node = NULL;
+    axiom_element_t *child_ele = NULL;
+    axis2_char_t *ele_name = NULL;
+    axis2_char_t *issuer_name_str = NULL;
+    axis2_char_t *serial_num_str = NULL;
+    int serial_num = -1;
+    oxs_key_mgr_t *key_mgr = NULL;
+    
+    if(rampart_context_get_receiver_certificate_file(rampart_ctx, env))
+    {
+        /* In the client side, it is prefered to use certificate files instead 
+         * of key store, because one client normally interact with only one
+         * service. To handle this scenario, if we found reciever certificate file 
+         * specified in rampart_context we directly call the get_reciever_certificate. 
+         */
+        return rampart_context_get_receiver_certificate(rampart_ctx, env);
+    }
+    
+    issuer_serial_node = axiom_node_get_first_child(x509_data_node, env);
+    issuer_serial_ele = axiom_node_get_data_element(issuer_serial_node, env);
+    
+    child_itr = axiom_element_get_child_elements(issuer_serial_ele, env, issuer_serial_node);
+    while(axiom_child_element_iterator_has_next(child_itr, env))
+    {
+        child_node = axiom_child_element_iterator_next(child_itr,env);
+        child_ele = axiom_node_get_data_element(child_node, env);
+        ele_name = axiom_element_get_localname(child_ele, env);
+        if(axutil_strcmp(ele_name, OXS_NODE_X509_ISSUER_NAME) == 0)
+        {
+            issuer_name_str = axiom_element_get_text(child_ele, env, child_node);
+            if(!issuer_name_str)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[rampart][shp]Issuer Name cannot be NULL.");
+                return NULL;
+            }
+            AXIS2_LOG_INFO(env->log, AXIS2_LOG_SI, 
+                    "[rampart][shp]X509 Certificate Issuer Name Found: %s", issuer_name_str);
+        }
+        else if(axutil_strcmp(ele_name, OXS_NODE_X509_SERIAL_NUMBER) == 0)
+        {
+            serial_num_str = axiom_element_get_text(child_ele, env, child_node);
+            if(!serial_num_str)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                        "[rampart][shp]Serial number cannot be null.");
+            }
+            AXIS2_LOG_INFO(env->log, AXIS2_LOG_SI, 
+                    "[rampart][shp]X509 Certificate Serial Number Found: %s", serial_num_str);
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[rampart][shp]Error in incoming key info. These types not supported: %", ele_name);
+            return NULL;
+        }        
+    }
+    
+    serial_num = atoi(serial_num_str);
+    key_mgr = rampart_context_get_key_mgr(rampart_ctx, env);
+    
+    cert = oxs_key_mgr_get_receiver_certificate_from_issuer_serial(key_mgr, env, issuer_name_str, serial_num);    
+    
+    return cert;
 }
 
 static void
@@ -414,12 +536,12 @@ rampart_shp_validate_qnames(const axutil_env_t *env,
     return AXIS2_FALSE;
 }
 
-static oxs_x509_cert_t *get_receiver_x509_cert(
+/*static oxs_x509_cert_t *get_receiver_x509_cert(
     const axutil_env_t *env,
     rampart_context_t *rampart_context)
 {
     return rampart_context_get_receiver_certificate(rampart_context, env);
-}
+}*/
 
 static axis2_status_t
 rampart_shp_process_signature_confirmation(const axutil_env_t *env,
@@ -1198,6 +1320,16 @@ rampart_shp_process_asym_binding_signature(
 
     if(str_node)
     {
+        /* A <wsse:SecurityTokenReference> element MAY reference an X.509 token type
+         * by one of the following means:
+         *  - Reference to a Subject Key Identifier (<wsse:KeyIdentifier>)
+         *  - Reference to a Binary Security Token (<wsse:Reference> element that
+         *    references a local <wsse:BinarySecurityToken> element or a remote data
+         *    source that contains the token data itself)
+         *  - Reference to an Issuer and Serial Number (<ds:X509Data> element that 
+         *    contains a <ds:X509IssuerSerial> element that uniquely identifies an 
+         *    end entity certificate)
+         */
         str_child_node = axiom_node_get_first_element(str_node,env);
         if(str_child_node)
         {
@@ -1206,6 +1338,9 @@ rampart_shp_process_asym_binding_signature(
             {
                 if(is_include_token)
                 {
+                    /* The <wsse:Reference> element is used to reference 
+                     * an X.509 security token value by means of a URI reference.
+                     */
                     if(axutil_strcmp(str_child_name, OXS_NODE_REFERENCE)!=0)
                     {
                         rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
@@ -1217,6 +1352,22 @@ rampart_shp_process_asym_binding_signature(
                     }
                     cert = oxs_x509_cert_create(env);
                     status = rampart_token_process_direct_ref(env, str_child_node, sec_node, cert);
+                    if(status == AXIS2_FAILURE)
+                    {
+                        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                                      "Processing Direct Reference Failed .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                        "[Rampart][shp]Processing Direct Reference Failed.");
+                        return AXIS2_FAILURE;
+                    }
+                    status = rampart_context_set_found_cert_in_shp(rampart_context, env, AXIS2_TRUE);
+                    if(status == AXIS2_FAILURE)
+                    {
+                        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                        "[Rampart][shp]Setting Certificate into rmapart context failed.");
+                        return AXIS2_FAILURE;
+                    }
+                    status = rampart_context_set_receiver_cert_found_in_shp(rampart_context, env, cert);
                 }
                 else
                 {
@@ -1233,6 +1384,22 @@ rampart_shp_process_asym_binding_signature(
                         }
                         cert = oxs_x509_cert_create(env);
                         status = rampart_token_process_embedded(env, str_child_node, cert);
+                        if(status == AXIS2_FAILURE)
+                        {
+                            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY,
+                                                          "Processing Embedded Token Failed .", RAMPART_FAULT_IN_SIGNATURE, msg_ctx);
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                            "[Rampart][shp]Processing Embedded Token Failed.");
+                            return AXIS2_FAILURE;
+                        }
+                        status = rampart_context_set_found_cert_in_shp(rampart_context, env, AXIS2_TRUE);
+                        if(status == AXIS2_FAILURE)
+                        {
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                            "[Rampart][shp]Setting Certificate into rmapart context failed.");
+                            return AXIS2_FAILURE;
+                        }
+                        status = rampart_context_set_receiver_cert_found_in_shp(rampart_context, env, cert);
                     }
                     else if(0 == axutil_strcmp(str_child_name, OXS_NODE_KEY_IDENTIFIER))
                     {
@@ -1245,11 +1412,25 @@ rampart_shp_process_asym_binding_signature(
                                             "[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_KEY_IDENTIFIER);
                             return AXIS2_FAILURE;
                         }
-                        cert = get_receiver_x509_cert(env, rampart_context);
+                        cert = get_certificate_by_key_identifier(env, rampart_context, str_child_node);
+                        if(!cert)
+                        {
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                            "[Rampart][shp]Couldn't find a certificate which matched given key information.");
+                            return AXIS2_FAILURE;
+                        }
+                        
+                        rampart_context_set_found_cert_in_shp(rampart_context, env, AXIS2_TRUE);
+                        rampart_context_set_receiver_cert_found_in_shp(rampart_context, env, cert);
                         status = AXIS2_SUCCESS;
                     }
                     else if(0 == axutil_strcmp(str_child_name, OXS_NODE_X509_DATA))
                     {
+                        /* The <ds:X509IssuerSerial> element is used to specify 
+                         * a reference to an X.509 security token by means of 
+                         * the certificate issuer name and serial number.
+                         */
+                        
                         if(!rampart_context_is_key_identifier_type_supported(
                                     rampart_context, token, RAMPART_STR_ISSUER_SERIAL, env))
                         {
@@ -1259,7 +1440,16 @@ rampart_shp_process_asym_binding_signature(
                                             "[Rampart][shp]Key Reference Info mismatch (%s, %s)", str_child_name, OXS_NODE_X509_DATA);
                             return AXIS2_FAILURE;
                         }
-                        cert = get_receiver_x509_cert(env,rampart_context);
+                        cert = get_certificate_by_issuer_serial(env, rampart_context, str_child_node);
+                        if(!cert)
+                        {
+                            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                                            "[Rampart][shp]Couldn't find a certificate which matched given key information.");
+                            return AXIS2_FAILURE;
+                        }
+                        
+                        rampart_context_set_found_cert_in_shp(rampart_context, env, AXIS2_TRUE);
+                        rampart_context_set_receiver_cert_found_in_shp(rampart_context, env, cert);
                         status = AXIS2_SUCCESS;
                     }
                     else

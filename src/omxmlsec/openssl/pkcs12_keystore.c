@@ -80,7 +80,8 @@ AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL
 pkcs12_keystore_create_from_buffer(
         const axutil_env_t *env,
         axis2_char_t *buffer,
-        axis2_char_t *password) 
+        axis2_char_t *password,
+        int len) 
 {
     pkcs12_keystore_t *keystore = NULL;
     EVP_PKEY *pvt_key = NULL;
@@ -100,7 +101,7 @@ pkcs12_keystore_create_from_buffer(
     keystore->cert = NULL;
     keystore->pvt_key = NULL;
 
-    if (!openssl_pkcs12_load_from_buffer(env, buffer, &keystore->keystore)) {
+    if (!openssl_pkcs12_load_from_buffer(env, buffer, &keystore->keystore, len)) {
         oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_DEFAULT,
                 "Error loading pkcs12 keystore from file");
         return NULL;

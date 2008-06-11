@@ -58,6 +58,8 @@ struct oxs_key_mgr_t
     pkcs12_keystore_t *key_store;
     
     void *pkcs12_buf;
+    
+    int pkcs12_buff_len;
 	
     /* Buffer holding keys and certs */
     void *pem_buf;
@@ -105,7 +107,7 @@ oxs_key_mgr_free(oxs_key_mgr_t *key_mgr, const axutil_env_t *env)
         oxs_x509_cert_free(key_mgr->receiver_certificate, env);
         key_mgr->receiver_certificate = NULL;
     }
-	AXIS2_FREE(env->allocator, key_mgr);
+    AXIS2_FREE(env->allocator, key_mgr);
     return AXIS2_SUCCESS;
 }
 
@@ -910,16 +912,52 @@ oxs_key_mgr_get_key_store_buff(
     return key_mgr->pkcs12_buf;
 }
 
+AXIS2_EXTERN int AXIS2_CALL
+oxs_key_mgr_get_key_store_buff_len(
+            oxs_key_mgr_t *key_mgr,
+            const axutil_env_t *env)
+{
+        return key_mgr->pkcs12_buff_len;
+}
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_mgr_set_key_store_buff(
     oxs_key_mgr_t *key_mgr,
     const axutil_env_t *env,
-    void *key_store_buf)
+    void *key_store_buf,
+    int len)
 {
     AXIS2_PARAM_CHECK(env->error, key_store_buf, AXIS2_FAILURE);
         
     key_mgr->pkcs12_buf = key_store_buf;
+    key_mgr->pkcs12_buff_len = len;
     
     return AXIS2_SUCCESS;
 }
+
+
+AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL
+oxs_key_mgr_get_receiver_certificate_from_ski(
+    oxs_key_mgr_t *key_mgr,
+    const axutil_env_t *env,
+    axis2_char_t *ski)
+{
+    AXIS2_PARAM_CHECK(env->error, ski, NULL);
+    
+    return pkcs12_keystore_get_certificate_for_subject_key_id(key_mgr->key_store, env, ski);
+}
+
+AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL
+oxs_key_mgr_get_receiver_certificate_from_issuer_serial(
+    oxs_key_mgr_t *key_mgr,
+    const axutil_env_t *env,
+    axis2_char_t *issuer,
+    int serial)
+{
+    AXIS2_PARAM_CHECK(env->error, issuer, NULL);
+    AXIS2_PARAM_CHECK(env->error, serial, NULL)
+    
+    return pkcs12_keystore_get_certificate_for_issuer_serial(key_mgr->key_store, env, issuer, serial);
+}
+
 

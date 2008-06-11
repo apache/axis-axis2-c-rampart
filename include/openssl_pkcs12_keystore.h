@@ -50,12 +50,6 @@ extern "C" {
         axis2_char_t *filename, 
         axis2_char_t *password);
     
-    AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL 
-    pkcs12_keystore_create_from_buffer(
-            const axutil_env_t *env,
-            axis2_char_t *buffer,
-            axis2_char_t *password);
-    
     axutil_array_list_t * AXIS2_CALL pkcs12_keystore_populate_cert_array(
         const axutil_env_t *env,
         STACK_OF(X509) *other_certs);
@@ -88,10 +82,18 @@ extern "C" {
         const axutil_env_t *env,
         axis2_char_t *ski);
 
-	AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL 
+    AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL 
     pkcs12_keystore_get_other_certificate(
     	pkcs12_keystore_t *keystore,
     	const axutil_env_t *env);
+     
+    AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL
+    pkcs12_keystore_create_from_buffer(
+        const axutil_env_t *env,
+        axis2_char_t *buffer,
+        axis2_char_t *password,
+        int len);
+
     
         
 #ifdef __cplusplus

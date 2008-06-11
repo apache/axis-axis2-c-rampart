@@ -122,14 +122,21 @@ rampart_enc_encrypt_session_key(const axutil_env_t *env,
     /*Create asymmetric encryption context*/
     asym_ctx = oxs_asym_ctx_create(env);
     oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
-	certificate = oxs_key_mgr_get_receiver_certificate(key_mgr, env);
-	if (!certificate)
-	{
-		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] Receiver certificate cannot be loaded.");
-        return AXIS2_FAILURE;
-	}
-	oxs_asym_ctx_set_certificate(asym_ctx, env, certificate);
+    if(rampart_context_get_found_cert_in_shp(rampart_context, env))
+    {
+        certificate = rampart_context_get_receiver_cert_found_in_shp(rampart_context, env);
+    }
+    else
+    {
+        certificate = oxs_key_mgr_get_receiver_certificate(key_mgr, env);
+    }
+    if (!certificate)
+    {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                    "[rampart][rampart_encryption] Receiver certificate cannot be loaded.");
+    return AXIS2_FAILURE;
+    }
+    oxs_asym_ctx_set_certificate(asym_ctx, env, certificate);
     oxs_asym_ctx_set_operation(asym_ctx, env,
                                OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
     oxs_asym_ctx_set_st_ref_pattern(asym_ctx, env, eki);
