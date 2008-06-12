@@ -68,8 +68,6 @@ rampart_engine_build_configuration(
     rp_secpolicy_t *secpolicy = NULL;
     rampart_context_t *rampart_context = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
-    /*axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;*/
     axis2_bool_t is_server_side = AXIS2_TRUE;
     neethi_policy_t *policy = NULL;
     axutil_property_t *property = NULL;
@@ -104,11 +102,34 @@ rampart_engine_build_configuration(
         }
     }
     
-    /*for server side's outflow and client side's inflow, we have to use rampart context created in 
-    server side's inflow or client side's out flow*/
+    /* for server side's outflow and client side's inflow, we have to use rampart context 
+     * created in server side's inflow or client side's out flow
+     */
     if((is_server_side && !is_inflow) || (!is_server_side && is_inflow))
     {
-        property = axis2_msg_ctx_get_property(msg_ctx, env, RAMPART_CONTEXT);
+        if(is_server_side)
+        {
+            property = axis2_msg_ctx_get_property(msg_ctx, env, RAMPART_CONTEXT);
+        }
+        else
+        {
+            /* Options from client's out message context will not be copied to in message context. 
+             * So, we have to get original out message context to access the property
+             */
+            axis2_op_ctx_t *op_ctx = NULL;
+            op_ctx = axis2_msg_ctx_get_op_ctx(msg_ctx, env);
+            if(op_ctx)
+            {
+                axis2_msg_ctx_t *out_msg_ctx = NULL;
+                out_msg_ctx = axis2_op_ctx_get_msg_ctx(op_ctx, env, AXIS2_WSDL_MESSAGE_LABEL_OUT);
+                if(out_msg_ctx)
+                {
+                    property = axis2_msg_ctx_get_property(out_msg_ctx, env, RAMPART_CONTEXT);
+                }
+            }
+
+        }
+
         if(property)
         {
             rampart_context = (rampart_context_t *)axutil_property_get_value(property, env);
@@ -263,7 +284,10 @@ rampart_engine_build_configuration(
     {
         oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
     }
-    
+
+    /* Since rampart_context is for request scope, we have to store in a container which has 
+     * request scope 
+     */
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
                AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_CONTEXT, property);

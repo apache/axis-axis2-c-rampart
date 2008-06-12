@@ -133,8 +133,7 @@ rampart_out_handler_invoke(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
             "[rampart][rampart_out_handler] Security header building failed.");
-        return status;
     }
 
-    return AXIS2_SUCCESS;
+    return status;
 }
