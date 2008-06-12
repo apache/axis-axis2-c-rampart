@@ -83,7 +83,7 @@ rampart_username_token_build(
         password_function = rampart_context_get_pwcb_function(rampart_context, env);
         if(password_function)
         {
-            param = rampart_context_get_ctx(rampart_context, env);
+            param = rampart_context_get_pwcb_user_params(rampart_context, env);
             if(!param)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -510,7 +510,7 @@ rampart_username_token_validate(
             password_function = rampart_context_get_pwcb_function(rampart_context, env);
             if(password_function)
             {
-                param = rampart_context_get_ctx(rampart_context, env);
+                param = rampart_context_get_pwcb_user_params(rampart_context, env);
                 if(!param)
                 {
                     rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,

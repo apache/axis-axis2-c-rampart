@@ -70,8 +70,15 @@ struct rampart_context_t
     axis2_bool_t require_ut;
 
     axutil_array_list_t *key_list;
-    /*This is used in callback functions.*/
-    void *ctx;
+    /* This is used in callback functions.
+     * Used to store password callback user parameters.
+     */
+    void *pwcb_user_params;
+    
+    /* This is used in replay detector functions.
+     * Used to store replay detector user parameters.
+     */
+    void *rd_user_params;
     
     /* Used to store and track whether we found the clients certificate while processing
      * the security headers key info element. found_cert_in_shp is used to track the status.
@@ -190,7 +197,8 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->authenticate_with_digest = NULL;
     rampart_context->require_ut = AXIS2_FALSE;
     rampart_context->require_timestamp = AXIS2_FALSE;
-    rampart_context->ctx = NULL;
+    rampart_context->rd_user_params = NULL;
+    rampart_context->pwcb_user_params = NULL;
     rampart_context->ref = 0;
 
     rampart_context->encryption_token_id = NULL;
@@ -491,24 +499,34 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                   const axutil_env_t *env,
                                   password_callback_fn pwcb_function,
-                                  void *ctx)
+                                  void *user_params)
 {
     AXIS2_PARAM_CHECK(env->error,pwcb_function,AXIS2_FAILURE);
 
     rampart_context->pwcb_function = pwcb_function;
-    rampart_context->ctx = ctx;
+    rampart_context->pwcb_user_params = user_params;
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
         const axutil_env_t *env,
-        rampart_is_replayed_fn is_replayed_function)
+        rampart_is_replayed_fn is_replayed_function,
+        void *user_params)
 {
     AXIS2_PARAM_CHECK(env->error, is_replayed_function, AXIS2_FAILURE);
     rampart_context->is_replayed_function = is_replayed_function;
+    rampart_context->rd_user_params = user_params;
 
     return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN void * AXIS2_CALL
+rampart_context_get_rd_user_params(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->rd_user_params;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -707,12 +725,12 @@ rampart_context_get_replay_detect_function(
 }
 
 
-AXIS2_EXTERN void* AXIS2_CALL
-rampart_context_get_ctx(
+AXIS2_EXTERN void * AXIS2_CALL
+rampart_context_get_pwcb_user_params(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
 {
-    return rampart_context->ctx;
+    return rampart_context->pwcb_user_params;
 }
 
 AXIS2_EXTERN int AXIS2_CALL

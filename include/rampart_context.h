@@ -53,12 +53,13 @@ extern "C"
     typedef axis2_char_t *(AXIS2_CALL*
                            password_callback_fn)(const axutil_env_t *env,
                                                  const axis2_char_t *username,
-                                                 void *ctx);
+                                                 void *user_params);
 
     typedef axis2_status_t (AXIS2_CALL*
                             rampart_is_replayed_fn)(const axutil_env_t *env,
                                                     axis2_msg_ctx_t* msg_ctx,
-                                                    rampart_context_t *rampart_context);
+                                                    rampart_context_t *rampart_context,
+                                                    void *user_params);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
             auth_password_func)(const axutil_env_t* env,
@@ -247,7 +248,7 @@ extern "C"
     rampart_context_set_pwcb_function(rampart_context_t *rampart_context,
                                       const axutil_env_t *env,
                                       password_callback_fn pwcb_function,
-                                      void *ctx);
+                                      void *user_params);
     /**
      *
      * @param rampart_context
@@ -259,8 +260,19 @@ extern "C"
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     rampart_context_set_replay_detect_function(rampart_context_t *rampart_context,
-            const axutil_env_t *env,
-            rampart_is_replayed_fn is_replayed_function);
+        const axutil_env_t *env,
+        rampart_is_replayed_fn is_replayed_function,
+        void *user_params);
+    
+    /**
+     * @param rampart_context
+     * @param env pointer to environment struct,Must not be NULL.
+     * @returns user parameters for replay detector function or NULL
+     */
+    AXIS2_EXTERN void * AXIS2_CALL
+    rampart_context_get_rd_user_params(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
     /**
      *
      * @param rampart_context
@@ -496,8 +508,8 @@ extern "C"
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
 
-    AXIS2_EXTERN void* AXIS2_CALL
-    rampart_context_get_ctx(
+    AXIS2_EXTERN void * AXIS2_CALL
+    rampart_context_get_pwcb_user_params(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
     /**

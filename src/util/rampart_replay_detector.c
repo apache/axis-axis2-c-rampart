@@ -259,7 +259,8 @@ rampart_replay_detector_set_ll_db(const axutil_env_t *env,
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_replay_detector_with_linked_list(const axutil_env_t *env,
         axis2_msg_ctx_t* msg_ctx,
-        rampart_context_t *rampart_context)
+        rampart_context_t *rampart_context,
+        void *user_params)
 {
     axutil_linked_list_t *ll = NULL;
     const axis2_char_t *msg_id = NULL;

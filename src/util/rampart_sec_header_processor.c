@@ -1686,7 +1686,7 @@ rampart_shp_detect_replays(const axutil_env_t *env,
 				rd_fn = rampart_context_get_replay_detect_function(rampart_context, env);
 				if(rd_fn)
 				{
-					status  = (*rd_fn)(env, msg_ctx, rampart_context);
+					status  = (*rd_fn)(env, msg_ctx, rampart_context, rampart_context_get_rd_user_params(rampart_context, env));
 					if(status != AXIS2_SUCCESS)
 					{
 						/*Scream .. replayed*/

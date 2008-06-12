@@ -81,8 +81,7 @@ rampart_engine_build_configuration(
     axis2_char_t *pkcs12_password = NULL;
     axis2_char_t *pkcs12_buf = NULL;
     password_callback_fn password_function = NULL;
-    rampart_callback_t *password_callback = NULL;
-    void *param = NULL;
+    rampart_callback_t *password_callback = NULL;   
     pkcs12_keystore_t *key_store = NULL;
 
     is_server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
@@ -235,6 +234,8 @@ rampart_engine_build_configuration(
         password_function = rampart_context_get_pwcb_function(rampart_context, env);
         if(password_function)
         {
+            void *param = NULL;
+            param = rampart_context_get_pwcb_user_params(rampart_context, env);
             password = (*password_function)(env, enc_user, param);
             pkcs12_password = password;
         }
@@ -346,7 +347,9 @@ rampart_engine_build_configuration(
 		 * this function will be used*/
         if(is_inflow)
         {
-            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list);
+            void *rd_param = NULL;
+            rd_param = rampart_context_get_rd_user_params(rampart_context, env);
+            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list, rd_param);
         }
     }
     return rampart_context;
