@@ -91,14 +91,14 @@ static oxs_x509_cert_t * get_certificate_by_key_identifier(
     axis2_char_t *ski = NULL;
     oxs_key_mgr_t *key_mgr = NULL;   
         
-    if(rampart_context_get_receiver_certificate_file(rampart_ctx, env))
+    if((cert = rampart_context_get_receiver_certificate(rampart_ctx, env)))
     {
         /* In the client side, it is prefered to use certificate files instead 
          * of key store, because one client normally interact with only one
          * service. To handle this scenario, if we found reciever certificate file 
          * specified in rampart_context we directly call the get_reciever_certificate. 
          */
-        return rampart_context_get_receiver_certificate(rampart_ctx, env);
+        return cert;
     }
     
     key_id_element = axiom_node_get_data_element(key_id_node, env);

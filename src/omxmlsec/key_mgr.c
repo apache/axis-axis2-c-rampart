@@ -944,7 +944,12 @@ oxs_key_mgr_get_receiver_certificate_from_ski(
 {
     AXIS2_PARAM_CHECK(env->error, ski, NULL);
     
-    return pkcs12_keystore_get_certificate_for_subject_key_id(key_mgr->key_store, env, ski);
+    if(key_mgr->key_store)
+    {
+        return pkcs12_keystore_get_certificate_for_subject_key_id(key_mgr->key_store, env, ski);
+    }
+    
+    return NULL;
 }
 
 AXIS2_EXTERN oxs_x509_cert_t * AXIS2_CALL
@@ -957,7 +962,10 @@ oxs_key_mgr_get_receiver_certificate_from_issuer_serial(
     AXIS2_PARAM_CHECK(env->error, issuer, NULL);
     AXIS2_PARAM_CHECK(env->error, serial, NULL)
     
-    return pkcs12_keystore_get_certificate_for_issuer_serial(key_mgr->key_store, env, issuer, serial);
+    if(key_mgr->key_store)
+        return pkcs12_keystore_get_certificate_for_issuer_serial(key_mgr->key_store, env, issuer, serial);
+    
+    return NULL;
 }
 
 
