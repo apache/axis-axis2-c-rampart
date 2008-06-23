@@ -85,6 +85,13 @@ struct rampart_context_t
      */
     axis2_bool_t found_cert_in_shp;
     oxs_x509_cert_t *receiver_cert;   
+
+    /* Security Context token operation related objects */
+    store_security_context_token_fn store_sct_funtion;
+    obtain_security_context_token_fn obtain_sct_function;
+    delete_security_context_token_fn delete_sct_function;
+    validate_security_context_token_fn validate_sct_function;
+    void *sct_user_params;
 };
 
 /*void rampart_context_set_callback_fn(axutil_env_t *env,
@@ -209,6 +216,12 @@ rampart_context_create(const axutil_env_t *env)
     
     rampart_context->found_cert_in_shp = AXIS2_FALSE;
     rampart_context->receiver_cert = NULL;
+
+    rampart_context->store_sct_funtion = NULL;
+    rampart_context->obtain_sct_function = NULL;
+    rampart_context->delete_sct_function = NULL;
+    rampart_context->validate_sct_function = NULL;
+    rampart_context->sct_user_params = NULL;
     
     return rampart_context;
 }
@@ -3042,3 +3055,92 @@ rampart_context_set_receiver_cert_found_in_shp(
 }
 
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_store_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    store_security_context_token_fn store_fn)
+{
+    rampart_context->store_sct_funtion = store_fn;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_obtain_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    obtain_security_context_token_fn get_fn)
+{
+    rampart_context->obtain_sct_function = get_fn;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_delete_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    delete_security_context_token_fn delete_fn)
+{
+    rampart_context->delete_sct_function = delete_fn;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_security_context_token_user_params(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    void* user_params)
+{
+    rampart_context->sct_user_params = user_params;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_validate_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    validate_security_context_token_fn validate_fn)
+{
+    rampart_context->validate_sct_function = validate_fn;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN store_security_context_token_fn AXIS2_CALL
+rampart_context_get_store_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->store_sct_funtion;
+}
+
+AXIS2_EXTERN obtain_security_context_token_fn AXIS2_CALL
+rampart_context_get_obtain_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->obtain_sct_function;
+}
+
+AXIS2_EXTERN delete_security_context_token_fn AXIS2_CALL
+rampart_context_get_delete_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->delete_sct_function;
+}
+
+AXIS2_EXTERN void* AXIS2_CALL
+rampart_context_get_security_context_token_user_params(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->sct_user_params;
+}
+
+AXIS2_EXTERN validate_security_context_token_fn AXIS2_CALL
+rampart_context_get_validate_security_context_token_fn(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->validate_sct_function;
+}

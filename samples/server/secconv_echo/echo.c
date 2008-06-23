@@ -31,6 +31,8 @@
 #include <rampart_sct_provider.h>
 #include <openssl_hmac.h>
 
+#define RAMPART_SCT_PROVIDER_HASH_PROB "Rampart_SCT_Prov_DB_Prop"
+
 axiom_node_t *
 build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
 
@@ -78,6 +80,74 @@ build_om_programatically(const axutil_env_t *env, axis2_char_t *text)
  
     return echo_om_node;
 }
+
+static void 
+sct_hash_store_free(
+    axutil_hash_t *sct_hash_store,
+    const axutil_env_t *env)
+{
+	axutil_hash_index_t *hi = NULL;
+
+	for (hi = axutil_hash_first(sct_hash_store, env); hi != NULL; hi = axutil_hash_next(env, hi))
+	{
+		void *v = NULL;
+        axutil_hash_this(hi, NULL, NULL, &v);
+		if (v)
+		{
+			security_context_token_free((security_context_token_t*)v, env);        	
+		}
+	}
+
+	axutil_hash_free(sct_hash_store, env);
+}
+
+static axutil_hash_t *
+get_sct_hash_store(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t* msg_ctx)
+{
+    axis2_conf_ctx_t *conf_ctx = NULL;
+    axis2_ctx_t *ctx = NULL;
+    axutil_property_t *property = NULL;
+    axutil_hash_t *hash_store = NULL;
+    
+    /* Get the conf ctx */
+    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+    if(!conf_ctx)
+    {
+        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, 
+            "[rampart]Config context is NULL. Cannot get security context token hash store.");
+        return NULL;
+    }
+
+    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
+    if(!ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart]Axis2 context is NULL. Cannot get security context token hash store.");
+        return NULL;
+    }
+
+    /* Get the hash store property */
+    property = axis2_ctx_get_property(ctx, env, RAMPART_SCT_PROVIDER_HASH_PROB);
+    if(property)
+    {
+        /* Get the store */
+        hash_store = (axutil_hash_t*)axutil_property_get_value(property, env);
+    }
+    else
+    {
+        axutil_property_t *hash_store_prop = NULL;
+
+        hash_store = axutil_hash_make(env);
+        hash_store_prop = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+               AXIS2_TRUE, (void *)sct_hash_store_free, hash_store);
+        axis2_ctx_set_property(ctx, env, RAMPART_SCT_PROVIDER_HASH_PROB, hash_store_prop);
+    }
+
+    return hash_store;
+}
+
 
 axiom_node_t *
 secconv_echo_sts_request_security_token(
@@ -177,7 +247,7 @@ secconv_echo_sts_request_security_token(
     }
 
     /*store SCT so that when server needs it, can be extracted*/
-    db = sct_provider_get_sct_hash(env, msg_ctx);
+    db = get_sct_hash_store(env, msg_ctx);
     if(!db)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][secconv_service] Cannot get sct datastore");
@@ -239,7 +309,7 @@ secconv_echo_sts_request_security_token(
     trust_rstr_free(rstr, env);
 
     /*set the action*/
-    axis2_msg_ctx_set_wsa_action(msg_ctx, env, "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT");
+    axis2_msg_ctx_set_wsa_action(msg_ctx, env, SECCONV_200502_REPLY_ACTION);
 
     /*return the node*/
     return rstr_node;

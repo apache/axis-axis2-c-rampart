@@ -80,40 +80,42 @@ struct trust_rst
 
 AXIS2_EXTERN trust_rst_t * AXIS2_CALL
 trust_rst_create(
-        const axutil_env_t *env)
+    const axutil_env_t *env)
 {
     trust_rst_t *rst = NULL;
-    
     rst = (trust_rst_t*)AXIS2_MALLOC(env->allocator, sizeof(trust_rst_t));
     
-    rst->attr_context = NULL;
-    rst->token_type = NULL;
-    rst->request_type = NULL;
-	rst->wsa_action = NULL;
-    rst->applies_to_addr = NULL;
-    rst->claims = NULL;
-    rst->entropy = NULL;
-    rst->key_type = NULL;
-    rst->key_size = -1;
-    rst->allow_postdating = AXIS2_FALSE;
-    rst->renewing = AXIS2_FALSE;
-    rst->attr_allow = AXIS2_FALSE;
-    rst->attr_ok = AXIS2_FALSE;
-    rst->renew_target = NULL;
-    rst->cancel_target = NULL;
-    rst->wst_ns_uri = NULL;    
-    rst->life_time = NULL;
-    rst->authentication_type = NULL;
-    rst->signature_algo = NULL;
-    rst->encryption_algo = NULL;
-    rst->canonicalization_algo = NULL;
-    rst->computed_key_algo = NULL;
-    rst->desired_encryption = NULL;
-    rst->proof_encryption = NULL;
-    rst->usekey = NULL;
-    rst->usekey_sig_attr = NULL;
-    rst->sign_with = NULL;
-    rst->encrypt_with = NULL;
+    if(rst)
+    {
+        rst->attr_context = NULL;
+        rst->token_type = NULL;
+        rst->request_type = NULL;
+	    rst->wsa_action = NULL;
+        rst->applies_to_addr = NULL;
+        rst->claims = NULL;
+        rst->entropy = NULL;
+        rst->key_type = NULL;
+        rst->key_size = -1;
+        rst->allow_postdating = AXIS2_FALSE;
+        rst->renewing = AXIS2_FALSE;
+        rst->attr_allow = AXIS2_FALSE;
+        rst->attr_ok = AXIS2_FALSE;
+        rst->renew_target = NULL;
+        rst->cancel_target = NULL;
+        rst->wst_ns_uri = NULL;    
+        rst->life_time = NULL;
+        rst->authentication_type = NULL;
+        rst->signature_algo = NULL;
+        rst->encryption_algo = NULL;
+        rst->canonicalization_algo = NULL;
+        rst->computed_key_algo = NULL;
+        rst->desired_encryption = NULL;
+        rst->proof_encryption = NULL;
+        rst->usekey = NULL;
+        rst->usekey_sig_attr = NULL;
+        rst->sign_with = NULL;
+        rst->encrypt_with = NULL;
+    }
     
     return rst;
 }

@@ -55,6 +55,10 @@ extern "C"
 #define RAMPART_IN_HANDLER  "RampartInHandler"
 #define RAMPART_OUT_HANDLER  "RampartOutHandler"
 
+    /* Rahas module */
+#define RAHAS_IN_HANDLER "RahasInHandler"
+#define RAHAS_OUT_HANDLER "RahasOutHandler"
+
     /*Default values*/
 #define RAMPART_DEFAULT_KT_ALGO OXS_DEFAULT_KT_ALGO_HREF
 #define RAMPART_STR_DEFAULT OXS_STR_DEFAULT
@@ -153,8 +157,10 @@ extern "C"
 #define RAMPART_RD_DEF_VALID_DURATION 60
 #define RAMPART_RD_DEF_MAX_RCDS 5
 
+#define RAMPART_SCT_ID_TYPE_UNKNOWN 0
+#define RAMPART_SCT_ID_TYPE_LOCAL 1
+#define RAMPART_SCT_ID_TYPE_GLOBAL 2
 
-#define RAMPART_SCT_PROVIDER_DB_PROB "Rampart_SCT_Prov_DB_Prop"
 
 #ifdef __cplusplus
 }

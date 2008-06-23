@@ -1,9 +1,10 @@
 /*
- * Copyright 2004,2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -51,29 +52,86 @@ extern "C"
     typedef struct rampart_context_t rampart_context_t;
 
     typedef axis2_char_t *(AXIS2_CALL*
-                           password_callback_fn)(const axutil_env_t *env,
-                                                 const axis2_char_t *username,
-                                                 void *user_params);
+        password_callback_fn)(
+        const axutil_env_t *env,
+        const axis2_char_t *username,
+        void *user_params);
 
     typedef axis2_status_t (AXIS2_CALL*
-                            rampart_is_replayed_fn)(const axutil_env_t *env,
-                                                    axis2_msg_ctx_t* msg_ctx,
-                                                    rampart_context_t *rampart_context,
-                                                    void *user_params);
+        rampart_is_replayed_fn)(
+        const axutil_env_t *env,
+        axis2_msg_ctx_t* msg_ctx,
+        rampart_context_t *rampart_context,
+        void *user_params);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
-            auth_password_func)(const axutil_env_t* env,
-                                const axis2_char_t *username,
-                                const axis2_char_t *password,
-                                void *ctx);
+        auth_password_func)(
+        const axutil_env_t* env,
+        const axis2_char_t *username,
+        const axis2_char_t *password,
+        void *ctx);
 
     typedef rampart_authn_provider_status_t (AXIS2_CALL*
-            auth_digest_func)(const axutil_env_t* env,
-                              const axis2_char_t *username,
-                              const axis2_char_t *nonce,
-                              const axis2_char_t *created,
-                              const char *digest,
-                              void *ctx);
+        auth_digest_func)(
+        const axutil_env_t* env,
+        const axis2_char_t *username,
+        const axis2_char_t *nonce,
+        const axis2_char_t *created,
+        const char *digest,
+        void *ctx);
+
+    /* This function will be used to store sct. Global id, local id will be given so function 
+     * writer can store them in anyway. Get or Delete method will use any of the Global id or local 
+     * id, so Store function writer should be ready for that.
+     */
+    typedef axis2_status_t (AXIS2_CALL*
+        store_security_context_token_fn)(
+        const axutil_env_t *env, 
+        axis2_msg_ctx_t* msg_ctx, 
+        axis2_char_t *sct_global_id, 
+        axis2_char_t *sct_local_id, 
+        void *sct, 
+        void *user_params);
+
+    /* This function will be called to get previously stored sct. If secure conversation token is 
+     * referred by this method, then sct_id will be not null. However, if security context token 
+     * (pre-agreed and established offline) is refered then sct_id might be NULL. is_encryption is 
+     * passed, so that if pre-agreed sct is different for encryption and signature, then it could be 
+     * accessed. sct_id_type will be RAMPART_SCT_ID_TYPE_LOCAL or RAMPART_SCT_ID_TYPE_GLOBAL if 
+     * sct_id is NOT NULL. If sct_id is NULL, then sct_id_type will be RAMPART_SCT_ID_TYPE_UNKNOWN
+     */
+    typedef void* (AXIS2_CALL*
+        obtain_security_context_token_fn)(
+        const axutil_env_t *env, 
+        axis2_bool_t is_encryption, 
+        axis2_msg_ctx_t* msg_ctx, 
+        axis2_char_t *sct_id, 
+        int sct_id_type,
+        void* user_params);
+
+    /* This function will be called to delete previously stored sct. sct_id_type can be 
+     * RAMPART_SCT_ID_TYPE_LOCAL or RAMPART_SCT_ID_TYPE_GLOBAL
+     */
+    typedef axis2_status_t (AXIS2_CALL*
+        delete_security_context_token_fn)(
+        const axutil_env_t *env, 
+        axis2_msg_ctx_t* msg_ctx, 
+        axis2_char_t *sct_id, 
+        int sct_id_type,
+        void* user_params);
+
+    /* Validates whether security context token is valid or not. Normally, we can directly send 
+     * true as response. But if syntax of security context token is altered/added by using 
+     * extensible mechanism (e.g having sessions, etc.) then user can implement this method. 
+     * Axiom representation of the sct will be given as the parameter, because if sct is 
+     * extended, we don't know the syntax. Method writer can implement whatever needed.
+     */
+    typedef axis2_status_t (AXIS2_CALL*
+    validate_security_context_token_fn)(
+        const axutil_env_t *env, 
+        axiom_node_t *sct_node, 
+        axis2_msg_ctx_t *msg_ctx, 
+        void *user_params);
 
 	
     /**
@@ -84,7 +142,8 @@ extern "C"
     */
 
     AXIS2_EXTERN rampart_context_t *AXIS2_CALL
-    rampart_context_create(const axutil_env_t *env);
+    rampart_context_create(
+        const axutil_env_t *env);
 
 
     /**
@@ -94,8 +153,9 @@ extern "C"
     */
 
     AXIS2_EXTERN void AXIS2_CALL
-    rampart_context_free(rampart_context_t *rampart_context,
-                         const axutil_env_t *env);
+    rampart_context_free(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
 
 
     /****************************************************************/
@@ -1653,6 +1713,129 @@ extern "C"
         const axutil_env_t *env,
         void *key_store_buf,
         int length);
+
+    /**
+     * Set the function used to store security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param store_fn funtion pointer used to store sct
+     * @returns status of the operation
+     */    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_store_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        store_security_context_token_fn store_fn);
+
+    /**
+     * Set the function used to get security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param get_fn funtion pointer used to get stored sct
+     * @returns status of the operation
+     */    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_obtain_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        obtain_security_context_token_fn get_fn);
+
+    /**
+     * Set the function used to delete security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param delete_fn funtion pointer used to delete stored sct
+     * @returns status of the operation
+     */    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_delete_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        delete_security_context_token_fn delete_fn);
+
+    /**
+     * Set the user parameters used to invoke security context token related funtions
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param user_params pointer to user params
+     * @returns status of the operation
+     */    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_security_context_token_user_params(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        void* user_params);
+
+    /**
+     * Set the function used to validate security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param validate_fn funtion pointer used to validate sct
+     * @returns status of the operation
+     */    
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_validate_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        validate_security_context_token_fn validate_fn);
+
+    /**
+     * Get the function used to store security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns untion pointer used to store sct
+     */    
+    AXIS2_EXTERN store_security_context_token_fn AXIS2_CALL
+    rampart_context_get_store_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    /**
+     * Get the function used to get security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns funtion pointer used to get stored sct
+     */    
+    AXIS2_EXTERN obtain_security_context_token_fn AXIS2_CALL
+    rampart_context_get_obtain_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    /**
+     * Get the function used to delete security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns funtion pointer used to delete stored sct
+     */    
+    AXIS2_EXTERN delete_security_context_token_fn AXIS2_CALL
+    rampart_context_get_delete_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    /**
+     * Get the user parameters used to invoke security context token related funtions
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @param user_params pointer to user params
+     * @returns pointer to user parameter.
+     */    
+    AXIS2_EXTERN void* AXIS2_CALL
+    rampart_context_get_security_context_token_user_params(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    /**
+     * Get the function used to validate security context token
+     * @param rampart_context Pointer to rampart context struct.
+     * @param env Pointer to environment struct
+     * @returns funtion pointer used to validate sct
+     */    
+    AXIS2_EXTERN validate_security_context_token_fn AXIS2_CALL
+    rampart_context_get_validate_security_context_token_fn(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+
     
 #ifdef __cplusplus
 }

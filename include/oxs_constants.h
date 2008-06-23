@@ -137,6 +137,7 @@ extern "C"
 #define OXS_NODE_SECURITY_CONTEXT_TOKEN "SecurityContextToken"
 #define OXS_NODE_IDENTIFIER "Identifier"
 #define OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN "http://schemas.xmlsoap.org/ws/2005/02/sc/sct"
+#define OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12 "http://docs.oasis-open.org/ws-sx/ws-secureconversation/200512/sct"
 
 /************************
     SAML nodes

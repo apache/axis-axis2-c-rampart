@@ -120,6 +120,7 @@ extern "C"
 #define TRUST_ATTR_USE_KEY_SIG          "Sig"
 
 
+#define TRUST_DEFAULT_KEY_SIZE 256
 
 	/* Trust Namespace URIs and Namespace prefix */
 #define TRUST_S11        "S11"
@@ -143,9 +144,20 @@ extern "C"
 #define TRUST_XS         "xs"
 #define TRUST_XS_XMLNS   "http://www.w3.org/2001/XMLSchema"
 
+#define SECCONV_200502_REQUEST_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT"
+#define SECCONV_200502_REPLY_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT"
+#define SECCONV_200512_REQUEST_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT"
+#define SECCONV_200512_REPLY_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT"
+
+#define SECCONV_GLOBAL_ID_PREFIX "urn:uuid:"
+#define SECCONV_LOCAL_ID_PREFIX "sctId"
+
+
 #define TRUST_COMPUTED_KEY_PSHA1 "http://schemas.xmlsoap.org/ws/2005/02/trust/CK/PSHA1"
+#define TRUST_COMPUTED_KEY_PSHA1_05_12 "http://docs.oasis-open.org/ws-sx/ws-trust/200512/CK/PSHA1"
 /* NS Versions */
 
+#define TRUST_VERSION_INVALID 0
 #define TRUST_VERSION_05_02 1
 #define TRUST_VERSION_05_12 2
 

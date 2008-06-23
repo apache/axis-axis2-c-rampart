@@ -88,7 +88,8 @@ extern "C"
      * @returns status of the op. AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_replay_detector_with_linked_list(const axutil_env_t *env,
+    rampart_replay_detector_default(
+        const axutil_env_t *env,
         axis2_msg_ctx_t* msg_ctx,
         rampart_context_t *rampart_context,
         void *user_params);

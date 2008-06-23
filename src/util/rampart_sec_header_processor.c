@@ -685,14 +685,27 @@ rampart_shp_process_usernametoken(const axutil_env_t *env,
 }
 
 static axis2_status_t
-rampart_shp_process_security_context_token(const axutil_env_t *env, 
-                                           axiom_node_t *token_node, 
-                                           rampart_context_t* rampart_context, 
-                                           axis2_msg_ctx_t *msg_ctx)
+rampart_shp_process_security_context_token(
+    const axutil_env_t *env, 
+    axiom_node_t *token_node, 
+    rampart_context_t* rampart_context, 
+    axis2_msg_ctx_t *msg_ctx)
 {
     axiom_node_t *identifier_node = NULL;
     axis2_char_t *identifier = NULL;
     axis2_char_t *key_name = NULL;
+
+    /*Check whether security context token is valid */
+    if(sct_provider_validate_security_context_token(env, token_node, rampart_context, msg_ctx)
+        != AXIS2_SUCCESS)
+    {
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+            "Security context token validation failed.", 
+            RAMPART_FAULT_INVALID_SECURITY_TOKEN, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Security context token validation failed.");
+        return AXIS2_FAILURE;
+    }
 
     /*Get the identifier node*/
     identifier_node = oxs_axiom_get_first_child_node_by_name(
@@ -700,21 +713,29 @@ rampart_shp_process_security_context_token(const axutil_env_t *env,
 
     if(!identifier_node)
     {
-        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, "Cannot find identifier node in security context token", RAMPART_FAULT_INVALID_SECURITY_TOKEN, msg_ctx);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Cannot find identifier node in security context token");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+            "Cannot find identifier node in security context token", 
+            RAMPART_FAULT_INVALID_SECURITY_TOKEN, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Cannot find identifier node in security context token");
         return AXIS2_FAILURE;
     }
 
     identifier = oxs_axiom_get_node_content(env, identifier_node);
     if(!identifier)
     {
-        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, "Cannot find identifier content in security context token", RAMPART_FAULT_INVALID_SECURITY_TOKEN, msg_ctx);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Cannot find identifier content in security context token");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+            "Cannot find identifier content in security context token", 
+            RAMPART_FAULT_INVALID_SECURITY_TOKEN, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][shp] Cannot find identifier content in security context token");
         return AXIS2_FAILURE;
     }
 
-    key_name = oxs_axiom_get_attribute_value_of_node_by_name(env, token_node, OXS_ATTR_ID, OXS_WSU_XMLNS);
-    return rampart_shp_add_security_context_token(env, identifier, key_name, rampart_context, msg_ctx);
+    key_name = oxs_axiom_get_attribute_value_of_node_by_name(
+        env, token_node, OXS_ATTR_ID, OXS_WSU_XMLNS);
+    return rampart_shp_add_security_context_token(
+        env, identifier, key_name, rampart_context, msg_ctx);
 }
 
 static axis2_status_t

@@ -290,7 +290,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
         {
             oxs_buffer_t *key_buf = NULL;
             session_key = oxs_key_create(env);
-            key_buf = sct_provider_get_secret(env, token, server_side, AXIS2_FALSE, rampart_context, msg_ctx);
+            key_buf = sct_provider_get_secret(env, token, AXIS2_FALSE, rampart_context, msg_ctx);
             if(!key_buf)
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -593,7 +593,7 @@ rampart_sig_sign_message(
             security_context_token_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_SECURITY_CONTEXT_TOKEN);
             if((!security_context_token_node) || (is_different_session_key_for_encryption_and_signing(env, rampart_context)))
             {
-                security_context_token_node = sct_provider_get_token(env, token, server_side, AXIS2_FALSE, rampart_context, msg_ctx);
+                security_context_token_node = sct_provider_get_token(env, token, AXIS2_FALSE, rampart_context, msg_ctx);
                 if(!security_context_token_node)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -604,12 +604,12 @@ rampart_sig_sign_message(
                 }
                 axiom_node_add_child(sec_node, env, security_context_token_node);
             }
-            key_reference_node = sct_provider_get_attached_reference(env, token, server_side, AXIS2_FALSE, rampart_context, msg_ctx);
+            key_reference_node = sct_provider_get_attached_reference(env, token, AXIS2_FALSE, rampart_context, msg_ctx);
         }
         else
         {
             /*get the unattachedReference and set to key_reference_node*/
-            key_reference_node = sct_provider_get_unattached_reference(env, token, server_side, AXIS2_FALSE, rampart_context, msg_ctx);
+            key_reference_node = sct_provider_get_unattached_reference(env, token, AXIS2_FALSE, rampart_context, msg_ctx);
         }
     }
     else if (token_type == RP_PROPERTY_SAML_TOKEN)

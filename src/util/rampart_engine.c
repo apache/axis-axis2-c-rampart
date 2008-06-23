@@ -341,17 +341,6 @@ rampart_engine_build_configuration(
             }
         }
     }
-    else
-    { /*Server side only*/
-        /*We set our default impl of replay detection function. if the module is not set, then 
-		 * this function will be used*/
-        if(is_inflow)
-        {
-            void *rd_param = NULL;
-            rd_param = rampart_context_get_rd_user_params(rampart_context, env);
-            rampart_context_set_replay_detect_function(rampart_context, env, rampart_replay_detector_with_linked_list, rd_param);
-        }
-    }
     return rampart_context;
 }
 
@@ -362,27 +351,17 @@ build_policy(
     axis2_msg_ctx_t *msg_ctx,
     axis2_bool_t is_inflow)
 {
-
-    axis2_svc_t *svc = NULL;
     axis2_desc_t *desc = NULL;
     axis2_policy_include_t *policy_include = NULL;
     neethi_policy_t *service_policy = NULL;
     axis2_op_t *op = NULL;
     axis2_msg_t *msg = NULL;
 
-    svc =  axis2_msg_ctx_get_svc(msg_ctx,env);
-    if(!svc)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_neethi] Service is NULL.");
-        return NULL;
-    }
-
     op = axis2_msg_ctx_get_op(msg_ctx, env);
     if(!op)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_engine] Operation is NULL.");
+            "[rampart][rampart_engine] Cannot find policy. Operation is NULL.");
         return NULL;
     }
 
@@ -398,17 +377,15 @@ build_policy(
     if(!msg)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_engine] Message is NULL.");
+            "[rampart][rampart_engine] Cannot find policy. Message is NULL.");
         return NULL;
     }
-
-    /*desc = axis2_svc_get_base(svc, env);*/
 
     desc = axis2_msg_get_base(msg, env);
     if(!desc)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_engine] axis2 description is NULL.");
+            "[rampart][rampart_engine] Cannot find policy. Axis2 description is NULL.");
         return NULL;
     }
 
@@ -416,22 +393,19 @@ build_policy(
     if(!policy_include)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_engine] Policy include is NULL.");
+            "[rampart][rampart_engine] Policy include is NULL.");
         return NULL;
     }
-    /*service_policy = axis2_policy_include_get_policy(policy_include, env);*/
 
     service_policy = axis2_policy_include_get_effective_policy(policy_include, env);
-
     if(!service_policy)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_engine] Policy is NULL.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart][rampart_engine] Policy is NULL.");
         return NULL;
     }
 
     return service_policy;
-
 }
 
 
@@ -449,28 +423,23 @@ set_rampart_user_properties(
     axis2_char_t *authn_provider_name = NULL;
 	axis2_char_t *replay_detector_name = NULL;
     axis2_char_t *sct_provider_name = NULL;
-    axis2_status_t status = AXIS2_SUCCESS;
 
-    status = rampart_context_set_user_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(rampart_context_set_user_from_file(rampart_context,env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    status = rampart_context_set_ttl_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(rampart_context_set_ttl_from_file(rampart_context,env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    status = rampart_context_set_rd_val_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(rampart_context_set_rd_val_from_file(rampart_context,env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    status = rampart_context_set_password_type_from_file(rampart_context,env);
-    if(status!=AXIS2_SUCCESS)
+    if(rampart_context_set_password_type_from_file(rampart_context,env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
@@ -480,7 +449,13 @@ set_rampart_user_properties(
     {
         password_callback_module = rampart_load_pwcb_module(env, pwcb_module_name);
         if(password_callback_module)
+        {
             rampart_context_set_password_callback(rampart_context,env,password_callback_module);
+        }
+        else
+        {
+            return AXIS2_FAILURE;
+        }
     }
 
     authn_provider_name = rampart_context_get_authn_module_name(rampart_context,env);
@@ -488,7 +463,13 @@ set_rampart_user_properties(
     {
         authn_provider = rampart_load_auth_module(env,authn_provider_name);
         if(authn_provider)
+        {
             rampart_context_set_authn_provider(rampart_context,env,authn_provider);
+        }
+        else
+        {
+            return AXIS2_FAILURE;
+        }
     }
 
     replay_detector_name = rampart_context_get_replay_detector_name(rampart_context,env);
@@ -496,7 +477,23 @@ set_rampart_user_properties(
     {
         replay_detector = rampart_load_replay_detector(env,replay_detector_name);
         if(replay_detector)
+        {
             rampart_context_set_replay_detector(rampart_context,env,(void*)replay_detector);
+        }
+        else
+        {
+            AXIS2_FAILURE;
+        }
+    }
+    else
+    {
+        /* if replay detector is not set, we can use replay detection function. We have to check 
+         * whether user has already set it. If not, we can use default function */
+        if(!rampart_context_get_replay_detect_function(rampart_context, env))
+        {
+            rampart_context_set_replay_detect_function(
+                rampart_context, env, rampart_replay_detector_default, NULL);
+        }
     }
 
     sct_provider_name = rampart_context_get_sct_provider_name(rampart_context,env);
@@ -504,9 +501,129 @@ set_rampart_user_properties(
     {
         sct_provider = rampart_load_sct_provider(env,sct_provider_name);
         if(sct_provider)
+        {
+            rampart_sct_provider_ops_t *ops = NULL;
             rampart_context_set_sct_provider(rampart_context,env,(void*)sct_provider);
+            ops = sct_provider->ops;
+
+            if(ops)
+            {
+                
+                void *user_param = NULL;
+                store_security_context_token_fn store_fn = NULL;
+                obtain_security_context_token_fn obtain_fn = NULL;
+                delete_security_context_token_fn delete_fn = NULL;
+                validate_security_context_token_fn validate_fn = NULL;
+
+                /* we have to call sct_provider's get user param method */
+                if(ops->get_user_params)
+                {
+                    user_param = ops->get_user_params(env);
+                    rampart_context_set_security_context_token_user_params(
+                        rampart_context, env, user_param);
+                }
+                else
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart]Cannot find 'get user param' operation of secrutiy context token \
+                        provider.");
+                    return AXIS2_FAILURE;
+                }
+
+                /* get function pointers and set it to rampart context */
+                store_fn = ops->store_security_context_token;
+                if(store_fn)
+                {
+                    rampart_context_set_store_security_context_token_fn(
+                        rampart_context, env, store_fn);
+                }
+                else
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart]Cannot find 'store' operation of secrutiy context token provider.");
+                    return AXIS2_FAILURE;
+                }
+
+                obtain_fn = ops->obtain_security_context_token;
+                if(obtain_fn)
+                {
+                    rampart_context_set_obtain_security_context_token_fn(
+                        rampart_context, env, obtain_fn);
+                }
+                else
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart]Cannot find 'obtain' operation of secrutiy context token provider.");
+                    return AXIS2_FAILURE;
+                }
+
+                delete_fn = ops->delete_security_context_token;
+                if(delete_fn)
+                {
+                    rampart_context_set_delete_security_context_token_fn(
+                        rampart_context, env, delete_fn);
+                }
+                else
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart]Cannot find 'delete' operation of secrutiy context token provider.");
+                    return AXIS2_FAILURE;
+                }
+
+                validate_fn = ops->validate_security_context_token;
+                if(validate_fn)
+                {
+                    rampart_context_set_validate_security_context_token_fn(
+                        rampart_context, env, validate_fn);
+                }
+                else
+                {
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[rampart]Cannot find 'validate' operation of secrutiy context token provider.");
+                    return AXIS2_FAILURE;
+                }
+            }
+            else
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    "[rampart]Cannot find operations of secrutiy context token provider.");
+                return AXIS2_FAILURE;
+            }
+        }
+        else 
+        {
+            return AXIS2_FAILURE;
+        }
     }
-    return status;
+    else
+    {
+        /* If sct_provider is not set, we can use sct functions. We have to check whether user has 
+         * already set it. If not, we can use default function */
+        if(!rampart_context_get_obtain_security_context_token_fn(rampart_context, env))
+        {
+            rampart_context_set_obtain_security_context_token_fn(
+                rampart_context, env, sct_provider_obtain_sct_default);
+        }
+
+        if(!rampart_context_get_store_security_context_token_fn(rampart_context, env))
+        {
+            rampart_context_set_store_security_context_token_fn(
+                rampart_context, env, sct_provider_store_sct_default);
+        }
+
+        if(!rampart_context_get_delete_security_context_token_fn(rampart_context, env))
+        {
+            rampart_context_set_delete_security_context_token_fn(
+                rampart_context, env, sct_provider_delete_sct_default);
+        }
+
+        if(!rampart_context_get_validate_security_context_token_fn(rampart_context, env))
+        {
+            rampart_context_set_validate_security_context_token_fn(
+                rampart_context, env, sct_provider_validate_sct_default);
+        }
+    }
+    return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
