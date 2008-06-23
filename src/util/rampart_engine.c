@@ -482,7 +482,7 @@ set_rampart_user_properties(
         }
         else
         {
-            AXIS2_FAILURE;
+            return AXIS2_FAILURE;
         }
     }
     else
