@@ -39,7 +39,6 @@ sct_provider_get_sct(
     rampart_context_t* rampart_context, 
     axis2_msg_ctx_t* msg_ctx)
 {
-    rampart_sct_provider_t* sct_provider = NULL;
     security_context_token_t* sct = NULL;
 
     /* if sct id is not given, check whether it is stored in rampart context */
@@ -310,7 +309,7 @@ sct_provider_obtain_token_from_sts(
 
         if(endpoint)
         {
-            issuer_address = axis2_endpoint_ref_get_address(endpoint, env);
+            issuer_address = (axis2_char_t*)axis2_endpoint_ref_get_address(endpoint, env);
         }
 
         if(!issuer_address)
@@ -328,7 +327,7 @@ sct_provider_obtain_token_from_sts(
         conf = axis2_conf_ctx_get_conf(conf_ctx, env);
         if(conf)
         {
-            client_home = axis2_conf_get_repo(conf, env);
+            client_home = (axis2_char_t*)axis2_conf_get_repo(conf, env);
         }
     }
     
@@ -650,3 +649,5 @@ sct_provider_validate_sct_default(
 
     return AXIS2_SUCCESS;
 }
+
+

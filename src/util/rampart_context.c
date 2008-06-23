@@ -3144,3 +3144,5 @@ rampart_context_get_validate_security_context_token_fn(
 {
     return rampart_context->validate_sct_function;
 }
+
+

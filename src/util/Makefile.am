@@ -13,6 +13,7 @@ librampart_util_la_SOURCES = rampart_crypto_util.c \
 
 librampart_util_la_LIBADD  = -lssl \
 			    ../omxmlsec/libomxmlsec.la \
+				../secconv/libsecconv.la \
 			     -lcrypto \
 				@OPENSSLLIB@
 
