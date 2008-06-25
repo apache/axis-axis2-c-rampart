@@ -144,10 +144,22 @@ extern "C"
 #define TRUST_XS         "xs"
 #define TRUST_XS_XMLNS   "http://www.w3.org/2001/XMLSchema"
 
-#define SECCONV_200502_REQUEST_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT"
-#define SECCONV_200502_REPLY_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT"
-#define SECCONV_200512_REQUEST_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT"
-#define SECCONV_200512_REPLY_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT"
+#define SECCONV_200502_REQUEST_ISSUE_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT"
+#define SECCONV_200502_REPLY_ISSUE_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT"
+#define SECCONV_200502_REQUEST_AMEND_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT/Amend"
+#define SECCONV_200502_REPLY_AMEND_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT/Amend"
+#define SECCONV_200502_REQUEST_RENEW_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT/Renew"
+#define SECCONV_200502_REPLY_RENEW_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT/Renew"
+#define SECCONV_200502_REQUEST_CANCEL_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RST/SCT/Cancel"
+#define SECCONV_200502_REPLY_CANCEL_ACTION "http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/SCT/Cancel"
+#define SECCONV_200512_REQUEST_ISSUE_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT"
+#define SECCONV_200512_REPLY_ISSUE_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT"
+#define SECCONV_200512_REQUEST_AMEND_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT/Amend"
+#define SECCONV_200512_REPLY_AMEND_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT/Amend"
+#define SECCONV_200512_REQUEST_RENEW_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT/Renew"
+#define SECCONV_200512_REPLY_RENEW_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT/Renew"
+#define SECCONV_200512_REQUEST_CANCEL_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RST/SCT/Cancel"
+#define SECCONV_200512_REPLY_CANCEL_ACTION "http://docs.oasis-open.org/ws-sx/ws-trust/200512/RSTR/SCT/Cancel"
 
 #define SECCONV_GLOBAL_ID_PREFIX "urn:uuid:"
 #define SECCONV_LOCAL_ID_PREFIX "sctId"
@@ -160,6 +172,12 @@ extern "C"
 #define TRUST_VERSION_INVALID 0
 #define TRUST_VERSION_05_02 1
 #define TRUST_VERSION_05_12 2
+
+#define SECCONV_ACTION_INVALID 0
+#define SECCONV_ACTION_ISSUE 1
+#define SECCONV_ACTION_AMEND 2
+#define SECCONV_ACTION_RENEW 3
+#define SECCONV_ACTION_CANCEL 4
 
 
 /* WS-SX Namespaces*/

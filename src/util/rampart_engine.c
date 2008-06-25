@@ -525,8 +525,8 @@ set_rampart_user_properties(
                 else
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                        "[rampart]Cannot find 'get user param' operation of secrutiy context token \
-                        provider.");
+                        "[rampart]Cannot find 'get user param' operation of secrutiy context token "
+                        "provider.");
                     return AXIS2_FAILURE;
                 }
 

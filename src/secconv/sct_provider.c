@@ -68,8 +68,8 @@ sct_provider_get_sct(
         if(!token)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[rampart]rampart policy property 'token' is not valid. Could not find whether \
-                token is SecureConversationToken or SecurityContextToken.");
+                "[rampart]rampart policy property 'token' is not valid. Could not find whether "
+                "token is SecureConversationToken or SecurityContextToken.");
             return NULL;
         }
 
@@ -77,8 +77,8 @@ sct_provider_get_sct(
         if(!rp_sct)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[rampart]value of rampart policy property 'token' is not valid. Could not find \
-                whether token is SecureConversationToken or SecurityContextToken.");
+                "[rampart]value of rampart policy property 'token' is not valid. Could not find "
+                "whether token is SecureConversationToken or SecurityContextToken.");
             return NULL;
         }
 
@@ -99,8 +99,8 @@ sct_provider_get_sct(
             else
             {
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "[rampart] Secure conversation token is requested without giving ID of SCT. \
-                    This cannot be done in server side.");
+                    "[rampart] Secure conversation token is requested without giving ID of SCT. "
+                    "This cannot be done in server side.");
             }
         }
         else
@@ -379,7 +379,7 @@ sct_provider_obtain_token_from_sts(
     trust_rst_set_request_type(rst, env, TRUST_REQ_TYPE_ISSUE);
     trust_rst_set_token_type(rst, env, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN);
     trust_rst_set_wst_ns_uri(rst, env, TRUST_WST_XMLNS_05_02);
-    trust_rst_set_wsa_action(rst, env, SECCONV_200502_REQUEST_ACTION);
+    trust_rst_set_wsa_action(rst, env, SECCONV_200502_REQUEST_ISSUE_ACTION);
     trust_context_set_rst(trust_context, env, rst);
 
     /* call sts_client to get the token from sts. We should create a clone of that policy */
@@ -537,7 +537,7 @@ sct_provider_obtain_sct_default(
             oxs_buffer_populate(
                 key_buffer, env, (unsigned char*)"01234567012345670123456701234567", 32);
             security_context_token_set_secret(sct, env, key_buffer);
-            sct_id = oxs_util_generate_id(env,"urn:uuid:");
+            sct_id = oxs_util_generate_id(env, SECCONV_GLOBAL_ID_PREFIX);
             security_context_token_set_global_identifier(sct, env, sct_id);
             security_context_token_set_local_identifier(
                 sct, env, axutil_strdup(env, "#sctId-29530019"));
@@ -602,8 +602,8 @@ sct_provider_store_sct_default(
             {
                 /* if both local_id and global_id are NULL, then we can't store it */
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "[rampart]Security context token identifiers are not valid. \
-                    Cannot store security context token. ");
+                    "[rampart]Security context token identifiers are not valid. "
+                    "Cannot store security context token. ");
                 status = AXIS2_FAILURE;
             }
         }

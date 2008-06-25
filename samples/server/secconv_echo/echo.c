@@ -309,7 +309,7 @@ secconv_echo_sts_request_security_token(
     trust_rstr_free(rstr, env);
 
     /*set the action*/
-    axis2_msg_ctx_set_wsa_action(msg_ctx, env, SECCONV_200502_REPLY_ACTION);
+    axis2_msg_ctx_set_wsa_action(msg_ctx, env, SECCONV_200502_REQUEST_ISSUE_ACTION);
 
     /*return the node*/
     return rstr_node;

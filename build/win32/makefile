@@ -30,6 +30,8 @@ SECCONV_SRC = $(RAMPART_SOURCE_DIR)\src\secconv\*.c
 
 TRUST_SRC = $(RAMPART_SOURCE_DIR)\src\trust\*.c
 
+RAHAS_SRC = $(RAMPART_SOURCE_DIR)\src\rahas\*.c
+
 MOD_RAMPART_INCLUDE_PATH = /I$(RAMPART_SOURCE_DIR)\include \
 		           /I$(OPENSSL_BIN_DIR)\include \
 			   /I$(AXIS2_BIN_DIR)\include
@@ -106,6 +108,7 @@ distdir:
 	if not exist $(RAMPART_DISTDIR)\bin\samples\credential_provider    mkdir $(RAMPART_DISTDIR)\bin\samples\credential_provider
 	if not exist $(RAMPART_DISTDIR)\bin\samples\data                   mkdir $(RAMPART_DISTDIR)\bin\samples\data
 	if not exist $(RAMPART_DISTDIR)\modules\rampart                    mkdir $(RAMPART_DISTDIR)\modules\rampart
+	if not exist $(RAMPART_DISTDIR)\modules\rahas                      mkdir $(RAMPART_DISTDIR)\modules\rahas
 	if not exist $(RAMPART_DISTDIR)\include                            mkdir $(RAMPART_DISTDIR)\include                              
 
 clean: 
@@ -115,6 +118,7 @@ clean:
 intdirs:
 	if not exist $(RAMPART_INTDIR) mkdir $(RAMPART_INTDIR)
 
+	if not exist $(RAMPART_INTDIR)\rahas mkdir $(RAMPART_INTDIR)\rahas
 	if not exist $(RAMPART_INTDIR)\samples\callback\pwcb mkdir $(RAMPART_INTDIR)\samples\callback\pwcb
 	if not exist $(RAMPART_INTDIR)\samples\authn_provider mkdir $(RAMPART_INTDIR)\samples\authn_provider
 	if not exist $(RAMPART_INTDIR)\samples\replay_detector mkdir $(RAMPART_INTDIR)\samples\replay_detector
@@ -141,6 +145,16 @@ $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll : $(MOD_RAMPART_SRC) $(OMXMLS
 	copy $(RAMPART_SOURCE_DIR)\src\data\module.xml $(RAMPART_DISTDIR)\modules\rampart
 
 mod_rampart : $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll
+
+$(RAMPART_DISTDIR)\modules\rahas\mod_rahas.dll : $(RAHAS_SRC)
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAHAS_SRC) /Fo$(RAMPART_INTDIR)\rahas\ /c
+	$(LD) /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart $(LDFLAGS) $(RAMPART_INTDIR)\rahas\*.obj $(LIBS) axutil.lib axiom.lib \
+	axis2_parser.lib axis2_engine.lib neethi.lib mod_rampart.lib \
+	/DLL /OUT:$(RAMPART_DISTDIR)\modules\rahas\mod_rahas.dll /IMPLIB:$(RAMPART_DISTDIR)\modules\rahas\mod_rahas.lib
+	-@$(_VC_MANIFEST_EMBED_DLL)
+	copy $(RAMPART_SOURCE_DIR)\src\data\rahas_module.xml $(RAMPART_DISTDIR)\modules\rahas\module.xml
+
+mod_rahas : $(RAMPART_DISTDIR)\modules\rahas\mod_rahas.dll
 
 $(RAMPART_DISTDIR)\bin\samples\callback\pwcb.dll : $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAMPART_SOURCE_DIR)\samples\callback\pwcb.c \
@@ -338,7 +352,7 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: distdir intdirs mod_rampart mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_saml_protect mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+dist: distdir intdirs mod_rampart mod_rahas mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_saml_protect mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs mod_rampart mod_rampart_copy_include copy_dist_files
 

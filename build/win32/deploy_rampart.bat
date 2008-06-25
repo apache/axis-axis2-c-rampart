@@ -8,6 +8,11 @@ copy modules\rampart\mod_rampart.dll %AXIS2C_HOME%\modules\rampart\
 copy modules\rampart\module.xml %AXIS2C_HOME%\modules\rampart\
 copy modules\rampart\mod_rampart.* %AXIS2C_HOME%\lib\
 
+md %AXIS2C_HOME%\modules\rahas\
+copy modules\rahas\mod_rahas.dll %AXIS2C_HOME%\modules\rahas\
+bin\samples\secpolicy\deploy.js modules\rahas\module.xml %AXIS2C_HOME%\modules\rahas\module.xml
+copy modules\rahas\mod_rahas.* %AXIS2C_HOME%\lib\
+
 md %AXIS2C_HOME%\services\sec_echo\
 copy bin\samples\services\sec_echo\sec_echo.dll %AXIS2C_HOME%\services\sec_echo\
 copy bin\samples\services\sec_echo\services.xml %AXIS2C_HOME%\services\sec_echo\

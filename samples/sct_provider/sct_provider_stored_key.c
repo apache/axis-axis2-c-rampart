@@ -223,8 +223,8 @@ sct_provider_stored_key_store_token(
             {
                 /* if both local_id and global_id are NULL, then we can't store it */
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                    "[rampart]Security context token identifiers are not valid. \
-                    Cannot store security context token. ");
+                    "[rampart]Security context token identifiers are not valid. "
+                    "Cannot store security context token. ");
                 status = AXIS2_FAILURE;
             }
         }
