@@ -127,6 +127,17 @@ extern "C"
     security_context_token_increment_ref(
         security_context_token_t *sct,
         const axutil_env_t * env);
+
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    security_context_token_serialize(
+        security_context_token_t *sct, 
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    security_context_token_deserialize(
+        security_context_token_t *sct, 
+        const axutil_env_t *env, 
+        axis2_char_t *serialised_node);
    
 #ifdef __cplusplus
 }

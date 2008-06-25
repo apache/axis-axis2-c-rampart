@@ -19,6 +19,7 @@
 #include <oxs_buffer.h>
 #include <oxs_tokens.h>
 #include <trust_constants.h>
+#include <trust_util.h>
 
 struct security_context_token_t
 {
@@ -424,5 +425,197 @@ security_context_token_set_token(
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+security_context_token_serialize(
+    security_context_token_t *sct, 
+    const axutil_env_t *env)
+{
+    axiom_node_t *sct_node = NULL;
+    axiom_node_t *proof_node = NULL;
+    axiom_node_t *attached_ref_node = NULL;
+    axiom_node_t *unattached_ref_node = NULL;
+    axiom_node_t *parent_attached_ref_node = NULL;
+    axiom_node_t *parent_unattached_ref_node = NULL;
+    axis2_char_t *serialised_node = NULL;
+
+    sct_node = security_context_token_get_token(sct, env);
+    if(!sct_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot serialise security context token.");
+        return NULL;
+    }
+
+    proof_node = security_context_token_get_requested_proof_token(sct, env);
+    attached_ref_node = security_context_token_get_attached_reference(sct, env);
+    unattached_ref_node = security_context_token_get_unattached_reference(sct, env);
+    
+    if(!proof_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot serialise proof token of security context token.");
+        axiom_node_free_tree(sct_node, env);
+        return NULL;
+    }
+    axiom_node_add_child(sct_node, env, proof_node);
+
+    /* attached reference is optional */
+    if(attached_ref_node)
+    {
+        parent_attached_ref_node = trust_util_create_req_attached_reference_element(
+            env, TRUST_WST_XMLNS, sct_node);
+        if(!parent_attached_ref_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Cannot serialise attached reference of security context token.");
+            axiom_node_free_tree(sct_node, env);
+            return NULL;
+        }
+        axiom_node_add_child(parent_attached_ref_node, env, attached_ref_node);    
+    }
+
+    /* unattached reference is optional */
+    if(unattached_ref_node)
+    {
+        parent_unattached_ref_node = trust_util_create_req_unattached_reference_element(
+            env, TRUST_WST_XMLNS, sct_node);
+        if(!parent_unattached_ref_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Cannot serialise unattached reference of security context token.");
+            axiom_node_free_tree(sct_node, env);
+            return NULL;
+        }
+        axiom_node_add_child(parent_unattached_ref_node, env, unattached_ref_node);
+    }
+
+    serialised_node = axiom_node_sub_tree_to_string(sct_node, env);
+    axiom_node_free_tree(sct_node, env);
+
+    return serialised_node;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+security_context_token_deserialize(
+    security_context_token_t *sct, 
+    const axutil_env_t *env, 
+    axis2_char_t *serialised_node)
+{
+    axiom_xml_reader_t *reader = NULL;
+    axiom_document_t *doc = NULL;
+    axiom_stax_builder_t *builder = NULL;
+    axiom_node_t *sct_node = NULL;
+    axiom_node_t *proof_node = NULL;
+    axiom_node_t *attached_ref_node = NULL;
+    axiom_node_t *unattached_ref_node = NULL;
+    axiom_node_t *parent_attached_ref_node = NULL;
+    axiom_node_t *parent_unattached_ref_node = NULL;
+    axiom_node_t *parent_proof_node = NULL;
+
+    reader = axiom_xml_reader_create_for_memory(
+        env, serialised_node, axutil_strlen(serialised_node), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
+
+    if(!reader)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot create xml reader. Security context token deserialize failed.");
+        return AXIS2_FAILURE;
+    }
+
+    builder = axiom_stax_builder_create(env, reader);
+    doc = axiom_document_create(env, NULL, builder);
+    sct_node = axiom_document_build_all(doc, env);
+    if(!sct_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Security context token deserialize failed.");
+        return AXIS2_FAILURE;
+    }
+    
+    parent_proof_node = oxs_axiom_get_node_by_local_name(
+        env, sct_node, TRUST_REQUESTED_PROOF_TOKEN);
+    if(!parent_proof_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Proof not could not be found. Security context token deserialize failed.");
+        return AXIS2_FAILURE;
+    }
+
+    axiom_node_detach(parent_proof_node, env);
+    proof_node = oxs_axiom_get_node_by_local_name(env, parent_proof_node, TRUST_BINARY_SECRET);
+    if(!proof_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Proof not could not be found. Security context token deserialize failed.");
+        return AXIS2_FAILURE;
+    }
+
+    if(security_context_token_set_requested_proof_token(sct, env, proof_node) != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Deserializing proof token node failed. " 
+            "Security context token deserialize failed.");
+        return AXIS2_FAILURE;
+    }
+    
+    parent_attached_ref_node = oxs_axiom_get_node_by_local_name(
+        env, sct_node, TRUST_REQUESTED_ATTACHED_REFERENCE);
+    if(parent_attached_ref_node)
+    {
+        axiom_node_detach(parent_attached_ref_node, env);
+        attached_ref_node = oxs_axiom_get_node_by_local_name(
+            env, parent_attached_ref_node, OXS_NODE_SECURITY_TOKEN_REFRENCE);
+        if(!attached_ref_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Attached reference node could not be found. " 
+                "Security context token deserialize failed.");
+            return AXIS2_FAILURE;
+        }
+        if (security_context_token_set_attached_reference(sct, env, attached_ref_node)
+            != AXIS2_SUCCESS)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Deserializing attached reference node failed. " 
+                "Security context token deserialize failed.");
+            return AXIS2_FAILURE;
+        }
+    }
+    
+    parent_unattached_ref_node = oxs_axiom_get_node_by_local_name(
+        env, sct_node, TRUST_REQUESTED_UNATTACHED_REFERENCE);
+    if(parent_unattached_ref_node)
+    {
+        axiom_node_detach(parent_unattached_ref_node, env);
+        unattached_ref_node = oxs_axiom_get_node_by_local_name(
+            env, parent_unattached_ref_node, OXS_NODE_SECURITY_TOKEN_REFRENCE);
+        if(!unattached_ref_node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Unattached reference node could not be found. " 
+                "Security context token deserialize failed.");
+            return AXIS2_FAILURE;
+        }
+        if (security_context_token_set_unattached_reference(sct, env, unattached_ref_node)
+            != AXIS2_SUCCESS)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Deserializing unattached reference node failed. " 
+                "Security context token deserialize failed.");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    if(security_context_token_set_token(sct, env, sct_node) != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Deserializing security context token failed." );
+        return AXIS2_FAILURE;
+    }
+    
+    axiom_xml_reader_xml_free(reader, env, NULL);
+
+    return AXIS2_SUCCESS;
+}
 
 
