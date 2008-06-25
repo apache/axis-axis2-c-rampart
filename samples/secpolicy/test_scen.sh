@@ -18,6 +18,7 @@ fi
     cd $AXIS2C_HOME/bin
     echo ">Start server @ $_PORT"
     ./axis2_http_server -p$_PORT &
+    sleep 2
     echo ">Go to client directory"
     if [ $S_i = 'scenario14' ]
     then

@@ -28,7 +28,7 @@
 static axis2_status_t
 rahas_send_reply(
     axiom_node_t *body_node,
-    axutil_env_t *env, 
+    const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx);
 
 static void
@@ -111,12 +111,12 @@ rahas_in_handler_invoke(
     soap_action = axis2_msg_ctx_get_soap_action(msg_ctx, env);
     if(soap_action)
     {
-        action = axutil_string_get_buffer(soap_action, env);
+        action = (axis2_char_t *)axutil_string_get_buffer(soap_action, env);
     }
 
     if(!action)
     {
-        action = axis2_msg_ctx_get_wsa_action(msg_ctx, env);
+        action = (axis2_char_t *)axis2_msg_ctx_get_wsa_action(msg_ctx, env);
     }
     
     
@@ -192,7 +192,7 @@ rahas_in_handler_invoke(
 static axis2_status_t
 rahas_send_reply(
     axiom_node_t *body_node,
-    axutil_env_t *env, 
+    const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx)
 {
     axis2_msg_ctx_t *out_msg_ctx = NULL;

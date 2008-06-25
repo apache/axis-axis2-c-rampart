@@ -2,9 +2,9 @@
 _SCEN="scenario"
 _SMPL_DIR="$PWD"
 _PORT=9090
-_SLEEP=3
+_SLEEP=2
 #You may change these to scenarios u need to run
-_LST="1 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17 18 19 21 22 23"
+_LST="1 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17 18 19 21 22 23 25 26"
 
 if [ $# -eq 1 ]
 then
@@ -28,6 +28,7 @@ do
     cd $AXIS2C_HOME/bin
     echo ">Start server @ $_PORT"
     ./axis2_http_server -p$_PORT &
+    sleep $_SLEEP
     #echo "Jump back to samples dir : $_SMPL_DIR"
     #cd $_SMPL_DIR
     echo ">Go to client directory"

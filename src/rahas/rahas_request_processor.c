@@ -41,6 +41,33 @@ rahas_store_security_context_token(
     security_context_token_t *sct, 
     axis2_msg_ctx_t *msg_ctx);
 
+static axis2_status_t
+rahas_validate_issue_request_parameters(
+    const axutil_env_t *env, 
+    trust_rst_t *rst, 
+    trust_rstr_t *rstr,
+    axis2_msg_ctx_t *msg_ctx,
+    int trust_version, 
+    axis2_bool_t client_entropy_needed, 
+    trust_entropy_t** requester_entropy);
+
+static axis2_status_t
+rahas_populate_rstr_for_issue_request(
+    const axutil_env_t *env, 
+    trust_rstr_t *rstr,
+    int trust_version, 
+    axis2_bool_t client_entropy_needed, 
+    oxs_buffer_t *server_secret, 
+    security_context_token_t *sct, 
+    int key_size);
+
+static axis2_status_t
+rahas_find_sts_policy(
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx, 
+    axis2_bool_t *client_entropy_needed,
+    axis2_bool_t *server_entropy_needed);
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rahas_process_issue_request(
     const axutil_env_t *env, 
