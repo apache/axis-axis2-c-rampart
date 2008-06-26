@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 #include <rampart_sct_provider.h>
+#include <rampart_sct_provider_utility.h>
 #include <oxs_constants.h>
 #include <oxs_buffer.h>
 #include <axiom_element.h>
@@ -30,6 +31,9 @@ sct_provider_obtain_token_from_sts(
     rp_security_context_token_t* rp_sct, 
     axis2_msg_ctx_t* msg_ctx);
 
+
+/* This method finds security context token using given parameters. If it is called without sct_id, 
+ * it will request from STS/Stored context */
 static security_context_token_t*
 sct_provider_get_sct(
     const axutil_env_t* env, 
@@ -178,6 +182,16 @@ sct_provider_get_sct(
     return sct;
 }
 
+/**
+ * Finds security context token and gets shared secret. 
+ * returned buffer should NOT be cleared by the caller
+ * @param env Pointer to environment struct
+ * @param token rampart policy property of the token
+ * @param is_encryption boolean showing whether the token is needed for encryption or signature
+ * @param rampart_context pointer to rampart context structure
+ * @param msg_ctx pointer to message context structure
+ * @returns shared secret of the security context token. returned buffer should NOT be freed
+ */    
 AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
 sct_provider_get_secret(
     const axutil_env_t* env, 
@@ -195,6 +209,15 @@ sct_provider_get_secret(
     return security_context_token_get_secret(sct, env);
 }
 
+/**
+ * Finds security context token and gets shared secret. 
+ * returned buffer should NOT be cleared by the caller
+ * @param env Pointer to environment struct
+ * @param sct_id id of security context token
+ * @param rampart_context pointer to rampart context structure
+ * @param msg_ctx pointer to message context structure
+ * @returns shared secret of the security context token. returned buffer should NOT be freed
+ */    
 AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
 sct_provider_get_secret_using_id(
     const axutil_env_t* env, 
@@ -214,6 +237,15 @@ sct_provider_get_secret_using_id(
     return security_context_token_get_secret(sct, env);
 }
 
+/**
+ * Finds security context token and gets the xml representation of token
+ * @param env Pointer to environment struct
+ * @param token rampart policy property of the token
+ * @param is_encryption boolean showing whether the token is needed for encryption or signature
+ * @param rampart_context pointer to rampart context structure
+ * @param msg_ctx pointer to message context structure
+ * @returns shared secret of the security context token. returned buffer should NOT be freed
+ */    
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 sct_provider_get_token(
     const axutil_env_t* env, 
@@ -230,6 +262,16 @@ sct_provider_get_token(
     return security_context_token_get_token(sct, env);
 }
 
+/**
+ * Finds security context token and gets the xml representation of key reference. This reference
+ * is used when security context token is included in the message
+ * @param env Pointer to environment struct
+ * @param token rampart policy property of the token
+ * @param is_encryption boolean showing whether the token is needed for encryption or signature
+ * @param rampart_context pointer to rampart context structure
+ * @param msg_ctx pointer to message context structure
+ * @returns shared secret of the security context token. returned buffer should NOT be freed
+ */ 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 sct_provider_get_attached_reference(
     const axutil_env_t* env, 
@@ -246,6 +288,16 @@ sct_provider_get_attached_reference(
     return security_context_token_get_attached_reference(sct, env); 
 }
 
+/**
+ * Finds security context token and gets the xml representation of key reference. This reference
+ * is used when security context token is NOT included in the message
+ * @param env Pointer to environment struct
+ * @param token rampart policy property of the token
+ * @param is_encryption boolean showing whether the token is needed for encryption or signature
+ * @param rampart_context pointer to rampart context structure
+ * @param msg_ctx pointer to message context structure
+ * @returns shared secret of the security context token. returned buffer should NOT be freed
+ */ 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
 sct_provider_get_unattached_reference(
     const axutil_env_t* env, 
@@ -262,6 +314,18 @@ sct_provider_get_unattached_reference(
     return security_context_token_get_unattached_reference(sct, env); 
 }
 
+/** 
+ * Validates whether security context token is valid or not. Normally, we can directly send 
+ * true as response. But if syntax of security context token is altered/added by using 
+ * extensible mechanism (e.g having sessions, etc.) then user can implement this method. 
+ * Axiom representation of the sct will be given as the parameter, because if sct is extended, 
+ * we don't know the syntax. Method writer can implement whatever needed.
+ * @param env Pointer to environment struct
+ * @param sct_node axiom node representation of security context token.
+ * @param rampart_context pointer to rampart context structure
+ * @param msg_ctx pointer to message context structure
+ * @returns AXIS2_TRUE is sct is valid. AXIS2_FALSE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sct_provider_validate_security_context_token(
     const axutil_env_t *env, 
@@ -277,6 +341,7 @@ sct_provider_validate_security_context_token(
     return validate_fn(env, sct_node, msg_ctx, user_param);
 }
 
+/* This method will request security context token from STS */
 static security_context_token_t* 
 sct_provider_obtain_token_from_sts(
     const axutil_env_t* env, 
@@ -425,7 +490,8 @@ sct_provider_obtain_token_from_sts(
     return sct;
 }
 
-
+/* Default place to store sct will be in a hash map. This will be the free method for that hash map.
+ * It will be called when hash map is destroyed */
 static void 
 sct_provider_sct_hash_store_free(
     axutil_hash_t *sct_hash_store,
@@ -446,6 +512,8 @@ sct_provider_sct_hash_store_free(
 	axutil_hash_free(sct_hash_store, env);
 }
 
+/* Default place to store sct will be in a hash map. This method creates the hash map and store it 
+ * in context hierarchy. If it is already created, will get it from context hierarchy */
 static axutil_hash_t *
 sct_provider_get_sct_hash_store(
     const axutil_env_t *env, 
@@ -493,6 +561,17 @@ sct_provider_get_sct_hash_store(
     return hash_store;
 }
 
+/** 
+ * Default implementation of obtain sct function. If neither sct_provider nor user defined 
+ * obtain function is given, this function will be used. (obtain_security_context_token_fn)
+ * @param env pointer to environment struct
+ * @param is_encryption boolean denotes sct is needed for encryption or signature
+ * @param msg_ctx pointer to message context structure
+ * @param sct_id identifier of security context token. Can be NULL
+ * @param sct_id_type type of sct id. can be global, local or unknown
+ * @param user_params parameter provided by user (not used in this method)
+ * return security context token if found. NULL otherwise.
+ */
 AXIS2_EXTERN void* AXIS2_CALL
 sct_provider_obtain_sct_default(
     const axutil_env_t *env, 
@@ -553,6 +632,17 @@ sct_provider_obtain_sct_default(
     return sct;
 }
 
+/**
+ * Default implementation of store sct function. If neither sct_provider nor user defined 
+ * store function is given, this function will be used. (store_security_context_token_fn)
+ * @param env pointer to environment struct
+ * @param msg_ctx pointer to message context structure
+ * @param sct_global_id global identifier of security context token. Can be NULL
+ * @param sct_local_id local identifier of security context token. Can be NULL
+ * @param sct security context token to be stored
+ * @param user_params parameter provided by user (not used in this method)
+ * return AXIS2_SUCCESS if stored. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sct_provider_store_sct_default(
     const axutil_env_t *env, 
@@ -620,6 +710,16 @@ sct_provider_store_sct_default(
 
 }
 
+/**
+ * Default implementation of delete sct function. If neither sct_provider nor user defined 
+ * store function is given, this function will be used. (delete_security_context_token_fn)
+ * @param env pointer to environment struct
+ * @param msg_ctx pointer to message context structure
+ * @param sct_id identifier of security context token. Should not be NULL.
+ * @param sct_id_type type of sct id. can be global or local.
+ * @param user_params parameter provided by user (not used in this method)
+ * @return AXIS2_SUCCESS if deleted. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sct_provider_delete_sct_default(
     const axutil_env_t *env, 
@@ -635,6 +735,14 @@ sct_provider_delete_sct_default(
     return AXIS2_SUCCESS;
 }
 
+/**
+ * Default implementation of validate sct function. If neither sct_provider nor user defined 
+ * store function is given, this function will be used. (validate_security_context_token_fn)
+ * @param env pointer to environment struct
+ * @param sct_node axiom representation of security context token
+ * @param user_params parameter provided by user (not used in this method)
+ * @return AXIS2_SUCCESS if valid. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 sct_provider_validate_sct_default(
     const axutil_env_t *env, 

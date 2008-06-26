@@ -20,6 +20,7 @@
 #include <oxs_utility.h>
 #include <rampart_util.h>
 #include <rampart_sct_provider.h>
+#include <secconv_security_context_token.h>
 
 #define RAMPART_SCT_PROVIDER_HASH_PROB "Rampart_SCT_Prov_DB_Prop"
 

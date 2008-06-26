@@ -41,7 +41,7 @@
 #include <rampart_token_builder.h>
 #include <rampart_util.h>
 #include <rampart_sec_processed_result.h>
-#include <rampart_sct_provider.h>
+#include <rampart_sct_provider_utility.h>
 #include <rampart_saml_token.h>
 
 /*Private functions*/

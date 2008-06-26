@@ -51,8 +51,7 @@ rahas_mod_create(
     if (!module)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rahas]Not enough memory. Cannot create module.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas]Not enough memory. Cannot create module.");
         return NULL;
     }
 
@@ -71,8 +70,7 @@ rahas_mod_init(
      * Any initialization stuff of Rahas module goes here. At the moment we have NONE. 
      * Intialization happens in handlers depending on the message flow and policies
      */    
-    AXIS2_LOG_INFO(env->log, 
-        "[rahas]Rahas module initialized");
+    AXIS2_LOG_INFO(env->log, "[rahas]Rahas module initialized");
     return AXIS2_SUCCESS;
 }
 
@@ -81,8 +79,7 @@ rahas_mod_shutdown(
     axis2_module_t *module,
     const axutil_env_t *env)
 {
-    AXIS2_LOG_INFO(env->log,
-        "[rahas] Rahas module shutdown");
+    AXIS2_LOG_INFO(env->log, "[rahas] Rahas module shutdown");
 
     if (module)
     {
@@ -106,8 +103,7 @@ rahas_mod_fill_handler_create_func_map(
     if (!module->handler_create_func_map)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rahas] Cannot create function map.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas] Cannot create function map.");
         return AXIS2_FAILURE;
     }
 
@@ -133,8 +129,7 @@ axis2_get_instance(
     *inst = rahas_mod_create(env);
     if (!(*inst))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[rahas] Rahas module creation failed");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas] Rahas module creation failed");
         return AXIS2_FAILURE;
     }
 

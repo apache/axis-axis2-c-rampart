@@ -348,6 +348,9 @@ rahas_request_security_token(
     return rstr_node;
 }
 
+
+/* This method will find trust_version, request_type and reply_action based on given action.
+ * trust_version, request_type, reply_action are output parameters. action is input parameter */
 static void
 rahas_find_trust_version_specific_details(
     const axutil_env_t *env, 

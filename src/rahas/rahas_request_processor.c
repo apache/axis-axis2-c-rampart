@@ -62,12 +62,22 @@ rahas_populate_rstr_for_issue_request(
     int key_size);
 
 static axis2_status_t
-rahas_find_sts_policy(
+rahas_get_sts_policy_parameters(
     const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx, 
     axis2_bool_t *client_entropy_needed,
     axis2_bool_t *server_entropy_needed);
 
+
+/**
+ * Processes issue request
+ * @param env pointer to environment struct
+ * @param rst request security token struct
+ * @param rstr request security token response struct
+ * @param msg_ctx message context structure
+ * @param trust_version Trust specification. Can be TRUST_VERSION_05_02 or TRUST_VERSION_05_12
+ * @return AXIS2_SUCCESS if processed successfully. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rahas_process_issue_request(
     const axutil_env_t *env, 
@@ -93,8 +103,8 @@ rahas_process_issue_request(
     }
 
     /* check whether client entropy and server entropy are needed */
-    if (rahas_find_sts_policy(env, msg_ctx, &client_entropy_needed, &server_entropy_needed)
-        != AXIS2_SUCCESS)
+    if (rahas_get_sts_policy_parameters(
+        env, msg_ctx, &client_entropy_needed, &server_entropy_needed) != AXIS2_SUCCESS)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot issue SecurityContextToken because security token service policy "
@@ -144,6 +154,8 @@ rahas_process_issue_request(
     return AXIS2_SUCCESS;
 }
 
+/* this method validates whether rst, rstr, msg_ctx, trust_version are correct. If they are ok, 
+ * it will populate requester_entropy. requester_entropy will be output parameter */
 static axis2_status_t
 rahas_validate_issue_request_parameters(
     const axutil_env_t *env, 
@@ -422,6 +434,7 @@ rahas_populate_rstr_for_issue_request(
     return AXIS2_SUCCESS;
 }
 
+/* this method uses store_method defined in rampart context to store sct */
 static axis2_status_t
 rahas_store_security_context_token(
     const axutil_env_t *env, 
@@ -464,8 +477,9 @@ rahas_store_security_context_token(
     return status;
 }
 
+/* This method checks whether rampart policy has STS related parameters. If so, will extract it */
 static axis2_status_t
-rahas_find_sts_policy(
+rahas_get_sts_policy_parameters(
     const axutil_env_t *env, 
     axis2_msg_ctx_t *msg_ctx, 
     axis2_bool_t *client_entropy_needed,

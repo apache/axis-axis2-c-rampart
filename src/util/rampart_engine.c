@@ -36,6 +36,7 @@
 #include <rampart_config.h>
 #include <axis2_options.h>
 #include <openssl_pkcs12_keystore.h>
+#include <rampart_sct_provider_utility.h>
 
 /*This method sets all the configurations
  loads required modules and start rampart.*/

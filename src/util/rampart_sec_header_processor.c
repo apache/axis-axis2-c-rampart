@@ -42,7 +42,7 @@
 #include <oxs_xml_signature.h>
 #include <oxs_key_mgr.h>
 #include <rampart_replay_detector.h>
-#include <rampart_sct_provider.h>
+#include <rampart_sct_provider_utility.h>
 #include <saml.h>
 #include <rampart_saml.h>
 #include <rampart_saml_token.h>
