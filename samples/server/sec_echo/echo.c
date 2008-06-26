@@ -21,6 +21,9 @@
 
 axiom_node_t *
 build_om_programatically(const axutil_env_t *env, axis2_char_t *text);
+axiom_node_t *
+build_om_payload_for_echo_svc_interop(const axutil_env_t *env, axis2_char_t *text);
+
 
 axiom_node_t *
 axis2_echo_echo(const axutil_env_t *env, axiom_node_t *node, axis2_msg_ctx_t *msg_ctx)
@@ -64,3 +67,22 @@ build_om_programatically(const axutil_env_t *env, axis2_char_t *text)
     return echo_om_node;
 }
 
+axiom_node_t *
+build_om_payload_for_echo_svc_interop(const axutil_env_t *env, axis2_char_t *text)
+{
+ axiom_node_t *echo_om_node = NULL;
+    axiom_element_t* echo_om_ele = NULL;
+    axiom_node_t* text_om_node = NULL;
+    axiom_element_t * text_om_ele = NULL;
+    axiom_namespace_t *ns1 = NULL;
+
+    ns1 = axiom_namespace_create(env, "http://InteropBaseAddress/interop", "ns1");
+    echo_om_ele = axiom_element_create(env, NULL, "echoResponse", ns1, &echo_om_node);
+
+    text_om_ele = axiom_element_create(env, echo_om_node, "LocalName", NULL, &text_om_node);
+
+    axiom_element_set_text(text_om_ele, env, text, text_om_node);
+ 
+    return echo_om_node;
+
+}
