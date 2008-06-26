@@ -129,13 +129,12 @@ rampart_replay_detector_default(
     const axis2_char_t *addr_msg_id = NULL;
     int max_rcds = RAMPART_RD_DEF_MAX_RCDS;
     axis2_status_t status = AXIS2_FAILURE;
-	void* pool = NULL;
 	
-	/* since replay details have to be stored until the application finished, 
-	 * they have to be created in golbal pool. If those are created in msg's pool, 
-	 * then it will be deleted after the request is served. (specially when using 
-	 * with apache, current_pool will denote the message's pool) */
-	axutil_allocator_switch_to_global_pool(env->allocator);
+    /* since replay details have to be stored until the application finished, 
+     * they have to be created in golbal pool. If those are created in msg's pool, 
+     * then it will be deleted after the request is served. (specially when using 
+     * with apache, current_pool will denote the message's pool) */
+    axutil_allocator_switch_to_global_pool(env->allocator);
 
     /* By using just Timestamps we dont need addressing. But there is a chance that
      * two messages might generated exactly at the same time*/
