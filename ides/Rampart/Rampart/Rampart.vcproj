@@ -646,10 +646,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\util\rampart_rd_record.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\util\rampart_replay_detector.c"
 					>
 				</File>
@@ -982,10 +978,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\rampart_policy_validator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\rampart_rd_record.h"
 				>
 			</File>
 			<File
