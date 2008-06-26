@@ -32,82 +32,89 @@ struct security_context_token_t
     int ref;
 };
 
+/**
+ * Creates security context token 
+ * @param env Pointer to environment struct
+ * @returns Security context token if success. NULL otherwise.
+ */
 AXIS2_EXTERN security_context_token_t *AXIS2_CALL
     security_context_token_create(
     const axutil_env_t * env)
 {
     security_context_token_t *sct = NULL;
-
     AXIS2_ENV_CHECK(env, NULL);
 
-    sct =  (security_context_token_t *) AXIS2_MALLOC (env->allocator,
-                       sizeof (security_context_token_t));
+    sct =  (security_context_token_t *) AXIS2_MALLOC (
+        env->allocator, sizeof (security_context_token_t));
 
-    if(sct == NULL)
+    if(!sct)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return NULL;
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart]Cannot create Security context token. Insufficient memory.");
     }
-    
-    sct->buffer = NULL;
-    sct->global_id = NULL;
-    sct->local_id = NULL;
-    sct->sct_node = NULL;
-    sct->attached_reference = NULL;
-    sct->unattached_reference = NULL;
-    sct->ref = 1;
+    else
+    {
+        sct->buffer = NULL;
+        sct->global_id = NULL;
+        sct->local_id = NULL;
+        sct->sct_node = NULL;
+        sct->attached_reference = NULL;
+        sct->unattached_reference = NULL;
+        sct->ref = 1;
+    }
     return sct;
 }
 
+/**
+ * Free security context token 
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-security_context_token_increment_ref(
-    security_context_token_t *sct,
-    const axutil_env_t * env)
-{
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    sct->ref++;
-    return AXIS2_SUCCESS;
-}
-
-AXIS2_EXTERN void AXIS2_CALL
 security_context_token_free(
     security_context_token_t *sct, 
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
+    if (--sct->ref <= 0)
+    {
+        if(sct->buffer)
+        {
+            oxs_buffer_free(sct->buffer, env);
+        }
+        if(sct->local_id)
+        {
+            AXIS2_FREE(env->allocator, sct->local_id);
+        }
+        if(sct->global_id)
+        {
+            AXIS2_FREE(env->allocator, sct->global_id);
+        }
+        if(sct->sct_node)
+        {
+            axiom_node_free_tree(sct->sct_node, env);
+        }
+        if(sct->attached_reference)
+        {
+            axiom_node_free_tree(sct->attached_reference, env);
+        }
+        if(sct->unattached_reference)
+        {
+            axiom_node_free_tree(sct->unattached_reference, env);
+        }
 
-    if (--sct->ref > 0)
-        return;
-
-    if(sct->buffer)
-    {
-        oxs_buffer_free(sct->buffer, env);
+        AXIS2_FREE(env->allocator, sct);
     }
-    if(sct->local_id)
-    {
-        AXIS2_FREE(env->allocator, sct->local_id);
-    }
-    if(sct->global_id)
-    {
-        AXIS2_FREE(env->allocator, sct->global_id);
-    }
-    if(sct->sct_node)
-    {
-        axiom_node_free_tree(sct->sct_node, env);
-    }
-    if(sct->attached_reference)
-    {
-        axiom_node_free_tree(sct->attached_reference, env);
-    }
-    if(sct->unattached_reference)
-    {
-        axiom_node_free_tree(sct->unattached_reference, env);
-    }
-
-    AXIS2_FREE(env->allocator, sct);
-    return;
+    return AXIS2_SUCCESS;
 }
 
+/**
+ * Get shared secret from security context token. Callers should not free returned buffer
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns shared secret if success. NULL otherwise.
+ */
 AXIS2_EXTERN oxs_buffer_t *AXIS2_CALL
 security_context_token_get_secret(
     security_context_token_t * sct, 
@@ -116,6 +123,13 @@ security_context_token_get_secret(
     return sct->buffer;
 }
 
+/**
+ * Get global id of security context token. 
+ * This id will be used when token is not included in the message
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns global id if success. NULL otherwise.
+ */
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 security_context_token_get_global_identifier(
     security_context_token_t * sct, 
@@ -124,6 +138,13 @@ security_context_token_get_global_identifier(
     return sct->global_id;
 }
 
+/**
+ * Get local id of security context token. 
+ * This id will be used when token is included in the message
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns local id if success. NULL otherwise.
+ */
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 security_context_token_get_local_identifier(
     security_context_token_t * sct, 
@@ -132,6 +153,14 @@ security_context_token_get_local_identifier(
     return sct->local_id;
 }
 
+/**
+ * Set shared secret of security context token. After this method is called, ownership of 
+ * the buffer will be with security context token. Users should not free it.
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param buffer Pointer to shared secret
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_secret(
     security_context_token_t * sct, 
@@ -146,6 +175,14 @@ security_context_token_set_secret(
     return AXIS2_SUCCESS;
 }
 
+/**
+ * Set global identifier of security context token. After this method is called, ownership of 
+ * global_id will be with security context token. Users should not free it.
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param global_id Global identifier of security context token
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_global_identifier(
     security_context_token_t * sct, 
@@ -160,6 +197,14 @@ security_context_token_set_global_identifier(
     return AXIS2_SUCCESS;
 }
 
+/**
+ * Set local identifier of security context token. After this method is called, ownership of 
+ * local_id will be with security context token. Users should not free it.
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param local_id Local identifier of security context token
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_local_identifier(
     security_context_token_t * sct, 
@@ -174,6 +219,16 @@ security_context_token_set_local_identifier(
     return AXIS2_SUCCESS;
 }
 
+/**
+ * Get shared secret as axiom_node. Shared secret will be included inside 
+ * 'RequestedProofToken' node. This is acording to WS-Trust specification 
+ * <wst:RequestedProofToken>
+ *      <wst:BinarySecret>Base64EncodedSharedSecret</wst:BinarySecret>
+ * </wst:RequestedProofToken>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns valid axiom_node if success. NULL otherwise.
+ */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 security_context_token_get_requested_proof_token(
     security_context_token_t *sct, 
@@ -189,78 +244,131 @@ security_context_token_get_requested_proof_token(
 
     if(!sct->buffer)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][security context token] Security context token does not have a shared secret");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Security context token does not have a shared secret");
         return NULL;
     }
     
     ns_obj_wst = axiom_namespace_create(env, TRUST_WST_XMLNS, TRUST_WST);
-    proof_token_ele = axiom_element_create(env, NULL, TRUST_REQUESTED_PROOF_TOKEN, ns_obj_wst, &proof_token);
+    proof_token_ele = axiom_element_create(
+        env, NULL, TRUST_REQUESTED_PROOF_TOKEN, ns_obj_wst, &proof_token);
     if (!proof_token_ele)
 	{
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot create requested proof token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot create requested proof token");
         return NULL;
     }
 
-    secret_ele = axiom_element_create(env, proof_token, TRUST_BINARY_SECRET, ns_obj_wst, &secret_node);
+    secret_ele = axiom_element_create(
+        env, proof_token, TRUST_BINARY_SECRET, ns_obj_wst, &secret_node);
     if(!secret_ele)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot create binary secret token");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot create binary secret token");
         return NULL;
     }
 
 	encodedlen = axutil_base64_encode_len(oxs_buffer_get_size(sct->buffer, env));
     encoded_str = AXIS2_MALLOC(env->allocator, encodedlen);
-    axutil_base64_encode(encoded_str, (const char *)oxs_buffer_get_data(sct->buffer, env), oxs_buffer_get_size(sct->buffer, env));
+    axutil_base64_encode(encoded_str, 
+        (const char *)oxs_buffer_get_data(sct->buffer, env), oxs_buffer_get_size(sct->buffer, env));
     axiom_element_set_text(secret_ele, env, encoded_str, secret_node);
 	AXIS2_FREE(env->allocator, encoded_str);
 
     return proof_token;
 }
 
+/**
+ * Get local id of security context token as axiom node. 
+ * This id will be used when token is included in the message
+ * <wsse:SecurityTokenReference>
+ *      <wsse:Reference>AttachedReference</wsse:Reference>
+ * </wsse:SecurityTokenReference>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns valid axiom node if success. NULL otherwise.
+ */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 security_context_token_get_attached_reference(
     security_context_token_t *sct, 
     const axutil_env_t * env)
 {
     axiom_node_t *str_token = NULL;
-    axiom_node_t *ref_token = NULL;
 
     if(sct->attached_reference)
-        return oxs_axiom_clone_node(env, sct->attached_reference);
-
-    if(!sct->local_id)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Security context token does not have a local identifier");
-        return NULL;
+        /* If attached reference is given by STS, then we have to return same reference */
+        str_token = oxs_axiom_clone_node(env, sct->attached_reference);
+    }
+    else
+    {
+        /* If attached reference is not given by STS, then we have to create it */
+        if(sct->local_id)
+        {
+            axiom_node_t *ref_token = NULL;
+            str_token = oxs_token_build_security_token_reference_element(env, NULL); 
+            ref_token = oxs_token_build_reference_element(
+                env, str_token, sct->local_id, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN); 
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Security context token does not have a local identifier");
+        }
     }
 
-    str_token = oxs_token_build_security_token_reference_element(env, NULL); 
-    ref_token = oxs_token_build_reference_element(env, str_token, sct->local_id, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN);   
     return str_token; 
 }
 
+/**
+ * Get global id of security context token as axiom node. 
+ * This id will be used when token is not included in the message
+ * <wsse:SecurityTokenReference>
+ *      <wsse:Reference>UnattachedReference</wsse:Reference>
+ * </wsse:SecurityTokenReference>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns valid axiom node if success. NULL otherwise.
+ */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 security_context_token_get_unattached_reference(
     security_context_token_t *sct, 
     const axutil_env_t * env)
 {
     axiom_node_t *str_token = NULL;
-    axiom_node_t *ref_token = NULL;
     
     if(sct->unattached_reference)
-        return oxs_axiom_clone_node(env, sct->unattached_reference);
-
-    if(!sct->global_id)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Security context token does not have a global identifier");
-        return NULL;
+        /* If unattached reference is given by STS, then we have to return same reference */
+        str_token = oxs_axiom_clone_node(env, sct->unattached_reference);
     }
-
-    str_token = oxs_token_build_security_token_reference_element(env, NULL); 
-    ref_token = oxs_token_build_reference_element(env, str_token, sct->global_id, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN);   
+    else
+    {
+        /* If unattached reference is not given by STS, then we have to create it */
+        if(sct->global_id)
+        {
+            axiom_node_t *ref_token = NULL;
+            str_token = oxs_token_build_security_token_reference_element(env, NULL); 
+            ref_token = oxs_token_build_reference_element(
+                env, str_token, sct->global_id, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN); 
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Security context token does not have a global identifier");
+        }
+    }
     return str_token; 
 }
 
+/**
+ * Get axiom node representation of security context token. 
+ * This will be included in the message if the token needs to be sent in the message
+ * <wsc:SecurityContextToken wsu:id=local_id> 
+ *      <wsc:Identifier>global_id</wsc:Identifier>
+ * </wsc:SecurityContextToken>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns valid axiom node if success. NULL otherwise.
+ */
 AXIS2_EXTERN axiom_node_t *AXIS2_CALL
 security_context_token_get_token(
     security_context_token_t *sct, 
@@ -279,34 +387,41 @@ security_context_token_get_token(
 
     if(!sct->global_id)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Security context token does not have an identifier.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Security context token does not have an identifier.");
         return NULL;
     }
 
     ns_obj_sc = axiom_namespace_create(env, OXS_WSC_NS, OXS_WSC);
-    token_ele = axiom_element_create(env, NULL, OXS_NODE_SECURITY_CONTEXT_TOKEN, ns_obj_sc, &sct_token);
+    token_ele = axiom_element_create(
+        env, NULL, OXS_NODE_SECURITY_CONTEXT_TOKEN, ns_obj_sc, &sct_token);
     if (!token_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityContextToken element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Error creating SecurityContextToken element.");
         return NULL;
     }
 
     if(sct->local_id)
     {
 		axis2_char_t *id = NULL;
+        
+        /* local id is in the format of '#sct2343443'. When including it in the axiom representation 
+         * of the token, we should remove first '#' */
 		id = axutil_string_substring_starting_at(axutil_strdup(env, sct->local_id), 1);
+
         ns_obj_wsu = axiom_namespace_create(env, OXS_WSU_XMLNS, OXS_WSU);
         id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, ns_obj_wsu);
         axiom_element_add_attribute(token_ele, env, id_attr, sct_token);
 		AXIS2_FREE(env->allocator, id);
     }
 
-    identifier_ele = axiom_element_create(env, sct_token, OXS_NODE_IDENTIFIER, ns_obj_sc, &identifier_node);
+    identifier_ele = axiom_element_create(
+        env, sct_token, OXS_NODE_IDENTIFIER, ns_obj_sc, &identifier_node);
     if(!identifier_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityContextToken element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Error creating Identifier element of security context token.");
         return NULL;
     }
     axiom_element_set_text(identifier_ele, env, sct->global_id, identifier_node);
@@ -314,13 +429,21 @@ security_context_token_get_token(
     return sct_token;
 }
 
+/**
+ * Set shared secret of security context token from proof token. This proof token will be given
+ * by STS. 
+ * <wst:BinarySecret>Base64EncodedSharedSecret</wst:BinarySecret>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param node Pointer to proof token axiom node
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_requested_proof_token(
     security_context_token_t *sct, 
     const axutil_env_t * env,
     axiom_node_t *node)
 {
-    /*axiom_node_t *secret_node = NULL;*/
     axis2_char_t *shared_secret = NULL;
     int decoded_len = 0;
     axis2_char_t *decoded_shared_secret = NULL;
@@ -329,17 +452,11 @@ security_context_token_set_requested_proof_token(
     AXIS2_PARAM_CHECK(env->error, node, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sct, AXIS2_FAILURE);
 
-    /*secret_node = oxs_axiom_get_first_child_node_by_name(env, node, TRUST_BINARY_SECRET, TRUST_WST_XMLNS, NULL);
-    if(!secret_node)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get binary secret node from proof token");
-        return AXIS2_FAILURE;
-    }*/
-
     shared_secret = oxs_axiom_get_node_content(env, node);
     if(!shared_secret)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get content of binary secret node");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart] Cannot get content of binary secret node");
         return AXIS2_FAILURE;
     }
     
@@ -354,6 +471,16 @@ security_context_token_set_requested_proof_token(
     return security_context_token_set_secret(sct, env, buffer);
 }
 
+/**
+ * Set local identifier of security context token from attached reference node. 
+ * <wsse:SecurityTokenReference>
+ *      <wsse:Reference>AttachedReference</wsse:Reference>
+ * </wsse:SecurityTokenReference>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param node Pointer to attached reference axiom node
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_attached_reference(
     security_context_token_t *sct, 
@@ -366,17 +493,19 @@ security_context_token_set_attached_reference(
     AXIS2_PARAM_CHECK(env->error, node, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sct, AXIS2_FAILURE);
 
-    ref_token = oxs_axiom_get_first_child_node_by_name(env, node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
+    ref_token = oxs_axiom_get_first_child_node_by_name(
+        env, node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
     if(!ref_token)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get reference node from attached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot get reference node from attached reference");
         return AXIS2_FAILURE;
     }
 
     local_id = oxs_token_get_reference(env, ref_token);
     if(!local_id)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get attached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot get attached reference");
         return AXIS2_FAILURE;
     }
     
@@ -384,6 +513,16 @@ security_context_token_set_attached_reference(
     return security_context_token_set_local_identifier(sct, env, axutil_strdup(env, local_id));
 }
 
+/**
+ * Set global identifier of security context token from unattached reference node. 
+ * <wsse:SecurityTokenReference>
+ *      <wsse:Reference>AttachedReference</wsse:Reference>
+ * </wsse:SecurityTokenReference>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param node Pointer to unattached reference axiom node
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_unattached_reference(
     security_context_token_t *sct, 
@@ -396,17 +535,19 @@ security_context_token_set_unattached_reference(
     AXIS2_PARAM_CHECK(env->error, node, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, sct, AXIS2_FAILURE);
 
-    ref_token = oxs_axiom_get_first_child_node_by_name(env, node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
+    ref_token = oxs_axiom_get_first_child_node_by_name(
+        env, node, OXS_NODE_REFERENCE, OXS_WSSE_XMLNS, NULL);
     if(!ref_token)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get reference node from unattached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot get reference node from unattached reference");
         return AXIS2_FAILURE;
     }
 
     reference_id = oxs_token_get_reference(env, ref_token);
     if(!reference_id)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][security context token] Cannot get unattached reference");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot get unattached reference");
         return AXIS2_FAILURE;
     }
     
@@ -415,6 +556,13 @@ security_context_token_set_unattached_reference(
     return security_context_token_set_global_identifier(sct, env, axutil_strdup(env, reference_id));
 }
 
+/**
+ * Set axiom representation of security context token. We don't need to understand the details of it
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param node Pointer to security context token axiom node
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_set_token(
     security_context_token_t *sct, 
@@ -425,6 +573,44 @@ security_context_token_set_token(
     return AXIS2_SUCCESS;
 }
 
+/**
+ * Increment the reference of security context token
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+security_context_token_increment_ref(
+    security_context_token_t *sct,
+    const axutil_env_t * env)
+{
+    sct->ref++;
+    return AXIS2_SUCCESS;
+}
+
+/**
+ * Serializes the security context token. Caller should take the ownership of returned value.
+ * Serialized value will be of format
+ * <wsc:SecurityContextToken wsu:id=local_id> 
+ *      <wsc:Identifier>global_id</wsc:Identifier>
+ *      <wst:RequestedProofToken>
+ *          <wst:BinarySecret>Base64EncodedSharedSecret</wst:BinarySecret>
+ *      </wst:RequestedProofToken>
+ *      <wst:RequestedAttachedReference>
+ *          <wsse:SecurityTokenReference>
+ *              <wsse:Reference>AttachedReference</wsse:Reference>
+ *          </wsse:SecurityTokenReference>
+ *      </wst:RequestedAttachedReference>
+ *      <wst:RequestedUnattachedReference>
+ *          <wsse:SecurityTokenReference>
+ *              <wsse:Reference>AttachedReference</wsse:Reference>
+ *          </wsse:SecurityTokenReference>
+ *      </wst:RequestedUnattachedReference>
+ * </wsc:SecurityContextToken>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @returns serialized security context token if success. NULL otherwise
+ */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 security_context_token_serialize(
     security_context_token_t *sct, 
@@ -495,6 +681,29 @@ security_context_token_serialize(
     return serialised_node;
 }
 
+/**
+ * Deserializes the security context token. 
+ * <wsc:SecurityContextToken wsu:id=local_id> 
+ *      <wsc:Identifier>global_id</wsc:Identifier>
+ *      <wst:RequestedProofToken>
+ *          <wst:BinarySecret>Base64EncodedSharedSecret</wst:BinarySecret>
+ *      </wst:RequestedProofToken>
+ *      <wst:RequestedAttachedReference>
+ *          <wsse:SecurityTokenReference>
+ *              <wsse:Reference>AttachedReference</wsse:Reference>
+ *          </wsse:SecurityTokenReference>
+ *      </wst:RequestedAttachedReference>
+ *      <wst:RequestedUnattachedReference>
+ *          <wsse:SecurityTokenReference>
+ *              <wsse:Reference>AttachedReference</wsse:Reference>
+ *          </wsse:SecurityTokenReference>
+ *      </wst:RequestedUnattachedReference>
+ * </wsc:SecurityContextToken>
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param serialised_node serialised string representation of security context token
+ * @returns serialized security context token if success. NULL otherwise
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 security_context_token_deserialize(
     security_context_token_t *sct, 

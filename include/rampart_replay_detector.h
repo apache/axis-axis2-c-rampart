@@ -80,11 +80,13 @@ extern "C"
 
     
     /**
-     * A linked list based implementation for RRD
-     * This doesnt required addressing headers to be present
+     * A linked list based implementation for replay detection.
+     * This doesnt require addressing headers to be present. If the user doesn't give any replay
+     * detection function, then this will be used.
      * @param env pointer to environment struct,Must not be NULL.
      * @param msg_ctx message context structure
      * @param rampart_context rampart context structure
+     * @param user_params parameters given by user. (Not used in this method)
      * @returns status of the op. AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -93,30 +95,6 @@ extern "C"
         axis2_msg_ctx_t* msg_ctx,
         rampart_context_t *rampart_context,
         void *user_params);
-    
-    /**
-     * @param linked_list linked list structure where messages/fields are stored
-     * @param env pointer to environment struct,Must not be NULL.
-     * @param msg_ctx
-     * @returns status of the op.                                                                                                        
-     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
-     */
-	AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-	rampart_replay_detector_linked_list_contains(
-        axutil_linked_list_t *linked_list,
-        const axutil_env_t *env,
-        axis2_char_t *id);
-    
-    /**
-     * @param env pointer to environment struct,Must not be NULL.
-     * @param msg_ctx
-     * @returns status of the op.                                                                                                        
-     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
-     */
-	AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-	rampart_replay_detector_get_ts(
-        const axutil_env_t *env,
-        axis2_msg_ctx_t* msg_ctx);
 
     /*************************** Function macros **********************************/
 #define RAMPART_REPLAY_DETECTOR_IS_REPLAYED(replay_detector, env, msg_ctx, rampart_context) \

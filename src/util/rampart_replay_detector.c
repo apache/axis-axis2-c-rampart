@@ -24,238 +24,98 @@
 #include <rampart_sec_processed_result.h>
 #include <rampart_util.h>
 
+#define RAMPART_RD_LL_PROP "Rampart_RD_LL_Prop"
 
-/**
-     *
-     * @param env pointer to environment struct,Must not be NULL.
-     * @param ctx
-     * @returns status of the op.                                                                                                        
-     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
-     */
-
-    AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
-    rampart_replay_detector_set_default_db(const axutil_env_t *env,
-                                           axis2_ctx_t *ctx);
-
-    /**
-     *
-     * @param env pointer to environment struct,Must not be NULL.
-     * @param ctx
-     * @returns status of the op.                                                                                                        
-     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
-     */
-
-    AXIS2_EXTERN axutil_linked_list_t *AXIS2_CALL
-    rampart_replay_detector_set_ll_db(const axutil_env_t *env,
-                                      axis2_ctx_t *ctx);
-
-/*Private functions*/
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_replay_detector_linked_list_contains(axutil_linked_list_t *linked_list,
-        const axutil_env_t *env,
-        axis2_char_t *id)
+static axis2_char_t *
+rampart_replay_detector_get_ts(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t* msg_ctx)
 {
-#if 0
-    entry_t *e = NULL;
+    axis2_char_t  *ts = NULL;
+    axutil_hash_t *hash = NULL;
 
-    e = axutil_linked_list_get_first(linked_list, env);
-    while (e)
-    {
-        if (0 == axutil_strcmp(id, (axis2_char_t*)e)){
-            return AXIS2_TRUE;
-        }
-        if(e->next){
-            e = e->next;
-        }else{
-            e = NULL;
-        }
-    }
-    return AXIS2_FALSE;
-#else
-    int count = 0;
-    int i = 0;
-
-    count = axutil_linked_list_size(linked_list, env);
-    for(i=0; i<count; i++){
-        axis2_char_t *tmp_id = NULL;
-
-        tmp_id = (axis2_char_t*)axutil_linked_list_get(linked_list, env, i);
-        if(0 == axutil_strcmp(id, tmp_id)){
-            return AXIS2_TRUE;
-        }
-    }
-    return AXIS2_FALSE;
-
-#endif
+    /*Get timestamp from security processed results */
+    hash = rampart_get_all_security_processed_results(env, msg_ctx);
+    ts = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
+    return ts;
 }
 
-
-AXIS2_EXTERN axutil_linked_list_t *AXIS2_CALL
-rampart_replay_detector_get_ll_db(const axutil_env_t *env,
-                                  axis2_msg_ctx_t* msg_ctx)
+static axutil_linked_list_t *
+rampart_replay_detector_get_linked_list(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t* msg_ctx)
 {
     axis2_conf_ctx_t *conf_ctx = NULL;
     axis2_ctx_t *ctx = NULL;
     axutil_property_t *property = NULL;
     axutil_linked_list_t *ll = NULL;
-    /*Get the conf ctx*/
+    
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
     if(!conf_ctx)
     {
-        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, "[rampart][rrd] Conf context is NULL ");
+        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, 
+            "[rampart]Conf context is not valid. Could not get replay detector store.");
         return NULL;
     }
     ctx = axis2_conf_ctx_get_base(conf_ctx,env);
     if(!ctx)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] axis2 context is NULL ");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart]Axis2 context is not valid. Could not get replay detector store.");
         return NULL;
     }
-    /*Get the DB property*/
-    property = axis2_ctx_get_property(ctx, env, RAMPART_RD_DB_PROP);
+
+    /* Get the Linked list property */
+    property = axis2_ctx_get_property(ctx, env, RAMPART_RD_LL_PROP);
     if(property)
     {
-        /*Get the DB*/
         ll = (axutil_linked_list_t*)axutil_property_get_value(property, env);
         return ll;
-    }else{
-        ll = rampart_replay_detector_set_ll_db(env, ctx);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
+    }
+    else
+    {
+        /* not found. Can create new */
+        ll = axutil_linked_list_create(env);
+        property = axutil_property_create(env);
+        axutil_property_set_value(property, env, ll);
+        axis2_ctx_set_property(ctx, env, RAMPART_RD_LL_PROP, property);
         return ll;
     }
 }
 
-AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
-rampart_replay_detector_get_default_db(const axutil_env_t *env,
-                                       axis2_msg_ctx_t* msg_ctx)
+static axis2_bool_t
+rampart_replay_detector_linked_list_contains(
+    axutil_linked_list_t *linked_list,
+    const axutil_env_t *env,
+    axis2_char_t *id)
 {
-    axis2_conf_ctx_t *conf_ctx = NULL;
-    axis2_ctx_t *ctx = NULL;
-    axutil_property_t *property = NULL;
-    axutil_hash_t *hash = NULL;
-    /*Get the conf ctx*/
-    conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
-    if(!conf_ctx)
+    int count = 0;
+    int i = 0;
+
+    count = axutil_linked_list_size(linked_list, env);
+    for(i=0; i<count; i++)
     {
-        AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, "[rampart][rrd] Conf context is NULL ");
-        return NULL;
+        axis2_char_t *tmp_id = NULL;
+
+        tmp_id = (axis2_char_t*)axutil_linked_list_get(linked_list, env, i);
+        if(0 == axutil_strcmp(id, tmp_id))
+        {
+            return AXIS2_TRUE;
+        }
     }
-    ctx = axis2_conf_ctx_get_base(conf_ctx,env);
-    if(!ctx)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] axis2 context is NULL ");
-        return NULL;
-    }
-    /*Get the DB property*/
-    property = axis2_ctx_get_property(ctx, env, RAMPART_RD_DB_PROP);
-    if(property)
-    {
-        /*Get the DB*/
-        hash = (axutil_hash_t*)axutil_property_get_value(property, env);
-        return hash;
-    }else{
-        hash = rampart_replay_detector_set_default_db(env, ctx);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-            "[rampart][rrd] Cannot get the property %s from msg_ctx. Creating a new DB", RAMPART_RD_DB_PROP);
-        return hash;
-    }
+    return AXIS2_FALSE;
 }
 
-AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-rampart_replay_detector_get_ts(const axutil_env_t *env,
-                               axis2_msg_ctx_t* msg_ctx)
-{
-    axis2_char_t  *ts = NULL;
-    axutil_hash_t *hash = NULL;
-
-    /*Get timestamp from security processed results*/
-    hash = rampart_get_all_security_processed_results(env, msg_ctx);
-
-    ts = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
-    return ts;
-}
-/*
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_replay_detector_is_replayed(const axutil_env_t *env,
-    const axis2_char_t *msg_id,
-    const axis2_char_t *ts,
-    const axis2_char_t *id,
-    const axis2_char_t *val)
-{
-    if((0== axutil_strcmp(msg_id, id)) && (0== axutil_strcmp(ts, val))){
-        return AXIS2_SUCCESS;
-    }else{
-        return AXIS2_FALSE;
-    }        
-}
-*/
-
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-rampart_replay_detector_is_overdue(const axutil_env_t *env,
-                                   int valid_duration,
-                                   const axis2_char_t *val)
-{
-    axutil_date_time_comp_result_t res = AXIS2_DATE_TIME_COMP_RES_UNKNOWN;
-    axutil_date_time_t *dt1 = NULL;
-    axutil_date_time_t *dt2 = NULL;
-
-    dt1 = axutil_date_time_create_with_offset(env, valid_duration);
-    dt2 = axutil_date_time_create(env);
-
-    axutil_date_time_deserialize_date_time(dt2, env, val);
-    /*If the dt1(LIMIT) < dt2(TS) this returns expired*/
-    /*printf("Comparing time(TIME, TS) %s >  %s\n", axutil_date_time_serialize_date_time(dt1, env), axutil_date_time_serialize_date_time(dt2, env));*/
-    res = axutil_date_time_compare(dt2, env, dt1);
-    if(AXIS2_DATE_TIME_COMP_RES_EXPIRED == res){
-        return AXIS2_TRUE;
-    }else{
-        return AXIS2_FALSE;
-    }
-}
-
-/*Public functions*/
-AXIS2_EXTERN axutil_hash_t *AXIS2_CALL
-rampart_replay_detector_set_default_db(const axutil_env_t *env,
-                                       axis2_ctx_t *ctx)
-{
-    axutil_hash_t *hash_db = NULL;
-    axutil_property_t *hash_db_prop = NULL;
-
-    if(!ctx){
-        return NULL;
-    }
-
-    hash_db = axutil_hash_make(env);
-    hash_db_prop = axutil_property_create(env);
-
-    axutil_property_set_value(hash_db_prop, env, hash_db);
-    axis2_ctx_set_property(ctx, env, RAMPART_RD_DB_PROP, hash_db_prop);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Setting dafult RD DB =%s", RAMPART_RD_DB_PROP);
-
-    return hash_db;
-}
-
-AXIS2_EXTERN axutil_linked_list_t *AXIS2_CALL
-rampart_replay_detector_set_ll_db(const axutil_env_t *env,
-                                  axis2_ctx_t *ctx)
-{
-    axutil_linked_list_t *ll_db = NULL;
-    axutil_property_t *ll_db_prop = NULL;
-
-    if(!ctx){
-        return NULL;
-    }
-
-    ll_db = axutil_linked_list_create(env);
-    ll_db_prop = axutil_property_create(env);
-
-    axutil_property_set_value(ll_db_prop, env, ll_db);
-    axis2_ctx_set_property(ctx, env, RAMPART_RD_DB_PROP, ll_db_prop);
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Setting linked_list RD DB =%s", RAMPART_RD_DB_PROP);
-
-    return ll_db;
-}
-
+/**
+ * A linked list based implementation for replay detection.
+ * This doesnt require addressing headers to be present. If the user doesn't give any replay
+ * detection function, then this will be used.
+ * @param env pointer to environment struct,Must not be NULL.
+ * @param msg_ctx message context structure
+ * @param rampart_context rampart context structure
+ * @param user_params parameters given by user. (Not used in this method)
+ * @returns status of the op. AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_replay_detector_default(
     const axutil_env_t *env,
@@ -275,79 +135,92 @@ rampart_replay_detector_default(
 	 * they have to be created in golbal pool. If those are created in msg's pool, 
 	 * then it will be deleted after the request is served. (specially when using 
 	 * with apache, current_pool will denote the message's pool) */
-	pool = env->allocator->current_pool;
 	axutil_allocator_switch_to_global_pool(env->allocator);
 
     /* By using just Timestamps we dont need addressing. But there is a chance that
      * two messages might generated exactly at the same time*/
-
     ts = rampart_replay_detector_get_ts( env, msg_ctx);
     addr_msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env);
 
-    if(!ts && addr_msg_id){
+    if(!ts && addr_msg_id)
+    {
         msg_id = addr_msg_id;
-    }else if(ts && !addr_msg_id){
+    }
+    else if(ts && !addr_msg_id)
+    {
         msg_id = ts;
-    }else if(ts && addr_msg_id){
+    }
+    else if(ts && addr_msg_id)
+    {
         msg_id = axutil_strcat(env, addr_msg_id, ts, NULL);
-    }else{
+    }
+    else
+    {
         msg_id = NULL;
     }
-    if(!msg_id){
-        msg_id = "RAMPART-DEFAULT-TS";/*This has to be changed to generate the hash???*/
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] NO msg_id specified, using default = %s", msg_id);
+    if(!msg_id)
+    {
+        msg_id = "RAMPART-DEFAULT-TS";
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[rampart]NO msg_id specified, using default = %s", msg_id);
     }
 
-    ll = rampart_replay_detector_get_ll_db(env, msg_ctx);
-    if(!ll){
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] Cannot get the linked-list for replay detection from msg_ctx");
-		env->allocator->current_pool = pool;
+    ll = rampart_replay_detector_get_linked_list(env, msg_ctx);
+    if(!ll)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot get the linked list storage for replay detection from msg_ctx");
+		axutil_allocator_switch_to_local_pool(env->allocator);
         return AXIS2_FAILURE;
-    }else{
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_linked_list_size(ll, env));
-        /*printf("[rampart][rrd] Number of records =%d", axutil_linked_list_size(ll, env)); */
-        /*Get the valid duration for a record*/
-        if(rampart_context_get_rd_val(rampart_context, env)){
+    }
+    else
+    {
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[rampart][rrd] Number of records =%d", axutil_linked_list_size(ll, env));
+        
+        /* Get the number of records to be stored */
+        if(rampart_context_get_rd_val(rampart_context, env))
+        {
             max_rcds = axutil_atoi(rampart_context_get_rd_val(rampart_context, env));
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the specified max_rcds  %d\n", max_rcds );
-            /*printf("[rampart][rrd] Using the specified max_rcds  %d\n", max_rcds);*/
-        }else{
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the default max_rcds  %d\n", max_rcds );
-            /*printf("[rampart][rrd] Using the default max_rcds  %d\n", max_rcds);*/
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[rampart]Using the specified max_rcds  %d\n", max_rcds );
+        }
+        else
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[rampart]Using the default max_rcds  %d\n", max_rcds );
         }
 
-        /*If the table already have the same key it's a replay*/
-        /*if(AXIS2_TRUE == axutil_linked_list_contains(ll, env, (void*)msg_id)){*/
-        if(AXIS2_TRUE == rampart_replay_detector_linked_list_contains(ll, env, (void*)msg_id)){
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] For ID=%s, a replay detected", msg_id);
-            /*printf("[rampart][rrd] For ID=%s, a replay detected", msg_id);*/
-			env->allocator->current_pool = pool;
+        /* If the table already have the same key it's a replay */
+        if(rampart_replay_detector_linked_list_contains(ll, env, (void*)msg_id))
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]For ID=%s, a replay detected", msg_id);
+			axutil_allocator_switch_to_local_pool(env->allocator);
             return AXIS2_FAILURE;
         }
 
-        /*Clean up clean up.... :)*/
-        while(axutil_linked_list_size(ll, env) > max_rcds){
+        /* If the number of records are more than allowed, delete old records */
+        while(axutil_linked_list_size(ll, env) > max_rcds)
+        {
             axis2_char_t *tmp_msg_id = NULL;
             tmp_msg_id = (axis2_char_t*)axutil_linked_list_remove_first(ll, env);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Deleting record  %s\n", tmp_msg_id );
-            /*printf("[rampart][rrd] Deleting record  %s\n", tmp_msg_id );*/
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Deleting record  %s\n", tmp_msg_id );
             AXIS2_FREE(env->allocator, tmp_msg_id);
             tmp_msg_id = NULL;
         }
 
-        /*Add current record*/
+        /* Add current record */
         status = axutil_linked_list_add(ll, env, (void*)axutil_strdup(env,msg_id));
-		env->allocator->current_pool = pool;
-        if(AXIS2_SUCCESS == status){
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Adding record  %s\n", msg_id );
-            /*printf("[rampart][rrd] Adding record  %s\n", msg_id );*/
+		axutil_allocator_switch_to_local_pool(env->allocator);
+        if(AXIS2_SUCCESS == status)
+        {
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Adding record  %s\n", msg_id );
             return AXIS2_SUCCESS;
-        }else{
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] Cannot add record %s\n", msg_id);
-            /*printf("[rampart][rrd] Cannot add record %s\n", msg_id);*/
+        }
+        else
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot add record %s\n", msg_id);
             return AXIS2_FAILURE;
         }
     }
-
-
 }

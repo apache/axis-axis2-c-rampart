@@ -30,8 +30,9 @@
 #define INDICATOR_FILE "/indicator"
 #define REPLAY_FILE "/replay.content"
 
-AXIS2_EXTERN axis2_char_t * AXIS2_CALL
-rampart_replay_detector_file_dir(const axutil_env_t* env)
+static axis2_char_t *
+rampart_replay_detector_file_dir(
+    const axutil_env_t* env)
 {
 #ifdef WIN32
 	char* axis_home = getenv("AXIS2C_HOME");
@@ -45,8 +46,9 @@ rampart_replay_detector_file_dir(const axutil_env_t* env)
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_replay_detector_free(rampart_replay_detector_t *rrd,
-								const axutil_env_t* env)
+rampart_replay_detector_free(
+    rampart_replay_detector_t *rrd,
+	const axutil_env_t* env)
 {
 	if (rrd)
 	{
@@ -59,9 +61,10 @@ rampart_replay_detector_free(rampart_replay_detector_t *rrd,
 	return AXIS2_SUCCESS;
 }
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_replay_detector_read_file(const axutil_env_t *env,
-								  axutil_linked_list_t* ll)
+static axis2_status_t
+rampart_replay_detector_read_file(
+    const axutil_env_t *env,
+    axutil_linked_list_t* ll)
 {
 	FILE* temp_file = NULL;
 	FILE* file = NULL;
@@ -77,10 +80,9 @@ rampart_replay_detector_read_file(const axutil_env_t *env,
 	
 
 	/*
-	 * check whether some other threads are using the file. In that case, the file will not be empty.
-	 * If no other threads are using it, then the file will be empty
+	 * check whether some other threads are using the file. In that case, the indicator file will 
+     * not be empty. If no other threads are using it, then the file will not available
 	 */
-
 	file_dir = rampart_replay_detector_file_dir(env);
 	file_name = axutil_stracat(env, file_dir, INDICATOR_FILE);
 	temp_file = fopen(file_name, "r");
@@ -99,7 +101,7 @@ rampart_replay_detector_read_file(const axutil_env_t *env,
 	AXIS2_FREE(env->allocator, file_name);
 	if (!temp_file)
 	{
-		AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] creating indicator file failed" );
+		AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Creating indicator file failed" );
 		AXIS2_FREE(env->allocator, file_dir);
 		return AXIS2_FAILURE;
 	}
@@ -151,23 +153,24 @@ rampart_replay_detector_read_file(const axutil_env_t *env,
 }
 
 
-AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_replay_detector_write_file(const axutil_env_t *env,
-								  axutil_linked_list_t* ll,
-								  axis2_bool_t write_content)
+static axis2_status_t
+rampart_replay_detector_write_file(
+    const axutil_env_t *env,
+    axutil_linked_list_t* ll,
+    axis2_bool_t write_content)
 {
 	FILE* file = NULL;
 	axis2_char_t *file_dir = NULL;
 	axis2_char_t *file_name = NULL;
 
 	file_dir = rampart_replay_detector_file_dir(env);
-	if (write_content == AXIS2_TRUE)
+	if (write_content)
 	{
 		file_name = axutil_stracat(env, file_dir, REPLAY_FILE);
 		file = fopen (file_name, "w+");
 		if (!file)
 		{
-			AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] creating replay file failed" );
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Creating replay file failed" );
 			AXIS2_FREE(env->allocator, file_name);
 			file_name = axutil_stracat(env, file_dir, INDICATOR_FILE);
 			remove(file_name);
@@ -215,11 +218,35 @@ rampart_replay_detector_write_file(const axutil_env_t *env,
 	return AXIS2_SUCCESS;
 }
 
+static axis2_bool_t
+rampart_replay_detector_check_in_linked_list(
+    axutil_linked_list_t *linked_list,
+    const axutil_env_t *env,
+    axis2_char_t *id)
+{
+    int count = 0;
+    int i = 0;
+
+    count = axutil_linked_list_size(linked_list, env);
+    for(i=0; i<count; i++)
+    {
+        axis2_char_t *tmp_id = NULL;
+
+        tmp_id = (axis2_char_t*)axutil_linked_list_get(linked_list, env, i);
+        if(0 == axutil_strcmp(id, tmp_id))
+        {
+            return AXIS2_TRUE;
+        }
+    }
+    return AXIS2_FALSE;
+}
+
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_replay_detector_with_flat_file(rampart_replay_detector_t *rrd,
-		const axutil_env_t *env,
-        axis2_msg_ctx_t* msg_ctx,
-        rampart_context_t *rampart_context)
+rampart_replay_detector_with_flat_file(
+    rampart_replay_detector_t *rrd,
+	const axutil_env_t *env,
+    axis2_msg_ctx_t* msg_ctx,
+    rampart_context_t *rampart_context)
 {
     axutil_linked_list_t *ll = NULL;
     const axis2_char_t *msg_id = NULL;
@@ -227,11 +254,13 @@ rampart_replay_detector_with_flat_file(rampart_replay_detector_t *rrd,
     const axis2_char_t *addr_msg_id = NULL;
     int max_rcds = RAMPART_RD_DEF_MAX_RCDS;
     axis2_status_t status = AXIS2_FAILURE;
-	
+    axutil_hash_t *sec_process_result = NULL;
 
-    /* By using just Timestamps we dont need addressing. But there is a chance that
-     * two messages might generated exactly at the same time*/
-    ts = rampart_replay_detector_get_ts( env, msg_ctx);
+    /*Get timestamp from security processed results */
+    sec_process_result = rampart_get_all_security_processed_results(env, msg_ctx);
+    ts = axutil_hash_get(sec_process_result, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
+
+    /* get message id from addressing headers */
     addr_msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env);
 
     if(!ts && addr_msg_id)
@@ -250,79 +279,86 @@ rampart_replay_detector_with_flat_file(rampart_replay_detector_t *rrd,
 	{
         msg_id = NULL;
     }
+
     if(!msg_id)
 	{
-        msg_id = "RAMPART-DEFAULT-TS";/*This has to be changed to generate the hash???*/
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] NO msg_id specified, using default = %s", msg_id);
+        /* using default msg id */
+        msg_id = "RAMPART-DEFAULT-TS";
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[rampart]No msg_id specified, using default = %s", msg_id);
     }
 
 
     ll = axutil_linked_list_create(env);
     if(!ll)
 	{
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd] linked list creation failed");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Linked list creation failed.");
         return AXIS2_FAILURE;
     }
 
 	status = rampart_replay_detector_read_file(env, ll);
-	if(AXIS2_FAILURE == status)
+	if(status != AXIS2_SUCCESS)
 	{
+        /* we have to clear linked list. We don't need to write the contents. So pass false to 
+         * denote whether to write the content */
 		rampart_replay_detector_write_file(env, ll, AXIS2_FALSE);
         return AXIS2_FAILURE;
     }
 	else
 	{
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Number of records =%d", axutil_linked_list_size(ll, env));
-        /*Get the valid duration for a record*/
+        /* Get the number of records to be kept */
         if(rampart_context_get_rd_val(rampart_context, env))
 		{
             max_rcds = axutil_atoi(rampart_context_get_rd_val(rampart_context, env));
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the specified max_rcds  %d\n", max_rcds );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[rampart]Using the specified max_rcds  %d\n", max_rcds );
         }
 		else
 		{
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Using the default max_rcds  %d\n", max_rcds );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+                "[rampart]Using the default max_rcds  %d\n", max_rcds );
         }
 
-        /*If the table already have the same key it's a replay*/
-        if(AXIS2_TRUE == rampart_replay_detector_linked_list_contains(ll, env, (void*)msg_id))
+        /* If the table already have the same key it's a replay */
+        if(rampart_replay_detector_check_in_linked_list(ll, env, (void*)msg_id))
 		{
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] For ID=%s, a replay detected", msg_id);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]For ID=%s, a replay detected", msg_id);
 			rampart_replay_detector_write_file(env, ll, AXIS2_FALSE);
             return AXIS2_FAILURE;
         }
 
+        /* if number of records saved are more than allowed, we have to remove them */
         while(axutil_linked_list_size(ll, env) >= max_rcds)
 		{
             axis2_char_t *tmp_msg_id = NULL;
             tmp_msg_id = (axis2_char_t*)axutil_linked_list_remove_first(ll, env);
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Deleting record  %s\n", tmp_msg_id );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Deleting record  %s\n", tmp_msg_id );
             AXIS2_FREE(env->allocator, tmp_msg_id);
             tmp_msg_id = NULL;
         }
 
-        /*Add current record*/
+        /* Add current record */
         status = axutil_linked_list_add(ll, env, (void*)axutil_strdup(env,msg_id));
-        if(AXIS2_SUCCESS == status)
+        if(status == AXIS2_SUCCESS)
 		{
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] Adding record  %s\n", msg_id );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Adding record  %s\n", msg_id );
         }
 		else
 		{
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] Cannot add record %s\n", msg_id);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Cannot add record %s\n", msg_id);
 			rampart_replay_detector_write_file(env, ll, AXIS2_FALSE);
             return AXIS2_FAILURE;
         }
 		status =  rampart_replay_detector_write_file(env, ll, AXIS2_TRUE);
 		axutil_linked_list_free(ll, env);
-        if(AXIS2_SUCCESS == status)
+        if(status == AXIS2_SUCCESS)
 		{
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rrd] writing to file succeed" );
+            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Writing records to file succeed." );
 			return AXIS2_SUCCESS;
         }
 		else
 		{
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart][rrd] writing to file failed");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Writing records to file failed");
             return AXIS2_FAILURE;
         }
     }
@@ -333,36 +369,41 @@ rampart_replay_detector_with_flat_file(rampart_replay_detector_t *rrd,
  * Following block distinguish the exposed part of the dll.
  */
 AXIS2_EXPORT int
-axis2_get_instance(rampart_replay_detector_t **inst,
-        const axutil_env_t *env)
+axis2_get_instance(
+    rampart_replay_detector_t **inst,
+    const axutil_env_t *env)
 {
     rampart_replay_detector_t* rd = NULL;
 
-    rd = AXIS2_MALLOC(env->allocator,
-            sizeof(rampart_replay_detector_t));
+    rd = AXIS2_MALLOC(env->allocator, sizeof(rampart_replay_detector_t));
+    if (!rd)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot create replay detector module. Insufficient memory.");
+        return AXIS2_FAILURE;
+    }
 
-    rd->ops = AXIS2_MALLOC(
-                env->allocator, sizeof(rampart_replay_detector_ops_t));
+    rd->ops = AXIS2_MALLOC(env->allocator, sizeof(rampart_replay_detector_ops_t));
+    if (!rd->ops)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot create replay detector module operations. Insufficient memory.");
+        return AXIS2_FAILURE;
+    }
 
-    /*assign function pointers*/
-
+    /* assign function pointers */
     rd->ops->is_replayed = rampart_replay_detector_with_flat_file;
     rd->ops->free = rampart_replay_detector_free;
 
     *inst = rd;
 
-    if (!(*inst))
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rrd_sample] Cannot initialize the replay detector  module");
-        return AXIS2_FAILURE;
-    }
-
     return AXIS2_SUCCESS;
 }
 
 AXIS2_EXPORT int
-axis2_remove_instance(rampart_replay_detector_t *inst,
-        const axutil_env_t *env)
+axis2_remove_instance(
+    rampart_replay_detector_t *inst,
+    const axutil_env_t *env)
 {
     axis2_status_t status = AXIS2_FAILURE;
     if (inst)
