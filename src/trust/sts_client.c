@@ -269,8 +269,9 @@ trust_sts_client_get_svc_client(
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);
 
-    /* Engage addressing module */
+    /* Engage addressing module and rampart module */
     axis2_svc_client_engage_module(svc_client, env, AXIS2_MODULE_ADDRESSING);
+    axis2_svc_client_engage_module(svc_client, env, RAMPART_RAMPART);
 
     /*set the address version*/
     if(address_version)
