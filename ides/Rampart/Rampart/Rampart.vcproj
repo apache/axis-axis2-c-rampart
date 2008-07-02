@@ -698,7 +698,7 @@
 				Name="secconv"
 				>
 				<File
-					RelativePath="..\..\..\src\secconv\sct_provider.c"
+					RelativePath="..\..\..\src\secconv\sct_provider_utility.c"
 					>
 				</File>
 				<File
@@ -986,6 +986,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\rampart_sct_provider.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\rampart_sct_provider_utility.h"
 				>
 			</File>
 			<File

@@ -103,7 +103,8 @@ extern "C"
         trust_context_t *trust_context,
         neethi_policy_t *issuer_policy,
         axis2_char_t *address_version,
-        axis2_bool_t is_soap11);
+        axis2_bool_t is_soap11,
+        rampart_context_t *rampart_context);
 
 	AXIS2_EXTERN axis2_status_t AXIS2_CALL
 	trust_sts_client_set_issuer_policy_location(

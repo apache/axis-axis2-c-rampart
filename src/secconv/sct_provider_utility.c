@@ -22,6 +22,7 @@
 #include <rampart_constants.h>
 #include <trust_sts_client.h>
 #include <oxs_utility.h>
+#include <rampart_handler_util.h>
 
 #define RAMPART_SCT_PROVIDER_HASH_PROB "Rampart_SCT_Prov_DB_Prop"
 
@@ -29,7 +30,13 @@ static security_context_token_t*
 sct_provider_obtain_token_from_sts(
     const axutil_env_t* env, 
     rp_security_context_token_t* rp_sct, 
-    axis2_msg_ctx_t* msg_ctx);
+    axis2_msg_ctx_t* msg_ctx,
+    rampart_context_t *rampart_context);
+
+static rampart_context_t *
+get_new_rampart_context(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx);
 
 
 /* This method finds security context token using given parameters. If it is called without sct_id, 
@@ -98,7 +105,7 @@ sct_provider_get_sct(
             {
                 /* we can request sct from sts */
 
-                sct = sct_provider_obtain_token_from_sts(env, rp_sct, msg_ctx);
+                sct = sct_provider_obtain_token_from_sts(env, rp_sct, msg_ctx, rampart_context);
             }
             else
             {
@@ -346,7 +353,8 @@ static security_context_token_t*
 sct_provider_obtain_token_from_sts(
     const axutil_env_t* env, 
     rp_security_context_token_t* rp_sct, 
-    axis2_msg_ctx_t* msg_ctx)
+    axis2_msg_ctx_t* msg_ctx, 
+    rampart_context_t *rampart_context)
 {
     axis2_char_t* issuer_address = NULL;
     axis2_char_t* client_home = NULL;
@@ -455,7 +463,8 @@ sct_provider_obtain_token_from_sts(
 	}
 		
     buffer = trust_sts_client_request_security_token_using_policy(
-        sts_client, env, trust_context, cloned_policy, addressing_version_from_msg_ctx, is_soap11);
+        sts_client, env, trust_context, cloned_policy, addressing_version_from_msg_ctx, 
+        is_soap11, get_new_rampart_context(env, msg_ctx));
 
     /* Obtain the reply from sts */
     rstr = trust_context_get_rstr(trust_context, env);
@@ -758,4 +767,60 @@ sct_provider_validate_sct_default(
     return AXIS2_SUCCESS;
 }
 
+/* this is used to create a new rampart context and copy details given by rampart specific 
+ * assertions. */
+static rampart_context_t *
+get_new_rampart_context(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx)
+{
+    rampart_context_t *in_rampart_ctx = NULL;
+    rampart_context_t *out_rampart_ctx = NULL;
 
+    in_rampart_ctx = (rampart_context_t*)rampart_get_rampart_configuration(
+        env, msg_ctx, RAMPART_CONFIGURATION);
+
+    /* rampart context is not given by user. It was built by policy */
+    if(!in_rampart_ctx)
+    {
+        return NULL;
+    }
+
+    out_rampart_ctx = rampart_context_create(env);
+    if(!out_rampart_ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Cannot create new rampart context. Insufficient memory.");
+        return NULL;
+    }
+
+    rampart_context_set_ttl(out_rampart_ctx, env, rampart_context_get_ttl(in_rampart_ctx, env));
+    rampart_context_set_user(out_rampart_ctx, env, 
+        axutil_strdup(env, rampart_context_get_user(in_rampart_ctx, env)));
+    rampart_context_set_certificate(out_rampart_ctx, env, 
+        rampart_context_get_certificate(in_rampart_ctx, env));
+    rampart_context_set_certificate_type(out_rampart_ctx, env, 
+        rampart_context_get_certificate_type(in_rampart_ctx, env));
+    rampart_context_set_receiver_certificate(out_rampart_ctx, env, 
+        rampart_context_get_receiver_certificate(in_rampart_ctx, env));
+    rampart_context_set_receiver_certificate_type(out_rampart_ctx, env, 
+        rampart_context_get_receiver_certificate_type(in_rampart_ctx, env));
+    rampart_context_set_prv_key(out_rampart_ctx, env, 
+        rampart_context_get_prv_key(in_rampart_ctx, env));
+    rampart_context_set_prv_key_type(out_rampart_ctx, env, 
+        rampart_context_get_prv_key_type(in_rampart_ctx, env));
+    rampart_context_set_password_type(out_rampart_ctx, env, 
+        rampart_context_get_password_type(in_rampart_ctx, env));
+    rampart_context_set_password(out_rampart_ctx, env, 
+        rampart_context_get_password(in_rampart_ctx, env));
+    rampart_context_set_pwcb_function(out_rampart_ctx, env, 
+        rampart_context_get_pwcb_function(in_rampart_ctx, env), 
+        rampart_context_get_pwcb_user_params(in_rampart_ctx, env));
+    rampart_context_set_replay_detect_function(out_rampart_ctx, env, 
+        rampart_context_get_replay_detect_function(in_rampart_ctx, env), 
+        rampart_context_get_rd_user_params(in_rampart_ctx, env));
+    rampart_context_set_rd_val(out_rampart_ctx, env, 
+        rampart_context_get_rd_val(in_rampart_ctx, env));
+
+    return out_rampart_ctx;
+}

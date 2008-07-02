@@ -413,7 +413,8 @@ trust_sts_client_request_security_token_using_policy(
     trust_context_t *trust_context,
     neethi_policy_t *issuer_policy, 
     axis2_char_t *address_version, 
-    axis2_bool_t is_soap11)
+    axis2_bool_t is_soap11, 
+    rampart_context_t *rampart_context)
 {
     axis2_status_t status = AXIS2_SUCCESS;
     axiom_node_t *rst_node = NULL;
@@ -456,6 +457,23 @@ trust_sts_client_request_security_token_using_policy(
 
     if (sts_client->svc_client)
     {
+        /* if rampart context is set, we can set it to svc_client. This will be used by 
+         * scripting bindings to specify rampart specific values */
+        if(rampart_context)
+        {
+            axis2_svc_ctx_t *svc_ctx = NULL;
+            axis2_conf_ctx_t *conf_ctx = NULL;
+            axis2_conf_t *conf = NULL;
+            axutil_param_t *security_param = NULL;
+
+            svc_ctx = axis2_svc_client_get_svc_ctx (sts_client->svc_client, env);
+            conf_ctx = axis2_svc_ctx_get_conf_ctx (svc_ctx, env);
+            conf = axis2_conf_ctx_get_conf (conf_ctx, env);
+            security_param = axutil_param_create (
+                env, RAMPART_CONFIGURATION, (void *)rampart_context);
+            axis2_conf_add_param (conf, env, security_param);
+        }
+
 		if(issuer_policy)
 		{
 			status = axis2_svc_client_set_policy(sts_client->svc_client, env, issuer_policy);

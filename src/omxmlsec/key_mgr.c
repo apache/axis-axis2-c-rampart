@@ -135,7 +135,7 @@ oxs_key_mgr_set_prv_key_password(
 {
 	if (key_mgr->prv_key_password)
 	{
-		AXIS2_FREE(env->allocator, password);
+		AXIS2_FREE(env->allocator, key_mgr->prv_key_password);
 	}
 	key_mgr->prv_key_password = axutil_strdup(env, password);
 	return AXIS2_SUCCESS;
