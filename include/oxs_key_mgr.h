@@ -343,6 +343,11 @@ extern "C"
             void *key_store_buf,
             int len);
 
+        AXIS2_EXTERN axis2_status_t AXIS2_CALL
+        oxs_key_mgr_increment_ref(
+            oxs_key_mgr_t *key_mgr, 
+            const axutil_env_t *env);
+
 	
     /** @} */
 #ifdef __cplusplus

@@ -67,68 +67,6 @@ rampart_sig_endorse_sign(
     axiom_soap_envelope_t *soap_envelope,
     axiom_node_t *sec_node);
 
-
-oxs_x509_cert_t *AXIS2_CALL
-rampart_sig_get_cert(const axutil_env_t *env,
-                     rampart_context_t *rampart_context)
-{
-    void *key_buf = NULL;
-    axis2_key_type_t type = 0;
-    oxs_x509_cert_t *cert = NULL;
-    axis2_char_t *certificate_file = NULL;
-
-    key_buf = rampart_context_get_certificate(rampart_context, env);
-    if(key_buf)
-    {
-        type = rampart_context_get_certificate_type(rampart_context, env);
-        if(type == AXIS2_KEY_TYPE_PEM)
-        {
-            cert = oxs_key_mgr_load_x509_cert_from_string(env,
-                    (axis2_char_t *)key_buf);
-            if(!cert)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Certificate cannot be loaded from the buffer.");
-                return NULL;
-            }
-            else
-            {
-                return cert;
-            }
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Key file type unknown.");
-            return NULL;
-        }
-    }
-    else
-    {
-        certificate_file = rampart_context_get_certificate_file(rampart_context, env);
-        if(certificate_file)
-        {
-            cert = oxs_key_mgr_load_x509_cert_from_pem_file(env, certificate_file);
-            if(!cert)
-            {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_signature] Certificate cannot be loaded from the file.");
-                return NULL;
-            }
-            else
-            {
-                return cert;
-            }
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Public key certificate file is not specified.");
-            return NULL;
-        }
-    }
-}
-
 axis2_status_t AXIS2_CALL
 rampart_sig_prepare_key_info_for_sym_binding(const axutil_env_t *env,
                 rampart_context_t *rampart_context,

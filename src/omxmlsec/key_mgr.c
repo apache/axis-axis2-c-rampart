@@ -66,6 +66,9 @@ struct oxs_key_mgr_t
 	
     /* Format of the current key */
     oxs_key_mgr_format_t format;
+
+    /* ref count to monitor when to free */
+    int ref;
 }; 
 
 AXIS2_EXTERN oxs_key_mgr_t * AXIS2_CALL
@@ -89,6 +92,7 @@ oxs_key_mgr_create(const axutil_env_t *env)
             key_mgr->pem_buf = NULL;
             key_mgr->format = -1;
             key_mgr->pkcs12_buf = NULL;
+            key_mgr->ref = 1;
 	}
 	return key_mgr; 
 }
@@ -97,17 +101,34 @@ oxs_key_mgr_create(const axutil_env_t *env)
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_key_mgr_free(oxs_key_mgr_t *key_mgr, const axutil_env_t *env)
 {
-    if(key_mgr->certificate)
-	{
-        oxs_x509_cert_free(key_mgr->certificate, env);
-        key_mgr->certificate = NULL;
+    if(--(key_mgr->ref) < 1)
+    {
+        if(key_mgr->certificate)
+	    {
+            if(key_mgr->certificate_type == AXIS2_KEY_TYPE_PEM)
+            {
+                AXIS2_FREE(env->allocator, key_mgr->certificate);
+            }
+            else
+            {
+                oxs_x509_cert_free(key_mgr->certificate, env);
+            }
+            key_mgr->certificate = NULL;
+        }
+        if(key_mgr->receiver_certificate)
+	    {
+            if(key_mgr->receiver_certificate_type == AXIS2_KEY_TYPE_PEM)
+            {
+                AXIS2_FREE(env->allocator, key_mgr->receiver_certificate);
+            }
+            else
+            {
+                oxs_x509_cert_free(key_mgr->receiver_certificate, env);
+            }
+            key_mgr->receiver_certificate = NULL;
+        }
+        AXIS2_FREE(env->allocator, key_mgr);
     }
-    if(key_mgr->receiver_certificate)
-	{
-        oxs_x509_cert_free(key_mgr->receiver_certificate, env);
-        key_mgr->receiver_certificate = NULL;
-    }
-    AXIS2_FREE(env->allocator, key_mgr);
     return AXIS2_SUCCESS;
 }
 
@@ -233,9 +254,14 @@ oxs_key_mgr_get_certificate(
             else
             {
 				key_mgr->certificate = cert;
+                key_mgr->certificate_type = AXIS2_KEY_TYPE_CERT;
                 return cert;
             }
 		}
+        else if(key_mgr->certificate_type == AXIS2_KEY_TYPE_CERT)
+        {
+            return key_mgr->certificate;
+        }
 		else 
 		{
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -390,9 +416,14 @@ oxs_key_mgr_get_receiver_certificate(
            	else
            	{
 				key_mgr->receiver_certificate = oxs_cert;
+                key_mgr->receiver_certificate_type = AXIS2_KEY_TYPE_CERT;
                	return oxs_cert;
            	}
 		}
+        else if(key_mgr->receiver_certificate_type == AXIS2_KEY_TYPE_CERT)
+        {
+            return key_mgr->receiver_certificate;
+        }
 		else
 		{
 			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -968,4 +999,11 @@ oxs_key_mgr_get_receiver_certificate_from_issuer_serial(
     return NULL;
 }
 
-
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_key_mgr_increment_ref(
+    oxs_key_mgr_t *key_mgr, 
+    const axutil_env_t *env)
+{
+    key_mgr->ref++;
+    return AXIS2_SUCCESS;
+}

@@ -776,6 +776,7 @@ get_new_rampart_context(
 {
     rampart_context_t *in_rampart_ctx = NULL;
     rampart_context_t *out_rampart_ctx = NULL;
+    oxs_key_mgr_t *key_mgr = NULL;
 
     in_rampart_ctx = (rampart_context_t*)rampart_get_rampart_configuration(
         env, msg_ctx, RAMPART_CONFIGURATION);
@@ -797,18 +798,6 @@ get_new_rampart_context(
     rampart_context_set_ttl(out_rampart_ctx, env, rampart_context_get_ttl(in_rampart_ctx, env));
     rampart_context_set_user(out_rampart_ctx, env, 
         axutil_strdup(env, rampart_context_get_user(in_rampart_ctx, env)));
-    rampart_context_set_certificate(out_rampart_ctx, env, 
-        rampart_context_get_certificate(in_rampart_ctx, env));
-    rampart_context_set_certificate_type(out_rampart_ctx, env, 
-        rampart_context_get_certificate_type(in_rampart_ctx, env));
-    rampart_context_set_receiver_certificate(out_rampart_ctx, env, 
-        rampart_context_get_receiver_certificate(in_rampart_ctx, env));
-    rampart_context_set_receiver_certificate_type(out_rampart_ctx, env, 
-        rampart_context_get_receiver_certificate_type(in_rampart_ctx, env));
-    rampart_context_set_prv_key(out_rampart_ctx, env, 
-        rampart_context_get_prv_key(in_rampart_ctx, env));
-    rampart_context_set_prv_key_type(out_rampart_ctx, env, 
-        rampart_context_get_prv_key_type(in_rampart_ctx, env));
     rampart_context_set_password_type(out_rampart_ctx, env, 
         rampart_context_get_password_type(in_rampart_ctx, env));
     rampart_context_set_password(out_rampart_ctx, env, 
@@ -821,6 +810,14 @@ get_new_rampart_context(
         rampart_context_get_rd_user_params(in_rampart_ctx, env));
     rampart_context_set_rd_val(out_rampart_ctx, env, 
         rampart_context_get_rd_val(in_rampart_ctx, env));
+
+    /* set key manager as well */
+    key_mgr = rampart_context_get_key_mgr(in_rampart_ctx, env);
+    if(key_mgr)
+    {
+        oxs_key_mgr_increment_ref(key_mgr, env);
+        rampart_context_set_key_mgr(out_rampart_ctx, env, key_mgr);
+    }
 
     return out_rampart_ctx;
 }

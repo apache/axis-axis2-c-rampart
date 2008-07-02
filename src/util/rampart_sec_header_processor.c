@@ -1728,23 +1728,6 @@ rampart_shp_detect_replays(const axutil_env_t *env,
         }
         return AXIS2_SUCCESS;
 }
-#if 0
-static axis2_status_t
-rampart_shp_process_bst(const axutil_env_t *env,
-                            axis2_msg_ctx_t *msg_ctx,
-                            rampart_context_t *rampart_context,
-                            axiom_node_t *sec_node,
-                            axiom_node_t *bst_node)
-{
-    axis2_char_t *cert_buf = NULL;
-
-    cert_buf = (axis2_char_t*)oxs_axiom_get_node_content(env, bst_node);
-    /*Set to Rampart Context*/
-    rampart_context_set_certificate(rampart_context, env, cert_buf);
-    rampart_context_set_certificate_type(rampart_context, env, AXIS2_KEY_TYPE_PEM);
-    return AXIS2_SUCCESS;
-}
-#endif
 
 static axis2_status_t
 rampart_shp_process_derived_key(const axutil_env_t *env,
