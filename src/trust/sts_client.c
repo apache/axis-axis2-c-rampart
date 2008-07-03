@@ -243,6 +243,7 @@ trust_sts_client_get_svc_client(
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_action(options, env, action);
+    axis2_options_set_xml_parser_reset(options, env, AXIS2_FALSE); 
     if(is_soap11)
     {
         axis2_options_set_soap_action(options, env, axutil_string_create(env, action));
