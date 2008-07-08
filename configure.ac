@@ -80,8 +80,8 @@ AC_ARG_WITH(axis2,
     if test -d $withval; then
         axis2inc="-I$withval"
     dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.4.0'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.4.0"
+    elif test -d '$(AXIS2C_HOME)/include/axis2-1.5.0'; then
+        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.5.0"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi
