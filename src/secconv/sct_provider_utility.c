@@ -681,6 +681,9 @@ sct_provider_store_sct_default(
     hash_store = sct_provider_get_sct_hash_store(env, msg_ctx);
     if(hash_store)
     {
+        /* set env */
+        axutil_hash_set_env(hash_store, env);
+
         /* store sct */
         if(sct_global_id)
         {
