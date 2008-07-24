@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="saml_sts"
-	ProjectGUID="{12374617-95C2-4548-98CF-7ABEB6A821D1}"
-	RootNamespace="saml_sts"
+	Name="Rahas"
+	ProjectGUID="{C8F24E4B-1F89-4E3D-A969-A3DB376A5606}"
+	RootNamespace="Rahas"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\..\include;&quot;$(AXIS2C_HOME)\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RAMPART_EXPORTS;AXIS2_DECLARE_EXPORT;_MBCS;_CRT_SECURE_NO_DEPRECATE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RAHAS_EXPORTS;AXIS2_DECLARE_EXPORT;_MBCS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,10 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="axiom.lib axutil.lib axis2_engine.lib axis2_parser.lib neethi.lib mod_rampart.lib"
-				OutputFile="$(SolutionDir)deploy\services\saml_sts\saml_sts.dll"
+				AdditionalDependencies="axiom.lib axutil.lib axis2_engine.lib axis2_parser.lib neethi.lib libeay32MDd.lib ssleay32MDd.lib"
+				OutputFile="$(SolutionDir)deploy\modules\rahas\mod_rahas.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)deploy\lib&quot;;&quot;$(AXIS2C_HOME)\lib&quot;"
+				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -92,7 +92,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\samples\server\saml_sts\services.xml $(SolutionDir)deploy\services\saml_sts\"
+				CommandLine="if not exist $(SolutionDir)deploy\lib\ mkdir $(SolutionDir)deploy\lib&#x0D;&#x0A;copy $(SolutionDir)deploy\modules\rahas\mod_rahas.* $(SolutionDir)deploy\lib\&#x0D;&#x0A;copy ..\..\..\src\data\rahas_module.xml $(SolutionDir)deploy\modules\rahas\module.xml"
 			/>
 		</Configuration>
 		<Configuration
@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SAML_STS_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;RAHAS_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -180,11 +180,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\samples\server\saml_sts\issuer.c"
+				RelativePath="..\..\..\src\rahas\mod_rahas.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\samples\server\saml_sts\saml_skeleton.c"
+				RelativePath="..\..\..\src\rahas\rahas_in_handler.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\rahas\rahas_request_processor.c"
 				>
 			</File>
 		</Filter>
@@ -194,7 +198,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\samples\server\saml_sts\saml_issuer.h"
+				RelativePath="..\..\..\include\rahas_mod.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\rahas_request_processor.h"
 				>
 			</File>
 		</Filter>

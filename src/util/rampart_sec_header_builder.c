@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+#include <axis2_util.h>
 #include <stdio.h>
 #include <rampart_encryption.h>
 #include <rampart_constants.h>

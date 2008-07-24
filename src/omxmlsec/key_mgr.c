@@ -17,6 +17,8 @@
 
 #include <stdio.h>
 #include <axis2_util.h>
+#include <axis2_key_type.h>
+#include <openssl_pkcs12_keystore.h>
 #include <oxs_error.h>
 #include <oxs_key_mgr.h>
 #include <openssl_pem.h>

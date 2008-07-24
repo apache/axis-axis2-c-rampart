@@ -40,7 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RAMPART_EXPORTS"
+				AdditionalIncludeDirectories="..\..\..\include;&quot;$(AXIS2C_HOME)\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RAMPART_EXPORTS;AXIS2_DECLARE_EXPORT;_MBCS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,7 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="axiom.lib axutil.lib axis2_engine.lib axis2_parser.lib neethi.lib libeay32MDd.lib ssleay32MDd.lib"
+				OutputFile="$(SolutionDir)deploy\modules\rampart\mod_rampart.dll"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(AXIS2C_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -88,6 +92,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="if not exist $(SolutionDir)deploy\lib\ mkdir $(SolutionDir)deploy\lib&#x0D;&#x0A;copy $(SolutionDir)deploy\modules\rampart\mod_rampart.* $(SolutionDir)deploy\lib\&#x0D;&#x0A;copy ..\..\..\src\data\module.xml $(SolutionDir)deploy\modules\rampart\"
 			/>
 		</Configuration>
 		<Configuration
@@ -517,6 +522,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\src\omxmlsec\tokens\token_saml.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\src\omxmlsec\tokens\token_security_token_reference.c"
 						>
 					</File>
@@ -618,6 +627,10 @@
 				Name="util"
 				>
 				<File
+					RelativePath="..\..\..\src\util\rampart_config.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\util\rampart_context.c"
 					>
 				</File>
@@ -639,6 +652,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\util\rampart_handler_util.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\util\rampart_issued.c"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\util\rampart_issued_token.c"
 					>
 				</File>
 				<File
@@ -706,58 +727,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="rahas"
-				>
-				<File
-					RelativePath="..\..\..\src\rahas\mod_rahas.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)\$(InputName)1.obj"
-							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)\$(InputName)1.obj"
-							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\rahas\rahas_in_handler.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)\$(InputName)1.obj"
-							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)\$(InputName)1.obj"
-							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\rahas\rahas_request_processor.c"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -798,6 +767,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\openssl_pkcs12.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\openssl_pkcs12_keystore.h"
 				>
 			</File>
 			<File
@@ -877,6 +850,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\oxs_saml_token.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\oxs_sign_ctx.h"
 				>
 			</File>
@@ -922,14 +899,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\oxs_xml_signature.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\rahas_mod.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\rahas_request_processor.h"
 				>
 			</File>
 			<File

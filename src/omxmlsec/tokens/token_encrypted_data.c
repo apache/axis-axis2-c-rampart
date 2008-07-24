@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+#include <axis2_util.h>
 #include <stdio.h>
 #include <oxs_constants.h>
 #include <oxs_error.h>

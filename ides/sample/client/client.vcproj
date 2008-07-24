@@ -40,7 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="..\..\..\include;&quot;$(AXIS2C_HOME)\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;RAMPART_EXPORTS;AXIS2_DECLARE_EXPORT;_MBCS;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,7 +62,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="axutil.lib axiom.lib neethi.lib axis2_parser.lib axis2_engine.lib mod_rampart.lib"
+				OutputFile="$(SolutionDir)deploy\bin\samples\rampart\client\sec_echo\echo.exe"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)deploy\lib&quot;;&quot;$(AXIS2C_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

@@ -14,6 +14,7 @@
  *   limitations under the License.
  */
 
+#include <axis2_util.h>
 #include <rampart_saml.h>
 #include <oxs_constants.h>
 #include <rp_property.h>

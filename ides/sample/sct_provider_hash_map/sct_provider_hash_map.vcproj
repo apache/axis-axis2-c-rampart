@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="saml_sts"
-	ProjectGUID="{12374617-95C2-4548-98CF-7ABEB6A821D1}"
-	RootNamespace="saml_sts"
+	Name="sct_provider_hash_map"
+	ProjectGUID="{5A2EC04F-5424-425E-A652-BA53685FAF05}"
+	RootNamespace="sct_provider_hash_map"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="axiom.lib axutil.lib axis2_engine.lib axis2_parser.lib neethi.lib mod_rampart.lib"
-				OutputFile="$(SolutionDir)deploy\services\saml_sts\saml_sts.dll"
+				OutputFile="$(SolutionDir)deploy\bin\samples\rampart\sct_provider\sctprovider_hashdb.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(SolutionDir)deploy\lib&quot;;&quot;$(AXIS2C_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
@@ -92,7 +92,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy ..\..\..\samples\server\saml_sts\services.xml $(SolutionDir)deploy\services\saml_sts\"
 			/>
 		</Configuration>
 		<Configuration
@@ -120,7 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SAML_STS_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SCT_PROVIDER_HASH_MAP_EXPORTS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -180,11 +179,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\samples\server\saml_sts\issuer.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\server\saml_sts\saml_skeleton.c"
+				RelativePath="..\..\..\samples\sct_provider\sct_provider_hash_map.c"
 				>
 			</File>
 		</Filter>
@@ -193,10 +188,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\..\samples\server\saml_sts\saml_issuer.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
