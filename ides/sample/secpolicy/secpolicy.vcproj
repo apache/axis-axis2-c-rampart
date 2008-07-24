@@ -30,6 +30,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="cd ..\..\..\samples\secpolicy&#x0D;&#x0A;start run_all.bat 9099"
+				ExcludedFromBuild="false"
 			/>
 		</Configuration>
 		<Configuration
