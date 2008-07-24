@@ -30,7 +30,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist $(SolutionDir)deploy\bin\ mkdir $(SolutionDir)deploy\bin&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\ mkdir $(SolutionDir)deploy\bin\samples&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\rampart\ mkdir $(SolutionDir)deploy\bin\samples\rampart&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\rampart\data mkdir $(SolutionDir)deploy\bin\samples\rampart\data&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\rampart\keys mkdir $(SolutionDir)deploy\bin\samples\rampart\keys&#x0D;&#x0A;copy ..\..\..\samples\data\passwords.txt $(SolutionDir)deploy\bin\samples\rampart\data&#x0D;&#x0A;xcopy /E /I /Y ..\..\..\samples\keys\* $(SolutionDir)deploy\bin\samples\rampart\keys&#x0D;&#x0A;copy ..\..\..\samples\server\sec_echo\server_axis2.xml $(SolutionDir)deploy\axis2.xml&#x0D;&#x0A;if not $(SolutionDir)deploy == $(AXIS2C_HOME) xcopy /E /I /Y $(SolutionDir)deploy $(AXIS2C_HOME)\&#x0D;&#x0A;cd ..\..\..\samples\client\sec_echo\&#x0D;&#x0A;call deploy_client_repo.bat&#x0D;&#x0A;cd ..\..\secpolicy\&#x0D;&#x0A;deploy.bat"
+				CommandLine="if not exist $(SolutionDir)deploy\bin\ mkdir $(SolutionDir)deploy\bin&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\ mkdir $(SolutionDir)deploy\bin\samples&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\rampart\ mkdir $(SolutionDir)deploy\bin\samples\rampart&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\rampart\data mkdir $(SolutionDir)deploy\bin\samples\rampart\data&#x0D;&#x0A;if not exist $(SolutionDir)deploy\bin\samples\rampart\keys mkdir $(SolutionDir)deploy\bin\samples\rampart\keys&#x0D;&#x0A;copy ..\..\..\samples\data\passwords.txt $(SolutionDir)deploy\bin\samples\rampart\data&#x0D;&#x0A;xcopy /E /I /Y ..\..\..\samples\keys\* $(SolutionDir)deploy\bin\samples\rampart\keys&#x0D;&#x0A;copy ..\..\..\samples\server\sec_echo\server_axis2.xml $(SolutionDir)deploy\axis2.xml&#x0D;&#x0A;if not $(SolutionDir)deploy == $(AXIS2C_HOME) xcopy /E /I /Y $(SolutionDir)deploy $(AXIS2C_HOME)\&#x0D;&#x0A;cd ..\..\..\samples\client\sec_echo\&#x0D;&#x0A;call deploy_client_repo.bat&#x0D;&#x0A;cd ..\..\secpolicy\&#x0D;&#x0A;deploy.bat&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -219,46 +219,6 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="secpolicy"
-			>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\deploy.bat"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\deploy.js"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\deploy.sh"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\run_all.bat"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\run_all.js"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\run_all.sh"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\saml.sh"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\test_scen.bat"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\samples\secpolicy\test_scen.sh"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
