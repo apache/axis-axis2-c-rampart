@@ -23,10 +23,13 @@
 #include <rampart_constants.h>
 #include <neethi_util.h>
 #include <neethi_policy.h>
+#include <axis2_addr.h>
 
 axiom_node_t *
 build_om_payload_for_echo_svc(const axutil_env_t *env);
 
+axiom_node_t *
+build_om_payload_for_echo_svc_interop(const axutil_env_t *env);
 
 int main(int argc, char** argv)
 {
@@ -42,9 +45,14 @@ int main(int argc, char** argv)
     axiom_node_t *ret_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
+    /*axutil_property_t *property  = NULL;
+    int i = 0;*/
 	
 	/* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
+
+    /*if (argc == 4)
+        AXIS2_SLEEP(10); */
 
     /* Set end-point-reference of echo service */
     address = "http://localhost:9090/axis2/services/echo";
@@ -72,7 +80,12 @@ int main(int argc, char** argv)
     axis2_options_set_action(options, env,
             "http://example.com/ws/2004/09/policy/Test/EchoRequest");
     /*axis2_options_set_action(options, env,
-            "urn:echo");*/
+            "http://xmlsoap.org/Ping");*/
+    /*axis2_options_set_action(options, env,
+            "urn:echoString");*/
+    
+    /*axis2_options_set_soap_action(options, env, axutil_string_create(env, "http://xmlsoap.org/Ping"));
+    axis2_options_set_soap_version(options, env, AXIOM_SOAP11);*/
     axis2_options_set_soap_version(options, env, AXIOM_SOAP12);
 
     /*If the client home is not specified, use the AXIS2C_HOME*/
@@ -93,6 +106,13 @@ int main(int argc, char** argv)
 
     /* Set service client options */
     axis2_svc_client_set_options(svc_client, env, options);
+
+    /* 
+    property = axutil_property_create(env);
+    axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+    axutil_property_set_value(property, env, AXIS2_WSA_NAMESPACE_SUBMISSION);
+    axis2_options_set_property(options, env, AXIS2_WSA_VERSION, property);
+    */
 
     /*We need to specify the client's policy file location*/
     if(client_home)
@@ -201,6 +221,7 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
     axis2_char_t *om_str = NULL;
 
     ns1 = axiom_namespace_create(env, "http://ws.apache.org/rampart/c/samples", "ns1");
+    /*ns1 = axiom_namespace_create(env, "http://echo.services.wsas.wso2.org", "ns1");*/
     echo_om_ele = axiom_element_create(env, NULL, "echoIn", ns1, &echo_om_node);    
     
     text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
@@ -213,4 +234,41 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
         om_str =  NULL;
     }
     return echo_om_node;
+}
+
+/* build SOAP request message content using OM (for java interop)*/
+axiom_node_t *
+build_om_payload_for_echo_svc_interop(const axutil_env_t *env)
+{
+    axiom_node_t *ping_request_om_node = NULL;
+    axiom_element_t* ping_request_om_ele = NULL;
+    axiom_node_t *ping_om_node = NULL;
+    axiom_element_t* ping_om_ele = NULL;
+    axiom_node_t* text_om_node = NULL;
+    axiom_element_t * text_om_ele = NULL;
+    axiom_namespace_t *ns1 = NULL;
+    axiom_namespace_t *ns0 = NULL;
+    axis2_char_t *om_str = NULL;
+
+    ns0 = axiom_namespace_create(env, "http://InteropBaseAddress/interop", "ns0");
+    ns1 = axiom_namespace_create(env, "http://xmlsoap.org/Ping", "ns1");
+    ping_request_om_ele = axiom_element_create(env, NULL, "PingRequest", ns0, &ping_request_om_node);    
+    ping_om_ele = axiom_element_create(env, ping_request_om_node, "Ping", ns1, &ping_om_node);   
+    
+    text_om_ele = axiom_element_create(env, ping_om_node, "scenario", ns1, &text_om_node);
+    axiom_element_set_text(text_om_ele, env, "scenario", text_om_node);
+    text_om_node= NULL;
+    text_om_ele = axiom_element_create(env, ping_om_node, "origin", ns1, &text_om_node);
+    axiom_element_set_text(text_om_ele, env, "origin", text_om_node);
+    text_om_node= NULL;
+    text_om_ele = axiom_element_create(env, ping_om_node, "text", ns1, &text_om_node);
+    axiom_element_set_text(text_om_ele, env, "text", text_om_node);
+
+    om_str = axiom_node_to_string(ping_request_om_node, env);
+    if (om_str){
+        printf("\nSending OM : %s\n", om_str);
+        AXIS2_FREE(env->allocator, om_str);
+        om_str =  NULL;
+    }
+    return ping_request_om_node;
 }
