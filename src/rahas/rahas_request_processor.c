@@ -93,15 +93,6 @@ rahas_process_issue_request(
     axis2_bool_t server_entropy_needed = AXIS2_FALSE;
     int key_size = TRUST_DEFAULT_KEY_SIZE;
 
-    /* validate whether given parameters are ok to proceed */
-    if(rahas_validate_issue_request_parameters(env, rst, rstr, msg_ctx, trust_version, 
-        client_entropy_needed, &requester_entropy) != AXIS2_SUCCESS)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rahas]Cannot issue SecurityContextToken because parameter validation failed.");
-        return AXIS2_FAILURE;
-    }
-
     /* check whether client entropy and server entropy are needed */
     if (rahas_get_sts_policy_parameters(
         env, msg_ctx, &client_entropy_needed, &server_entropy_needed) != AXIS2_SUCCESS)
@@ -112,6 +103,14 @@ rahas_process_issue_request(
         return AXIS2_FAILURE;
     }
 
+    /* validate whether given parameters are ok to proceed */
+    if(rahas_validate_issue_request_parameters(env, rst, rstr, msg_ctx, trust_version, 
+        client_entropy_needed, &requester_entropy) != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rahas]Cannot issue SecurityContextToken because parameter validation failed.");
+        return AXIS2_FAILURE;
+    }
 
     /* Get the size of the key*/
     key_size = trust_rst_get_key_size(rst, env);
