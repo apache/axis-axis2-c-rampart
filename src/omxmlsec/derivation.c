@@ -95,7 +95,6 @@ oxs_derivation_extract_derived_key_from_token(
     dk_token_element =(axiom_element_t *) axiom_node_get_data_element(dk_token_node, env);
     if (dk_token_element)
     {
-        axis2_char_t *ns = NULL;
         axutil_qname_t *node_qname = NULL;
         node_qname = axiom_element_get_qname(dk_token_element, env, dk_token_node);
         if(!node_qname)

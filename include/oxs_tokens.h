@@ -591,8 +591,7 @@ extern "C"
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     oxs_token_get_label_value(
         const axutil_env_t *env,
-        axiom_node_t *label_node, 
-        axis2_char_t *wsc_ns_uri);
+        axiom_node_t *label_node);
 
     /**
      * Creates <wsc:Properties> element
