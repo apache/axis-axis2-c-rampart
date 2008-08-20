@@ -30,7 +30,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="cd ..\..\..\samples\secpolicy&#x0D;&#x0A;start run_all.bat 9099"
+				CommandLine="cd ..\..\..\samples\secpolicy&#x0D;&#x0A;start run_all.bat 9099&#x0D;&#x0A;"
 				ExcludedFromBuild="false"
 			/>
 		</Configuration>
@@ -497,6 +497,30 @@
 				</File>
 				<File
 					RelativePath="..\..\..\samples\secpolicy\scenario26\services.xml"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="scenario27"
+				>
+				<File
+					RelativePath="..\..\..\samples\secpolicy\scenario27\client-policy.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\samples\secpolicy\scenario27\services.xml"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="scenario28"
+				>
+				<File
+					RelativePath="..\..\..\samples\secpolicy\scenario28\client-policy.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\samples\secpolicy\scenario28\services.xml"
 					>
 				</File>
 			</Filter>
