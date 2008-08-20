@@ -15,33 +15,29 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_attribute.h>
-#include <axiom_element.h>
-
-/*TODO These names should be changed to oxs_token_build_XXX_node*/
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_security_token_reference_element(const axutil_env_t *env,
-        axiom_node_t *parent)
+oxs_token_build_security_token_reference_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent)
 {
     axiom_node_t *security_token_reference_node = NULL;
     axiom_element_t *security_token_reference_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_WSSE_XMLNS,
-                                    OXS_WSSE);
+    ns_obj = axiom_namespace_create(env, OXS_WSSE_XMLNS, OXS_WSSE);
 
-    /* We especially pass parent=NULL in order to add WSSE namespace to the SECURITY_TOKEN_REFRENCE node.
-     * Otherwise if we encrypt the signature , the dercyption fails to build the node as the namespace is not within the doc*/
-    security_token_reference_ele = axiom_element_create(env, NULL, OXS_NODE_SECURITY_TOKEN_REFRENCE, ns_obj, &security_token_reference_node);
+    /* We especially pass parent=NULL in order to add WSSE namespace to the SECURITY_TOKEN_REFRENCE 
+     * node. Otherwise if we encrypt the signature , the dercyption fails to build the node as the 
+     * namespace is not within the doc */
+    security_token_reference_ele = axiom_element_create(
+        env, NULL, OXS_NODE_SECURITY_TOKEN_REFRENCE, ns_obj, &security_token_reference_node);
     if(!security_token_reference_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating SecurityTokenReference element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Error creating SecurityTokenReference element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 

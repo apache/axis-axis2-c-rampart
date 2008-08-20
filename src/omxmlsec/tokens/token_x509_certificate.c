@@ -15,43 +15,42 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_element.h>
-#include <oxs_axiom.h>
-
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_x509_certificate(const axutil_env_t *env,
-                               axiom_node_t *sv_node)
+oxs_token_get_x509_certificate(
+    const axutil_env_t *env,
+    axiom_node_t *sv_node)
 {
     axis2_char_t *sv = NULL;
-    /*TODO Verification*/
+
+    /* TODO Verification */
     sv = (axis2_char_t*)oxs_axiom_get_node_content(env, sv_node);
     return sv;
-
 }
 
+/**
+* Creates <ds:X509Certificate> element
+*/
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_x509_certificate_element(const axutil_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t* cert_data)
+oxs_token_build_x509_certificate_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t* cert_data)
 {
     axiom_node_t *x509_certificate_node = NULL;
     axiom_element_t *x509_certificate_ele = NULL;
     axis2_status_t ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
-
-    x509_certificate_ele = axiom_element_create(env, parent, OXS_NODE_X509_CERTIFICATE, ns_obj, &x509_certificate_node);
-    if (!x509_certificate_ele)
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS, OXS_DS);
+    x509_certificate_ele = axiom_element_create(
+        env, parent, OXS_NODE_X509_CERTIFICATE, ns_obj, &x509_certificate_node);
+    if(!x509_certificate_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating %s element", OXS_NODE_X509_CERTIFICATE);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Error creating %s element", OXS_NODE_X509_CERTIFICATE);
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
@@ -61,6 +60,5 @@ oxs_token_build_x509_certificate_element(const axutil_env_t *env,
     }
 
     return x509_certificate_node;
-
 }
 

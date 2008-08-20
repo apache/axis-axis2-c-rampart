@@ -95,7 +95,7 @@ rampart_sig_prepare_key_info_for_sym_binding(const axutil_env_t *env,
         /*Session key in use. Which is encrypted and hidden in the EncryptedKey with Id=encrypted_key_id*/
         key_id = encrypted_key_id;
         value_type = OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY;
-        id_ref = axutil_stracat(env, "#",key_id);
+        id_ref = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,key_id);
     }else{
         /*Derived Keys in use.*/
         key_id = oxs_key_get_name(key, env);
@@ -140,7 +140,7 @@ rampart_sig_prepare_key_info_for_asym_binding(const axutil_env_t *env,
                             "[rampart][rampart_signature] Security Token element creation failed in Direct reference.");
             return AXIS2_FAILURE;
         }
-        cert_id_ref = axutil_stracat(env, "#",cert_id);
+        cert_id_ref = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,cert_id);
         reference_node = oxs_token_build_reference_element(
                              env, str_node, cert_id_ref, OXS_VALUE_X509V3);
         AXIS2_FREE(env->allocator, cert_id_ref);
@@ -385,6 +385,7 @@ rampart_sig_sign_message(
     rp_property_type_t token_type;
     rp_property_type_t binding_type;
     rp_property_t *token = NULL;
+    axis2_char_t *derived_key_version = NULL;
     axiom_node_t *sig_node = NULL;
     axis2_char_t *eki = NULL;
     axis2_bool_t is_direct_reference = AXIS2_TRUE;
@@ -493,6 +494,7 @@ rampart_sig_sign_message(
     include = rampart_context_is_token_include(rampart_context, token, 
                                                 token_type, server_side, 
                                                 AXIS2_FALSE, env);
+    derived_key_version = rampart_context_get_derived_key_version(env, token);
     if (token_type == RP_PROPERTY_X509_TOKEN) 
     {        
 		if (include) 
@@ -654,7 +656,7 @@ rampart_sig_sign_message(
                 /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
                 rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL);
                 /*In addition we need to add a DerivedKeyToken*/
-                dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node);
+                dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node, derived_key_version);
                 /*We need to make DerivedKeyToken to appear before the sginature node*/
                 oxs_axiom_interchange_nodes(env, dk_token, sig_node);
             }
@@ -674,7 +676,7 @@ rampart_sig_sign_message(
                 /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
                 rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL);
                 /*In addition we need to add a DerivedKeyToken*/
-                dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node);
+                dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node, derived_key_version);
                 /*We need to make DerivedKeyToken to appear before the sginature node*/
                 oxs_axiom_interchange_nodes(env, dk_token, sig_node);
             }
@@ -704,7 +706,7 @@ rampart_sig_sign_message(
                     /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
                     rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL);
                     /*In addition we need to add a DerivedKeyToken*/
-                    dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node);
+                    dk_token = oxs_derivation_build_derived_key_token_with_stre(env, signed_key, sec_node, key_reference_node, derived_key_version);
                     /*We need to make DerivedKeyToken to appear before the sginature node*/
                     oxs_axiom_interchange_nodes(env, dk_token, sig_node);
                 }
@@ -753,7 +755,7 @@ rampart_sig_sign_message(
                     /*We have used a derived key to sign. Note the NULL we pass for the enc_key_id*/
                     rampart_sig_prepare_key_info_for_sym_binding(env, rampart_context, sign_ctx, sig_node, signed_key, NULL  );
                     /*In addition we need to add a DerivedKeyToken after the EncryptedKey*/
-                    dk_token = oxs_derivation_build_derived_key_token(env, signed_key, sec_node, enc_key_id ,OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
+                    dk_token = oxs_derivation_build_derived_key_token(env, signed_key, sec_node, enc_key_id ,OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, derived_key_version);
                     /*We need to make DerivedKeyToken to appear before the sginature node*/
                     oxs_axiom_interchange_nodes(env, dk_token, sig_node);
                 }

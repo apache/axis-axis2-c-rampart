@@ -114,7 +114,7 @@ rampart_get_security_header(const axutil_env_t *env,
 
     header_block_ht = axiom_soap_header_get_all_header_blocks(soap_header, env);
     if (!header_block_ht)
-        return AXIS2_FAILURE;
+        return NULL;
 
     /*BETTER IF : If there are multiple security header elements, get the one with @role=rampart*/
     for (hash_index = axutil_hash_first(header_block_ht, env); hash_index;

@@ -161,6 +161,7 @@ sct_provider_stored_key_obtain_token(
             security_context_token_set_global_identifier(sct, env, axutil_strdup(env, sct_id));
             security_context_token_set_local_identifier(
                 sct, env, axutil_strdup(env, "#sctId-29530019"));
+            security_context_token_set_is_sc10(sct, env, AXIS2_TRUE);
     
             if(free_sctid)
             {

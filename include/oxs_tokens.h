@@ -18,11 +18,19 @@
 #ifndef OXS_TOKENS_H
 #define OXS_TOKENS_H
 
+#include <axis2_util.h>
+#include <stdio.h>
 #include <axutil_qname.h>
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axiom_node.h>
 #include <axiom_element.h>
+#include <axiom_attribute.h>
+#include <oxs_constants.h>
+#include <rampart_constants.h>
+#include <oxs_utility.h>
+#include <oxs_axiom.h>
+#include <axutil_array_list.h>
 
 /**
 * @file oxs_tokens.h
@@ -278,7 +286,8 @@ extern "C"
 	 */
     AXIS2_EXTERN axis2_char_t * AXIS2_CALL
     oxs_token_get_reference_value_type(
-		const axutil_env_t * env, axiom_node_t * ref_node);
+		const axutil_env_t * env, 
+        axiom_node_t * ref_node);
 
 	/**
 	 * Creates <xenc:ReferenceList> element
@@ -509,95 +518,117 @@ extern "C"
         const axutil_env_t * env,
         axiom_node_t * parent,
         axis2_char_t * id,
-        axis2_char_t * algo);
+        axis2_char_t * algo, 
+        axis2_char_t* wsc_ns_uri);
 
     /**
      * Creates <wsc:Length> element
      */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_length_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     int length);
+    oxs_token_build_length_element(
+        const axutil_env_t *env,
+        axiom_node_t *parent,
+        int length, 
+        axis2_char_t *wsc_ns_uri);
+
 	/**
 	 * Gets value from <wsc:Length> element
 	 */
     AXIS2_EXTERN int AXIS2_CALL
-    oxs_token_get_length_value(const axutil_env_t *env,
-                           axiom_node_t *length_node);
+    oxs_token_get_length_value(
+        const axutil_env_t *env,
+        axiom_node_t *length_node);
+
     /**
      * Creates <wsc:Offset> element
      */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_offset_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     int offset);
+    oxs_token_build_offset_element(
+        const axutil_env_t *env,
+        axiom_node_t *parent,
+        int offset, 
+        axis2_char_t *wsc_ns_uri);
+
 	/**
 	 * Gets value from <wsc:Offset> element
 	 */
     AXIS2_EXTERN int AXIS2_CALL
-    oxs_token_get_offset_value(const axutil_env_t *env,
-                           axiom_node_t *offset_node);
+    oxs_token_get_offset_value(
+        const axutil_env_t *env,
+        axiom_node_t *offset_node);
+
     /**
      * Creates <wsc:Nonce> element
      */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_nonce_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     axis2_char_t* nonce_val);
-	/**
+    oxs_token_build_nonce_element(
+        const axutil_env_t *env,
+        axiom_node_t *parent,
+        axis2_char_t *nonce_val,
+        axis2_char_t *wsc_ns_uri);
+
+    /**
 	 * Gets value from <wsc:Nonce> element
 	 */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_token_get_nonce_value(const axutil_env_t *env,
-                           axiom_node_t *nonce_node);
+    oxs_token_get_nonce_value(
+        const axutil_env_t *env,
+        axiom_node_t *nonce_node);
 
 	/**
 	 * Creates <wsc:Label> element
 	 */
 	AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-	oxs_token_build_label_element(const axutil_env_t *env,
-										axiom_node_t *parent,
-										axis2_char_t* label);
+	oxs_token_build_label_element(
+        const axutil_env_t *env,
+		axiom_node_t *parent,
+		axis2_char_t *label, 
+        axis2_char_t *wsc_ns_uri);
+
 	/**
 	 * Gets value from <wsc:Label> element
 	 */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_token_get_label_value(const axutil_env_t *env,
-                           axiom_node_t *label_node);
-
-
+    oxs_token_get_label_value(
+        const axutil_env_t *env,
+        axiom_node_t *label_node, 
+        axis2_char_t *wsc_ns_uri);
 
     /**
      * Creates <wsc:Properties> element
      */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_properties_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     axis2_char_t* properties_val);
+    oxs_token_build_properties_element(
+        const axutil_env_t *env,
+        axiom_node_t *parent,
+        axis2_char_t* properties_val, 
+        axis2_char_t *wsc_ns_uri);
 
 	/**
 	 * Gets value from <wsc:Properties> element
 	 */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_token_get_properties_value(const axutil_env_t *env,
-                           axiom_node_t *properties_node);
+    oxs_token_get_properties_value(
+        const axutil_env_t *env,
+        axiom_node_t *properties_node);
     
     /**
      * Creates <wsc:Generation> element
      */
     AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-    oxs_token_build_generation_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     axis2_char_t* generation_val);
+    oxs_token_build_generation_element(
+        const axutil_env_t *env,
+        axiom_node_t *parent,
+        axis2_char_t *generation_val, 
+        axis2_char_t *wsc_ns_uri);
     
 	/**
 	 * Gets value from <wsc:Generation> element
 	 */
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-    oxs_token_get_generation_value(const axutil_env_t *env,
-                           axiom_node_t *generation_node);
-
-
+    oxs_token_get_generation_value(
+        const axutil_env_t *env,
+        axiom_node_t *generation_node);
 
     /** @} */
 

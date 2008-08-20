@@ -185,7 +185,11 @@ extern "C"
         trust_rstr_t *rstr,
         const axutil_env_t *env,
         int key_size);
-    
+
+    AXIS2_EXTERN axis2_char_t * AXIS2_CALL
+    trust_rstr_get_wst_ns_uri(
+	    trust_rstr_t *rstr,
+	    const axutil_env_t *env);    
      
 
 #ifdef __cplusplus

@@ -15,51 +15,57 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_element.h>
 
-
+/**
+ * Creates <ds:X509IssuerSerial> element with issuer name and serial number
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_x509_issuer_serial_with_data(const axutil_env_t *env,
-        axiom_node_t *parent,
-        axis2_char_t *issuer_name,
-        axis2_char_t *serial_number)
+oxs_token_build_x509_issuer_serial_with_data(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t *issuer_name,
+    axis2_char_t *serial_number)
 {
     axiom_node_t *x509_issuer_serial_node = NULL;
     axiom_node_t *x509_issuer_name_node = NULL;
     axiom_node_t *x509_serial_number_node = NULL;
 
     x509_issuer_serial_node = oxs_token_build_x509_issuer_serial_element(env, parent);
-    if(issuer_name){
-        x509_issuer_name_node = oxs_token_build_issuer_name_element(env, x509_issuer_serial_node, issuer_name);
+    if(issuer_name)
+    {
+        x509_issuer_name_node = oxs_token_build_issuer_name_element(
+            env, x509_issuer_serial_node, issuer_name);
     }
-    if(serial_number){
-        x509_serial_number_node = oxs_token_build_serial_number_element(env, x509_issuer_serial_node, serial_number);
+
+    if(serial_number)
+    {
+        x509_serial_number_node = oxs_token_build_serial_number_element(
+            env, x509_issuer_serial_node, serial_number);
     }
     return x509_issuer_serial_node;
-
 }
 
+/**
+* Creates <ds:X509IssuerSerial> element
+*/
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_x509_issuer_serial_element(const axutil_env_t *env,
-        axiom_node_t *parent)
+oxs_token_build_x509_issuer_serial_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent)
 {
     axiom_node_t *x509_issuer_serial_node = NULL;
     axiom_element_t *x509_issuer_serial_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS, OXS_DS);
 
-
-    x509_issuer_serial_ele = axiom_element_create(env, parent, OXS_NODE_X509_ISSUER_SERIAL, ns_obj, &x509_issuer_serial_node);
-    if (!x509_issuer_serial_ele)
+    x509_issuer_serial_ele = axiom_element_create(
+        env, parent, OXS_NODE_X509_ISSUER_SERIAL, ns_obj, &x509_issuer_serial_node);
+    if(!x509_issuer_serial_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating X509IssuerSerial element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating X509IssuerSerial element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 

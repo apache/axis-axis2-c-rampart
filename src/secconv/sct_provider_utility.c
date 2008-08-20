@@ -371,6 +371,7 @@ sct_provider_obtain_token_from_sts(
 	neethi_policy_t *sts_policy = NULL;
 	neethi_policy_t *cloned_policy = NULL;
     oxs_buffer_t *buffer = NULL;
+    axis2_bool_t is_sc10 = AXIS2_FALSE;
 
     /* Get the token issuer address. If the address is not valid, then issuer should be same as 
     the service. So get the service end point */
@@ -391,6 +392,8 @@ sct_provider_obtain_token_from_sts(
             return NULL;
         }
     }
+
+    is_sc10 = rp_security_context_token_get_sc10_security_context_token(rp_sct, env);
 
     /* Get the client home from msg_ctx */
     conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
@@ -450,9 +453,18 @@ sct_provider_obtain_token_from_sts(
         return NULL;
     }
     trust_rst_set_request_type(rst, env, TRUST_REQ_TYPE_ISSUE);
-    trust_rst_set_token_type(rst, env, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN);
-    trust_rst_set_wst_ns_uri(rst, env, TRUST_WST_XMLNS_05_02);
-    trust_rst_set_wsa_action(rst, env, SECCONV_200502_REQUEST_ISSUE_ACTION);
+    if(is_sc10)
+    {
+        trust_rst_set_token_type(rst, env, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02);
+        trust_rst_set_wst_ns_uri(rst, env, TRUST_WST_XMLNS_05_02);
+        trust_rst_set_wsa_action(rst, env, SECCONV_200502_REQUEST_ISSUE_ACTION);
+    }
+    else
+    {        
+        trust_rst_set_token_type(rst, env, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12);
+        trust_rst_set_wst_ns_uri(rst, env, TRUST_WST_XMLNS_05_12);
+        trust_rst_set_wsa_action(rst, env, SECCONV_200512_REQUEST_ISSUE_ACTION);
+    }
     trust_context_set_rst(trust_context, env, rst);
 
     /* call sts_client to get the token from sts. We should create a clone of that policy */
@@ -477,6 +489,14 @@ sct_provider_obtain_token_from_sts(
 
     /* Create security context token and populate it with details given */
     sct = security_context_token_create(env);
+    if(is_sc10)
+    {
+        security_context_token_set_is_sc10(sct, env, AXIS2_TRUE);
+    }
+    else
+    {
+        security_context_token_set_is_sc10(sct, env, AXIS2_FALSE);
+    }
     security_context_token_set_token(sct, env, trust_rstr_get_requested_security_token(rstr, env));
     security_context_token_set_attached_reference(
         sct, env, trust_rstr_get_requested_attached_reference(rstr, env));
@@ -615,26 +635,11 @@ sct_provider_obtain_sct_default(
     }
     else
     {
-        /* we can create an sct and send it */
-
-        sct = security_context_token_create(env);
-        if(sct)
-        {
-            oxs_buffer_t* key_buffer = NULL;
-            key_buffer = oxs_buffer_create(env);
-            oxs_buffer_populate(
-                key_buffer, env, (unsigned char*)"01234567012345670123456701234567", 32);
-            security_context_token_set_secret(sct, env, key_buffer);
-            sct_id = oxs_util_generate_id(env, SECCONV_GLOBAL_ID_PREFIX);
-            security_context_token_set_global_identifier(sct, env, sct_id);
-            security_context_token_set_local_identifier(
-                sct, env, axutil_strdup(env, "#sctId-29530019"));
-        }
-        else
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[rampart]Cannot create security context token. Insufficient memory.");
-        }
+        /* we don't support stored security context token in default implementation. 
+         * Otherwise, it will be a security hole. */
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Default implementation does not support stored security context token."
+            " Please provide sct_provider module.");
     }
     axutil_allocator_switch_to_local_pool(env->allocator);
     

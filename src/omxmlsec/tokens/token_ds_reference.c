@@ -15,50 +15,51 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_attribute.h>
-#include <axiom_element.h>
 
-
+/**
+ * Creates <ds:Reference> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_ds_reference_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     axis2_char_t *id,
-                                     axis2_char_t *uri,
-                                     axis2_char_t *type)
+oxs_token_build_ds_reference_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t *id,
+    axis2_char_t *uri,
+    axis2_char_t *type)
 {
     axiom_node_t *ds_reference_node = NULL;
     axiom_element_t *ds_reference_ele = NULL;
     int ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
-
-    ds_reference_ele = axiom_element_create(env, parent, OXS_NODE_REFERENCE, ns_obj, &ds_reference_node);
-    if (!ds_reference_ele)
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS, OXS_DS);
+    ds_reference_ele = axiom_element_create(
+        env, parent, OXS_NODE_REFERENCE, ns_obj, &ds_reference_node);
+    
+    if(!ds_reference_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating ds:Reference element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating ds:Reference element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
-    if(id){
+    if(id)
+    {
         axiom_attribute_t *id_attr = NULL;
         id_attr =  axiom_attribute_create(env, OXS_ATTR_ID , id, NULL);
         ret = axiom_element_add_attribute(ds_reference_ele, env, id_attr, ds_reference_node);
     }
 
-    if(uri){
+    if(uri)
+    {
         axiom_attribute_t *uri_attr = NULL;
         uri_attr =  axiom_attribute_create(env, OXS_ATTR_URI , uri, NULL);
         ret = axiom_element_add_attribute(ds_reference_ele, env, uri_attr, ds_reference_node);
     }
 
-    if(type){
+    if(type)
+    {
         axiom_attribute_t *type_attr = NULL;
         type_attr =  axiom_attribute_create(env, OXS_ATTR_TYPE , type, NULL);
         ret = axiom_element_add_attribute(ds_reference_ele, env, type_attr, ds_reference_node);
@@ -68,7 +69,9 @@ oxs_token_build_ds_reference_element(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_ds_reference(const axutil_env_t *env, axiom_node_t *ref_node)
+oxs_token_get_ds_reference(
+    const axutil_env_t *env, 
+    axiom_node_t *ref_node)
 {
     axis2_char_t *ref = NULL;
     axiom_element_t *reference_ele = NULL;
@@ -76,14 +79,12 @@ oxs_token_get_ds_reference(const axutil_env_t *env, axiom_node_t *ref_node)
     reference_ele = axiom_node_get_data_element(ref_node, env);
     if (!reference_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving data reference element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Error retrieving data reference element.");
         return NULL;
     }
 
     ref = axiom_element_get_attribute_value_by_name(reference_ele, env, OXS_ATTR_URI);
     return ref;
-
 }
 
 

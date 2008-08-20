@@ -15,44 +15,43 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_element.h>
-#include <oxs_axiom.h>
-
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_cipher_value(const axutil_env_t *env,
-                           axiom_node_t *cv_node)
+oxs_token_get_cipher_value(
+    const axutil_env_t *env,
+    axiom_node_t *cv_node)
 {
     axis2_char_t *cv = NULL;
-    /*TODO Verification*/
+    
+    /* TODO Verification */
+
     cv = (axis2_char_t*)oxs_axiom_get_node_content(env, cv_node);
     return cv;
-
 }
 
+/**
+ * Creates <xenc:CipherValue> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_cipher_value_element(const axutil_env_t *env,
-                                     axiom_node_t *parent,
-                                     axis2_char_t* cipher_val
-                                    )
+oxs_token_build_cipher_value_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t* cipher_val)
 {
     axiom_node_t *cipher_value_node = NULL;
     axiom_element_t *cipher_value_ele = NULL;
     axis2_status_t ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-                                    OXS_XENC);
+    ns_obj = axiom_namespace_create(env, OXS_ENC_NS, OXS_XENC);
 
-    cipher_value_ele = axiom_element_create(env, parent, OXS_NODE_CIPHER_VALUE, ns_obj, &cipher_value_node);
-    if (!cipher_value_ele)
+    cipher_value_ele = axiom_element_create(
+        env, parent, OXS_NODE_CIPHER_VALUE, ns_obj, &cipher_value_node);
+    if(!cipher_value_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating cipher value element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating cipher value element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
@@ -62,6 +61,5 @@ oxs_token_build_cipher_value_element(const axutil_env_t *env,
     }
 
     return cipher_value_node;
-
 }
 

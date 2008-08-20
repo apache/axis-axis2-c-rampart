@@ -29,6 +29,7 @@ struct security_context_token_t
     axiom_node_t *sct_node;
     axiom_node_t *attached_reference;
     axiom_node_t *unattached_reference;
+    axis2_bool_t is_sc10;
     int ref;
 };
 
@@ -61,6 +62,7 @@ AXIS2_EXTERN security_context_token_t *AXIS2_CALL
         sct->sct_node = NULL;
         sct->attached_reference = NULL;
         sct->unattached_reference = NULL;
+        sct->is_sc10 = AXIS2_FALSE;
         sct->ref = 1;
     }
     return sct;
@@ -176,6 +178,23 @@ security_context_token_set_secret(
 }
 
 /**
+ * Set WS-SecureConversation version 
+ * @param sct Pointer to secuirty context token struct
+ * @param env Pointer to environment struct
+ * @param is_sc10 Boolean denoting whether we need security context token as in WS-SecConv 1.0
+ * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+ */
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+security_context_token_set_is_sc10(
+    security_context_token_t *sct, 
+    const axutil_env_t * env,
+    axis2_bool_t is_sc10)
+{
+    sct->is_sc10 = is_sc10;
+    return AXIS2_SUCCESS;
+}
+
+/**
  * Set global identifier of security context token. After this method is called, ownership of 
  * global_id will be with security context token. Users should not free it.
  * @param sct Pointer to secuirty context token struct
@@ -202,7 +221,7 @@ security_context_token_set_global_identifier(
  * local_id will be with security context token. Users should not free it.
  * @param sct Pointer to secuirty context token struct
  * @param env Pointer to environment struct
- * @param local_id Local identifier of security context token
+ * @param local_id Local identifier of securiy context token
  * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
  */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -249,7 +268,15 @@ security_context_token_get_requested_proof_token(
         return NULL;
     }
     
-    ns_obj_wst = axiom_namespace_create(env, TRUST_WST_XMLNS, TRUST_WST);
+    if(sct->is_sc10)
+    {
+        ns_obj_wst = axiom_namespace_create(env, TRUST_WST_XMLNS_05_02, TRUST_WST);
+    }
+    else
+    {
+        ns_obj_wst = axiom_namespace_create(env, TRUST_WST_XMLNS_05_12, TRUST_WST);
+    }
+    
     proof_token_ele = axiom_element_create(
         env, NULL, TRUST_REQUESTED_PROOF_TOKEN, ns_obj_wst, &proof_token);
     if (!proof_token_ele)
@@ -304,9 +331,19 @@ security_context_token_get_attached_reference(
         if(sct->local_id)
         {
             axiom_node_t *ref_token = NULL;
+            axis2_char_t *value_type;
+
+            if(sct->is_sc10)
+            {
+                value_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02;
+            }
+            else
+            {
+                value_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12;
+            }
             str_token = oxs_token_build_security_token_reference_element(env, NULL); 
             ref_token = oxs_token_build_reference_element(
-                env, str_token, sct->local_id, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN); 
+                env, str_token, sct->local_id, value_type); 
         }
         else
         {
@@ -346,9 +383,19 @@ security_context_token_get_unattached_reference(
         if(sct->global_id)
         {
             axiom_node_t *ref_token = NULL;
+            axis2_char_t *value_type;
+
+            if(sct->is_sc10)
+            {
+                value_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02;
+            }
+            else
+            {
+                value_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12;
+            }
             str_token = oxs_token_build_security_token_reference_element(env, NULL); 
             ref_token = oxs_token_build_reference_element(
-                env, str_token, sct->global_id, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN); 
+                env, str_token, sct->global_id, value_type); 
         }
         else
         {
@@ -392,7 +439,14 @@ security_context_token_get_token(
         return NULL;
     }
 
-    ns_obj_sc = axiom_namespace_create(env, OXS_WSC_NS, OXS_WSC);
+    if(sct->is_sc10)
+    {
+        ns_obj_sc = axiom_namespace_create(env, OXS_WSC_NS_05_02, OXS_WSC);
+    }
+    else
+    {
+        ns_obj_sc = axiom_namespace_create(env, OXS_WSC_NS_05_12, OXS_WSC);
+    }
     token_ele = axiom_element_create(
         env, NULL, OXS_NODE_SECURITY_CONTEXT_TOKEN, ns_obj_sc, &sct_token);
     if (!token_ele)
@@ -623,6 +677,8 @@ security_context_token_serialize(
     axiom_node_t *parent_attached_ref_node = NULL;
     axiom_node_t *parent_unattached_ref_node = NULL;
     axis2_char_t *serialised_node = NULL;
+    axis2_char_t *wst_uri = NULL;
+
 
     sct_node = security_context_token_get_token(sct, env);
     if(!sct_node)
@@ -645,11 +701,21 @@ security_context_token_serialize(
     }
     axiom_node_add_child(sct_node, env, proof_node);
 
+    /* get trust namespace based on version */
+    if(sct->is_sc10)
+    {
+        wst_uri = TRUST_WST_XMLNS_05_02;
+    }
+    else
+    {
+        wst_uri = TRUST_WST_XMLNS_05_12;
+    }
+
     /* attached reference is optional */
     if(attached_ref_node)
     {
         parent_attached_ref_node = trust_util_create_req_attached_reference_element(
-            env, TRUST_WST_XMLNS, sct_node);
+            env, wst_uri, sct_node);
         if(!parent_attached_ref_node)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -664,7 +730,7 @@ security_context_token_serialize(
     if(unattached_ref_node)
     {
         parent_unattached_ref_node = trust_util_create_req_unattached_reference_element(
-            env, TRUST_WST_XMLNS, sct_node);
+            env, wst_uri, sct_node);
         if(!parent_unattached_ref_node)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 

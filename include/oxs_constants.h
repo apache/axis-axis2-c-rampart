@@ -66,6 +66,7 @@ extern "C"
 #define OXS_EMBEDDED_ID "EmbeddedID"
 #define OXS_DERIVED_ID "DKID"
 #define OXS_SIG_CONF_ID "SigConfID"
+#define OXS_LOCAL_REFERENCE_PREFIX "#"
 
     /****************************************************************
        Global namespaces 
@@ -74,7 +75,8 @@ extern "C"
 #define OXS_ENC_NS                 "http://www.w3.org/2001/04/xmlenc#"
 /*#define OXS_WSSE_NS                "http://schemas.xmlsoap.org/ws/2002/04/secext"*/
 #define OXS_WSSE_NS                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-#define OXS_WSC_NS "http://schemas.xmlsoap.org/ws/2005/02/sc"
+#define OXS_WSC_NS_05_02 "http://schemas.xmlsoap.org/ws/2005/02/sc"
+#define OXS_WSC_NS_05_12 "http://docs.oasis-open.org/ws-sx/ws-secureconversation/200512"
 
     /****************************************************************
         DSig Nodes  
@@ -136,7 +138,7 @@ extern "C"
 #define OXS_NODE_NONCE "Nonce"
 #define OXS_NODE_SECURITY_CONTEXT_TOKEN "SecurityContextToken"
 #define OXS_NODE_IDENTIFIER "Identifier"
-#define OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN "http://schemas.xmlsoap.org/ws/2005/02/sc/sct"
+#define OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02 "http://schemas.xmlsoap.org/ws/2005/02/sc/sct"
 #define OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12 "http://docs.oasis-open.org/ws-sx/ws-secureconversation/200512/sct"
 
 /************************
@@ -323,8 +325,8 @@ extern "C"
 #define OXS_NAME_SHA512           "sha512"
 #define OXS_HREF_SHA512           "http://www.w3.org/2001/04/xmlenc#sha512"
 
-#define OXS_SC_DK_NAME_P_SHA1    "P_SHA-1"
-#define OXS_SC_DK_HREF_P_SHA1           "http://schemas.xmlsoap.org/ws/2005/02/sc/dk/p_sha1"
+#define OXS_SC_DK_NAME_P_SHA1     "P_SHA-1"
+#define OXS_SC_DK_HREF_P_SHA1     "http://schemas.xmlsoap.org/ws/2005/02/sc/dk/p_sha1"
     /****************************************************************
         X509 
     ****************************************************************/

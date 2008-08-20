@@ -15,18 +15,16 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_attribute.h>
-#include <axiom_element.h>
 
-
+/**
+ * Creates <xenc:DataReference> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_data_reference_element(const axutil_env_t *env,
-                                       axiom_node_t *parent,
-                                       axis2_char_t *data_ref)
+oxs_token_build_data_reference_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t *data_ref)
 {
     axiom_node_t *data_reference_node = NULL;
     axiom_element_t *data_reference_ele = NULL;
@@ -34,31 +32,31 @@ oxs_token_build_data_reference_element(const axutil_env_t *env,
     int ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-                                    OXS_XENC);
-
-    data_reference_ele = axiom_element_create(env, parent, OXS_NODE_DATA_REFERENCE, ns_obj, &data_reference_node);
-    if (!data_reference_ele)
+    ns_obj = axiom_namespace_create(env, OXS_ENC_NS, OXS_XENC);
+    data_reference_ele = axiom_element_create(
+        env, parent, OXS_NODE_DATA_REFERENCE, ns_obj, &data_reference_node);
+    if(!data_reference_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating data reference element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating data reference element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
-    /*attach empty string*/
-    if (!data_ref)
+
+    if(!data_ref)
     {
+        /* attach empty string */
         data_ref = "";
     }
 
     data_ref_attr =  axiom_attribute_create(env, OXS_ATTR_URI , data_ref, NULL);
-
     ret = axiom_element_add_attribute(data_reference_ele, env, data_ref_attr, data_reference_node);
-
     return data_reference_node;
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_data_reference(const axutil_env_t *env, axiom_node_t *data_ref_node)
+oxs_token_get_data_reference(
+    const axutil_env_t *env, 
+    axiom_node_t *data_ref_node)
 {
     axis2_char_t *data_ref = NULL;
     axiom_element_t *data_reference_ele = NULL;
@@ -66,13 +64,11 @@ oxs_token_get_data_reference(const axutil_env_t *env, axiom_node_t *data_ref_nod
     data_reference_ele = axiom_node_get_data_element(data_ref_node, env);
     if (!data_reference_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving data reference element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Error retrieving data reference element.");
         return NULL;
     }
 
     data_ref = axiom_element_get_attribute_value_by_name(data_reference_ele, env, OXS_ATTR_URI);
     return data_ref;
-
 }
 

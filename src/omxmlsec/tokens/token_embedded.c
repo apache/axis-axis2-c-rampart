@@ -15,21 +15,16 @@
  * limitations under the License.
  */
 
-#include <axis2_util.h>
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_attribute.h>
-#include <axiom_element.h>
-#include <oxs_utility.h>
 
-
-
+/**
+ * Creates <wsse:Embedded> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_embedded_element(const axutil_env_t *env,
-                                 axiom_node_t *parent,
-                                 axis2_char_t* id)
+oxs_token_build_embedded_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t* id)
 {
     axiom_node_t *embedded_node = NULL;
     axiom_element_t *embedded_ele = NULL;
@@ -37,47 +32,42 @@ oxs_token_build_embedded_element(const axutil_env_t *env,
     int ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_WSSE_NS,
-                                    OXS_WSSE);
-
+    ns_obj = axiom_namespace_create(env, OXS_WSSE_NS, OXS_WSSE);
     embedded_ele = axiom_element_create(env, parent, OXS_NODE_EMBEDDED, ns_obj, &embedded_node);
-    if (!embedded_ele)
+   
+    if(!embedded_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating embedded element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating embedded element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
-    if (!id)
+
+    if(!id)
     {
         id = oxs_util_generate_id(env,(axis2_char_t*)OXS_EMBEDDED_ID);
     }
 
     id_attr =  axiom_attribute_create(env, OXS_ATTR_ID, id, NULL);
-
     ret = axiom_element_add_attribute(embedded_ele, env, id_attr, embedded_node);
-
     return embedded_node;
-
 }
 
-
-
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_embedded_id(const axutil_env_t *env, axiom_node_t *embedded_node)
+oxs_token_get_embedded_id(
+    const axutil_env_t *env, 
+    axiom_node_t *embedded_node)
 {
     axis2_char_t *embedded = NULL;
     axiom_element_t *embedded_ele = NULL;
 
     embedded_ele = axiom_node_get_data_element(embedded_node, env);
-    if (!embedded_ele)
+    if(!embedded_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error retrieving embedded element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error retrieving embedded element.");
         return NULL;
     }
 
     embedded = axiom_element_get_attribute_value_by_name(embedded_ele, env, OXS_ATTR_ID);
     return embedded;
-
 }
 

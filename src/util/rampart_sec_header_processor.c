@@ -211,6 +211,9 @@ rampart_shp_store_token_id(const axutil_env_t *env,
     axiom_node_t* key_node = NULL;
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
+    rp_security_context_token_t *security_context_token = NULL;
+    axis2_char_t *needed_value_type = NULL;
+    axis2_char_t *wsc_ns_uri = NULL;
 
     if(is_encryption)
         token_id = rampart_context_get_encryption_token_id(rampart_context, env);
@@ -235,6 +238,19 @@ rampart_shp_store_token_id(const axutil_env_t *env,
     token_type = rp_property_get_type(token, env);
     if((token_type != RP_PROPERTY_SECURITY_CONTEXT_TOKEN) && (token_type != RP_PROPERTY_X509_TOKEN))
         return;
+
+    /* Get the version of security context token */
+    security_context_token = (rp_security_context_token_t *)rp_property_get_value(token, env);
+    if(rp_security_context_token_get_sc10_security_context_token(security_context_token, env))
+    {
+        needed_value_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02;
+        wsc_ns_uri = OXS_WSC_NS_05_02;
+    }
+    else
+    {
+        needed_value_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12;
+        wsc_ns_uri = OXS_WSC_NS_05_12;
+    }
 
     key_node = key_info_node;
 
@@ -268,7 +284,7 @@ rampart_shp_store_token_id(const axutil_env_t *env,
         {
             axis2_char_t* value_type = NULL;
             value_type = oxs_token_get_reference_value_type(env, ref_node);
-            if(0 == axutil_strcmp(value_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN))
+            if(!axutil_strcmp(value_type, needed_value_type))
             {
                 token_id = axutil_strdup(env, ref_val);
                 break;
@@ -285,9 +301,10 @@ rampart_shp_store_token_id(const axutil_env_t *env,
         {
             axiom_node_t *identifier_node = NULL;
 
+            
             /*Get the identifier node*/
             identifier_node = oxs_axiom_get_first_child_node_by_name(
-                env, key_node, OXS_NODE_IDENTIFIER, OXS_WSC_NS, NULL);
+                env, key_node, OXS_NODE_IDENTIFIER, wsc_ns_uri, NULL);
 
             if(!identifier_node)
             {
@@ -451,7 +468,8 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
     {
         axis2_char_t* value_type = NULL;
         value_type = oxs_token_get_reference_value_type(env, ref_node);
-        if(0 == axutil_strcmp(value_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN))
+        if((0 == axutil_strcmp(value_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02))||
+            (0 == axutil_strcmp(value_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12)))
         {
             rampart_shp_add_security_context_token(env, id, id, rampart_context, msg_ctx);
         }
@@ -710,7 +728,14 @@ rampart_shp_process_security_context_token(
 
     /*Get the identifier node*/
     identifier_node = oxs_axiom_get_first_child_node_by_name(
-        env, token_node, OXS_NODE_IDENTIFIER, OXS_WSC_NS, NULL);
+        env, token_node, OXS_NODE_IDENTIFIER, OXS_WSC_NS_05_02, NULL);
+
+    if(!identifier_node)
+    {
+        /* check other namespace as well */
+        identifier_node = oxs_axiom_get_first_child_node_by_name(
+            env, token_node, OXS_NODE_IDENTIFIER, OXS_WSC_NS_05_12, NULL);
+    }
 
     if(!identifier_node)
     {
@@ -1740,11 +1765,13 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
     oxs_key_t *session_key = NULL;
     oxs_key_t *derived_key = NULL;
 
-    /*Get the session key.*/ 
-    session_key = rampart_shp_get_key_for_key_info(env, dk_node, rampart_context, msg_ctx, AXIS2_TRUE);
+    /* Get the session key. */ 
+    session_key = rampart_shp_get_key_for_key_info(
+        env, dk_node, rampart_context, msg_ctx, AXIS2_TRUE);
     if(!session_key)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  "[rampart][shp] On processing derived key, failed to get the session key. Cannot derive the key");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  
+            "[rampart]Failed to get the session key. Cannot derive the key");
         return AXIS2_FAILURE;
     }
 

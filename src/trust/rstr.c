@@ -642,8 +642,7 @@ trust_rstr_set_in_header(
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 trust_rstr_get_wst_ns_uri(
 	trust_rstr_t *rstr,
-	const axutil_env_t *env,
-	axis2_char_t *wst_ns_uri)
+	const axutil_env_t *env)
 {
 		return rstr->wst_ns_uri;
 }

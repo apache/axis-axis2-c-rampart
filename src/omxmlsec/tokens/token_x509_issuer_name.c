@@ -15,44 +15,42 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_element.h>
-#include <oxs_axiom.h>
-
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_issuer_name(const axutil_env_t *env,
-                          axiom_node_t *issuer_name_node)
+oxs_token_get_issuer_name(
+    const axutil_env_t *env,
+    axiom_node_t *issuer_name_node)
 {
     axis2_char_t *val = NULL;
-    /*TODO Verification*/
+
+    /* TODO Verification */
     val = (axis2_char_t*)oxs_axiom_get_node_content(env, issuer_name_node);
     return val;
-
 }
 
+/**
+* Creates <ds:X509IssuerName> element
+*/
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_issuer_name_element(const axutil_env_t *env,
-                                    axiom_node_t *parent,
-                                    axis2_char_t* value
-                                   )
+oxs_token_build_issuer_name_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t* value)
 {
     axiom_node_t *issuer_name_node = NULL;
     axiom_element_t *issuer_name_ele = NULL;
     axis2_status_t ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS, OXS_DS);
 
-    issuer_name_ele = axiom_element_create(env, parent, OXS_NODE_X509_ISSUER_NAME, ns_obj, &issuer_name_node);
+    issuer_name_ele = axiom_element_create(
+        env, parent, OXS_NODE_X509_ISSUER_NAME, ns_obj, &issuer_name_node);
     if (!issuer_name_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating  element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating X509IssuerName element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
@@ -62,6 +60,5 @@ oxs_token_build_issuer_name_element(const axutil_env_t *env,
     }
 
     return issuer_name_node;
-
 }
 

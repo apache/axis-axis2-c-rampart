@@ -110,7 +110,7 @@ oxs_xml_enc_populate_stref_with_bst(const axutil_env_t *env,
     bst_node = oxs_token_build_binary_security_token_element(env, parent, id, OXS_ENCODING_BASE64BINARY, OXS_VALUE_X509V3, bst_data);
 
     /*Build a Reference to above BST*/
-    ref_id = axutil_stracat(env, "#", id);
+    ref_id = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX, id);
     ref_node = oxs_token_build_reference_element(env, stref_node, ref_id, OXS_VALUE_X509V3);
 
     return AXIS2_SUCCESS;

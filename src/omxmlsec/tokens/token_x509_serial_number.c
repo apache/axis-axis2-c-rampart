@@ -15,44 +15,41 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_element.h>
-#include <oxs_axiom.h>
-
 
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
-oxs_token_get_serial_number(const axutil_env_t *env,
-                            axiom_node_t *serial_number_node)
+oxs_token_get_serial_number(
+    const axutil_env_t *env,
+    axiom_node_t *serial_number_node)
 {
     axis2_char_t *val = NULL;
-    /*TODO Verification*/
+
+    /* TODO Verification */
     val = (axis2_char_t*)oxs_axiom_get_node_content(env, serial_number_node);
     return val;
-
 }
 
+/**
+ * Creates <ds:X509SerialNumber> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_serial_number_element(const axutil_env_t *env,
-                                      axiom_node_t *parent,
-                                      axis2_char_t* value
-                                     )
+oxs_token_build_serial_number_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t* value)
 {
     axiom_node_t *serial_number_node = NULL;
     axiom_element_t *serial_number_ele = NULL;
     axis2_status_t ret;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
-
-    serial_number_ele = axiom_element_create(env, parent, OXS_NODE_X509_SERIAL_NUMBER, ns_obj, &serial_number_node);
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS, OXS_DS);
+    serial_number_ele = axiom_element_create(
+        env, parent, OXS_NODE_X509_SERIAL_NUMBER, ns_obj, &serial_number_node);
     if (!serial_number_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating  element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Error creating X509SerialNumber element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
@@ -62,6 +59,5 @@ oxs_token_build_serial_number_element(const axutil_env_t *env,
     }
 
     return serial_number_node;
-
 }
 

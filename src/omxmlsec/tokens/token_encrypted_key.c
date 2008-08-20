@@ -15,47 +15,41 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_attribute.h>
-#include <axiom_element.h>
 
-/*TODO These names should be changed to oxs_token_build_XXX_node*/
-
+/**
+ * Creates <xenc:EncryptedKey> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_encrypted_key_element(const axutil_env_t *env,
-                                      axiom_node_t *parent)
+oxs_token_build_encrypted_key_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent)
 {
     axiom_node_t *encrypted_key_node = NULL;
     axiom_element_t *encrypted_key_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-                                    OXS_XENC);
-
-    encrypted_key_ele = axiom_element_create(env, parent, OXS_NODE_ENCRYPTED_KEY, ns_obj, &encrypted_key_node);
-    if (!encrypted_key_ele)
+    ns_obj = axiom_namespace_create(env, OXS_ENC_NS, OXS_XENC);
+    encrypted_key_ele = axiom_element_create(
+        env, parent, OXS_NODE_ENCRYPTED_KEY, ns_obj, &encrypted_key_node);
+    if(!encrypted_key_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating encrypted key element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating encrypted key element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
-
-
     return encrypted_key_node;
-
 }
 
 
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_get_encrypted_key_node(const axutil_env_t *env,
-                                 axiom_node_t *parent)
+oxs_token_get_encrypted_key_node(
+    const axutil_env_t *env,
+    axiom_node_t *parent)
 {
     axiom_node_t *enc_key_node = NULL;
 
-    /*TODO*/
+    /* TODO */
     return enc_key_node;
 }

@@ -1201,7 +1201,10 @@ rampart_context_validate_ut(
         inclusion = rp_username_token_get_inclusion(username_token,env);
         if((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
                 (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
-                (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0))
+                (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0) ||
+                (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_SP12)==0) ||
+                (axutil_strcmp(inclusion,RP_INCLUDE_ONCE_SP12)==0)||
+                (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT_SP12)==0))
             return bval;
         else
             bval = AXIS2_FALSE;
@@ -2416,21 +2419,67 @@ rampart_context_check_is_derived_keys(
     const axutil_env_t *env,
     rp_property_t *token)
 {
+    derive_key_type_t key_type = DERIVEKEY_NONE;
     if(rp_property_get_type(token,env) == RP_PROPERTY_X509_TOKEN)
     {
         rp_x509_token_t *x509_token = NULL;
         x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
-        return rp_x509_token_get_derivedkeys(x509_token,env);
+        key_type = rp_x509_token_get_derivedkey(x509_token,env);
     }
     else if(rp_property_get_type(token, env) == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
     {
         rp_security_context_token_t *security_context_token = NULL;
         security_context_token = (rp_security_context_token_t *)rp_property_get_value(token, env);
-        return rp_security_context_token_get_derivedkeys(security_context_token, env);
+        key_type = rp_security_context_token_get_derivedkey(security_context_token, env);
     }
     /*This can be extended when we are supporting other token types.*/
     else
+    {
         return AXIS2_FALSE;
+    }
+
+    if(key_type == DERIVEKEY_NONE)
+    {
+        return AXIS2_FALSE;
+    }
+    else
+    {
+        return AXIS2_TRUE;
+    }
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rampart_context_get_derived_key_version(
+    const axutil_env_t *env, 
+    rp_property_t *token)
+{
+    derive_key_version_t key_version = DERIVEKEY_VERSION_SC13;
+    if(rp_property_get_type(token,env) == RP_PROPERTY_X509_TOKEN)
+    {
+        rp_x509_token_t *x509_token = NULL;
+        x509_token = (rp_x509_token_t *)rp_property_get_value(token,env);
+        key_version = rp_x509_token_get_derivedkey_version(x509_token,env);
+    }
+    else if(rp_property_get_type(token, env) == RP_PROPERTY_SECURITY_CONTEXT_TOKEN)
+    {
+        rp_security_context_token_t *security_context_token = NULL;
+        security_context_token = (rp_security_context_token_t *)rp_property_get_value(token, env);
+        key_version = rp_security_context_token_get_derivedkey_version(security_context_token, env);
+    }
+    /*This can be extended when we are supporting other token types.*/
+    else
+    {
+        return NULL;
+    }
+
+    if(key_version == DERIVEKEY_VERSION_SC13)
+    {
+        return OXS_WSC_NS_05_12;
+    }
+    else
+    {
+        return OXS_WSC_NS_05_02;
+    }
 }
 
 AXIS2_EXTERN int AXIS2_CALL
@@ -2686,10 +2735,14 @@ rampart_context_is_token_include(
         {
             include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
                        (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE_SP12)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_SP12)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT_SP12)==0)||
                        (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
         }
         else
-            include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
+            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0) ||
+                        (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_SP12)==0));
     }
     else
     {
@@ -2697,10 +2750,14 @@ rampart_context_is_token_include(
         {
             include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0)||
                        (axutil_strcmp(inclusion,RP_INCLUDE_ONCE)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ONCE_SP12)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_SP12)==0)||
+                       (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT_SP12)==0)||
                        (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_TO_RECIPIENT)==0));
         }
         else
-            include = (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0);
+            include = ((axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS)==0) ||
+                        (axutil_strcmp(inclusion,RP_INCLUDE_ALWAYS_SP12)==0));
     }
     return include;
     

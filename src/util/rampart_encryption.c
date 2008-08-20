@@ -178,6 +178,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     axiom_node_t *sig_node = NULL;
     axiom_node_t *data_ref_list_node = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
+    axis2_char_t *derived_key_version = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
@@ -268,6 +269,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
     token_type = rp_property_get_type(token, env);
     use_derived_keys = rampart_context_check_is_derived_keys (env, token);
+    derived_key_version = rampart_context_get_derived_key_version(env, token);
 
     if(token_type == RP_PROPERTY_SAML_TOKEN)
     {
@@ -635,7 +637,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                     /*get the unattachedReference and set to key_reference_node*/
                     key_reference_node = sct_provider_get_unattached_reference(env, token, AXIS2_TRUE, rampart_context, msg_ctx);
                 }
-                dk_node = oxs_derivation_build_derived_key_token_with_stre(env, dk, sec_node, key_reference_node);
+                dk_node = oxs_derivation_build_derived_key_token_with_stre(env, dk, sec_node, key_reference_node, derived_key_version);
             }
             else
             {
@@ -647,11 +649,11 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
                     key_reference_node = oxs_token_build_security_token_reference_element(env, NULL); 
                     identifier_token = oxs_token_build_key_identifier_element(env, key_reference_node, 
                                         OXS_ENCODING_BASE64BINARY, OXS_X509_ENCRYPTED_KEY_SHA1, encrypted_key_hash);
-                    dk_node = oxs_derivation_build_derived_key_token_with_stre(env, dk, sec_node, key_reference_node);
+                    dk_node = oxs_derivation_build_derived_key_token_with_stre(env, dk, sec_node, key_reference_node, derived_key_version);
                 }
                 else
                 {
-                    dk_node = oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
+                    dk_node = oxs_derivation_build_derived_key_token(env, dk, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, derived_key_version);
                 }
             }
 
@@ -675,7 +677,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
 		axis2_char_t *id = NULL;
         axis2_char_t* mod_id = NULL;
 		id = (axis2_char_t *)axutil_array_list_get(id_list, env, j);
-        mod_id = axutil_stracat(env, "#",id);
+        mod_id = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,id);
         oxs_token_build_data_reference_element(env, data_ref_list_node, mod_id);
         /*if x509 is used and no-derived keys, then we have to modify security token reference*/
         if((token_type == RP_PROPERTY_X509_TOKEN) && (!use_derived_keys) && (asym_key_id))
@@ -693,7 +695,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             reference_node = axiom_node_detach(reference_node, env);
             axiom_node_free_tree(reference_node, env);
             
-            id_ref = axutil_stracat(env, "#",asym_key_id);
+            id_ref = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,asym_key_id);
             reference_node = oxs_token_build_reference_element(env, str_node,
                                 id_ref, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);
 
@@ -995,7 +997,7 @@ rampart_enc_add_key_info(
             if(str_node)
             {
                 axis2_char_t *key_id_ref = NULL;
-                key_id_ref = axutil_stracat(env, "#",key_id);
+                key_id_ref = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,key_id);
                 reference_node = oxs_token_build_reference_element(
                                      env, str_node, key_id_ref, NULL);
                 AXIS2_FREE(env->allocator, key_id_ref);
@@ -1062,6 +1064,7 @@ rampart_enc_encrypt_signature(
     axiom_node_t *temp_node = NULL;
     axiom_node_t *node_to_move = NULL;
     axis2_bool_t use_derived_keys = AXIS2_TRUE;
+    axis2_char_t *derived_key_version = NULL;
     axis2_bool_t server_side = AXIS2_FALSE;
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
@@ -1162,6 +1165,7 @@ rampart_enc_encrypt_signature(
 
     /*We need to take the decision whether to use derived keys or not*/
     use_derived_keys = rampart_context_check_is_derived_keys (env, token);
+    derived_key_version = rampart_context_get_derived_key_version(env, token);
     if(AXIS2_TRUE == use_derived_keys)
     {
         /*Derive a new key*/
@@ -1230,7 +1234,7 @@ rampart_enc_encrypt_signature(
                 axis2_char_t *mod_id = NULL;
 
                 /*We need to prepend # to the id in the list to create the reference*/
-                mod_id = axutil_stracat(env, "#",id);
+                mod_id = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,id);
                 data_ref_node = oxs_token_build_data_reference_element(env, ref_list_node, mod_id);
 
             }
@@ -1268,13 +1272,13 @@ rampart_enc_encrypt_signature(
         if((token_type == RP_PROPERTY_SECURITY_CONTEXT_TOKEN) || token_type == RP_PROPERTY_SAML_TOKEN ||
             (server_side && (rampart_context_get_binding_type(rampart_context,env) == RP_PROPERTY_SYMMETRIC_BINDING)))
         {
-            oxs_derivation_build_derived_key_token_with_stre(env, derived_key, sec_node, key_reference_node);
+            oxs_derivation_build_derived_key_token_with_stre(env, derived_key, sec_node, key_reference_node, derived_key_version);
         }
         else
         {
             axis2_char_t *asym_key_id = NULL;
             asym_key_id = oxs_axiom_get_attribute_value_of_node_by_name(env, encrypted_key_node, OXS_ATTR_ID, NULL);
-            oxs_derivation_build_derived_key_token(env, derived_key, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY);  
+            oxs_derivation_build_derived_key_token(env, derived_key, sec_node, asym_key_id, OXS_WSS_11_VALUE_TYPE_ENCRYPTED_KEY, derived_key_version);  
         }
 		/*now we can free the derived key*/
 		oxs_key_free(derived_key, env);

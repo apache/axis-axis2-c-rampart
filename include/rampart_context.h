@@ -1097,14 +1097,23 @@ extern "C"
      *
      * @param env pointer to environment struct,Must not be NULL.
      * @param token
-     * @returns status of the op.                                                                                                        
-     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
+     * @returns whether derived key needed or not                                                                                                        
      */
-
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
     rampart_context_check_is_derived_keys(
         const axutil_env_t *env,
         rp_property_t *token);
+
+    /**
+     * @param env pointer to environment struct,Must not be NULL.
+     * @param token
+     * @returns derived key version. NULL on error.                                                                                                        
+     */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_derived_key_version(
+        const axutil_env_t *env, 
+        rp_property_t *token);
+
     /**
      *
      * @param rampart_context

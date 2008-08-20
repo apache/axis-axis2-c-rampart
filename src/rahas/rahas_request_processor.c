@@ -192,7 +192,7 @@ rahas_validate_issue_request_parameters(
     /* check whether trust version is valid, and if so, get trust version specific constants */
     if(trust_version == TRUST_VERSION_05_02)
     {
-        expected_token_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN;
+        expected_token_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02;
     }
     else if(trust_version == TRUST_VERSION_05_12)
     {
@@ -276,7 +276,8 @@ rahas_create_security_context_token(
 
     /* create global id, local id */
     global_id = oxs_util_generate_id(env, SECCONV_GLOBAL_ID_PREFIX);
-    local_id = axutil_stracat(env, "#", oxs_util_generate_id(env, SECCONV_LOCAL_ID_PREFIX));
+    local_id = axutil_stracat(
+        env, OXS_LOCAL_REFERENCE_PREFIX, oxs_util_generate_id(env, SECCONV_LOCAL_ID_PREFIX));
     
     /* check whether server secret is needed. If specifically said "server entropy needed" then 
      * no problem. If not said specifically, and if client entropy is not there, then again we have 
@@ -362,14 +363,16 @@ rahas_populate_rstr_for_issue_request(
     if(trust_version == TRUST_VERSION_05_02)
     {
         trust_ns_uri = TRUST_WST_XMLNS_05_02;
-        token_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN;
+        token_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02;
         computed_key_algo = TRUST_COMPUTED_KEY_PSHA1;
+        security_context_token_set_is_sc10(sct, env, AXIS2_TRUE);
     }
     else if(trust_version == TRUST_VERSION_05_12)
     {
         trust_ns_uri = TRUST_WST_XMLNS_05_12;
         token_type = OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_12; 
-        computed_key_algo = TRUST_COMPUTED_KEY_PSHA1_05_12;   
+        computed_key_algo = TRUST_COMPUTED_KEY_PSHA1_05_12;
+        security_context_token_set_is_sc10(sct, env, AXIS2_FALSE);
     }
 
     /* We have to populate issue request specific items.

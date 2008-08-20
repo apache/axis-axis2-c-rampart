@@ -580,7 +580,7 @@ trust_sts_client_insert_entropy(
 
     entropy = trust_entropy_create(env);
     trust_entropy_set_binary_secret(entropy, env, nonce);
-    trust_entropy_set_ns_uri(entropy, env, TRUST_WST_XMLNS_05_02);
+    trust_entropy_set_ns_uri(entropy, env, trust_rst_get_wst_ns_uri(rst, env));
     trust_entropy_set_binary_secret_type(entropy, env, NONCE);
 
     trust_rst_set_key_size(rst, env, key_size);

@@ -15,31 +15,26 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_element.h>
 
-
+/**
+* Creates <ds:KeyInfo> element
+*/
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_key_info_element(const axutil_env_t *env,
-                                 axiom_node_t *parent
-                                )
+oxs_token_build_key_info_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent)
 {
     axiom_node_t *key_info_node = NULL;
     axiom_element_t *key_info_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
-
-
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,OXS_DS);
     key_info_ele = axiom_element_create(env, parent, OXS_NODE_KEY_INFO, ns_obj, &key_info_node);
-    if (!key_info_ele)
+    if(!key_info_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating KeyInfo element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating KeyInfo element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 

@@ -15,31 +15,28 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <axiom_element.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <oxs_axiom.h>
 
-
+/**
+ * Creates <xenc:CipherData> element
+ */
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_cipher_data_element(const axutil_env_t *env,
-                                    axiom_node_t *parent
-                                   )
+oxs_token_build_cipher_data_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent)
 {
     axiom_node_t *cipher_data_node = NULL;
     axiom_element_t *cipher_data_ele = NULL;
     axiom_namespace_t *ns_obj = NULL;
 
-    ns_obj = axiom_namespace_create(env, OXS_ENC_NS,
-                                    OXS_XENC);
-
-    cipher_data_ele = axiom_element_create(env, parent, OXS_NODE_CIPHER_DATA, ns_obj, &cipher_data_node);
+    ns_obj = axiom_namespace_create(env, OXS_ENC_NS, OXS_XENC);
+    cipher_data_ele = axiom_element_create(
+        env, parent, OXS_NODE_CIPHER_DATA, ns_obj, &cipher_data_node);
+    
     if (!cipher_data_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating cipher data element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating cipher data element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
@@ -47,17 +44,25 @@ oxs_token_build_cipher_data_element(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-oxs_token_get_cipher_value_from_cipher_data(const axutil_env_t *env,
-        axiom_node_t *cd_node)
+oxs_token_get_cipher_value_from_cipher_data(
+    const axutil_env_t *env,
+    axiom_node_t *cd_node)
 {
     axiom_node_t *cv_node = NULL;
     axis2_char_t *value = NULL;
-    /*First check direct <CipherValue>*/
-    cv_node = oxs_axiom_get_first_child_node_by_name(env, cd_node, OXS_NODE_CIPHER_VALUE, OXS_ENC_NS, OXS_XENC);
-    if(cv_node){
+    
+    /* First check direct <CipherValue> */
+    cv_node = oxs_axiom_get_first_child_node_by_name(
+        env, cd_node, OXS_NODE_CIPHER_VALUE, OXS_ENC_NS, OXS_XENC);
+    
+    if(cv_node)
+    {
         value = oxs_token_get_cipher_value(env, cv_node);
-    }else{
-        /*If not then check for <CipherReference URI?>*/
+    }
+    else
+    {
+        /* If not then check for <CipherReference URI?> */
+        /* TODO */
     }
 
     return value;

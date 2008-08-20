@@ -180,7 +180,7 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
     id = oxs_axiom_get_attribute_value_of_node_by_name(env, node, id_name,
 													ns_uri);
 
-    ref_id = axutil_stracat(env, "#", id);/* <ds:Reference URI="#id">*/
+    ref_id = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX, id);/* <ds:Reference URI="#id">*/
     reference_node = oxs_token_build_ds_reference_element(env, parent ,NULL, ref_id, NULL);
 
     AXIS2_FREE(env->allocator, ref_id);

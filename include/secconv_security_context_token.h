@@ -135,6 +135,19 @@ extern "C"
         axis2_char_t *local_id);
 
     /**
+     * Set WS-SecureConversation version 
+     * @param sct Pointer to secuirty context token struct
+     * @param env Pointer to environment struct
+     * @param is_sc10 Boolean denoting whether we need security context token as in WS-SecConv 1.0
+     * @returns AXIS2_SUCCESS if success. AXIS2_FAILURE otherwise.
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    security_context_token_set_is_sc10(
+        security_context_token_t *sct, 
+        const axutil_env_t * env,
+        axis2_bool_t is_sc10);
+
+    /**
      * Get shared secret as axiom_node. Shared secret will be included inside 
      * 'RequestedProofToken' node. This is acording to WS-Trust specification 
      * @param sct Pointer to secuirty context token struct

@@ -181,7 +181,7 @@ secconv_echo_sts_request_security_token(
 
     /*check whether rst is valid and can be processed*/
     token_type = trust_rst_get_token_type(rst, env);
-    if((!token_type) || (0 != axutil_strcmp(token_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN)))
+    if((!token_type) || (0 != axutil_strcmp(token_type, OXS_VALUE_TYPE_SECURITY_CONTEXT_TOKEN_05_02)))
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][secconv_service] token type is not valid");
         return NULL;
@@ -199,7 +199,7 @@ secconv_echo_sts_request_security_token(
 
     /*create global id, local id, and shared secret*/
     global_id = oxs_util_generate_id(env,"urn:uuid:");
-    local_id = axutil_stracat(env, "#", oxs_util_generate_id(env, "sctId"));
+    local_id = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX, oxs_util_generate_id(env, "sctId"));
     shared_secret = oxs_buffer_create(env);
     if(requester_entropy)
     {
@@ -209,6 +209,7 @@ secconv_echo_sts_request_security_token(
 
     /*create security context token and populate it*/
     sct = security_context_token_create(env);
+    security_context_token_set_is_sc10(sct, env, AXIS2_TRUE);
     security_context_token_set_global_identifier(sct, env, global_id);
     security_context_token_set_local_identifier(sct, env, local_id);
     

@@ -659,7 +659,7 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 oxs_c14n_apply(
     const axutil_env_t *env,
     const axiom_document_t *doc,
-    axis2_bool_t comments,
+    const axis2_bool_t comments,
     axis2_char_t **outbuf,
     const axis2_bool_t exclusive,
     const axutil_array_list_t *ns_prefixes,
@@ -773,7 +773,7 @@ c14n_apply_on_comment (
 
 static axis2_status_t
 c14n_apply_on_element(
-    const axiom_node_t const *node,
+    const axiom_node_t *node,
     const c14n_ctx_t *ctx
 )
 {

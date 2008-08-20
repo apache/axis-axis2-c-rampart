@@ -79,7 +79,7 @@ trust_claims_deserialize(
         }
         
         dialect_attr = axiom_element_get_attribute_value_by_name(claims_ele, env, TRUST_CLAIMS_DIALECT);
-        claims->wst_ns_uri = TRUST_WST_XMLNS;
+        claims->wst_ns_uri = TRUST_WST_XMLNS_05_02;
         if(dialect_attr)
         {
             claims->attr_dialect = dialect_attr;
@@ -102,7 +102,7 @@ trust_claims_serialize(
     axiom_node_t *claims_node = NULL;
     int index = 0;
     
-    claims_node = (axiom_node_t*)trust_util_create_claims_element(env, TRUST_WST_XMLNS, parent, claims->attr_dialect);
+    claims_node = (axiom_node_t*)trust_util_create_claims_element(env, TRUST_WST_XMLNS_05_02, parent, claims->attr_dialect);
     if(!claims_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[trust] Claims Element creation failed!");

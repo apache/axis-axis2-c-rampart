@@ -15,19 +15,16 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <oxs_constants.h>
-#include <oxs_error.h>
 #include <oxs_tokens.h>
-#include <axiom_attribute.h>
-#include <axiom_element.h>
 
-
-
+/**
+* Creates <ds:Signature> element
+*/
 AXIS2_EXTERN axiom_node_t* AXIS2_CALL
-oxs_token_build_signature_element(const axutil_env_t *env,
-                                  axiom_node_t *parent,
-                                  axis2_char_t* id)
+oxs_token_build_signature_element(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    axis2_char_t* id)
 {
     axiom_node_t *signature_node = NULL;
     axiom_element_t *signature_ele = NULL;
@@ -35,18 +32,15 @@ oxs_token_build_signature_element(const axutil_env_t *env,
     axiom_namespace_t *ns_obj = NULL;
     int ret;
 
-    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS,
-                                    OXS_DS);
-
+    ns_obj = axiom_namespace_create(env, OXS_DSIG_NS, OXS_DS);
     signature_ele = axiom_element_create(env, parent, OXS_NODE_SIGNATURE, ns_obj, &signature_node);
     if (!signature_ele)
     {
-        oxs_error(env, OXS_ERROR_LOCATION,
-                  OXS_ERROR_ELEMENT_FAILED, "Error creating ds:Signature element");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Error creating ds:Signature element.");
+        axiom_namespace_free(ns_obj, env);
         return NULL;
     }
 
-    /*If id is not NULL then add it as an attribute*/
     if (id)
     {
         id_attr = axiom_attribute_create(env, OXS_ATTR_ID, id, NULL);
@@ -54,6 +48,5 @@ oxs_token_build_signature_element(const axutil_env_t *env,
     }
 
     return signature_node;
-
 }
 
