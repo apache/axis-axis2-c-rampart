@@ -65,6 +65,8 @@ Scenario    Summary
 24. 		SAML as a protection token for signing and encrypting a message. 
 25.			SecureConversation using Rahas module. Issue operation is defined in rahas
 26.			SecureConversation using Rahas module. Issue operation is defined in service
+27.			Same as 25. With WS-SecurityPolicy1.2, WS-Trust1.3 and WS-SecConv 1.3
+28.			Same as 26. With WS-SecurityPolicy1.2, WS-Trust1.3 and WS-SecConv 1.3
 
 FAQ:
 ---
