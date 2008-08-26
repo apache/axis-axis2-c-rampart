@@ -184,10 +184,17 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     rp_property_type_t token_type;
     rampart_saml_token_t *saml = NULL;
     oxs_key_t *derived_key = NULL;
+    axiom_soap_body_t *body = NULL;
+    axiom_node_t *body_node = NULL;
+    axiom_node_t *body_child_node = NULL;
 
     axis2_bool_t signature_protection = AXIS2_FALSE;
     int i = 0;
     int j = 0;
+
+    body = axiom_soap_envelope_get_body(soap_envelope, env);
+    body_node = axiom_soap_body_get_base_node(body, env);
+    body_child_node = axiom_node_get_first_element(body_node, env);
 
     /*Get nodes to be encrypted*/
     nodes_to_encrypt = axutil_array_list_create(env, 0);
@@ -466,8 +473,16 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
  
         if(parent_of_node_to_enc || enc_data_id)
         {
+            axis2_char_t *enc_type = OXS_TYPE_ENC_ELEMENT;
+
+            if(body_child_node == node_to_enc)
+            {
+                /* we have to use #Content for body encryption */
+                enc_type = OXS_TYPE_ENC_CONTENT;
+            }
+
             enc_data_node = oxs_token_build_encrypted_data_element(env,
-                            parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, enc_data_id );
+                            parent_of_node_to_enc, enc_type, enc_data_id );
             status = oxs_xml_enc_encrypt_node(env, enc_ctx,
                                                   node_to_enc, &enc_data_node, key_reference_node);
             /*Add Ids to the list. We will create reference list*/
@@ -736,6 +751,13 @@ rampart_enc_encrypt_message(
     int i = 0;
     axis2_bool_t signature_protection = AXIS2_FALSE;
     axiom_node_t *sig_node = NULL;
+    axiom_soap_body_t *body = NULL;
+    axiom_node_t *body_node = NULL;
+    axiom_node_t *body_child_node = NULL;
+
+    body = axiom_soap_envelope_get_body(soap_envelope, env);
+    body_node = axiom_soap_body_get_base_node(body, env);
+    body_child_node = axiom_node_get_first_element(body_node, env);
 
 
     /*Get nodes to be encrypted*/
@@ -888,8 +910,16 @@ rampart_enc_encrypt_message(
 
         if(parent_of_node_to_enc || id)
         {
+            axis2_char_t *enc_type = OXS_TYPE_ENC_ELEMENT;
+
+            if(body_child_node == node_to_enc)
+            {
+                /* we have to use #Content for body encryption */
+                enc_type = OXS_TYPE_ENC_CONTENT;
+            }
+
             enc_data_node = oxs_token_build_encrypted_data_element(env,
-                            parent_of_node_to_enc, OXS_TYPE_ENC_ELEMENT, id );
+                            parent_of_node_to_enc, enc_type, id );
             enc_status = oxs_xml_enc_encrypt_node(env, enc_ctx,
                                                   node_to_enc, &enc_data_node, NULL); 
             axutil_array_list_add(id_list, env, id);
