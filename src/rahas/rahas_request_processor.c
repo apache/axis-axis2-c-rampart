@@ -131,6 +131,17 @@ rahas_process_issue_request(
         return AXIS2_FAILURE;
     }
 
+    /* set sct version */
+    if(trust_version == TRUST_VERSION_05_02)
+    {
+        security_context_token_set_is_sc10(sct, env, AXIS2_TRUE);
+    }
+    else if(trust_version == TRUST_VERSION_05_12)
+    {
+        security_context_token_set_is_sc10(sct, env, AXIS2_FALSE);
+    }
+
+
     /* store SCT so that when server needs it, can be extracted. It is the responsibility of the 
      * storing implementer to switch to global pool if needed */
     if(rahas_store_security_context_token(env, sct, msg_ctx) != AXIS2_SUCCESS)
