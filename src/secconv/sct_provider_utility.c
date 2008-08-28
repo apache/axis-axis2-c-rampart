@@ -630,6 +630,9 @@ sct_provider_obtain_sct_default(
     /* get the sct if sct_id is given */
     if(sct_id)
     {
+        /* set env */
+        axutil_hash_set_env(hash_store, env);
+
         sct = (security_context_token_t *)axutil_hash_get(
             hash_store, sct_id, AXIS2_HASH_KEY_STRING);
     }

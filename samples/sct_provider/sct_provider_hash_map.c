@@ -135,6 +135,9 @@ sct_provider_hash_map_obtain_token(
     /* get the sct if sct_id is given */
     if(sct_id)
     {
+        /* set env */
+        axutil_hash_set_env(hash_store, env);
+
         sct = (security_context_token_t *)axutil_hash_get(
             hash_store, sct_id, AXIS2_HASH_KEY_STRING);
     }
@@ -176,6 +179,9 @@ sct_provider_hash_map_store_token(
     hash_store = sct_provider_hash_map_get_sct_hash_store(env, msg_ctx);
     if(hash_store)
     {
+        /* set env */
+        axutil_hash_set_env(hash_store, env);
+
         /* store sct */
         if(sct_global_id)
         {
