@@ -786,6 +786,9 @@ security_context_token_deserialize(
     axiom_node_t *parent_attached_ref_node = NULL;
     axiom_node_t *parent_unattached_ref_node = NULL;
     axiom_node_t *parent_proof_node = NULL;
+    axis2_char_t *ns = NULL;
+    axutil_qname_t *node_qname = NULL;
+    axiom_element_t *element = NULL;
 
     reader = axiom_xml_reader_create_for_memory(
         env, serialised_node, axutil_strlen(serialised_node), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
@@ -806,7 +809,30 @@ security_context_token_deserialize(
             "[rampart]Security context token deserialize failed.");
         return AXIS2_FAILURE;
     }
-    
+
+    /* get the namespace of root node and decide the sct version */
+    element = (axiom_element_t *) axiom_node_get_data_element(sct_node, env);
+    node_qname = axiom_element_get_qname(element, env, sct_node);
+    if(!node_qname)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart] Cannot get qname from SecurityContextToken element.");
+        return AXIS2_FAILURE;
+    }
+
+    ns = axutil_qname_get_uri(node_qname, env);
+    if(!ns)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart] Cannot get namespace from SecurityContextToken element.");
+        return AXIS2_FAILURE;
+    }
+
+    if(!axutil_strcmp(ns, OXS_WSC_NS_05_02))
+    {
+        sct->is_sc10 = AXIS2_TRUE;
+    }
+
     parent_proof_node = oxs_axiom_get_node_by_local_name(
         env, sct_node, TRUST_REQUESTED_PROOF_TOKEN);
     if(!parent_proof_node)
