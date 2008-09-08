@@ -329,7 +329,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
         else
         {
             axis2_char_t *token_id = NULL;
-            token_id = rampart_context_get_encryption_token_id(rampart_context, env);
+            token_id = rampart_context_get_encryption_token_id(rampart_context, env, msg_ctx);
             if(token_id)
             {
                 session_key = rampart_context_get_key(rampart_context, env, token_id);

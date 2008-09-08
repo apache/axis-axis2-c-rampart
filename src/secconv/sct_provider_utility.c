@@ -56,9 +56,9 @@ sct_provider_get_sct(
     if(!sct_id)
     {
         if(is_encryption)
-            sct_id = rampart_context_get_encryption_token_id(rampart_context, env);
+            sct_id = rampart_context_get_encryption_token_id(rampart_context, env, msg_ctx);
         else
-            sct_id = rampart_context_get_signature_token_id(rampart_context, env);
+            sct_id = rampart_context_get_signature_token_id(rampart_context, env, msg_ctx);
     }
 
     if(!sct_id)
@@ -149,14 +149,14 @@ sct_provider_get_sct(
             if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
             {
                 if(is_encryption)
-                    rampart_context_set_encryption_token_id(rampart_context, env, global_id);
+                    rampart_context_set_encryption_token_id(rampart_context, env, global_id, msg_ctx);
                 else
-                    rampart_context_set_signature_token_id(rampart_context, env, global_id);
+                    rampart_context_set_signature_token_id(rampart_context, env, global_id, msg_ctx);
             }
             else
             {
-                rampart_context_set_encryption_token_id(rampart_context, env, global_id);
-                rampart_context_set_signature_token_id(rampart_context, env, global_id);
+                rampart_context_set_encryption_token_id(rampart_context, env, global_id, msg_ctx);
+                rampart_context_set_signature_token_id(rampart_context, env, global_id, msg_ctx);
             }
         }
     }

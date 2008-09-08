@@ -261,7 +261,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
         else
         {
             axis2_char_t *token_id = NULL;
-            token_id = rampart_context_get_signature_token_id(rampart_context, env);
+            token_id = rampart_context_get_signature_token_id(rampart_context, env, msg_ctx);
             if(token_id)
             {
                 int key_usage = OXS_KEY_USAGE_SESSION;

@@ -216,9 +216,9 @@ rampart_shp_store_token_id(const axutil_env_t *env,
     axis2_char_t *wsc_ns_uri = NULL;
 
     if(is_encryption)
-        token_id = rampart_context_get_encryption_token_id(rampart_context, env);
+        token_id = rampart_context_get_encryption_token_id(rampart_context, env, msg_ctx);
     else
-        token_id = rampart_context_get_signature_token_id(rampart_context, env);
+        token_id = rampart_context_get_signature_token_id(rampart_context, env, msg_ctx);
 
     /*if already stored, then can return*/
     if(token_id)
@@ -325,14 +325,14 @@ rampart_shp_store_token_id(const axutil_env_t *env,
     if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
     {
         if(is_encryption)
-            rampart_context_set_encryption_token_id(rampart_context, env, token_id);
+            rampart_context_set_encryption_token_id(rampart_context, env, token_id, msg_ctx);
         else
-            rampart_context_set_signature_token_id(rampart_context, env, token_id);
+            rampart_context_set_signature_token_id(rampart_context, env, token_id, msg_ctx);
     }
     else
     {
-        rampart_context_set_encryption_token_id(rampart_context, env, token_id);
-        rampart_context_set_signature_token_id(rampart_context, env, token_id);
+        rampart_context_set_encryption_token_id(rampart_context, env, token_id, msg_ctx);
+        rampart_context_set_signature_token_id(rampart_context, env, token_id, msg_ctx);
     }
 }
 
@@ -1951,5 +1951,7 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
     }
     return AXIS2_SUCCESS;
 }
+
+
 
 

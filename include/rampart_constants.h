@@ -160,6 +160,8 @@ extern "C"
 #define RAMPART_SCT_ID_TYPE_LOCAL 1
 #define RAMPART_SCT_ID_TYPE_GLOBAL 2
 
+#define RAMPART_ENC_TOKEN_ID "EncryptionTokenID"
+#define RAMPART_SIG_TOKEN_ID "SignatureTokenID"
 
 #ifdef __cplusplus
 }

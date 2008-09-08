@@ -2854,16 +2854,84 @@ rampart_context_increment_ref(rampart_context_t *rampart_context,
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_encryption_token_id(
     rampart_context_t *rampart_context,
-    const axutil_env_t *env)
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
 {
+    if((!rampart_context->encryption_token_id) && (!axis2_msg_ctx_get_server_side(msg_ctx, env)))
+    {
+        /* used by scripting bindings */
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_ctx_t *ctx = NULL;
+        axutil_property_t *property = NULL;
+        
+        /* Get the conf ctx */
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+        if(!conf_ctx)
+        {
+            AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, 
+                "[rampart]Conf context is NULL. Cannot get encryption token id.");
+            return NULL;
+        }
+
+        ctx = axis2_conf_ctx_get_base(conf_ctx,env);
+        if(!ctx)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart]Axis2 context is NULL. Cannot get encryption token id.");
+            return NULL;
+        }
+
+        /* Get the hash store property */
+        property = axis2_ctx_get_property(ctx, env, RAMPART_ENC_TOKEN_ID);
+        if(property)
+        {
+            /* Get the store */
+            rampart_context->encryption_token_id = 
+                (axis2_char_t*)axutil_property_get_value(property, env);
+        }
+    }
     return rampart_context->encryption_token_id;
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_context_get_signature_token_id(
     rampart_context_t *rampart_context,
-    const axutil_env_t *env)
+    const axutil_env_t *env, 
+    axis2_msg_ctx_t *msg_ctx)
 {
+    if((!rampart_context->signature_token_id)&& (!axis2_msg_ctx_get_server_side(msg_ctx, env)))
+    {
+        /* used by scripting bindings */
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_ctx_t *ctx = NULL;
+        axutil_property_t *property = NULL;
+        
+        /* Get the conf ctx */
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+        if(!conf_ctx)
+        {
+            AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, 
+                "[rampart]Conf context is NULL. Cannot get signature token id.");
+            return NULL;
+        }
+
+        ctx = axis2_conf_ctx_get_base(conf_ctx,env);
+        if(!ctx)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart]Axis2 context is NULL. Cannot get signature token id.");
+            return NULL;
+        }
+
+        /* Get the hash store property */
+        property = axis2_ctx_get_property(ctx, env, RAMPART_SIG_TOKEN_ID);
+        if(property)
+        {
+            /* Get the store */
+            rampart_context->signature_token_id = 
+                (axis2_char_t*)axutil_property_get_value(property, env);
+        }
+    }
     return rampart_context->signature_token_id;
 }
 
@@ -2871,8 +2939,46 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_encryption_token_id(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
-    axis2_char_t *sct_id)
+    axis2_char_t *sct_id, 
+    axis2_msg_ctx_t *msg_ctx)
 {
+    if (!axis2_msg_ctx_get_server_side(msg_ctx, env))
+    {
+        /* used by scripting bindings */
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_ctx_t *ctx = NULL;
+        axutil_property_t *property = NULL;
+        
+        /* Get the conf ctx */
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+        if(!conf_ctx)
+        {
+            AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, 
+                "[rampart]Conf context is NULL. Cannot store encryption token id.");
+            return AXIS2_FAILURE;
+        }
+
+        ctx = axis2_conf_ctx_get_base(conf_ctx,env);
+        if(!ctx)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart]Axis2 context is NULL. Cannot store encryption token id.");
+            return AXIS2_FAILURE;
+        }
+
+        /* Get the hash store property */
+        property = axis2_ctx_get_property(ctx, env, RAMPART_ENC_TOKEN_ID);
+        if(property)
+        {
+            axutil_property_set_value(property, env, sct_id);
+        }
+        else
+        {
+            property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                AXIS2_TRUE, (void *)NULL, sct_id);
+            axis2_ctx_set_property(ctx, env, RAMPART_ENC_TOKEN_ID, property);
+        }
+    }
     rampart_context->encryption_token_id = sct_id;
     return AXIS2_SUCCESS;
 }
@@ -2881,8 +2987,47 @@ AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_context_set_signature_token_id(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
-    axis2_char_t *sct_id)
+    axis2_char_t *sct_id,
+    axis2_msg_ctx_t *msg_ctx)
 {
+    if (!axis2_msg_ctx_get_server_side(msg_ctx, env))
+    {
+        /* used by scripting bindings */
+        axis2_conf_ctx_t *conf_ctx = NULL;
+        axis2_ctx_t *ctx = NULL;
+        axutil_property_t *property = NULL;
+        
+        /* Get the op ctx */
+        conf_ctx = axis2_msg_ctx_get_conf_ctx(msg_ctx, env);
+        if(!conf_ctx)
+        {
+            AXIS2_LOG_ERROR(env->log,AXIS2_LOG_SI, 
+                "[rampart]Conf context is NULL. Cannot store signature token id.");
+            return AXIS2_FAILURE;
+        }
+
+        ctx = axis2_conf_ctx_get_base(conf_ctx,env);
+        if(!ctx)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart]Axis2 context is NULL. Cannot store signature token id.");
+            return AXIS2_FAILURE;
+        }
+
+        /* Get the hash store property */
+        property = axis2_ctx_get_property(ctx, env, RAMPART_SIG_TOKEN_ID);
+        if(property)
+        {
+            axutil_property_set_value(property, env, sct_id);
+        }
+        else
+        {
+            property = axutil_property_create_with_args(env, AXIS2_SCOPE_APPLICATION,
+                AXIS2_TRUE, (void *)NULL, sct_id);
+            axis2_ctx_set_property(ctx, env, RAMPART_SIG_TOKEN_ID, property);
+        }
+    }
+
     rampart_context->signature_token_id = sct_id;
     return AXIS2_SUCCESS;
 }
@@ -3201,5 +3346,7 @@ rampart_context_get_validate_security_context_token_fn(
 {
     return rampart_context->validate_sct_function;
 }
+
+
 
 

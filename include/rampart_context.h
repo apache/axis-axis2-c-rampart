@@ -1443,7 +1443,8 @@ extern "C"
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_encryption_token_id(
         rampart_context_t *rampart_context,
-        const axutil_env_t *env);
+        const axutil_env_t *env, 
+        axis2_msg_ctx_t* msg_ctx);
     /**
      *
      * @param rampart_context
@@ -1455,7 +1456,8 @@ extern "C"
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_signature_token_id(
         rampart_context_t *rampart_context,
-        const axutil_env_t *env);
+        const axutil_env_t *env, 
+        axis2_msg_ctx_t* msg_ctx);
     /**
      *
      * @param rampart_context
@@ -1469,7 +1471,8 @@ extern "C"
     rampart_context_set_encryption_token_id(
         rampart_context_t *rampart_context,
         const axutil_env_t *env,
-        axis2_char_t *sct_id);
+        axis2_char_t *sct_id, 
+        axis2_msg_ctx_t* msg_ctx);
     /**
      *
      * @param rampart_context
@@ -1483,7 +1486,8 @@ extern "C"
     rampart_context_set_signature_token_id(
         rampart_context_t *rampart_context,
         const axutil_env_t *env,
-        axis2_char_t *sct_id);
+        axis2_char_t *sct_id, 
+        axis2_msg_ctx_t* msg_ctx);
 
 
     /* Return the saml token of token type set in the rampart context */
