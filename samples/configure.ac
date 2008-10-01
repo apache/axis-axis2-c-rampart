@@ -119,6 +119,7 @@ AC_CONFIG_FILES([Makefile \
         client/sec_echo/Makefile \
         client/sec_echo/data/Makefile \
 		client/saml_echo/Makefile \
+		client/saml_protect/Makefile \
 		client/sts_client/Makefile \
 		client/issued_token/Makefile \
         keys/Makefile \
