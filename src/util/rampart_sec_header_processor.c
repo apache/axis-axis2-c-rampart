@@ -481,16 +481,15 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
 }
     
 static axis2_bool_t
-rampart_shp_validate_qnames(const axutil_env_t *env,
-                            axiom_node_t *node)
+rampart_shp_validate_qnames(
+    const axutil_env_t *env,
+    axiom_node_t *node)
 
 {
     axiom_element_t *node_ele = NULL;
     axutil_qname_t *qname = NULL;
     axutil_qname_t *node_qname = NULL;
     axis2_char_t *local_name = NULL;
-
-    AXIS2_ENV_CHECK(env,AXIS2_FALSE);
 
     node_ele = axiom_node_get_data_element(node, env);
     if(!node_ele)
@@ -573,63 +572,45 @@ rampart_shp_process_signature_confirmation(const axutil_env_t *env,
 }
 
 static axis2_status_t
-rampart_shp_process_timestamptoken(const axutil_env_t *env,
-                                   axis2_msg_ctx_t *msg_ctx,
-                                   rampart_context_t *rampart_context,
-                                   axiom_node_t *sec_node)
+rampart_shp_process_timestamptoken(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_node_t *ts_node)
 {
     axis2_status_t valid_ts = AXIS2_FAILURE;
-    axiom_node_t *ts_node = NULL;
-    ts_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, RAMPART_SECURITY_TIMESTAMP, OXS_WSU_XMLNS, NULL);
-    if(!ts_node)
-    {
-        if(rampart_context_is_include_timestamp(rampart_context, env))
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][shp] Timestamp is not in the message");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_SECURITY_TOKEN_UNAVAILABLE,
-                                          "Timestamp is not in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
-            return AXIS2_FAILURE;
-        }
 
-        else
-        {
-            return AXIS2_SUCCESS;
-        }
-    }
-    else if(!rampart_context_is_include_timestamp(rampart_context, env))
+    if(!rampart_context_is_include_timestamp(rampart_context, env))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][shp] Timestamp should not be in the message.");
-        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
-                                      "Timestamp should not be in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Timestamp should not be in the message.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+            "Timestamp should not be in the message ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
         return AXIS2_FAILURE;
     }
     else
     {
         if(!rampart_shp_validate_qnames(env, ts_node))
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][shp] Error in the Timestamp element.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]QName for given timestamp is not valid.");
             rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
-                                          "Error in the Timestamp Element. ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
+                "Error in the Timestamp Element. ", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
             return AXIS2_FAILURE;
         }
 
-
-        valid_ts = rampart_timestamp_token_validate(env, msg_ctx, ts_node);
+        valid_ts = rampart_timestamp_token_validate(
+            env, msg_ctx, ts_node, rampart_context_get_clock_skew_buffer(rampart_context, env));
 
         if (valid_ts)
         {
-            AXIS2_LOG_INFO(env->log, "[rampart][scp] Succesfully validated the timestamp ");
+            AXIS2_LOG_INFO(env->log, "[rampart]Succesfully validated the timestamp ");
             return AXIS2_SUCCESS;
         }
         else
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][scp] Timestamp is not valid");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Timestamp is not valid");
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Timestamp is not valid", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
+                "Timestamp is not valid", RAMPART_FAULT_IN_TIMESTAMP, msg_ctx);
             return AXIS2_FAILURE;
         }
     }
@@ -1833,17 +1814,18 @@ rampart_shp_process_saml_token(const axutil_env_t *env,
 /*Public functions*/
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_shp_process_sec_header(const axutil_env_t *env,
-                            axis2_msg_ctx_t *msg_ctx,
-                            rampart_context_t *rampart_context,
-                            axiom_soap_envelope_t *soap_envelope,
-                            axiom_node_t *sec_node)
+rampart_shp_process_sec_header(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_soap_envelope_t *soap_envelope,
+    axiom_node_t *sec_node)
 {
     axiom_node_t *cur_node = NULL;
     axis2_status_t status = AXIS2_FAILURE;
-    axis2_bool_t first_signature= AXIS2_TRUE;
+    axis2_bool_t first_signature = AXIS2_TRUE;
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Processing security header in Strict layout");
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart]Processing security header in Strict layout");
 
     cur_node = axiom_node_get_first_child(sec_node, env);
 
@@ -1851,102 +1833,123 @@ rampart_shp_process_sec_header(const axutil_env_t *env,
     while(cur_node)
     {
         axis2_char_t *cur_local_name = NULL;
-        
         cur_local_name = axiom_util_get_localname(cur_node, env);
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Processing security header element %s", cur_local_name);
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
+            "[rampart]Processing security header element %s", cur_local_name);
 
-        if(0 == axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_KEY))
+        if(!axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_KEY))
         {
-            status = rampart_shp_process_encrypted_key(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);    
+            status = rampart_shp_process_encrypted_key(
+                env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);    
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SECURITY_CONTEXT_TOKEN))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_SECURITY_CONTEXT_TOKEN))
         {
-            status = rampart_shp_process_security_context_token(env, cur_node, rampart_context, msg_ctx);
+            status = rampart_shp_process_security_context_token(
+                env, cur_node, rampart_context, msg_ctx);
         }
-        else if(0 == axutil_strcmp(cur_local_name, RAMPART_SECURITY_TIMESTAMP))
+        else if(!axutil_strcmp(cur_local_name, RAMPART_SECURITY_TIMESTAMP))
         {
-            status = rampart_shp_process_timestamptoken(env, msg_ctx, rampart_context, sec_node);
+            status = rampart_shp_process_timestamptoken(env, msg_ctx, rampart_context, cur_node);
         }
-        else if(0 == axutil_strcmp(cur_local_name, RAMPART_SECURITY_USERNAMETOKEN))
+        else if(!axutil_strcmp(cur_local_name, RAMPART_SECURITY_USERNAMETOKEN))
         {
             status = rampart_shp_process_usernametoken(env, msg_ctx, rampart_context, sec_node);
 
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE))
         {
             if(first_signature)
             {
-                status = rampart_shp_process_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
+                status = rampart_shp_process_signature(
+                    env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
                 first_signature = AXIS2_FALSE;
             }
             else /*endorsing*/
             {
-                status = rampart_shp_process_asym_binding_signature(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node, AXIS2_TRUE);
+                status = rampart_shp_process_asym_binding_signature(
+                    env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node, AXIS2_TRUE);
                 if(AXIS2_SUCCESS == status)
                 {
                     axis2_char_t *sig_val = NULL; 
                     axiom_node_t *sig_val_node = NULL;
-                    sig_val_node = oxs_axiom_get_first_child_node_by_name(env, cur_node, OXS_NODE_SIGNATURE_VALUE, OXS_DSIG_NS, OXS_DS );
+                    sig_val_node = oxs_axiom_get_first_child_node_by_name(
+                        env, cur_node, OXS_NODE_SIGNATURE_VALUE, OXS_DSIG_NS, OXS_DS );
                     sig_val = oxs_token_get_signature_value(env, sig_val_node);
-                    rampart_set_security_processed_result(env, msg_ctx, RAMPART_SPR_ENDORSED_VALUE, sig_val);
+                    rampart_set_security_processed_result(
+                        env, msg_ctx, RAMPART_SPR_ENDORSED_VALUE, sig_val);
                 }
             }
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_REFERENCE_LIST))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_REFERENCE_LIST))
         {
-            status = rampart_shp_process_reference_list(env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
+            status = rampart_shp_process_reference_list(
+                env, msg_ctx, rampart_context, soap_envelope, sec_node, cur_node);
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_DERIVED_KEY_TOKEN))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_DERIVED_KEY_TOKEN))
         {
             /* We need to extract this and store in the rampart context*/
-            status = rampart_shp_process_derived_key(env, msg_ctx,  rampart_context, sec_node, cur_node);
+            status = rampart_shp_process_derived_key(
+                env, msg_ctx,  rampart_context, sec_node, cur_node);
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_DATA))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_ENCRYPTED_DATA))
         {
-            /*We do nothing. But this is possible when a security header is Encrypted. But it would be decrypted thru a ref list*/
+            /* We do nothing. But this is possible when a security header is Encrypted. 
+             * But it would be decrypted thru a ref list */
             status = AXIS2_SUCCESS;
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE_CONFIRMATION))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE_CONFIRMATION))
         {
-            status = rampart_shp_process_signature_confirmation(env, msg_ctx,  rampart_context,  cur_node);
+            status = rampart_shp_process_signature_confirmation(
+                env, msg_ctx,  rampart_context,  cur_node);
         }
-        else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_BINARY_SECURITY_TOKEN))
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_BINARY_SECURITY_TOKEN))
         {
             /*We do nothing.*/
             status = AXIS2_SUCCESS;
-        }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SAML_ASSERTION)){
-            status = rampart_shp_process_saml_token(env, msg_ctx, rampart_context, cur_node);
-		 
-        }else if(0 == axutil_strcmp(cur_local_name, OXS_NODE_SECURITY_TOKEN_REFRENCE)){
+        }
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_SAML_ASSERTION))
+        {
+            status = rampart_shp_process_saml_token(env, msg_ctx, rampart_context, cur_node); 
+        }
+        else if(!axutil_strcmp(cur_local_name, OXS_NODE_SECURITY_TOKEN_REFRENCE))
+        {
             /*We do nothing.*/
             status = AXIS2_SUCCESS;
-        }else{
-            AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shp] Unknown security header %s", cur_local_name);
-            status = AXIS2_SUCCESS;
+        }
+        else
+        {
+            /* if the security header is unknown, we should not continue. */
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Unknown security header %s", cur_local_name);
+            status = AXIS2_FAILURE;
         }
 
         if(status != AXIS2_SUCCESS)
         {
-             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] %s processing failed", cur_local_name);
+             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                 "[rampart]%s processing failed", cur_local_name);
              return AXIS2_FAILURE;
         }
 
-        /*Get next node*/
+        /* Get next node */
         cur_node = axiom_node_get_next_sibling(cur_node, env);
     }/*Eof while loop*/
             
     AXIS2_LOG_INFO(env->log, "Security header processing done");
+    
     /*Now detect replays*/
-    status = rampart_shp_detect_replays(env, msg_ctx, rampart_context,  soap_envelope, sec_node); 
-    if(status != AXIS2_SUCCESS){
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] A replay detected");
+    status = rampart_shp_detect_replays(env, msg_ctx, rampart_context, soap_envelope, sec_node); 
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Message replay detected.");
         return AXIS2_FAILURE;
     }
 
-    /*Now validate security policies, those cannot be checked on the fly*/
+    /* Now validate security policies, those cannot be checked on the fly */
     status = rampart_pv_validate_sec_header(env, rampart_context, sec_node, msg_ctx);
-    if(status != AXIS2_SUCCESS){
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][shp] Security policy validation failed");
+    if(status != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Security policy validation failed.");
         return AXIS2_FAILURE;
     }
     return AXIS2_SUCCESS;

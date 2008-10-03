@@ -468,13 +468,15 @@ rampart_shb_build_message(
     if(rampart_context_is_include_timestamp(rampart_context,env))
     {
         int ttl = -1;
+        axis2_bool_t need_millisecond = AXIS2_TRUE;
+
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Building Timestamp Token");
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][shb] Using default timeToLive value %d",
                        RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE);
         ttl = rampart_context_get_ttl(rampart_context,env);
+        need_millisecond = rampart_context_get_need_millisecond_precision(rampart_context, env);
 
-        status = rampart_timestamp_token_build(env,
-                                               sec_node, sec_ns_obj, ttl);
+        status = rampart_timestamp_token_build(env, sec_node, ttl, need_millisecond);
         if (status == AXIS2_FAILURE)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,

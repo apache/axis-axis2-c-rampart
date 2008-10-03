@@ -435,6 +435,16 @@ set_rampart_user_properties(
         return AXIS2_FAILURE;
     }
 
+    if(rampart_context_set_clock_skew_buffer_from_file(rampart_context,env) != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    if(rampart_context_set_need_millisecond_precision_from_file(rampart_context,env)!= AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
     if(rampart_context_set_rd_val_from_file(rampart_context,env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;

@@ -357,9 +357,23 @@ extern "C"
      */
 
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    rampart_context_set_ttl(rampart_context_t *rampart_context,
-                            const axutil_env_t *env,
-                            int ttl);
+    rampart_context_set_ttl(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        int ttl);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_need_millisecond_precision(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        axis2_bool_t need_millisecond_precision);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_clock_skew_buffer(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env,
+        int skew_buffer);
+
     /**
      *
      * @param rampart_context
@@ -584,6 +598,17 @@ extern "C"
     rampart_context_get_ttl(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    rampart_context_get_need_millisecond_precision(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN int AXIS2_CALL
+    rampart_context_get_clock_skew_buffer(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     /**
      *
      * @param rampart_context
@@ -1344,6 +1369,17 @@ extern "C"
     rampart_context_set_ttl_from_file(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_clock_skew_buffer_from_file(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_context_set_need_millisecond_precision_from_file(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     /**
      *
      * @param rampart_context

@@ -31,6 +31,8 @@
             </sp:AsymmetricBinding>
             <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                 <rampc:TimeToLive>360</rampc:TimeToLive>
+				<rampc:ClockSkewBuffer>60</rampc:ClockSkewBuffer>
+				<rampc:PrecisionInMilliseconds>False</rampc:PrecisionInMilliseconds>
             </rampc:RampartConfig>
         </wsp:All>
     </wsp:ExactlyOne>

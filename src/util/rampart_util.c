@@ -264,13 +264,21 @@ rampart_callback_pkcs12_password(
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_generate_time(
     const axutil_env_t *env, 
-    int ttl)
+    int ttl, 
+    axis2_bool_t with_millisecond)
 {
     axutil_date_time_t *dt = NULL;
     axis2_char_t *dt_str = NULL;
 
     dt = axutil_date_time_create_with_offset(env, ttl);
-    dt_str =  axutil_date_time_serialize_date_time(dt, env);
+    if(with_millisecond)
+    {
+        dt_str =  axutil_date_time_serialize_date_time(dt, env);
+    }
+    else
+    {
+        dt_str = axutil_date_time_serialize_date_time_without_millisecond(dt, env);
+    }
     axutil_date_time_free(dt, env);
     return dt_str;
 }

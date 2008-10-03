@@ -178,18 +178,20 @@ extern "C" {
      * Generates time.
      * User MUST free memory
      * @param ttl Time to live. The time difference between created and expired in mili seconds.
+     * @param with_millisecond  shows whether millisecond precision is needed or not
      * @return generated time
      **/
     AXIS2_EXTERN axis2_char_t* AXIS2_CALL
     rampart_generate_time(
         const axutil_env_t *env, 
-        int ttl);
+        int ttl, 
+        axis2_bool_t with_millisecond);
 
     /**
      * Check if @dt1 < @dt2. if not returns a false
      * @param env pointer to environment struct
-     * @param dt1 date time 1
-     * @param dt2 date time 2
+     * @param dt1 date time 1.
+     * @param dt2 date time 2.
      * @return AXIS2_SUCCESS if dt1 < dt2. AXIS2_FALSE otherwise
      */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL

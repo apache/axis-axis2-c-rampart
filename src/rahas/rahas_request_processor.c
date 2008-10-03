@@ -26,6 +26,7 @@
 #include <openssl_hmac.h>
 #include <oxs_utility.h>
 #include <openssl_util.h>
+#include <rampart_handler_util.h>
 
 static security_context_token_t *
 rahas_create_security_context_token(
@@ -100,6 +101,8 @@ rahas_process_issue_request(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot issue SecurityContextToken because security token service policy "
             "could not be found.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -109,6 +112,8 @@ rahas_process_issue_request(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot issue SecurityContextToken because parameter validation failed.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -128,6 +133,8 @@ rahas_process_issue_request(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot issue SecurityContextToken because SCT creation failed.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -147,6 +154,8 @@ rahas_process_issue_request(
     if(rahas_store_security_context_token(env, sct, msg_ctx) != AXIS2_SUCCESS)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas]Cannot store SecurityContextToken.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         security_context_token_free(sct, env);
         return AXIS2_FAILURE;
     }
@@ -157,6 +166,8 @@ rahas_process_issue_request(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot issue SecurityContextToken because response createion failed.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         security_context_token_free(sct, env);
         return AXIS2_FAILURE;
     }

@@ -34,39 +34,37 @@ extern "C"
 {
 #endif
 
-#define RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE 300
-
 #include <axutil_env.h>
-#include <rampart_constants.h>
-
     /**
      * Builds timestamp token.
      * @param env pointer to environment struct
-     * @param ctx axis2 context
      * @param sec_node security node
-     * @param sec_ns_obj Security namespace object
-     * @param ttl Time to live. The time difference btwn Created and Expired
+     * @param ttl Time to live. The time difference btwn Created and Expired. If it is zero or less
+     * than zero, then Expired element will not be created. 
+     * @param with_millisecond shows whether millisecond precision is needed
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
      */
-
     axis2_status_t AXIS2_CALL
     rampart_timestamp_token_build(
         const axutil_env_t *env,
         axiom_node_t *sec_node,
-        const  axiom_namespace_t *sec_ns_obj,
-        int ttl);
+        int ttl, 
+        axis2_bool_t with_millisecond);
+
     /**
-     * Validates time stamp token. Validation is based in expiration time of the
-     * Expired element.
+     * Validates time stamp token. Validation is based in expiration time of the Expired element.
      * @param env pointer to environment struct
+     * @param msg_ctx pointer to message context structure
      * @param ts_node Timestamp node
+     * @param clock_skew_buffer buffer of allowable skew of time between sender and receiver
      * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
     */
     axis2_status_t AXIS2_CALL
     rampart_timestamp_token_validate(
         const axutil_env_t *env,
         axis2_msg_ctx_t *msg_ctx,
-        axiom_node_t *ts_node );
+        axiom_node_t *ts_node,
+        int clock_skew_buffer);
 
     /* @} */
 #ifdef __cplusplus

@@ -150,7 +150,7 @@ sct_provider_stored_key_obtain_token(
         if(sct)
         {
             oxs_buffer_t* key_buffer = NULL;
-            axis2_bool_t *free_sctid = AXIS2_FALSE;
+            axis2_bool_t free_sctid = AXIS2_FALSE;
 
             key_buffer = oxs_buffer_create(env);
             oxs_buffer_populate(

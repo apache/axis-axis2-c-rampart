@@ -58,11 +58,12 @@ oxs_axiom_add_attribute(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-oxs_axiom_get_number_of_children_with_qname(const axutil_env_t *env,
-        axiom_node_t* parent,
-        axis2_char_t* local_name,
-        axis2_char_t* ns_uri,
-        axis2_char_t* prefix)
+oxs_axiom_get_number_of_children_with_qname(
+    const axutil_env_t *env,
+    axiom_node_t* parent,
+    axis2_char_t* local_name,
+    axis2_char_t* ns_uri,
+    axis2_char_t* prefix)
 {
 
     axutil_qname_t *qname = NULL;

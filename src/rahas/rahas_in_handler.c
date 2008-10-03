@@ -24,6 +24,8 @@
 #include <trust_rst.h>
 #include <trust_rstr.h>
 #include <rahas_request_processor.h>
+#include <rampart_handler_util.h>
+#include <rampart_constants.h>
 
 static axis2_status_t
 rahas_send_reply(
@@ -138,6 +140,8 @@ rahas_in_handler_invoke(
     if(!soap_envelope)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas]SOAP envelope cannot be found.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -145,6 +149,8 @@ rahas_in_handler_invoke(
     if(!soap_body)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas]SOAP body cannot be found.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -152,6 +158,8 @@ rahas_in_handler_invoke(
     if(!body_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas]SOAP body node cannot be found.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
         return AXIS2_FAILURE;
     }
     
@@ -160,6 +168,8 @@ rahas_in_handler_invoke(
     {
         /* body node is empty. Secure conversation related messages should have a non empty body */
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rahas]SOAP body node is empty.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
         return AXIS2_FAILURE;
     }
 
@@ -247,7 +257,9 @@ rahas_send_reply(
     engine = axis2_engine_create(env, axis2_msg_ctx_get_conf_ctx(out_msg_ctx, env));
     axis2_engine_send(engine, env, out_msg_ctx);
     if(engine)
+    {
         axis2_engine_free(engine, env);
+    }
 
     return AXIS2_SUCCESS;
 
@@ -284,6 +296,8 @@ rahas_request_security_token(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot create RequestSecurityToken structure. Insufficient memory.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         return NULL;
     }
 
@@ -294,6 +308,8 @@ rahas_request_security_token(
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Cannot populate RequestSecurityToken structure. Given message might not "
             "be a valid security token request. ");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         trust_rst_free(rst, env);
         return NULL;
     }
@@ -303,7 +319,9 @@ rahas_request_security_token(
     if(!rstr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rahas]Cannot create RequestSecurityTokenResponse structure. Insufficient memory.");
+            "[rahas]Cannot create RequestSecurityTokenResponse structure.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
         trust_rst_free(rst, env);
         return NULL;
     }
@@ -320,12 +338,20 @@ rahas_request_security_token(
     else if(request_type == SECCONV_ACTION_CANCEL)
     {
         /* TODO implement cancel method */
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rahas]Inidentified security context token request type. "
+            "Only 'issue' is supported.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
+        status = AXIS2_FAILURE;
     }
     else
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rahas]Inidentified security context token request type. "
             "Only 'issue' and 'cancel' are supported.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_INVALID, 
+            "The request was invalid or malformed", RAMPART_FAULT_TRUST_REQUEST_INVALID, msg_ctx);
         status = AXIS2_FAILURE;
     }
 
@@ -340,6 +366,13 @@ rahas_request_security_token(
 
     /* build the rstr node */
     rstr_node = trust_rstr_build_rstr(rstr, env, NULL);
+    if(!rstr_node)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rahas]Creation of RequestSecurityTokenResponse node failed.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_TRUST_REQUEST_FAILED, 
+            "The specified request failed", RAMPART_FAULT_TRUST_REQUEST_FAILED, msg_ctx);
+    }
 
     /* clear stuff */
     trust_rstr_free(rstr, env);

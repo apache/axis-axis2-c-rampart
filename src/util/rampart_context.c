@@ -41,6 +41,8 @@ struct rampart_context_t
     password_callback_fn pwcb_function;
     rampart_is_replayed_fn is_replayed_function;
     int ttl;
+    axis2_bool_t need_millisecond_precision;
+    int clock_skew_buffer;
     axis2_char_t *rd_val;
     int ref;
     oxs_key_mgr_t *key_mgr;
@@ -189,6 +191,8 @@ rampart_context_create(const axutil_env_t *env)
     rampart_context->pwcb_function = NULL;
     rampart_context->is_replayed_function = NULL;
     rampart_context->ttl = 300;
+    rampart_context->clock_skew_buffer = 0;
+    rampart_context->need_millisecond_precision = AXIS2_TRUE;
     rampart_context->rd_val = NULL;
     rampart_context->password_type = NULL;
     rampart_context->saml_tokens = NULL;
@@ -565,6 +569,42 @@ rampart_context_set_ttl(rampart_context_t *rampart_context,
 
     rampart_context->ttl = ttl;
     return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+rampart_context_get_need_millisecond_precision(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->need_millisecond_precision;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_need_millisecond_precision(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    axis2_bool_t need_millisecond_precision)
+{
+    rampart_context->need_millisecond_precision = need_millisecond_precision;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_clock_skew_buffer(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env,
+    int skew_buffer)
+{
+    rampart_context->clock_skew_buffer = skew_buffer;
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN int AXIS2_CALL
+rampart_context_get_clock_skew_buffer(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    return rampart_context->clock_skew_buffer;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -2002,10 +2042,49 @@ rampart_context_set_ttl_from_file(
         return AXIS2_FAILURE;
 
     time_to_live = rp_rampart_config_get_time_to_live(config,env);
-    if(!time_to_live)
-        rampart_context->ttl = 300;
-    else
+    if(time_to_live)
         rampart_context->ttl = axutil_atoi(time_to_live);
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_clock_skew_buffer_from_file(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_rampart_config_t *config = NULL;
+    axis2_char_t *clock_skew_buffer = NULL;
+    config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
+    if(!config)
+        return AXIS2_FAILURE;
+
+    clock_skew_buffer = rp_rampart_config_get_clock_skew_buffer(config,env);
+    if(clock_skew_buffer)
+        rampart_context->clock_skew_buffer = axutil_atoi(clock_skew_buffer);
+
+    return AXIS2_SUCCESS;
+}
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_context_set_need_millisecond_precision_from_file(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_rampart_config_t *config = NULL;
+    axis2_char_t *need_millisecond = NULL;
+    config = rp_secpolicy_get_rampart_config(rampart_context->secpolicy,env);
+    if(!config)
+        return AXIS2_FAILURE;
+
+    need_millisecond = rp_rampart_config_get_need_millisecond_precision(config,env);
+    if(need_millisecond)
+    {
+        if(!axutil_strcasecmp(need_millisecond, "TRUE"))
+            rampart_context->need_millisecond_precision = AXIS2_TRUE;
+        else
+            rampart_context->need_millisecond_precision = AXIS2_FALSE;
+    }
 
     return AXIS2_SUCCESS;
 }

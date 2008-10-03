@@ -144,9 +144,11 @@ rampart_username_token_build(
             axis2_char_t *nonce_val = NULL;
             axis2_char_t *created_val = NULL;
             axis2_char_t *digest_val = NULL;
+            axis2_bool_t need_millisecond = AXIS2_TRUE;
 
+            need_millisecond = rampart_context_get_need_millisecond_precision(rampart_context, env);
             nonce_val = oxs_util_generate_nonce(env, 24) ;
-            created_val = rampart_generate_time(env, 0);
+            created_val = rampart_generate_time(env, 0, need_millisecond);
             digest_val = rampart_crypto_sha1(env, nonce_val, created_val, password);
 
             axiom_namespace_increment_ref(sec_ns_obj, env);

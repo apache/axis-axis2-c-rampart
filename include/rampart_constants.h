@@ -62,6 +62,7 @@ extern "C"
     /*Default values*/
 #define RAMPART_DEFAULT_KT_ALGO OXS_DEFAULT_KT_ALGO_HREF
 #define RAMPART_STR_DEFAULT OXS_STR_DEFAULT
+#define RAMPART_TIMESTAMP_TOKEN_DEFAULT_TIME_TO_LIVE 300
 
     /* rampart element names*/
 #define RAMPART_SECURITY "Security"
@@ -109,6 +110,8 @@ extern "C"
 #define RAMPART_FAULT_FAILED_AUTHENTICATION         "wsse:FailedAuthentication"
 #define RAMPART_FAULT_FAILED_CHECK                  "wsse:FailedCheck"
 #define RAMPART_FAULT_SECURITY_TOKEN_UNAVAILABLE    "wsse:SecurityTokenUnavailable"
+#define RAMPART_FAULT_TRUST_REQUEST_FAILED          "wst:RequestFailed"
+#define RAMPART_FAULT_TRUST_REQUEST_INVALID         "wst:InvalidRequest"
 
     /***********fault related strings*********/
 #define RAMPART_FAULT_IN_TIMESTAMP             "wsse:Timestamp"
@@ -118,6 +121,7 @@ extern "C"
 #define RAMPART_FAULT_IN_SIGNATURE             "ds:Signature"
 #define RAMPART_FAULT_MSG_REPLAYED             "rampc:Message-Replayed"
 #define RAMPART_FAULT_IN_POLICY                "rampc:Policy"
+
 
     /*Dynamically set values*/
 #define RAMPART_ACTION_PASSWORD "password"
