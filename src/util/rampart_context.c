@@ -2259,7 +2259,10 @@ rampart_context_get_nodes_to_protect(
         }
         else
         {
-            axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
+            if(body_child_node)
+            {
+                axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
+            }
         }
 
         return AXIS2_SUCCESS;
