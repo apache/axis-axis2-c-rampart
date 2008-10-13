@@ -346,7 +346,6 @@ oxs_axiom_get_first_child_node_by_name(
     axiom_node_t *node = NULL;
     axiom_element_t *parent_ele = NULL;
     axiom_element_t *ele = NULL;
-    axis2_char_t *parent_name = NULL;
 
     qname = axutil_qname_create(env, local_name, ns_uri, prefix);
     parent_ele = axiom_node_get_data_element(parent, env);
