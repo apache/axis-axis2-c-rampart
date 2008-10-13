@@ -29,6 +29,7 @@
 #include <rp_issued_token.h>
 #include <rampart_saml_token.h>
 #include <oxs_key_mgr.h>
+#include <axis2_conf_ctx.h>
 
 struct rampart_context_t
 {
@@ -3429,6 +3430,39 @@ rampart_context_get_validate_security_context_token_fn(
     return rampart_context->validate_sct_function;
 }
 
+AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+is_different_session_key_for_encryption_and_signing(
+    const axutil_env_t *env,
+    rampart_context_t *rampart_context)
+{
+    rp_property_t *binding = NULL;
+    axis2_bool_t use_different_key = AXIS2_FALSE;
 
+    if(rampart_context)
+    {
+        binding = rp_secpolicy_get_binding(rampart_context_get_secpolicy(rampart_context, env),env);
+        if(binding)
+        {
+            if(rp_property_get_type(binding,env) == RP_PROPERTY_SYMMETRIC_BINDING)
+            {
+                rp_symmetric_binding_t *sym_binding = NULL;
+                rp_property_t *token = NULL;
+                sym_binding = (rp_symmetric_binding_t *)rp_property_get_value(binding,env);
+                if(sym_binding)
+                {
+                    /* check protection tokens have being specified. If not (means encryption token 
+                       and signature token is specified), use different session key for 
+                       encryption and signature 
+                    */
+                    token = rp_symmetric_binding_get_protection_token(sym_binding,env);
+                    if(!token)
+                        use_different_key = AXIS2_TRUE;
+                }
+            }
+        }
+    }
+
+    return use_different_key;
+}
 
 

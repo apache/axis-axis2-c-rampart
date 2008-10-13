@@ -22,6 +22,7 @@
 #include <rampart_util.h>
 #include <rampart_sct_provider.h>
 #include <secconv_security_context_token.h>
+#include <axis2_conf_ctx.h>
 
 #define RAMPART_SCT_PROVIDER_HASH_PROB "Rampart_SCT_Prov_DB_Prop"
 

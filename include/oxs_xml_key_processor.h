@@ -36,6 +36,7 @@
 #include <axiom_node.h>
 #include <axiom_element.h>
 #include <axutil_qname.h>
+#include <oxs_x509_cert.h>
 
 #ifdef __cplusplus
 extern "C"

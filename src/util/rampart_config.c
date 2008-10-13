@@ -16,11 +16,9 @@
  */
 
 #include <rampart_config.h>
-#include <rampart_constants.h>
 
 struct rampart_config_t
 {
-    /*****************************/
     axis2_char_t *username;
     axis2_char_t *password;
     axis2_char_t *password_type;
@@ -29,112 +27,83 @@ struct rampart_config_t
     int ttl;
 };
 
-
-
 AXIS2_EXTERN rampart_config_t *AXIS2_CALL
-rampart_config_create(const axutil_env_t *env)
+rampart_config_create(
+    const axutil_env_t *env)
 {
     rampart_config_t *rampart_config = NULL;
+    rampart_config =  (rampart_config_t *) AXIS2_MALLOC (env->allocator, sizeof (rampart_config_t));
 
-    AXIS2_ENV_CHECK(env, NULL);
-
-    rampart_config =  (rampart_config_t *) AXIS2_MALLOC (env->allocator,
-                       sizeof (rampart_config_t));
-
-    if(rampart_config == NULL)
+    if(!rampart_config)
     {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart] Unable to create rampart configuration. Insufficient memory.");
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         return NULL;
     }
+
     rampart_config->username = NULL;
     rampart_config->password = NULL;
     rampart_config->password_type = NULL;
     rampart_config->ttl = 0;
     rampart_config->saml_tokens = NULL;
 	rampart_config->issued_token_aquire = NULL;
-
     return rampart_config;
 }
 
 AXIS2_EXTERN void AXIS2_CALL
-rampart_config_free(rampart_config_t *rampart_config,
-                     const axutil_env_t *env)
+rampart_config_free(
+    rampart_config_t *rampart_config,
+    const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
-
-        /*TODO Free*/
-        AXIS2_FREE(env->allocator,rampart_config);
-        rampart_config = NULL;
-    return;
+    AXIS2_FREE(env->allocator,rampart_config);
 }
 
-
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_config_set_username(rampart_config_t *rampart_config,
-                         const axutil_env_t *env,
-                         axis2_char_t *username)
+rampart_config_set_username(
+    rampart_config_t *rampart_config,
+    const axutil_env_t *env,
+    axis2_char_t *username)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error, username, AXIS2_FAILURE);
-
     rampart_config->username = username;
     return AXIS2_SUCCESS;
-
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_config_set_password(rampart_config_t *rampart_config,
-                             const axutil_env_t *env,
-                             axis2_char_t *password)
+rampart_config_set_password(
+    rampart_config_t *rampart_config,
+    const axutil_env_t *env,
+    axis2_char_t *password)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error,password,AXIS2_FAILURE);
-
     rampart_config->password = password;
     return AXIS2_SUCCESS;
 }
 
-
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_config_set_password_type(rampart_config_t *rampart_config,
-                                  const axutil_env_t *env,
-                                  axis2_char_t *password_type)
+rampart_config_set_password_type(
+    rampart_config_t *rampart_config,
+    const axutil_env_t *env,
+    axis2_char_t *password_type)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error,password_type,AXIS2_FAILURE);
-
     rampart_config->password_type = password_type;
     return AXIS2_SUCCESS;
-
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_config_set_ttl(rampart_config_t *rampart_config,
-                        const axutil_env_t *env,
-                        int ttl)
+rampart_config_set_ttl(
+    rampart_config_t *rampart_config,
+    const axutil_env_t *env,
+    int ttl)
 {
-
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-    AXIS2_PARAM_CHECK(env->error,ttl,AXIS2_FAILURE);
-
     rampart_config->ttl = ttl;
     return AXIS2_SUCCESS;
 }
-
-
-
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 rampart_config_get_username(
     rampart_config_t *rampart_config,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
-
     return rampart_config->username;
 }
 
@@ -143,8 +112,6 @@ rampart_config_get_password(
     rampart_config_t *rampart_config,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env, NULL);
-
     return rampart_config->password;
 }
 
@@ -154,8 +121,6 @@ rampart_config_get_password_type(
     rampart_config_t *rampart_config,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env,NULL);
-
     return rampart_config->password_type;
 }
 
@@ -164,15 +129,14 @@ rampart_config_get_ttl(
     rampart_config_t *rampart_config,
     const axutil_env_t *env)
 {
-    AXIS2_ENV_CHECK(env,NULL);
-
     return rampart_config->ttl;
 }
 
 AXIS2_EXTERN int AXIS2_CALL
-rampart_config_add_saml_token(rampart_config_t *rampart_config, 
-                              const axutil_env_t *env, 
-                              rampart_saml_token_t *saml)
+rampart_config_add_saml_token(
+    rampart_config_t *rampart_config, 
+    const axutil_env_t *env, 
+    rampart_saml_token_t *saml)
 {
 	if (!rampart_config->saml_tokens)
 	{
@@ -187,24 +151,27 @@ rampart_config_add_saml_token(rampart_config_t *rampart_config,
 }
 
 AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL
-rampart_config_get_saml_tokens(rampart_config_t *rampart_config, 
-                              const axutil_env_t *env)                         
+    rampart_config_get_saml_tokens(
+    rampart_config_t *rampart_config, 
+    const axutil_env_t *env)
 {
     return rampart_config->saml_tokens;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_config_set_issued_token_aquire_function(rampart_config_t *rampart_config,
-							  const axutil_env_t *env,
-							  issued_token_callback_func issued_token_aquire)
+rampart_config_set_issued_token_aquire_function(
+    rampart_config_t *rampart_config,
+    const axutil_env_t *env,
+    issued_token_callback_func issued_token_aquire)
 {
 	rampart_config->issued_token_aquire = issued_token_aquire;
 	return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN issued_token_callback_func AXIS2_CALL
-rampart_config_get_issued_token_aquire_function(rampart_config_t *rampart_config, 
-							  const axutil_env_t *env)  
+rampart_config_get_issued_token_aquire_function(
+    rampart_config_t *rampart_config, 
+    const axutil_env_t *env)  
 {
 	return rampart_config->issued_token_aquire;
 }

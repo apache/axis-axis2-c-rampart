@@ -29,6 +29,7 @@
 #include <oxs_key_mgr.h>
 #include <oxs_tokens.h>
 #include <oxs_xml_key_processor.h>
+#include <axiom_util.h>
 /*Private functions*/
 
 /*Public functions*/

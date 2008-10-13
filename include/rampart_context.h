@@ -1884,6 +1884,17 @@ extern "C"
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
 
+    /**
+     * check whether different keys are needed for encryption and signature
+     * @param env pointer to environment struct
+     * @param rampart_context rampart context
+     * @return AXIS2_TRUE if different keys are needed. AXIS2_FALSE otherwise.
+     */
+    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
+    is_different_session_key_for_encryption_and_signing(
+        const axutil_env_t *env,
+        rampart_context_t *rampart_context);
+
 
     
 #ifdef __cplusplus

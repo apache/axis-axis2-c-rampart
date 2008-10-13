@@ -32,8 +32,8 @@
 #include <axis2_defines.h>
 #include <axutil_env.h>
 #include <axis2_msg_ctx.h>
-#include <axis2_conf_ctx.h>
 #include <rampart_context.h>
+
 #ifdef __cplusplus
 extern "C"
 {

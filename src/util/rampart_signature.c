@@ -43,6 +43,7 @@
 #include <rampart_sec_processed_result.h>
 #include <rampart_sct_provider_utility.h>
 #include <rampart_saml_token.h>
+#include <axiom_util.h>
 
 /*Private functions*/
 

@@ -16,21 +16,7 @@
  */
 
 
-#include <stdio.h>
 #include <rampart_util.h>
-#include <axis2_util.h>
-#include <axutil_base64.h>
-#include <axutil_property.h>
-#include <time.h>
-#include <axis2_msg_ctx.h>
-#include <rampart_constants.h>
-#include <rampart_callback.h>
-#include <rampart_credentials.h>
-#include <rampart_replay_detector.h>
-#include <rampart_sct_provider.h>
-#include <oxs_buffer.h>
-#include <oxs_utility.h>
-#include <rampart_context.h>
 
 /* Load a .dll or .so module */
 static void*
@@ -43,8 +29,7 @@ rampart_load_module(
     axutil_param_t *impl_info_param = NULL;
     void *ptr = NULL;
 
-    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-        "[rampart][rampart_util] Trying to load module %s", module_name);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,  "[rampart]Trying to load module %s", module_name);
     dll_desc = axutil_dll_desc_create(env);
     axutil_dll_desc_set_name(dll_desc, env, module_name);
     impl_info_param = axutil_param_create(env, NULL, dll_desc);
@@ -55,19 +40,26 @@ rampart_load_module(
     if (!ptr)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Unable to load the module %s.", module_name);
+            "[rampart] Unable to load the module %s.", module_name);
         axutil_param_free(impl_info_param, env);
     }
     else
     {
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Successfully loaded module %s", module_name);
+            "[rampart]Successfully loaded module %s", module_name);
         *param = impl_info_param;
     }
 
     return ptr;
 }
 
+/**
+ * Load the credentials module
+ * User MUST free memory
+ * @param env pointer to environment struct
+ * @param cred_module_name name of the credentails module to be loaded
+ * @return the loaded credentails module
+ */
 AXIS2_EXTERN rampart_credentials_t* AXIS2_CALL
 rampart_load_credentials_module(
     const axutil_env_t *env,
@@ -80,8 +72,7 @@ rampart_load_credentials_module(
     if(!cred)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Unable to identify the credentials  module %s.", 
-            cred_module_name);
+            "[rampart]Unable to identify the credentials  module %s.", cred_module_name);
     }
     else if(param)
     {
@@ -91,6 +82,16 @@ rampart_load_credentials_module(
     return cred;
 }
 
+/**
+ * Call credentials module
+ * User MUST free memory of username and password
+ * @param env pointer to environment struct
+ * @param cred_module the credentails module
+ * @param ctx the message context
+ * @param username reference to the returned username
+ * @param password reference to the returned password
+ * @return the status of the operation
+ */
 AXIS2_EXTERN rampart_credentials_status_t AXIS2_CALL
 rampart_call_credentials(
     const axutil_env_t *env,
@@ -100,11 +101,17 @@ rampart_call_credentials(
     axis2_char_t **password)
 {
     rampart_credentials_status_t cred_status = RAMPART_CREDENTIALS_GENERAL_ERROR;
-
     cred_status = RAMPART_CREDENTIALS_USERNAME_GET(cred_module, env, msg_ctx, username, password);
     return cred_status;
 }
 
+/**
+ * Load authentication module
+ * User MUST free memory
+ * @param env pointer to environment struct
+ * @param auth_module_name name of the authentication module
+ * @return created athenticaiton module
+ */
 AXIS2_EXTERN rampart_authn_provider_t* AXIS2_CALL
 rampart_load_auth_module(
     const axutil_env_t *env,
@@ -117,8 +124,7 @@ rampart_load_auth_module(
     if(!authp)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Unable to identify the authentication module %s.", 
-            auth_module_name);
+            "[rampart]Unable to identify the authentication module %s.", auth_module_name);
     }
     else if(param)
     {
@@ -128,6 +134,13 @@ rampart_load_auth_module(
     return authp;
 }
 
+/**
+ * Load replay detection module
+ * User MUST free memory
+ * @param env pointer to environment struct
+ * @param replay_detector_name name of the replay detection module
+ * @return created replay detection module
+ */
 AXIS2_EXTERN rampart_replay_detector_t* AXIS2_CALL
 rampart_load_replay_detector(
     const axutil_env_t *env,
@@ -140,8 +153,7 @@ rampart_load_replay_detector(
     if(!rd)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Unable to identify the replay detection  module %s.", 
-            replay_detector_name);
+            "[rampart]Unable to identify the replay detection  module %s.", replay_detector_name);
     }
     else if(param)
     {
@@ -151,6 +163,13 @@ rampart_load_replay_detector(
     return rd;
 }
 
+/**
+ * Load security context token provider
+ * User MUST free memory
+ * @param env pointer to environment struct
+ * @param sct_provider_name name of the security context token provider 
+ * @return created security context token provider module
+ */
 AXIS2_EXTERN rampart_sct_provider_t* AXIS2_CALL
 rampart_load_sct_provider(
     const axutil_env_t *env,
@@ -163,7 +182,7 @@ rampart_load_sct_provider(
     if(!sct_provider)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Unable to identify security context token provider module %s.", 
+            "[rampart]Unable to identify security context token provider module %s.", 
             sct_provider_name);
     }
     else if(param)
@@ -174,6 +193,13 @@ rampart_load_sct_provider(
     return sct_provider;
 }
 
+/**
+ * Load the password callback module
+ * User MUST free memory
+ * @param env pointer to environment struct
+ * @callback_module_name the name of the callback module
+ * @return the loaded callback module
+ */
 AXIS2_EXTERN rampart_callback_t* AXIS2_CALL
 rampart_load_pwcb_module(
     const axutil_env_t *env,
@@ -186,8 +212,7 @@ rampart_load_pwcb_module(
     if(!cb)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Unable to identify the callback module %s.", 
-            callback_module_name);
+            "[rampart]Unable to identify the callback module %s.", callback_module_name);
     }
     else if(param)
     {
@@ -197,14 +222,26 @@ rampart_load_pwcb_module(
     return cb;
 }
 
+/**
+ * Call auth module
+ * @param env pointer to environment struct
+ * @param authp the authentication module
+ * @param  username the username in the UsernameToken
+ * @param  password the password in the UsernameToken
+ * @param  nonce the nonce in the UsernameToken. Can be NULL if plain text password is used.
+ * @param  created created time in UsernameToken. Can be NULL if plain text password is used.
+ * @param password_type  the type of the password. either plain text of digest
+ * @param msg_ctx the message context
+ * @return status of the operation
+ */
 AXIS2_EXTERN rampart_authn_provider_status_t AXIS2_CALL
 rampart_authenticate_un_pw(
     const axutil_env_t *env,
     rampart_authn_provider_t *authp,
     const axis2_char_t *username,
     const axis2_char_t *password,
-    const axis2_char_t *nonce,/*Can be NULL if plain text*/
-    const axis2_char_t *created,/*Can be NULL if plain text*/
+    const axis2_char_t *nonce,
+    const axis2_char_t *created,
     const axis2_char_t *password_type,
     axis2_msg_ctx_t *msg_ctx)
 {
@@ -212,7 +249,7 @@ rampart_authenticate_un_pw(
 
     if(authp)
     {
-        if(0 == axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
+        if(!axutil_strcmp(password_type, RAMPART_PASSWORD_DIGEST_URI))
         {
             auth_status = RAMPART_AUTHN_PROVIDER_CHECK_PASSWORD_DIGEST(
                 authp, env, msg_ctx, username, nonce, created, password);
@@ -226,12 +263,19 @@ rampart_authenticate_un_pw(
     else
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_util] Cannot authenticate user. Authentication module is not valid");
+            "[rampart]Cannot authenticate user. Authentication module is not valid");
     }
 
     return auth_status;
 }
 
+/**
+ * Gets the password of given user.
+ * @env the environment
+ * @callback_module callback module structure
+ * @username the name of the user to get the password
+ * @return the password for the user or NULL if failed
+ */
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_callback_password(
     const axutil_env_t *env,
@@ -246,6 +290,13 @@ rampart_callback_password(
     return password;
 }
 
+/**
+ * Get the password for pkcs12 key store.
+ * @env pointer to environment struct
+ * @callback pointer to rampart callback module
+ * @username name of the pkcs12 owner
+ * @return the password for the user or NULL if username is incorrect
+ */
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
 rampart_callback_pkcs12_password(
 	const axutil_env_t *env,
@@ -260,7 +311,13 @@ rampart_callback_pkcs12_password(
 	return password;
 }
 
-
+/**
+ * Generates time.
+ * User MUST free memory
+ * @param ttl Time to live. The time difference between created and expired in mili seconds.
+ * @param with_millisecond  shows whether millisecond precision is needed or not
+ * @return generated time
+ **/
 AXIS2_EXTERN axis2_char_t* AXIS2_CALL
 rampart_generate_time(
     const axutil_env_t *env, 
@@ -283,7 +340,13 @@ rampart_generate_time(
     return dt_str;
 }
 
-
+/**
+ * Check if @dt1 < @dt2. if not returns a false
+ * @param env pointer to environment struct
+ * @param dt1 date time 1.
+ * @param dt2 date time 2.
+ * @return AXIS2_SUCCESS if dt1 < dt2. AXIS2_FALSE otherwise
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_compare_date_time(
     const axutil_env_t *env, 
@@ -297,7 +360,7 @@ rampart_compare_date_time(
 
     dt1 = axutil_date_time_create(env);
     status =  axutil_date_time_deserialize_date_time(dt1, env, dt1_str);
-    if (!status)
+    if(status != AXIS2_SUCCESS)
     {
         axutil_date_time_free(dt1, env);
         return AXIS2_FAILURE;
@@ -305,14 +368,14 @@ rampart_compare_date_time(
 
     dt2 = axutil_date_time_create(env);
     status =  axutil_date_time_deserialize_date_time(dt2, env, dt2_str);
-    if (status == AXIS2_FAILURE)
+    if (status != AXIS2_SUCCESS)
     {
         axutil_date_time_free(dt1, env);
         axutil_date_time_free(dt2, env);
         return AXIS2_FAILURE;
     }
 
-    /*dt1<dt2 for SUCCESS*/
+    /* dt1<dt2 for SUCCESS */
     res = axutil_date_time_compare(dt1, env, dt2);
     axutil_date_time_free(dt1, env);
     axutil_date_time_free(dt2, env);
@@ -325,40 +388,4 @@ rampart_compare_date_time(
         return AXIS2_FAILURE;
     }
 }
-
-AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-is_different_session_key_for_encryption_and_signing(
-    const axutil_env_t *env,
-    rampart_context_t *rampart_context)
-{
-    rp_property_t *binding = NULL;
-    axis2_bool_t use_different_key = AXIS2_FALSE;
-
-    if(rampart_context)
-    {
-        binding = rp_secpolicy_get_binding(rampart_context_get_secpolicy(rampart_context, env),env);
-        if(binding)
-        {
-            if(rp_property_get_type(binding,env) == RP_PROPERTY_SYMMETRIC_BINDING)
-            {
-                rp_symmetric_binding_t *sym_binding = NULL;
-                rp_property_t *token = NULL;
-                sym_binding = (rp_symmetric_binding_t *)rp_property_get_value(binding,env);
-                if(sym_binding)
-                {
-                    /* check protection tokens have being specified. If not (means encryption token 
-                       and signature token is specified), use different session key for 
-                       encryption and signature 
-                    */
-                    token = rp_symmetric_binding_get_protection_token(sym_binding,env);
-                    if(!token)
-                        use_different_key = AXIS2_TRUE;
-                }
-            }
-        }
-    }
-
-    return use_different_key;
-}
-
 

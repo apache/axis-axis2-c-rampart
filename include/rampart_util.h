@@ -19,7 +19,6 @@
 #include <axis2_defines.h>
 #include <axutil_date_time.h>
 #include <axutil_env.h>
-#include <axutil_property.h>
 #include <axis2_msg_ctx.h>
 #include <rampart_authn_provider.h>
 #include <rampart_credentials.h>
@@ -199,17 +198,6 @@ extern "C" {
         const axutil_env_t *env, 
         axis2_char_t *dt1, 
         axis2_char_t *dt2);
-
-    /**
-     * check whether different keys are needed for encryption and signature
-     * @param env pointer to environment struct
-     * @param rampart_context rampart context
-     * @return AXIS2_TRUE if different keys are needed. AXIS2_FALSE otherwise.
-     */
-    AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    is_different_session_key_for_encryption_and_signing(
-        const axutil_env_t *env,
-        rampart_context_t *rampart_context);
 
     /* @} */
 #ifdef __cplusplus

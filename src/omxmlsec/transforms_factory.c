@@ -25,6 +25,7 @@
 #include <oxs_buffer.h>
 #include <oxs_c14n.h>
 #include <oxs_saml_token.h>
+#include <axiom_util.h>
 
 /*Functions that implements transforms*/
 oxs_tr_dtype_t AXIS2_CALL

@@ -36,6 +36,7 @@
 #include <rampart_signature.h>
 #include <rampart_saml.h>
 #include <rampart_issued.h>
+#include <axiom_util.h>
 /*Private functions*/
 
 axis2_status_t AXIS2_CALL

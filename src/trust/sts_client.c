@@ -19,6 +19,7 @@
 #include <axis2_op_client.h>
 #include <openssl_hmac.h>
 #include <oxs_utility.h>
+#include <axiom_util.h>
 
 static void
 trust_sts_client_insert_entropy(

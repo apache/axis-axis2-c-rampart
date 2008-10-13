@@ -14,7 +14,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-#include <axutil_param.h>
 
 #ifndef RAMPART_AUTHN_PROVIDER_H
 #define RAMPART_AUTHN_PROVIDER_H
@@ -29,6 +28,7 @@
 * @{
 */
 
+#include <axutil_param.h>
 #include <axis2_defines.h>
 #include <axutil_error.h>
 #include <axutil_env.h>

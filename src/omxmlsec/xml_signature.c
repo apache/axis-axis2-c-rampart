@@ -33,6 +33,7 @@
 #include <oxs_transform.h>
 #include <oxs_transforms_factory.h>
 #include <oxs_tokens.h>
+#include <axiom_util.h>
 /*Private functions*/
 
 

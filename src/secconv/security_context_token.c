@@ -776,9 +776,6 @@ security_context_token_deserialize(
     const axutil_env_t *env, 
     axis2_char_t *serialised_node)
 {
-    axiom_xml_reader_t *reader = NULL;
-    axiom_document_t *doc = NULL;
-    axiom_stax_builder_t *builder = NULL;
     axiom_node_t *sct_node = NULL;
     axiom_node_t *proof_node = NULL;
     axiom_node_t *attached_ref_node = NULL;
@@ -790,19 +787,7 @@ security_context_token_deserialize(
     axutil_qname_t *node_qname = NULL;
     axiom_element_t *element = NULL;
 
-    reader = axiom_xml_reader_create_for_memory(
-        env, serialised_node, axutil_strlen(serialised_node), NULL, AXIS2_XML_PARSER_TYPE_BUFFER);
-
-    if(!reader)
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart]Cannot create xml reader. Security context token deserialize failed.");
-        return AXIS2_FAILURE;
-    }
-
-    builder = axiom_stax_builder_create(env, reader);
-    doc = axiom_document_create(env, NULL, builder);
-    sct_node = axiom_document_build_all(doc, env);
+    sct_node = oxs_axiom_deserialize_node(env, serialised_node);
     if(!sct_node)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
@@ -914,8 +899,6 @@ security_context_token_deserialize(
         return AXIS2_FAILURE;
     }
     
-    axiom_xml_reader_xml_free(reader, env, NULL);
-
     return AXIS2_SUCCESS;
 }
 

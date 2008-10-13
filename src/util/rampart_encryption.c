@@ -33,6 +33,7 @@
 #include <axis2_key_type.h>
 #include <oxs_derivation.h>
 #include <rampart_sct_provider_utility.h>
+#include <axiom_util.h>
 
 
 /*Private functions*/

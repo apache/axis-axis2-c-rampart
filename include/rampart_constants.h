@@ -122,6 +122,8 @@ extern "C"
 #define RAMPART_FAULT_MSG_REPLAYED             "rampc:Message-Replayed"
 #define RAMPART_FAULT_IN_POLICY                "rampc:Policy"
 
+#define RAMPART_FAULT_ELEMENT_LOCAL_NAME       "ProblemSecurityHeader"
+
 
     /*Dynamically set values*/
 #define RAMPART_ACTION_PASSWORD "password"
@@ -164,8 +166,13 @@ extern "C"
 #define RAMPART_SCT_ID_TYPE_LOCAL 1
 #define RAMPART_SCT_ID_TYPE_GLOBAL 2
 
+#define RAMPART_USERNAME_TOKEN_NONCE_LENGTH 24
+
 #define RAMPART_ENC_TOKEN_ID "EncryptionTokenID"
 #define RAMPART_SIG_TOKEN_ID "SignatureTokenID"
+
+#define RAMPART_BST_ID_PREFIX "BST-"
+#define RAMPART_EMBED_TOKEN_ID "ID"
 
 #ifdef __cplusplus
 }

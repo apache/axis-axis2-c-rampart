@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-
-/* Rampart_crypto_util will contain crypto functionalities of the rampart model
- *
- */
-#include <stdio.h>
 #include <rampart_crypto_util.h>
 #include <axis2_util.h>
 #include <axutil_base64.h>
 #include <openssl_digest.h>
 
-/*Calculate the hash of concatenated string of
- * nonce, created and the password.
- *
+/**
+ * Calculate the hash of concatenated string of nonce+created+password
+ * @param env pointer to environment variable
+ * @param nonce randomly created bytes
+ * @param created created time
+ * @param password password to be hashed
+ * @return calculated hash on success. NULL otherwise
  */
-
-AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axutil_env_t *env,
-        const axis2_char_t *nonce,
-        const axis2_char_t *created,
-        const axis2_char_t *password)
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
+rampart_crypto_sha1(
+    const axutil_env_t *env,
+    const axis2_char_t *nonce,
+    const axis2_char_t *created,
+    const axis2_char_t *password)
 {
     char* input = NULL;
     axis2_char_t* digest = NULL;
@@ -42,8 +42,9 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axutil_env_t *en
     int created_length = 0;
     int password_length = 0;
 
-    /*Decode the nonce first*/
-    if(nonce){
+    /* Decode the nonce first */
+    if(nonce)
+    {
         int ret;
         decoded_nonce_length = axutil_base64_decode_len(nonce);
         decoded_nonce = AXIS2_MALLOC(env->allocator, decoded_nonce_length);
@@ -51,13 +52,16 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axutil_env_t *en
     }
 
     if ((!nonce) && (!created))
-    {/*If both nonce and created are omitted*/
+    {
+        /* If both nonce and created are omitted, string to be hashed is only password */
         password_length = axutil_strlen(password);
         input = AXIS2_MALLOC(env->allocator, password_length);
         memcpy(input, password, password_length);
     }
     else if (!nonce)
-    {/*If nonce is omitted*/
+    {
+        /* If nonce is omitted, but created is given. 
+         * So, string to be hashed is created + password */
         created_length = axutil_strlen(created);
         password_length = axutil_strlen(password);
         input = AXIS2_MALLOC(env->allocator, created_length + password_length);
@@ -65,18 +69,21 @@ AXIS2_EXTERN axis2_char_t* AXIS2_CALL rampart_crypto_sha1(const axutil_env_t *en
         memcpy(input + created_length, password, password_length);
     }
     else  if (!created)
-    {/*If created is omitted*/
+    {
+        /* If created is omitted, but nonce is given. 
+         * So, string to be hased is nonce + password */
         password_length = axutil_strlen(password);
         input = AXIS2_MALLOC(env->allocator, decoded_nonce_length + password_length);
         memcpy(input, decoded_nonce, decoded_nonce_length);
         memcpy(input + decoded_nonce_length, password, password_length);
     }
     else
-    {/*If all nonce, created and password are present*/
+    {
+        /* If all nonce, created and password are present */
         created_length = axutil_strlen(created);
         password_length = axutil_strlen(password);
-        input = AXIS2_MALLOC(env->allocator,
-                             decoded_nonce_length + created_length + password_length);
+        input = AXIS2_MALLOC(
+            env->allocator, decoded_nonce_length + created_length + password_length);
         memcpy(input, decoded_nonce, decoded_nonce_length);
         memcpy(input + decoded_nonce_length, created, created_length);
         memcpy(input + decoded_nonce_length + created_length, password, password_length);

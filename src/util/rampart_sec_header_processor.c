@@ -47,6 +47,7 @@
 #include <saml.h>
 #include <rampart_saml.h>
 #include <rampart_saml_token.h>
+#include <axiom_util.h>
 /*Private functions*/
 
 /*Get the security context token and store it in key array*/
@@ -617,68 +618,49 @@ rampart_shp_process_timestamptoken(
 }
 
 static axis2_status_t
-rampart_shp_process_usernametoken(const axutil_env_t *env,
-                                  axis2_msg_ctx_t *msg_ctx,
-                                  rampart_context_t *rampart_context,
-                                  axiom_node_t *sec_node)
+rampart_shp_process_usernametoken(
+    const axutil_env_t *env,
+    axis2_msg_ctx_t *msg_ctx,
+    rampart_context_t *rampart_context,
+    axiom_node_t *ut_node)
 {
     axis2_status_t valid_user = AXIS2_FAILURE;
-    axiom_node_t *ut_node = NULL;
-    ut_node = oxs_axiom_get_first_child_node_by_name(env, sec_node, RAMPART_SECURITY_USERNAMETOKEN, OXS_WSSE_XMLNS, NULL);
-    if(!ut_node)
-    {
-        if(rampart_context_is_include_username_token(rampart_context, env))
-        {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][shp] Username token is not in the message");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION,
-                                          "Username Token not found", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
-            return AXIS2_FAILURE;
-        }
-        else
-        {
-            return AXIS2_SUCCESS;
-        }
-    }
-    else if(!rampart_context_is_include_username_token(rampart_context, env))
-    {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][shp] Username token should not be in the message.");
-        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
-                                      "Username Token not expected", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
 
+    if(!rampart_context_is_include_username_token(rampart_context, env))
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Username token should not be in the message.");
+        rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+            "Username Token not expected", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
         return AXIS2_FAILURE;
     }
     else
     {
         if(!rampart_shp_validate_qnames(env, ut_node))
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][shp] Error in validating qnames for the username token");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN,
-                                          "Error in the Username token.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
-
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                "[rampart]Error in validating qnames for the username token");
+            rampart_create_fault_envelope(env, RAMPART_FAULT_INVALID_SECURITY_TOKEN, 
+                "Error in the Username token.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
             return AXIS2_FAILURE;
         }
 
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Validating UsernameToken");
-        valid_user = rampart_username_token_validate(env,
-                     msg_ctx, ut_node, rampart_context);
+        AXIS2_LOG_INFO(env->log, "[rampart]Validating UsernameToken");
+        valid_user = rampart_username_token_validate(env, msg_ctx, ut_node, rampart_context);
     }
+
     if (valid_user)
     {
-        AXIS2_LOG_INFO(env->log, "[rampart][shp] Validating UsernameToken SUCCESS");
+        AXIS2_LOG_INFO(env->log, "[rampart]Validating UsernameToken SUCCESS");
         return AXIS2_SUCCESS;
     }
     else
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][shp] Validating UsernameToken FAILED");
-
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Validating UsernameToken FAILED");
         if(!axis2_msg_ctx_get_fault_soap_envelope(msg_ctx, env))
         {
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION,
-                                          "UsernameToken validation failed.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
+            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_AUTHENTICATION, 
+                "UsernameToken validation failed.", RAMPART_FAULT_IN_USERNAMETOKEN, msg_ctx);
         }
         return AXIS2_FAILURE;
     }
@@ -771,7 +753,12 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     /*Get EncryptedData references */
     ref_list_node = oxs_axiom_get_first_child_node_by_name(
                         env, encrypted_key_node, OXS_NODE_REFERENCE_LIST, OXS_ENC_NS, NULL);
-    reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
+    
+    /* reference list is not a mandatory item in encrypted key. */
+    if(ref_list_node)
+    {
+        reference_list = oxs_token_get_reference_list_data(env, ref_list_node);
+    }
 
     /*Get the algorithm to decrypt the sesison key*/
     enc_mtd_node = oxs_axiom_get_first_child_node_by_name(
@@ -1853,8 +1840,7 @@ rampart_shp_process_sec_header(
         }
         else if(!axutil_strcmp(cur_local_name, RAMPART_SECURITY_USERNAMETOKEN))
         {
-            status = rampart_shp_process_usernametoken(env, msg_ctx, rampart_context, sec_node);
-
+            status = rampart_shp_process_usernametoken(env, msg_ctx, rampart_context, cur_node);
         }
         else if(!axutil_strcmp(cur_local_name, OXS_NODE_SIGNATURE))
         {

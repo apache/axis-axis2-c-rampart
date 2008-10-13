@@ -92,7 +92,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="if not exist $(SolutionDir)deploy\lib\ mkdir $(SolutionDir)deploy\lib&#x0D;&#x0A;copy $(SolutionDir)deploy\modules\rampart\mod_rampart.* $(SolutionDir)deploy\lib\&#x0D;&#x0A;copy ..\..\..\src\data\module.xml $(SolutionDir)deploy\modules\rampart\"
+				CommandLine="if not exist $(SolutionDir)deploy\lib\ mkdir $(SolutionDir)deploy\lib&#x0D;&#x0A;copy $(SolutionDir)deploy\modules\rampart\mod_rampart.* $(SolutionDir)deploy\lib\&#x0D;&#x0A;copy ..\..\..\src\data\module.xml $(SolutionDir)deploy\modules\rampart\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration

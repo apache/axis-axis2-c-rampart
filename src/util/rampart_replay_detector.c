@@ -15,31 +15,19 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <axutil_utils.h>
 #include <axutil_linked_list.h>
 #include <rampart_replay_detector.h>
 #include <axutil_property.h>
 #include <rampart_constants.h>
 #include <rampart_sec_processed_result.h>
-#include <rampart_util.h>
+#include <axis2_conf_ctx.h>
 
 #define RAMPART_RD_LL_PROP "Rampart_RD_LL_Prop"
 
-static axis2_char_t *
-rampart_replay_detector_get_ts(
-    const axutil_env_t *env,
-    axis2_msg_ctx_t* msg_ctx)
-{
-    axis2_char_t  *ts = NULL;
-    axutil_hash_t *hash = NULL;
-
-    /*Get timestamp from security processed results */
-    hash = rampart_get_all_security_processed_results(env, msg_ctx);
-    ts = axutil_hash_get(hash, RAMPART_SPR_TS_CREATED, AXIS2_HASH_KEY_STRING);
-    return ts;
-}
-
+/** 
+ * Get replay detector storage from msg_ctx. If it is not yet created, it will create a new one and
+ * store it in conf_context.
+ */
 static axutil_linked_list_t *
 rampart_replay_detector_get_linked_list(
     const axutil_env_t *env,
@@ -83,6 +71,9 @@ rampart_replay_detector_get_linked_list(
     }
 }
 
+/**
+ * Checks whether given id is available in the linked list
+ */
 static axis2_bool_t
 rampart_replay_detector_linked_list_contains(
     axutil_linked_list_t *linked_list,
@@ -96,9 +87,8 @@ rampart_replay_detector_linked_list_contains(
     for(i=0; i<count; i++)
     {
         axis2_char_t *tmp_id = NULL;
-
         tmp_id = (axis2_char_t*)axutil_linked_list_get(linked_list, env, i);
-        if(0 == axutil_strcmp(id, tmp_id))
+        if(!axutil_strcmp(id, tmp_id))
         {
             return AXIS2_TRUE;
         }
@@ -137,8 +127,10 @@ rampart_replay_detector_default(
     axutil_allocator_switch_to_global_pool(env->allocator);
 
     /* By using just Timestamps we dont need addressing. But there is a chance that
-     * two messages might generated exactly at the same time*/
-    ts = rampart_replay_detector_get_ts( env, msg_ctx);
+     * two messages might generated exactly at the same time */
+
+    /* get the timestamp from security processed results */
+    ts = rampart_get_security_processed_result(env, msg_ctx, RAMPART_SPR_TS_CREATED);
     addr_msg_id = axis2_msg_ctx_get_wsa_message_id(msg_ctx, env);
 
     if(!ts && addr_msg_id)
@@ -151,12 +143,13 @@ rampart_replay_detector_default(
     }
     else if(ts && addr_msg_id)
     {
-        msg_id = axutil_strcat(env, addr_msg_id, ts, NULL);
+        msg_id = axutil_stracat(env, addr_msg_id, ts);
     }
     else
     {
         msg_id = NULL;
     }
+
     if(!msg_id)
     {
         msg_id = "RAMPART-DEFAULT-TS";
