@@ -263,6 +263,7 @@ extern "C"
     AXIS2_EXTERN oxs_key_t *AXIS2_CALL
     oxs_key_create(const axutil_env_t *env);
 
+    /* once the key_sha is given, ownership is assumed */
     AXIS2_EXTERN axis2_status_t AXIS2_CALL
     oxs_key_set_key_sha(
         oxs_key_t *key,

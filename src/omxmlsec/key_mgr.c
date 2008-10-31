@@ -129,6 +129,19 @@ oxs_key_mgr_free(oxs_key_mgr_t *key_mgr, const axutil_env_t *env)
             }
             key_mgr->receiver_certificate = NULL;
         }
+        /*if(key_mgr->prv_key)
+	    {
+            if(key_mgr->prv_key_type== AXIS2_KEY_TYPE_PEM)
+            {
+                AXIS2_FREE(env->allocator, key_mgr->prv_key);
+            }
+            else
+            {
+                openssl_pkey_free(key_mgr->prv_key, env);
+            }
+            key_mgr->receiver_certificate = NULL;
+        }*/
+
         AXIS2_FREE(env->allocator, key_mgr);
     }
     return AXIS2_SUCCESS;
@@ -156,11 +169,7 @@ oxs_key_mgr_set_prv_key_password(
     const axutil_env_t *env,
 	axis2_char_t *password)
 {
-	if (key_mgr->prv_key_password)
-	{
-		AXIS2_FREE(env->allocator, key_mgr->prv_key_password);
-	}
-	key_mgr->prv_key_password = axutil_strdup(env, password);
+    key_mgr->prv_key_password = password;
 	return AXIS2_SUCCESS;
 }
 
@@ -194,11 +203,7 @@ oxs_key_mgr_set_private_key_file(
     const axutil_env_t *env,
 	axis2_char_t *file_name)
 {
-	if (key_mgr->private_key_file)
-	{
-		AXIS2_FREE(env->allocator, key_mgr->private_key_file); 
-	}
-	key_mgr->private_key_file = axutil_strdup(env, file_name);
+    key_mgr->private_key_file = file_name;
 	return AXIS2_SUCCESS;
 }
 
@@ -208,11 +213,7 @@ oxs_key_mgr_set_certificate_file(
     const axutil_env_t *env,
 	axis2_char_t *file_name)
 {
-	if (key_mgr->certificate_file)
-	{
-		AXIS2_FREE(env->allocator, key_mgr->certificate_file);
-	}
-	key_mgr->certificate_file = axutil_strdup(env, file_name);
+    key_mgr->certificate_file = file_name;
 	return AXIS2_SUCCESS;
 }
 
@@ -222,11 +223,7 @@ oxs_key_mgr_set_reciever_certificate_file(
     const axutil_env_t *env,
 	axis2_char_t *file_name)
 {
-	if (key_mgr->reciever_certificate_file)
-	{
-		AXIS2_FREE(env->allocator, key_mgr->reciever_certificate_file);
-	}
-	key_mgr->reciever_certificate_file = axutil_strdup(env, file_name);
+    key_mgr->reciever_certificate_file = file_name;
 	return AXIS2_SUCCESS;
 }
 
@@ -300,8 +297,7 @@ oxs_key_mgr_get_certificate(
         return NULL;
     }
    
-	key_mgr->certificate = cert;
-	return key_mgr->certificate;
+	return cert;
 }
 
 AXIS2_EXTERN axis2_key_type_t AXIS2_CALL
@@ -327,42 +323,45 @@ oxs_key_mgr_get_prv_key(
     {                 
         if(key_mgr->prv_key_type == AXIS2_KEY_TYPE_PEM)
         {
-            prvkey = oxs_key_mgr_load_private_key_from_string(
-                env, (axis2_char_t *)key_buf, NULL);
+            prvkey = oxs_key_mgr_load_private_key_from_string( env, (axis2_char_t *)key_buf, NULL);
             if(!prvkey)
             {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                    "[oxs][key_mgr] Can't load the key from buffer");
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[oxs]Can't load the key from buffer");
                 return NULL;
             }
+            /*key_mgr->prv_key = prvkey;
+            key_mgr->prv_key_type = AXIS2_KEY_TYPE_CERT;
+        }
+        else if(key_mgr->prv_key_type == AXIS2_KEY_TYPE_CERT)
+        {
+            prvkey = key_buf;*/
         }
 		else 
 		{
-			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_signature] Key file type unknown.");
+			AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[oxs] Private key type is unknown.");
             return NULL;			
 		}
     }
     else
     {   /*Buffer is null load from the file*/
-        prv_key_file = axutil_strdup(env, oxs_key_mgr_get_private_key_file(key_mgr, env));
+        prv_key_file = key_mgr->private_key_file;
        
         /*Get the password to retrieve the key from key store*/
-        password = axutil_strdup(env, oxs_key_mgr_get_prv_key_password(key_mgr, env));
+        password = key_mgr->prv_key_password;
 
         if(prv_key_file)
         {
-	        if(oxs_util_get_format_by_file_extension(env, prv_key_file)
-	                ==OXS_ASYM_CTX_FORMAT_PEM)
+	        if(oxs_util_get_format_by_file_extension(env, prv_key_file) ==OXS_ASYM_CTX_FORMAT_PEM)
 	        {
-	            prvkey = oxs_key_mgr_load_private_key_from_pem_file(
-	                         env, prv_key_file, password);
+	            prvkey = oxs_key_mgr_load_private_key_from_pem_file(env, prv_key_file, password);
 	            if(!prvkey)
 	            {
-	                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-	                                "[rampart][key_mgr] Cannot load the private key from file.");
+	                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                        "[oxs]Cannot load the private key from file.");
 	                return NULL;
 	            }
+                /*key_mgr->prv_key = prvkey;
+                key_mgr->prv_key_type = AXIS2_KEY_TYPE_CERT;*/
 	        }  
         }
         else
@@ -440,6 +439,8 @@ oxs_key_mgr_get_receiver_certificate(
 		if(key_mgr->reciever_certificate_file)
 		{
 			oxs_cert = oxs_key_mgr_load_x509_cert_from_pem_file(env, key_mgr->reciever_certificate_file);
+            key_mgr->receiver_certificate = oxs_cert;
+            key_mgr->receiver_certificate_type = AXIS2_KEY_TYPE_CERT;
 		}
 		else if(key_mgr->key_store)
 		{
@@ -563,6 +564,8 @@ oxs_key_mgr_set_key_store(
 	key_mgr->key_store = key_store;
 	return AXIS2_SUCCESS;
 }
+
+#if 0
 /**
  * Loads the key
  * 1. If the key buffer is specified, Take that as the source.
@@ -760,6 +763,7 @@ oxs_key_mgr_load_key(
 
 /********************************************************************************************/
 /*These are new set of functions that break-up the complex logic in oxs_key_mgr_load_key()*/
+#endif
 
 AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL
 oxs_key_mgr_load_private_key_from_string(const axutil_env_t *env,
@@ -887,7 +891,6 @@ oxs_key_mgr_load_x509_cert_from_pem_file(const axutil_env_t *env,
 
     openssl_x509_load_from_pem(env, filename,  &cert);
     oxs_cert = oxs_key_mgr_convert_to_x509(env, cert);
-
     return oxs_cert;
 }
 

@@ -747,7 +747,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     axis2_char_t *enc_sym_algo_in_pol = NULL;
     openssl_pkey_t *open_prvkey = NULL;
     int i = 0;
-    void *key_buf = NULL;
+    /*void *key_buf = NULL;*/
 	axis2_char_t *prv_key_file = NULL;
 
     /*Get EncryptedData references */
@@ -791,7 +791,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
     asym_ctx = oxs_asym_ctx_create(env);
     oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
 
-    key_buf = rampart_context_get_prv_key(rampart_context, env);
+   /* key_buf = rampart_context_get_prv_key(rampart_context, env);
     if(key_buf)
     {
         axis2_key_type_t type = 0;
@@ -801,7 +801,7 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 			oxs_key_mgr_set_format(key_mgr, env, OXS_KEY_MGR_FORMAT_PEM);
 			oxs_key_mgr_set_pem_buf(key_mgr, env, key_buf);
         }
-    }    
+    } */   
     oxs_asym_ctx_set_operation(asym_ctx, env, OXS_ASYM_CTX_OPERATION_PRV_DECRYPT);
 	prv_key_file = rampart_context_get_private_key_file(rampart_context, env);   
 	oxs_key_mgr_set_format(key_mgr, env,  oxs_util_get_format_by_file_extension(env, prv_key_file));

@@ -55,6 +55,7 @@ extern "C"
 	        OXS_KEY_MGR_FORMAT_PKCS12
 	}oxs_key_mgr_format_t;
 	
+#if 0
     /**
      * Loads keys/certificates from a keystore or a PEm file depending on information available in the @ctx
      * @ctx pointer to the OMXMLSec asymmetric encryption context struct
@@ -67,6 +68,9 @@ extern "C"
 		oxs_key_mgr_t *key_mgr,
 		const axutil_env_t *env,
 	    oxs_asym_ctx_t *ctx);
+
+#endif
+
     /**
      * Loads a private key from a string buffer @pem_buf which of PEM format.
      * -----BEGIN RSA PRIVATE KEY-----

@@ -160,12 +160,12 @@ oxs_key_set_key_sha(
     AXIS2_ENV_CHECK(env, AXIS2_FAILURE);
     AXIS2_PARAM_CHECK(env->error, key_sha, AXIS2_FAILURE);
 
-    if (key->key_sha)
+    if(key->key_sha)
     {
         AXIS2_FREE(env->allocator, key->key_sha);
         key->key_sha = NULL;
     }
-    key->key_sha = axutil_strdup(env, key_sha);
+    key->key_sha = key_sha;
     return AXIS2_SUCCESS;
 }
 

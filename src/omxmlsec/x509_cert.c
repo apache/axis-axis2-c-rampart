@@ -129,6 +129,7 @@ oxs_x509_cert_copy_to(oxs_x509_cert_t *x509_cert,
     oxs_x509_cert_set_date(to, env, x509_cert->date);
     oxs_x509_cert_set_hash(to, env, x509_cert->hash);
     oxs_x509_cert_set_data(to, env, x509_cert->data);
+    openssl_pkey_increment_ref(x509_cert->public_key, env);
     oxs_x509_cert_set_public_key(to, env, x509_cert->public_key);
 	oxs_x509_cert_set_common_name(to, env, x509_cert->common_name);
 
@@ -319,7 +320,6 @@ oxs_x509_cert_set_public_key(oxs_x509_cert_t *x509_cert,
                              const axutil_env_t *env,
                              openssl_pkey_t *public_key)
 {
-	openssl_pkey_increment_ref(public_key, env);
     if(x509_cert->public_key)
     {
         openssl_pkey_free(x509_cert->public_key, env);
