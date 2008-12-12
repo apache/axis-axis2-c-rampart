@@ -106,6 +106,7 @@
         <phase name="PreDispatch"/>
         <phase name="Dispatch"/>
         <phase name="PostDispatch"/>
+        <phase name="Security" />
         <!-- System pre defined phases       -->
         <!-- After PostDispatch phase, module or service author can add any phase as required  -->
         <!--phase name="userphase1"/-->
