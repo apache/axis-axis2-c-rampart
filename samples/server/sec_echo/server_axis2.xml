@@ -77,6 +77,7 @@
         <!-- End system pre defined phases       -->
         <!-- After PostDispatch phase, module or service author can add any phase as required  -->
         <!-- User defined phases could be added here -->
+        <phase name="Security" />
         <phase name="userphase1"/>
         <phase name="Rahas"/>
         <phase name="RMPhase"/>
