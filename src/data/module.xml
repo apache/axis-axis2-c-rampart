@@ -1,7 +1,7 @@
 <module name="rampart" class="mod_rampart">
     <inflow>
         <handler name="RampartInHandler" class="mod_rampart">
-            <order phase="PreDispatch"/>
+            <order phase="Security"/>
         </handler>
     </inflow>
 
