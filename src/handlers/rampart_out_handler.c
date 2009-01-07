@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-
 #include <axis2_handler_desc.h>
 #include <axutil_qname.h>
 #include <axis2_svc.h>
@@ -38,6 +37,12 @@ rampart_out_handler_invoke(
     const axutil_env_t * env,
     struct axis2_msg_ctx *msg_ctx);
 
+/**
+ * Creates Out handler
+ * @param env pointer to environment struct
+ * @param name handler name 
+ * @return Created Out handler
+ */
 AXIS2_EXTERN axis2_handler_t *AXIS2_CALL
 rampart_out_handler_create(
     const axutil_env_t *env,  
@@ -49,17 +54,22 @@ rampart_out_handler_create(
     handler = axis2_handler_create(env);
     if (!handler)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_out_handler] Cannot create out-handler.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot create out-handler.");
         return NULL;
     }
 
-    /*Set the base struct's invoke op */
+    /* Set the base struct's invoke op */
     axis2_handler_set_invoke(handler, env, rampart_out_handler_invoke);
     
     return handler;
 }
 
+/**
+ * Invokes out handler logic. This will build security headers for out going message
+ * @param handler rampart out handler
+ * @param env pointer to environment struct
+ * @param msg_ctx message context
+ */
 axis2_status_t AXIS2_CALL
 rampart_out_handler_invoke(
     struct axis2_handler * handler,
@@ -83,7 +93,7 @@ rampart_out_handler_invoke(
     if(!rampart_is_rampart_engaged(env,msg_ctx))
     {
         AXIS2_LOG_INFO(env->log, 
-            "[rampart][rampart_out_handler] Rampart is not engaged. No security support is needed.");
+            "[rampart] Rampart is not engaged. No security support is needed.");
         return AXIS2_SUCCESS;
     }
 
