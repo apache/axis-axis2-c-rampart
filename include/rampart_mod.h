@@ -37,22 +37,24 @@ extern "C"
     /**
      * Creates In handler
      * @param env pointer to environment struct
-     * @param qname 
+     * @param name handler name 
      * @return Created In handler
      */
     AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
-    rampart_in_handler_create(const axutil_env_t *env,
-                              axutil_string_t *name);
+    rampart_in_handler_create(
+        const axutil_env_t *env,
+        axutil_string_t *name);
 
     /**
      * Creates Out handler
      * @param env pointer to environment struct
-     * @param qname 
+     * @param name handler name 
      * @return Created Out handler
      */
     AXIS2_EXTERN axis2_handler_t* AXIS2_CALL
-    rampart_out_handler_create(const axutil_env_t *env,
-                               axutil_string_t *name);
+    rampart_out_handler_create(
+        const axutil_env_t *env,
+        axutil_string_t *name);
 
     /** @} */
 
