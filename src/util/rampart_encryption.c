@@ -35,25 +35,21 @@
 #include <rampart_sct_provider_utility.h>
 #include <axiom_util.h>
 
-
-/*Private functions*/
-
-axis2_status_t AXIS2_CALL
+static axis2_status_t AXIS2_CALL
 rampart_enc_get_nodes_to_encrypt(
     rampart_context_t *rampart_context,
     const axutil_env_t *env,
     axiom_soap_envelope_t *soap_envelope,
     axutil_array_list_t *nodes_to_encrypt)
 {
-
     axis2_status_t status1 = AXIS2_SUCCESS;
     axis2_status_t status2 = AXIS2_SUCCESS;
     
     status1 = rampart_context_get_nodes_to_encrypt(
-                  rampart_context, env, soap_envelope, nodes_to_encrypt);
+        rampart_context, env, soap_envelope, nodes_to_encrypt);
 
     status2 = rampart_context_get_elements_to_encrypt(
-                  rampart_context, env, soap_envelope, nodes_to_encrypt);
+        rampart_context, env, soap_envelope, nodes_to_encrypt);
 
     if(status1 == AXIS2_SUCCESS || status2 == AXIS2_SUCCESS)
     {
@@ -65,14 +61,21 @@ rampart_enc_get_nodes_to_encrypt(
     }
 }
 
-
-/*Public functions*/
+/**
+ * Encrypts the session key using assymmetric encription
+ * @param env pointer to environment struct
+ * @param session_key the session key to be encrypted
+ * @param msg_ctx message context
+ * @param rampart_context the rampart context
+ * @param sec_node The security element
+ * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_enc_encrypt_session_key(const axutil_env_t *env,
+rampart_enc_encrypt_session_key(
+    const axutil_env_t *env,
     oxs_key_t *session_key,
     axis2_msg_ctx_t *msg_ctx,
     rampart_context_t *rampart_context,
-    axiom_soap_envelope_t *soap_envelope,
     axiom_node_t *sec_node,
     axutil_array_list_t *id_list)
 {
@@ -83,29 +86,25 @@ rampart_enc_encrypt_session_key(const axutil_env_t *env,
     rp_property_t *token = NULL;
     rp_property_type_t token_type;
     axis2_char_t *eki = NULL;
-    oxs_key_mgr_t *key_mgr = NULL;
 	oxs_x509_cert_t *certificate = NULL; 
-    token = rampart_context_get_token(rampart_context, env,
-                                      AXIS2_TRUE, server_side, AXIS2_FALSE);
+    
+    server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
+    token = rampart_context_get_token(rampart_context, env, AXIS2_TRUE, server_side, AXIS2_FALSE);
     token_type = rp_property_get_type(token, env);
 
     if(!rampart_context_is_token_type_supported(token_type, env))
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] Specified token type not supported.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Specified token type not supported.");
         return AXIS2_FAILURE;
     }
     
-
-    /*Get the asymmetric key encryption algorithm*/
+    /* Get the asymmetric key encryption algorithm */
     enc_asym_algo = rampart_context_get_enc_asym_algo(rampart_context, env);
-
-    /*Get encryption key identifier*/
-    /*First we should check whether we include the token in the
-     *message.*/
-
-    if(rampart_context_is_token_include(rampart_context,
-                                        token, token_type, server_side, AXIS2_FALSE, env))
+ 
+    /* Get encryption key identifier. This identifier depends on whether we include the token in 
+     * the message. */
+    if(rampart_context_is_token_include(
+        rampart_context, token, token_type, server_side, AXIS2_FALSE, env))
     {
         eki = RAMPART_STR_DIRECT_REFERENCE;
     }
@@ -113,54 +112,66 @@ rampart_enc_encrypt_session_key(const axutil_env_t *env,
     {
         eki = rampart_context_get_key_identifier(rampart_context, token, env);
     }
+
     if(!eki)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] No mechanism for attaching the certificate info.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart] No mechanism for attaching the certificate information.");
         return AXIS2_FAILURE;
     }
-	key_mgr = rampart_context_get_key_mgr(rampart_context, env);
-    /*Create asymmetric encryption context*/
-    asym_ctx = oxs_asym_ctx_create(env);
-    oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
+
+    /* Receiver certificate can be in the received message. In that case, we should use it. 
+       If it is not there, then can get from key manager */
     if(rampart_context_get_found_cert_in_shp(rampart_context, env))
     {
         certificate = rampart_context_get_receiver_cert_found_in_shp(rampart_context, env);
     }
     else
     {
+        oxs_key_mgr_t *key_mgr = NULL;
+        key_mgr = rampart_context_get_key_mgr(rampart_context, env);
         certificate = oxs_key_mgr_get_receiver_certificate(key_mgr, env);
     }
+
     if (!certificate)
     {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                    "[rampart][rampart_encryption] Receiver certificate cannot be loaded.");
-    return AXIS2_FAILURE;
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart] Receiver certificate cannot be loaded.");
+        return AXIS2_FAILURE;
     }
+
+    /* Create asymmetric encryption context and populate algorithm, certificate etc. */
+    asym_ctx = oxs_asym_ctx_create(env);
+    oxs_asym_ctx_set_algorithm(asym_ctx, env, enc_asym_algo);
     oxs_asym_ctx_set_certificate(asym_ctx, env, certificate);
-    oxs_asym_ctx_set_operation(asym_ctx, env,
-                               OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
+    oxs_asym_ctx_set_operation(asym_ctx, env,OXS_ASYM_CTX_OPERATION_PUB_ENCRYPT);
     oxs_asym_ctx_set_st_ref_pattern(asym_ctx, env, eki);
 
-    /*Encrypt the session key*/
-    status = oxs_xml_enc_encrypt_key(env, asym_ctx,
-                                     sec_node, session_key, id_list);
+    /* Encrypt the session key */
+    status = oxs_xml_enc_encrypt_key(env, asym_ctx, sec_node, session_key, id_list);
     oxs_asym_ctx_free(asym_ctx, env);
     asym_ctx = NULL;
     
-    if(AXIS2_FAILURE == status)
+    if(status != AXIS2_SUCCESS)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] Session key encryption failed.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart] Session key encryption failed.");
         return AXIS2_FAILURE;
-    }else{
-	    return AXIS2_SUCCESS;
     }
 
+    return AXIS2_SUCCESS;
 }
 
+/**
+ * Encrypt the message using derived keys. Uses symmetric encryption
+ * @param env pointer to environment struct
+ * @param msg_ctx message context
+ * @param rampart_context rampart context
+ * @param soap_envelope the SOAP envelope
+ * @param sec_node The security element
+ * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+ */
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
-rampart_enc_dk_encrypt_message(const axutil_env_t *env,
+rampart_enc_dk_encrypt_message(
+    const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     rampart_context_t *rampart_context,
     axiom_soap_envelope_t *soap_envelope,
@@ -197,30 +208,31 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
     body_node = axiom_soap_body_get_base_node(body, env);
     body_child_node = axiom_node_get_first_element(body_node, env);
 
-    /*Get nodes to be encrypted*/
+    /* Get nodes to be encrypted */
     nodes_to_encrypt = axutil_array_list_create(env, 0);
     status = rampart_enc_get_nodes_to_encrypt(
-                 rampart_context, env, soap_envelope, nodes_to_encrypt);
+        rampart_context, env, soap_envelope, nodes_to_encrypt);
 
     if(status != AXIS2_SUCCESS)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                        "[rampart][rampart_encryption] Error occured in Adding Encrypted parts..");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Error occured in Adding Encrypted parts.");
         axutil_array_list_free(nodes_to_encrypt, env);
         nodes_to_encrypt = NULL;
         return AXIS2_FAILURE;
     }
     
-    /*If the sp:EncryptSignature is ON  &&  We sign before the encryption, we need to add signature node too. */
-    signature_protection = rampart_context_is_encrypt_signature(
-                               rampart_context, env);
+    /* If the sp:EncryptSignature is ON  &&  We sign before the encryption, 
+     * we need to add signature node too. */
+    signature_protection = rampart_context_is_encrypt_signature(rampart_context, env);
 
+    /* if nothing to encrypt, then we can return successfully */
     if((axutil_array_list_size(nodes_to_encrypt, env)==0))
     {
         if(!signature_protection)
         {
             AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
-                           "[rampart][rampart_encryption] No parts specified or specified parts can't be found for encryprion.");
+                "[rampart]No parts specified or specified parts can't be found for encryprion.");
 			axutil_array_list_free(nodes_to_encrypt, env);
 			nodes_to_encrypt = NULL;
             return AXIS2_SUCCESS;
@@ -581,7 +593,7 @@ rampart_enc_dk_encrypt_message(const axutil_env_t *env,
             if(!encrypted_key_node)
             {
                 /*Create EncryptedKey element*/
-                status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+                status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, sec_node, NULL );
                 if(AXIS2_FAILURE == status)
                 {
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
@@ -943,7 +955,7 @@ rampart_enc_encrypt_message(
     nodes_to_encrypt = NULL;
 
     /*We need to encrypt the session key.*/
-    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, id_list);
+    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, sec_node, id_list);
     if(AXIS2_FAILURE == status){
         return AXIS2_FAILURE;
     }

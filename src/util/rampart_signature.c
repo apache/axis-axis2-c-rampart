@@ -723,7 +723,7 @@ rampart_sig_sign_message(
                 if(!encrypted_key_node)
                 {
                     /*There is no EncryptedKey so generate one*/
-                    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, soap_envelope, sec_node, NULL );
+                    status = rampart_enc_encrypt_session_key(env, session_key, msg_ctx, rampart_context, sec_node, NULL );
                     if(AXIS2_FAILURE == status)
                     {
                         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_signature] Cannot encrypt the session key " );
