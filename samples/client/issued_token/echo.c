@@ -34,7 +34,7 @@ axiom_node_t *
 build_om_payload_for_echo_svc(const axutil_env_t *env);
 
 rampart_issued_token_t * AXIS2_CALL 
-get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context_t *rampart_context);
+get_issued_token(const axutil_env_t *env, rp_property_t *issued_token, rampart_context_t *rampart_context);
 
 axis2_char_t *policy_file = NULL;
 axis2_char_t *sts_ploicy = NULL;
@@ -111,7 +111,7 @@ int main(int argc, char** argv)
         return 0;
     }
     
-    rampart_config_set_issued_token_aquire_function(client_config, env, get_issued_token);
+    rampart_config_set_issued_token_aquire_function(client_config, env, (rampart_issued_token_t*)get_issued_token);
 
     property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
         AXIS2_TRUE, (void *)rampart_config_free, client_config);
@@ -243,7 +243,7 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
 
 
 rampart_issued_token_t * AXIS2_CALL 
-get_issued_token(axutil_env_t *env, rp_property_t *issued_token, rampart_context_t *rampart_context)
+get_issued_token(const axutil_env_t *env, rp_property_t *issued_token, rampart_context_t *rampart_context)
 {
 	axis2_endpoint_ref_t *endpoint_ref = NULL;
     axis2_options_t *options = NULL;

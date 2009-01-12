@@ -10,8 +10,7 @@ libsecconv_echo_la_SOURCES = echo.c echo_skeleton.c
 libsecconv_echo_la_LIBADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
                     -L$(AXIS2C_HOME)/modules/rampart \
-					-lmod_rampart \
-					-ltrust 
+					-lmod_rampart
 					
 
 

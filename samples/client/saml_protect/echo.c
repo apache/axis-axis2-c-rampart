@@ -79,7 +79,6 @@ int main(int argc, char** argv)
     rampart_config_t* client_config = NULL;
     axutil_property_t *property = NULL;
     rampart_saml_token_t *saml = NULL;
-    axiom_node_t *assertion = NULL;
 	/* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
 
@@ -278,7 +277,6 @@ create_saml_token(const axutil_env_t *env)
     oxs_sign_ctx_t *sign_ctx = NULL;
 	oxs_x509_cert_t *cert = NULL;
 	openssl_pkey_t *prv_key = NULL;
-	axiom_node_t *sig_node = NULL;
 	rampart_saml_token_t *saml = NULL;
 
 	axutil_date_time_t *time = NULL;

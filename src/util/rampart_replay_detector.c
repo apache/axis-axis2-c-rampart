@@ -78,7 +78,7 @@ static axis2_bool_t
 rampart_replay_detector_linked_list_contains(
     axutil_linked_list_t *linked_list,
     const axutil_env_t *env,
-    axis2_char_t *id)
+    const axis2_char_t *id)
 {
     int count = 0;
     int i = 0;
@@ -184,7 +184,7 @@ rampart_replay_detector_default(
         }
 
         /* If the table already have the same key it's a replay */
-        if(rampart_replay_detector_linked_list_contains(ll, env, (void*)msg_id))
+        if(rampart_replay_detector_linked_list_contains(ll, env, msg_id))
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]For ID=%s, a replay detected", msg_id);
 			axutil_allocator_switch_to_local_pool(env->allocator);

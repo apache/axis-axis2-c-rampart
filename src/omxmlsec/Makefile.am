@@ -1,5 +1,5 @@
 SUBDIRS = tokens openssl c14n 
-lib_LTLIBRARIES = libomxmlsec.la
+noinst_LTLIBRARIES = libomxmlsec.la
 
 libomxmlsec_la_SOURCES = ctx.c  buffer.c key.c cipher.c error.c axis2_utils.c axiom.c \
                          iv.c xml_encryption.c encryption.c\
@@ -15,8 +15,7 @@ libomxmlsec_la_LIBADD  = @OPENSSLLIB@ \
 			-lssl \
 			tokens/liboxstokens.la \
 			openssl/libomopenssl.la \
-			c14n/liboxsc14n.la \
-			-lcrypto 
+			c14n/liboxsc14n.la
 
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \

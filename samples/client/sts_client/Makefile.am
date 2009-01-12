@@ -7,9 +7,7 @@ sts_client_SOURCES = client.c
 sts_client_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
 		    -L$(AXIS2C_HOME)/modules/rampart \
-		    -lmod_rampart \
-			-lsecconv \
-		    -ltrust \
+		    	-lmod_rampart \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \

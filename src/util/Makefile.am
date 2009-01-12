@@ -11,12 +11,6 @@ librampart_util_la_SOURCES = rampart_crypto_util.c \
 							rampart_issued.c rampart_issued_token.c
 
 
-librampart_util_la_LIBADD  = -lssl \
-			    ../omxmlsec/libomxmlsec.la \
-				../secconv/libsecconv.la \
-			     -lcrypto \
-				@OPENSSLLIB@
-
 INCLUDES = -I$(top_builddir)/include \
 			-I ../../include \
 			@OPENSSLINC@ \

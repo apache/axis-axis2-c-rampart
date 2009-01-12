@@ -4,17 +4,13 @@ libsctprovider_la_SOURCES = sct_provider_stored_key.c
 libsctprovider_la_LIBADD  = $(LDFLAGS) \
 						   		-L$(AXIS2C_HOME)/lib \
 								-laxutil \
-								../../src/util/librampart_util.la \
-								../../src/secconv/libsecconv.la \
-								../../src/omxmlsec/libomxmlsec.la
+								../../src/core/libmod_rampart.la
 
 libsctprovider_hashdb_la_SOURCES = sct_provider_hash_map.c
 libsctprovider_hashdb_la_LIBADD  = $(LDFLAGS) \
 						   		-L$(AXIS2C_HOME)/lib \
 								-laxutil \
-								../../src/util/librampart_util.la \
-								../../src/secconv/libsecconv.la \
-								../../src/omxmlsec/libomxmlsec.la \
-								../../src/trust/libtrust.la 
+								../../src/core/libmod_rampart.la
+								 
 INCLUDES = -I ../../include\
 			@AXIS2INC@

@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = libtrust.la
+noinst_LTLIBRARIES = libtrust.la
 
 libtrust_la_SOURCES = context.c \
 			claims.c \

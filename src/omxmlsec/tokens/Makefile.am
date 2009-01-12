@@ -1,4 +1,4 @@
-lib_LTLIBRARIES =liboxstokens.la
+noinst_LTLIBRARIES =liboxstokens.la
 
 liboxstokens_la_SOURCES =  token_encrypted_data.c token_encryption_method.c token_cipher_value.c \
                         token_cipher_data.c token_key_name.c token_key_info.c token_binary_security_token.c \

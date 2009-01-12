@@ -10,14 +10,12 @@ saml_protect_LDADD   = $(LDFLAGS) \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \
-					-lsecconv \
                     -laxis2_engine \
                     -laxis2_parser \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-					-lmod_rampart \
-					-lomxmlsec \
+		    		-lmod_rampart \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

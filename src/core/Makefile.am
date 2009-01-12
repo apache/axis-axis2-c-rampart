@@ -12,6 +12,7 @@ libmod_rampart_la_LIBADD  = ../handlers/librampart_handlers.la \
 			    ../util/librampart_util.la \
 			    ../omxmlsec/libomxmlsec.la \
 				../secconv/libsecconv.la \
+				../trust/libtrust.la \
 				@OPENSSLLIB@ \
 				@AXIS2LIB@ \
 				-lcrypto \

@@ -9,9 +9,7 @@ INCLUDES = @AXIS2INC@ \
 sign_LDADD = -laxutil \
                     -laxis2_axiom \
 					-lxml2 \
-					../../../src/omxmlsec/libomxmlsec.la \
-                    ../../../src/omxmlsec/openssl/libomopenssl.la \
-                    ../../../src/omxmlsec/tokens/liboxstokens.la 
+					../../src/core/libmod_rampart.la
  
 
 
