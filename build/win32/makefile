@@ -147,7 +147,7 @@ $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll : $(MOD_RAMPART_SRC) $(OMXMLS
 mod_rampart : $(RAMPART_DISTDIR)\modules\rampart\mod_rampart.dll
 
 $(RAMPART_DISTDIR)\modules\rahas\mod_rahas.dll : $(RAHAS_SRC)
-	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAHAS_SRC) /Fo$(RAMPART_INTDIR)\rahas\ /c
+	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) $(RAHAS_SRC) $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\rahas\ /c
 	$(LD) /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart $(LDFLAGS) $(RAMPART_INTDIR)\rahas\*.obj $(LIBS) axutil.lib axiom.lib \
 	axis2_parser.lib axis2_engine.lib neethi.lib mod_rampart.lib \
 	/DLL /OUT:$(RAMPART_DISTDIR)\modules\rahas\mod_rahas.dll /IMPLIB:$(RAMPART_DISTDIR)\modules\rahas\mod_rahas.lib
@@ -208,7 +208,7 @@ mod_rampart_sct_provider_hashdb: $(RAMPART_DISTDIR)\bin\samples\sct_provider\sct
 
 $(RAMPART_DISTDIR)\bin\samples\services\sec_echo\sec_echo.dll : $(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\sec_echo \
-	$(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c /Fo$(RAMPART_INTDIR)\samples\services\sec_echo\ /c
+	$(RAMPART_SOURCE_DIR)\samples\server\sec_echo\*.c $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\samples\services\sec_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\sec_echo\*.obj \
 	axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib \
 	axis2_http_receiver.lib axis2_http_sender.lib \
@@ -240,7 +240,7 @@ mod_rampart_services_saml_sts: $(RAMPART_DISTDIR)\bin\samples\services\saml_sts\
 
 $(RAMPART_DISTDIR)\bin\samples\services\secconv_echo\secconv_echo.dll : $(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\*.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) /I$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo \
-	$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\*.c /Fo$(RAMPART_INTDIR)\samples\services\secconv_echo\ /c
+	$(RAMPART_SOURCE_DIR)\samples\server\secconv_echo\*.c $(APPLINK_FILE) /Fo$(RAMPART_INTDIR)\samples\services\secconv_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\services\secconv_echo\*.obj \
 	axutil.lib axiom.lib axis2_parser.lib $(LIBS) axis2_engine.lib mod_rampart.lib /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart\
 	axis2_http_receiver.lib axis2_http_sender.lib \
@@ -269,7 +269,7 @@ mod_rampart_samples_sec_echo: $(RAMPART_DISTDIR)\bin\samples\client\sec_echo\ech
 ####### SAML Echo
 $(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe : $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\echo.c
 	$(CC) $(CFLAGS) $(MOD_RAMPART_INCLUDE_PATH) \
-        $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\echo.c \
+        $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\echo.c $(APPLINK_FILE) \
         /Fo$(RAMPART_INTDIR)\samples\client\saml_echo\ /c
 	$(LD) $(LDFLAGS) $(RAMPART_INTDIR)\samples\client\saml_echo\echo.obj axutil.lib axiom.lib neethi.lib \
 		axis2_parser.lib axis2_engine.lib /FIXED:NO /LIBPATH:$(RAMPART_DISTDIR)\modules\rampart mod_rampart.lib /OUT:$(RAMPART_DISTDIR)\bin\samples\client\saml_echo\echo.exe
