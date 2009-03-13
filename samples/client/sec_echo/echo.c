@@ -31,6 +31,9 @@ build_om_payload_for_echo_svc(const axutil_env_t *env);
 axiom_node_t *
 build_om_payload_for_echo_svc_interop(const axutil_env_t *env);
 
+axiom_node_t *
+build_om_programatically_mtom(const axutil_env_t * env);
+
 int main(int argc, char** argv)
 {
     const axutil_env_t *env = NULL;
@@ -79,6 +82,7 @@ int main(int argc, char** argv)
     axis2_options_set_to(options, env, endpoint_ref);
     axis2_options_set_action(options, env,
             "http://example.com/ws/2004/09/policy/Test/EchoRequest");
+    
     /*axis2_options_set_action(options, env,
             "http://xmlsoap.org/Ping");*/
     /*axis2_options_set_action(options, env,
@@ -146,6 +150,7 @@ int main(int argc, char** argv)
     
     /* Build the SOAP request message payload using OM API.*/
     payload = build_om_payload_for_echo_svc(env);
+    /*axis2_options_set_enable_mtom(options, env, AXIS2_TRUE);*/
     
     /*If not engaged in the client's axis2.xml, uncomment this line*/
     /*axis2_svc_client_engage_module(svc_client, env, "rampart");*/
@@ -271,4 +276,63 @@ build_om_payload_for_echo_svc_interop(const axutil_env_t *env)
         om_str =  NULL;
     }
     return ping_request_om_node;
+}
+
+/* build SOAP request message content using OM */
+axiom_node_t *
+build_om_programatically_mtom(
+    const axutil_env_t * env)
+{
+    axiom_node_t *mtom_om_node = NULL;
+    axiom_element_t *mtom_om_ele = NULL;
+    axiom_node_t *image_om_node = NULL;
+    axiom_element_t *image_om_ele = NULL;
+    axiom_node_t *file_om_node = NULL;
+    axiom_element_t *file_om_ele = NULL;
+    axiom_node_t *data_om_node = NULL;
+    axiom_text_t *data_text = NULL;
+    axiom_namespace_t *ns1 = NULL;
+    axis2_char_t *om_str = NULL;
+    const axis2_char_t *image_name = "E:/src/C/Axis2C/build/deploy/samples/bin/resources/axis2.jpg";
+    const axis2_char_t *to_save_name = "test.jpg";
+    axis2_bool_t optimized = AXIS2_TRUE;
+
+    axiom_data_handler_t *data_handler = NULL;
+
+    ns1 =
+        axiom_namespace_create(env, "http://ws.apache.org/axis2/c/samples/mtom",
+                               "ns1");
+    mtom_om_ele =
+        axiom_element_create(env, NULL, "mtomSample", ns1, &mtom_om_node);
+
+    file_om_ele =
+        axiom_element_create(env, mtom_om_node, "fileName", ns1, &file_om_node);
+    axiom_element_set_text(file_om_ele, env, to_save_name, file_om_node);
+
+    image_om_ele =
+        axiom_element_create(env, mtom_om_node, "image", ns1, &image_om_node);
+
+    /* This is when we directly give file name */
+
+    data_handler = axiom_data_handler_create(env, image_name, "image/jpeg");
+
+    /* Uncomment following to set a callback instead of a file */
+
+    /*data_handler = axiom_data_handler_create(env, NULL, "image/jpeg");
+    axiom_data_handler_set_data_handler_type(data_handler, env, AXIOM_DATA_HANDLER_TYPE_CALLBACK); 
+    axiom_data_handler_set_user_param(data_handler, env, (void *)image_name);*/
+
+    data_text =
+        axiom_text_create_with_data_handler(env, image_om_node, data_handler,
+                                            &data_om_node);
+
+    axiom_text_set_optimize(data_text, env, optimized);
+    /*axiom_text_set_is_swa(data_text, env, AXIS2_TRUE);*/
+    om_str = axiom_node_to_string(mtom_om_node, env);
+    if (om_str)
+    {
+        printf("%s", om_str);
+        AXIS2_FREE(env->allocator, om_str);
+    }
+    return mtom_om_node;
 }
