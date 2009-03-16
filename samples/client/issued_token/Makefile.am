@@ -1,15 +1,11 @@
-prgbindir=$(prefix)/bin/samples/rampart/client/issued_token
-prgbin_PROGRAMS = issued_token 
-datadir=$(prefix)/bin/samples/rampart/client/issued_token
-#data_DATA= update_n_run.sh
-#samplesdir=$(prefix)/samples/client/echo
-#samples_DATA=echo.c README.txt Makefile.am Makefile.in
-issued_token_SOURCES = echo.c 
+prgbindir=$(prefix)/samples/bin
+prgbin_PROGRAMS = issued_token_echo
+datadir=$(prefix)/samples/bin
+issued_token_echo_SOURCES = echo.c 
 
-issued_token_LDADD   = $(LDFLAGS) \
+issued_token_echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
-					-L$(AXIS2C_HOME)/modules/rampart \
-		    		-lmod_rampart \
+		    		-lrampart \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \

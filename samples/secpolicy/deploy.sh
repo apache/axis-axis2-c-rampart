@@ -10,7 +10,7 @@ CLIENT_REPO="$INST_DIR/client_repo/"
 SERVICE_HOME="$INST_DIR/services/sec_echo"
 
 echo "Copying server's axis2.xml to " $AXIS2C_HOME
-cp ../server/sec_echo/server_axis2.xml $AXIS2C_HOME/axis2.xml
+cp ../data/server_axis2.xml $AXIS2C_HOME/axis2.xml
 
 #COPYING THE RELEVENT POLICY FILES TO CLIENT AND SERVER
 

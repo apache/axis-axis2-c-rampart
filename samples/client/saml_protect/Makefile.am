@@ -1,12 +1,11 @@
-prgbindir=$(prefix)/bin/samples/rampart/client/saml_protect
-prgbin_PROGRAMS = saml_protect
-datadir=$(prefix)/bin/samples/rampart/client/saml_protect
+prgbindir=$(prefix)/samples/bin
+prgbin_PROGRAMS = saml_protect_echo
+datadir=$(prefix)/samples/bin
 data_DATA= update_n_run.sh
-saml_protect_SOURCES = echo.c 
+saml_protect_echo_SOURCES = echo.c 
 
-saml_protect_LDADD   = $(LDFLAGS) \
+saml_protect_echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
-					-L$(AXIS2C_HOME)/modules/rampart \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \
@@ -15,7 +14,7 @@ saml_protect_LDADD   = $(LDFLAGS) \
                     -lpthread \
                     -laxis2_http_sender \
                     -laxis2_http_receiver \
-		    		-lmod_rampart \
+		    		-lrampart \
                     $(GUTHTHILA_LIBS) \
                     $(LIBXML2_LIBS)
 

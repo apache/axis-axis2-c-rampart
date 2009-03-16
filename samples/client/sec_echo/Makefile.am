@@ -1,13 +1,10 @@
-SUBDIRS = data 
-prgbindir=$(prefix)/bin/samples/rampart/client/sec_echo
-prgbin_PROGRAMS = echo 
-datadir=$(prefix)/bin/samples/rampart/client/sec_echo
-data_DATA= README update_n_run.sh deploy_client_repo.sh
-#samplesdir=$(prefix)/samples/client/echo
-#samples_DATA=echo.c README.txt Makefile.am Makefile.in
-echo_SOURCES = echo.c 
+prgbindir=$(prefix)/samples/bin
+prgbin_PROGRAMS = sec_echo
+datadir=$(prefix)/samples/bin
+data_DATA= update_n_run.sh
+sec_echo_SOURCES = echo.c 
 
-echo_LDADD   = $(LDFLAGS) \
+sec_echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
 					-laxutil \
                     -laxis2_axiom \
@@ -24,4 +21,4 @@ INCLUDES = @AXIS2INC@ \
 		   -I$(AXIS2C_HOME)/include \
             -I ../../../include 
 
-EXTRA_DIST = README deploy_client_repo.sh update_n_run.sh update_n_run.bat deploy_client_repo.bat
+EXTRA_DIST = update_n_run.sh update_n_run.bat 

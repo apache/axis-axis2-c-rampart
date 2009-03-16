@@ -1,5 +1,5 @@
 SUBDIRS=htpasswd_callback
-prglibdir=$(prefix)/bin/samples/rampart/callback
+prglibdir=$(prefix)/samples/lib
 prglib_LTLIBRARIES = libpwcb.la
 libpwcb_la_SOURCES = pwcb.c
 libpwcb_la_LIBADD  =

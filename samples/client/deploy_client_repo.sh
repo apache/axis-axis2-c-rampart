@@ -1,7 +1,6 @@
 #!/bin/bash
 
 CLIENT_REPO="$AXIS2C_HOME/client_repo"
-SERVICE_HOME="$AXIS2C_HOME/services/sec_echo"
 echo "Start creating a client repository at $CLIENT_REPO"
 
 if [ -d  $CLIENT_REPO ]; 
@@ -15,7 +14,7 @@ fi
 
 #copy [client]axis2.xml to CLIENT_REPO
 echo "Copying axis2.xml to $CLIENT_REPO"
-cp data/client.axis2.xml $CLIENT_REPO/axis2.xml
+cp ../data/client_axis2.xml $CLIENT_REPO/axis2.xml
 
 #copy libs to client_repo
 echo "Copying libraries to $CLIENT_REPO"

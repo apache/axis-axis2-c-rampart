@@ -1,13 +1,12 @@
-prgbindir=$(prefix)/bin/samples/rampart/client/sts_client
+prgbindir=$(prefix)/samples/bin
 prgbin_PROGRAMS = sts_client 
-datadir=$(prefix)/bin/samples/rampart/client/sts_client
-data_DATA= client.xml service.xml
+datadir=$(prefix)/samples/bin
+#data_DATA= client.xml service.xml
 sts_client_SOURCES = client.c 
 
 sts_client_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
-		    -L$(AXIS2C_HOME)/modules/rampart \
-		    	-lmod_rampart \
+		    	-lrampart \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \
@@ -23,4 +22,4 @@ INCLUDES = @AXIS2INC@ \
 		   -I$(AXIS2C_HOME)/include \
             -I ../../../include 
 
-EXTRA_DIST = client.xml service.xml
+#EXTRA_DIST = client.xml service.xml
