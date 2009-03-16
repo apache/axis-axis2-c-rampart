@@ -17,9 +17,11 @@ if exist  "%CLIENT_REPO%" (
 
 
 @echo Copying axis2.xml to client_repo
-copy /Y ".\data\client.axis2.xml" "%CLIENT_REPO%\axis2.xml"
+copy /Y "..\data\client_axis2.xml" "%CLIENT_REPO%\axis2.xml"
 	  
-copy /Y ".\..\..\secpolicy\scenario5\client-policy.xml" "%CLIENT_REPO%\policy.xml"
+@cd ..\secpolicy\
+call deploy.bat
+echo off
 
 @echo Copying libraries to client_repo
 xcopy /S/I/Q/Y "%AXIS2C_HOME%\lib" "%CLIENT_REPO%\lib"

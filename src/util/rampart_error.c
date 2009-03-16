@@ -20,7 +20,7 @@
 
 AXIS2_IMPORT extern const axis2_char_t* axutil_error_messages[];
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_error_init()
 {
     /* A namespace that is not supported by Sandesha2 */

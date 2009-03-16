@@ -151,7 +151,7 @@
                 <rampc:User>Alice</rampc:User>
                 <rampc:TimeToLive>360</rampc:TimeToLive>
                 <rampc:PasswordType>Digest</rampc:PasswordType>
-                <rampc:PasswordCallbackClass>AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so</rampc:PasswordCallbackClass>
+                <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/libpwcb.so</rampc:PasswordCallbackClass>
             </rampc:RampartConfig>
         </wsp:All>
     </wsp:ExactlyOne>

@@ -68,7 +68,7 @@ extern "C"
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
 
-axis2_status_t AXIS2_CALL
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
 rampart_error_init();
 
 /** @} */
