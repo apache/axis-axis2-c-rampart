@@ -2,7 +2,7 @@ dnl run autogen.sh to generate the configure script.
 
 AC_PREREQ(2.59)
 
-AC_INIT(rampartc-src, 1.2.0)
+AC_INIT(rampartc-src, 1.3.0)
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 dnl AM_INIT_AUTOMAKE([tar-ustar])
@@ -80,8 +80,8 @@ AC_ARG_WITH(axis2,
     if test -d $withval; then
         axis2inc="-I$withval"
     dnl else find the axis2inc include dir in $(AXIS2C_HOME)/include
-    elif test -d '$(AXIS2C_HOME)/include/axis2-1.5.0'; then
-        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.5.0"
+    elif test -d '$(AXIS2C_HOME)/include/axis2-1.6.0'; then
+        axis2inc="-I$(AXIS2C_HOME)/include/axis2-1.6.0"
     else
         AC_MSG_ERROR(could not find axis2inc. stop)
     fi
@@ -121,6 +121,7 @@ NEETHIINC=$neethiinc
 OPENSSLINC=$opensslinc
 OPENSSLLIB=$openssllib
 UTILINC=$axis2_utilinc
+VERSION_NO="3:0:3"
 AC_SUBST(AXIS2INC)
 AC_SUBST(AXIS2LIB)
 AC_SUBST(AXIOMINC)
@@ -129,6 +130,8 @@ AC_SUBST(OPENSSLLIB)
 AC_SUBST(NEETHIINC)
 AC_SUBST(UTILINC)
 AC_SUBST(XMLSCHEMAINC)
+AC_SUBST(VERSION_NO)
+
 
 AC_CONFIG_FILES([Makefile \
     src/Makefile \
