@@ -25,16 +25,15 @@ rem echo Sleeping for %_SLEEP% seconds
 echo waiting.......
 pause %_SLEEP%
 
-echo Go to client directory
+echo Go to client directory and run the sample
+cd %AXIS2C_HOME%/samples/bin
 if not "%1" == "scenario14"  goto else
-	cd %_SMPL_DIR%/../client/saml_echo
+	call saml_update_n_run.bat
 	goto endif
 :else
-	cd %_SMPL_DIR%/../client/sec_echo
+	call update_n_run.bat
 :endif
 
-echo Run the sample
-call update_n_run.bat
 @echo off
 
 echo Killing server
