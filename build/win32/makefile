@@ -18,6 +18,7 @@ RAMPART_SAMPLE_LIB_DIR = $(RAMPART_DISTDIR)\samples\lib
 RAMPART_SAMPLE_SERVICE_DIR = $(RAMPART_DISTDIR)\services
 RAMPART_SAMPLE_DATA_DIR = $(RAMPART_DISTDIR)\samples\data
 RAMPART_SAMPLE_POLICY_DIR = $(RAMPART_DISTDIR)\samples\secpolicy
+RAMPART_SAMPLE_SRC_DIR = $(RAMPART_DISTDIR)\samples\src\security
 
 #rampart module
 
@@ -103,6 +104,7 @@ distdir:
 	if not exist $(RAMPART_SAMPLE_LIB_DIR) mkdir $(RAMPART_SAMPLE_LIB_DIR)
 	if not exist $(RAMPART_SAMPLE_DATA_DIR) mkdir $(RAMPART_SAMPLE_DATA_DIR)
 	if not exist $(RAMPART_SAMPLE_POLICY_DIR) mkdir $(RAMPART_SAMPLE_POLICY_DIR)
+	if not exist $(RAMPART_SAMPLE_SRC_DIR) mkdir $(RAMPART_SAMPLE_SRC_DIR)
 	if not exist $(RAMPART_SAMPLE_SERVICE_DIR) mkdir $(RAMPART_SAMPLE_SERVICE_DIR)
 	if not exist $(RAMPART_SAMPLE_SERVICE_DIR)\sec_echo	mkdir $(RAMPART_SAMPLE_SERVICE_DIR)\sec_echo
 	if not exist $(RAMPART_SAMPLE_SERVICE_DIR)\secconv_echo	mkdir $(RAMPART_SAMPLE_SERVICE_DIR)\secconv_echo
@@ -358,19 +360,30 @@ del_am:
 copy_docs:
 	if exist $(RAMPART_SOURCE_DIR)\docs xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\docs $(RAMPART_DISTDIR)\docs 
 
-dist: distdir intdirs rampart mod_rampart mod_rahas mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_saml_protect mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
+install: distdir intdirs rampart mod_rampart mod_rahas mod_rampart_pwcb mod_rampart_authn mod_rampart_rd mod_rampart_sct_provider mod_rampart_sct_provider_hashdb mod_rampart_services_sec_echo mod_rampart_services_secconv_echo mod_rampart_services_saml_sts mod_rampart_samples_sec_echo mod_rampart_samples_saml_echo mod_rampart_samples_issued_token mod_rampart_samples_saml_protect mod_rampart_samples_credential_provider mod_rampart_copy_deploy mod_rampart_copy_include copy_dist_files copy_sec_policy mod_rampart_copy_keys del_am mod_rampart_sample_data copy_docs
 
 dist_no_samples: clean distdir intdirs rampart mod_rampart mod_rahas mod_rampart_copy_include copy_dist_files
 
-deploy:
+deploy: install
 	chdir $(RAMPART_DISTDIR)
 	deploy_rampart.bat
 	chdir $(RAMPART_DISTDIR)\samples\bin
 	deploy_client_repo.bat
 	chdir .\..\..\..\win32
 
-install: dist deploy
+copy_samples:
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\authn_provider $(RAMPART_SAMPLE_SRC_DIR)\authn_provider
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\callback $(RAMPART_SAMPLE_SRC_DIR)\callback
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\client $(RAMPART_SAMPLE_SRC_DIR)\client
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\credential_provider $(RAMPART_SAMPLE_SRC_DIR)\credential_provider
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\replay_detector $(RAMPART_SAMPLE_SRC_DIR)\replay_detector
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\sct_provider $(RAMPART_SAMPLE_SRC_DIR)\sct_provider
+	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\server $(RAMPART_SAMPLE_SRC_DIR)\server
+	@cd $(RAMPART_SAMPLE_SRC_DIR)
+	@del /s /q *.am
+	@cd .\..\..\..\..\win32
 
+dist: install copy_samples
 
 
 
