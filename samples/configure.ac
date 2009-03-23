@@ -117,7 +117,6 @@ AC_CONFIG_FILES([Makefile \
 		server/secconv_echo/Makefile \
         client/Makefile
         client/sec_echo/Makefile \
-        client/sec_echo/data/Makefile \
 		client/saml_echo/Makefile \
 		client/saml_protect/Makefile \
 		client/sts_client/Makefile \
