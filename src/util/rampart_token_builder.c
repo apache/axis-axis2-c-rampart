@@ -58,6 +58,10 @@ rampart_token_build_security_token_reference(
     {
         status = rampart_token_build_x509_data_issuer_serial(env, stref_node, cert);
     }
+    else if(RTBP_THUMBPRINT == pattern)
+    {
+        status = rampart_token_build_thumbprint_reference(env, stref_node, cert);
+    }
     else
     {
         /* reference method is not supported */
@@ -230,4 +234,54 @@ rampart_token_build_x509_data_issuer_serial(
         env, x509_data_node, issuer, serial_no);
 
     return AXIS2_SUCCESS;
+}
+
+
+/**
+ * Build a Thumbprint Reference of the certificate.
+   <wsse:SecurityTokenReference>
+                  <wsse:KeyIdentifier EncodingType="..." ValueType="...#
+                    ThumbprintSHA1">bg6I8267h0TUcPYvYE0D6k6+UJQ=</wsse:KeyIdentifier>
+   </wsse:SecurityTokenReference> 
+
+ * @param env pointer to environment struct
+ * @param parent The parent node
+ * @param cert The X509 certificate
+ * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+ */
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+rampart_token_build_thumbprint_reference(
+    const axutil_env_t *env,
+    axiom_node_t *parent,
+    oxs_x509_cert_t *cert)
+{
+
+    axiom_node_t *key_identifier_node = NULL;
+    axis2_char_t *key_identifier = NULL;
+    axis2_char_t *val_type = NULL;
+
+    key_identifier = oxs_x509_cert_get_fingerprint(cert, env);
+    val_type = OXS_X509_TUMBP_PRINT_SHA1;
+        
+    if(!key_identifier)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart] Cannot create the Thumpprint from Cert.");
+        return AXIS2_FAILURE;
+    }
+    /*Build KeyIdentifier node*/
+    key_identifier_node = oxs_token_build_key_identifier_element(
+                              env, parent, OXS_ENCODING_BASE64BINARY,
+                              val_type, key_identifier);
+    if(key_identifier_node)
+    {
+        return AXIS2_SUCCESS;
+
+    }
+    else
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "Thumbpring node creation failed");
+        return AXIS2_FAILURE;
+    }
 }

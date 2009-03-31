@@ -180,6 +180,11 @@ rampart_sig_prepare_key_info_for_asym_binding(const axutil_env_t *env,
             status = rampart_token_build_security_token_reference(
                          env, key_info_node, cert, RTBP_KEY_IDENTIFIER);
         }
+        else if(axutil_strcmp(eki, RAMPART_STR_THUMB_PRINT) == 0)
+        {
+            status = rampart_token_build_security_token_reference(
+                        env, key_info_node, cert, RTBP_THUMBPRINT);
+        }
         else
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
