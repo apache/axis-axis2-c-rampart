@@ -42,7 +42,8 @@ extern "C" {
         RTBP_EMBEDDED,
         RTBP_KEY_IDENTIFIER,
         RTBP_X509DATA_ISSUER_SERIAL,
-        RTBP_X509DATA_X509CERTIFICATE
+        RTBP_X509DATA_X509CERTIFICATE,
+        RTBP_THUMBPRINT
     } rampart_token_build_pattern_t;
 
     /**
@@ -137,6 +138,25 @@ extern "C" {
         const axutil_env_t *env,
         axiom_node_t *parent,
         oxs_x509_cert_t *cert);
+
+     /**
+     * Build a Thumbprint Reference of the certificate.
+       <wsse:SecurityTokenReference>
+                      <wsse:KeyIdentifier EncodingType="..." ValueType="...#
+                        ThumbprintSHA1">bg6I8267h0TUcPYvYE0D6k6+UJQ=</wsse:KeyIdentifier>
+       </wsse:SecurityTokenReference> 
+
+     * @param env pointer to environment struct
+     * @param parent The parent node
+     * @param cert The X509 certificate
+     * @return AXIS2_SUCCESS on success, else AXIS2_FAILURE
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_token_build_thumbprint_reference(
+        const axutil_env_t *env,
+        axiom_node_t *parent,
+        oxs_x509_cert_t *cert);
+
 
     /* @} */
 #ifdef __cplusplus
