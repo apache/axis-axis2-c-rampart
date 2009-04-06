@@ -26,7 +26,7 @@ echo waiting.......
 pause %_SLEEP%
 
 echo Go to client directory and run the sample
-cd %AXIS2C_HOME%/samples/bin
+cd %AXIS2C_HOME%/samples/bin/rampartc
 if not "%1" == "scenario14"  goto else
 	call saml_update_n_run.bat
 	goto endif

@@ -13,12 +13,12 @@ PATCH_VER = 0
 
 RAMPART_DIST_NAME = .\..\rampartc-$(MAJOR_VER).$(MINOR_VER).$(PATCH_VER)
 RAMPART_DISTDIR = $(RAMPART_DIST_NAME)
-RAMPART_SAMPLE_BIN_DIR = $(RAMPART_DISTDIR)\samples\bin
-RAMPART_SAMPLE_LIB_DIR = $(RAMPART_DISTDIR)\samples\lib
+RAMPART_SAMPLE_BIN_DIR = $(RAMPART_DISTDIR)\samples\bin\rampartc
+RAMPART_SAMPLE_LIB_DIR = $(RAMPART_DISTDIR)\samples\lib\rampartc
 RAMPART_SAMPLE_SERVICE_DIR = $(RAMPART_DISTDIR)\services
-RAMPART_SAMPLE_DATA_DIR = $(RAMPART_DISTDIR)\samples\data
-RAMPART_SAMPLE_POLICY_DIR = $(RAMPART_DISTDIR)\samples\secpolicy
-RAMPART_SAMPLE_SRC_DIR = $(RAMPART_DISTDIR)\samples\src\security
+RAMPART_SAMPLE_DATA_DIR = $(RAMPART_DISTDIR)\samples\src\rampartc\data
+RAMPART_SAMPLE_POLICY_DIR = $(RAMPART_DISTDIR)\samples\src\rampartc\secpolicy
+RAMPART_SAMPLE_SRC_DIR = $(RAMPART_DISTDIR)\samples\src\rampartc
 
 #rampart module
 
@@ -325,7 +325,6 @@ mod_rampart_copy_keys:
 
 mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
-	copy $(RAMPART_SOURCE_DIR)\samples\client\deploy_client_repo.bat $(RAMPART_SAMPLE_BIN_DIR)
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\update_n_run.bat $(RAMPART_SAMPLE_BIN_DIR)
 	copy $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\update_n_run.bat $(RAMPART_SAMPLE_BIN_DIR)\saml_update_n_run.bat
 	copy $(RAMPART_SOURCE_DIR)\samples\data\client_axis2.xml $(RAMPART_SAMPLE_DATA_DIR)\ 
@@ -364,12 +363,6 @@ install: distdir intdirs rampart mod_rampart mod_rahas mod_rampart_pwcb mod_ramp
 
 dist_no_samples: clean distdir intdirs rampart mod_rampart mod_rahas mod_rampart_copy_include copy_dist_files
 
-deploy: install
-	chdir $(RAMPART_DISTDIR)
-	deploy_rampart.bat
-	chdir $(RAMPART_DISTDIR)\samples\bin
-	deploy_client_repo.bat
-	chdir .\..\..\..\win32
 
 copy_samples:
 	@xcopy /E /I /Y $(RAMPART_SOURCE_DIR)\samples\authn_provider $(RAMPART_SAMPLE_SRC_DIR)\authn_provider
@@ -385,5 +378,8 @@ copy_samples:
 
 dist: install copy_samples
 
-
+deploy: dist
+	chdir $(RAMPART_DISTDIR)
+	deploy_rampart.bat
+	chdir ..\win32
 

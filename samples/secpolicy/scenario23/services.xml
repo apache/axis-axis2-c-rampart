@@ -70,8 +70,8 @@
                     <rampc:TimeToLive>360</rampc:TimeToLive>
                     <rampc:EncryptionUser>a</rampc:EncryptionUser>
                     <rampc:PasswordType>Digest</rampc:PasswordType>
-                    <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/libpwcb.so</rampc:PasswordCallbackClass>
-                    <rampc:PKCS12KeyStore>AXIS2C_HOME/samples/data/keys/ahome/alice_kstore.p12</rampc:PKCS12KeyStore>
+                    <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/rampartc/libpwcb.so</rampc:PasswordCallbackClass>
+                    <rampc:PKCS12KeyStore>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_kstore.p12</rampc:PKCS12KeyStore>
                 </rampc:RampartConfig>
             </wsp:All>
         </wsp:ExactlyOne>

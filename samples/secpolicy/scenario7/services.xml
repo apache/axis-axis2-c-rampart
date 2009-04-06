@@ -44,7 +44,7 @@
                 </sp:AsymmetricBinding>
                 <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
 					<rampc:ReplayDetection>5</rampc:ReplayDetection>
-					<rampc:ReplayDetectionModule>AXIS2C_HOME/samples/lib/librdflatfile.so</rampc:ReplayDetectionModule>
+					<rampc:ReplayDetectionModule>AXIS2C_HOME/samples/lib/rampartc/librdflatfile.so</rampc:ReplayDetectionModule>
                 </rampc:RampartConfig>
             </wsp:All>
         </wsp:ExactlyOne>

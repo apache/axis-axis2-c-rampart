@@ -48,7 +48,7 @@
                 <rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
                     <rampc:PasswordType>Digest</rampc:PasswordType>
                     <!--rampc:AuthnModuleName>AXIS2C_HOME/bin/samples/rampart/authn_provider/libauthn.so</rampc:AuthnModuleName-->
-                    <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/libpwcb.so</rampc:PasswordCallbackClass>
+                    <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/rampartc/libpwcb.so</rampc:PasswordCallbackClass>
                 </rampc:RampartConfig>
             </wsp:All>
         </wsp:ExactlyOne>

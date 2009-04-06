@@ -147,8 +147,8 @@
                 <rampc:User>Alice</rampc:User>
                 <rampc:TimeToLive>360</rampc:TimeToLive>
                 <rampc:PasswordType>Digest</rampc:PasswordType>
-                <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/libpwcb.so</rampc:PasswordCallbackClass>
-				<rampc:SecurityContextTokenProvider>AXIS2C_HOME/samples/lib/libsctprovider_hashdb.so</rampc:SecurityContextTokenProvider>
+                <rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/rampartc/libpwcb.so</rampc:PasswordCallbackClass>
+				<rampc:SecurityContextTokenProvider>AXIS2C_HOME/samples/lib/rampartc/libsctprovider_hashdb.so</rampc:SecurityContextTokenProvider>
             </rampc:RampartConfig>
         </wsp:All>
     </wsp:ExactlyOne>

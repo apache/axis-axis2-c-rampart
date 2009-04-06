@@ -69,7 +69,7 @@
 					<rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
 						<rampc:User>Bob</rampc:User>
 						<rampc:PasswordType>Digest</rampc:PasswordType>
-						<rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/libpwcb.so</rampc:PasswordCallbackClass>
+						<rampc:PasswordCallbackClass>AXIS2C_HOME/samples/lib/rampartc/libpwcb.so</rampc:PasswordCallbackClass>
 					</rampc:RampartConfig>
 				</wsp:All>
 			</wsp:ExactlyOne>
