@@ -179,6 +179,8 @@ oxs_sig_verify_hmac_sha1(const axutil_env_t *env,
     signed_val = (axis2_char_t*)oxs_buffer_get_data(output_buf, env);
 	oxs_buffer_free(input_buf, env);
     /*Compare the output with the signature. If tally; SUCCESS*/
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[RAMPART]Signature received [%s]", signature);
+    AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[RAMPART]Signature calculated [%s]", signed_val);
     if(axutil_strcmp(signature, signed_val) == 0){
 		oxs_buffer_free(output_buf, env);
         return AXIS2_SUCCESS;
