@@ -1,7 +1,7 @@
 prglibdir=$(prefix)/services/sec_echo
-samplesdir=$(prefix)/samples/src/server/sec_echo
+#samplesdir=$(prefix)/samples/src/server/sec_echo
 prglib_LTLIBRARIES = libsec_echo.la
-samples_DATA=echo.c echo_skeleton.c echo.h services.xml Makefile.am Makefile.in
+#samples_DATA=echo.c echo_skeleton.c echo.h services.xml Makefile.am Makefile.in
 prglib_DATA= services.xml
 EXTRA_DIST = services.xml echo.h
 noinst_HEADERS = echo.h
