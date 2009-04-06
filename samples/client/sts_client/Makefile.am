@@ -1,6 +1,6 @@
-prgbindir=$(prefix)/samples/bin
+prgbindir=$(prefix)/samples/bin/rampartc
 prgbin_PROGRAMS = sts_client 
-datadir=$(prefix)/samples/bin
+datadir=$(prefix)/samples/bin/rampartc
 #data_DATA= client.xml service.xml
 sts_client_SOURCES = client.c 
 

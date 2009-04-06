@@ -1,4 +1,4 @@
-prglibdir=$(prefix)/samples/lib
+prglibdir=$(prefix)/samples/lib/rampartc
 prglib_LTLIBRARIES = libhtpwcb.la
 libhtpwcb_la_SOURCES = htpwcb.c
 

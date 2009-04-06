@@ -1,6 +1,6 @@
-prgbindir=$(prefix)/samples/bin
+prgbindir=$(prefix)/samples/bin/rampartc
 prgbin_PROGRAMS = sec_echo
-datadir=$(prefix)/samples/bin
+datadir=$(prefix)/samples/bin/rampartc
 data_DATA= update_n_run.sh
 sec_echo_SOURCES = echo.c 
 

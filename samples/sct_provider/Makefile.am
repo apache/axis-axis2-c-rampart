@@ -1,4 +1,4 @@
-prglibdir=$(prefix)/samples/lib
+prglibdir=$(prefix)/samples/lib/rampartc
 prglib_LTLIBRARIES = libsctprovider.la libsctprovider_hashdb.la
 libsctprovider_la_SOURCES = sct_provider_stored_key.c
 libsctprovider_la_LIBADD  = $(LDFLAGS) \

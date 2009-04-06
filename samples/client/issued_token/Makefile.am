@@ -1,6 +1,5 @@
-prgbindir=$(prefix)/samples/bin
+prgbindir=$(prefix)/samples/bin/rampartc
 prgbin_PROGRAMS = issued_token_echo
-datadir=$(prefix)/samples/bin
 issued_token_echo_SOURCES = echo.c 
 
 issued_token_echo_LDADD   = $(LDFLAGS) \
@@ -22,3 +21,6 @@ INCLUDES = @AXIS2INC@ \
             -I ../../../include 
 
 EXTRA_DIST = update_n_run.sh
+
+install-data-hook:
+		cp update_n_run.sh $(prefix)/samples/bin/rampartc/issues_token_update_n_run.sh

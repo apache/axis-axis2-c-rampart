@@ -20,16 +20,14 @@ fi
     ./axis2_http_server -p$_PORT &
     sleep 2
     echo ">Go to client directory"
+	cd $AXIS2C_HOME/samples/bin/rampartc
+    echo ">Run the sample"
     if [ $S_i = 'scenario14' ]
     then
-        echo "SAML"
-        cd $_SMPL_DIR/../client/saml_echo
+        sh saml_echo_update_n_run.sh
     else
-        echo "****"
-        cd $_SMPL_DIR/../client/sec_echo
+        sh update_n_run.sh
     fi
-    echo ">Run the sample"
-    sh update_n_run.sh
     echo ">Jump back to samples dir :$_SMPL_DIR"
     cd $_SMPL_DIR
     

@@ -1,7 +1,5 @@
-prgbindir=$(prefix)/samples/bin
+prgbindir=$(prefix)/samples/bin/rampartc
 prgbin_PROGRAMS = saml_echo 
-datadir=$(prefix)/samples/bin
-data_DATA= update_n_run.sh
 saml_echo_SOURCES = echo.c 
 
 saml_echo_LDADD   = $(LDFLAGS) \
@@ -23,3 +21,6 @@ INCLUDES = @AXIS2INC@ \
             -I ../../../include 
 
 EXTRA_DIST = update_n_run.sh update_n_run.bat
+
+install-data-hook:
+		cp update_n_run.sh $(prefix)/samples/bin/rampartc/saml_echo_update_n_run.sh
