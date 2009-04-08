@@ -8,6 +8,7 @@ noinst_HEADERS = echo.h
 SUBDIRS =
 libsecconv_echo_la_SOURCES = echo.c echo_skeleton.c
 libsecconv_echo_la_LIBADD   = $(LDFLAGS) \
+							  -L$(prefix)/lib \
                     -L$(AXIS2C_HOME)/lib \
 					-lrampart
 					

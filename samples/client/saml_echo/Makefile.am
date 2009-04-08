@@ -4,6 +4,7 @@ saml_echo_SOURCES = echo.c
 
 saml_echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
+					-L$(prefix)/lib \
 		    		-lrampart \
 					-laxutil \
                     -laxis2_axiom \

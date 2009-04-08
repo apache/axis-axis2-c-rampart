@@ -9,6 +9,7 @@ SUBDIRS =
 libsec_echo_la_SOURCES = echo.c echo_skeleton.c
 libsec_echo_la_LIBADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
+					-L$(prefix)/lib \
 					-lrampart
 
 

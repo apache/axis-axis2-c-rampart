@@ -6,6 +6,7 @@ sts_client_SOURCES = client.c
 
 sts_client_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
+					-L$(prefix)/lib \
 		    	-lrampart \
 					-laxutil \
                     -laxis2_axiom \

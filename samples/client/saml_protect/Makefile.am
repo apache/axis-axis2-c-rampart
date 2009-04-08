@@ -4,6 +4,7 @@ saml_protect_echo_SOURCES = echo.c
 
 saml_protect_echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
+					-L$(prefix)/lib \
 					-laxutil \
                     -laxis2_axiom \
 					-lneethi \

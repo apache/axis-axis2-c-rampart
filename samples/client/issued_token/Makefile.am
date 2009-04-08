@@ -4,6 +4,7 @@ issued_token_echo_SOURCES = echo.c
 
 issued_token_echo_LDADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
+					-L$(prefix)/lib \
 		    		-lrampart \
 					-laxutil \
                     -laxis2_axiom \

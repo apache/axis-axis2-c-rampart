@@ -9,6 +9,7 @@ SUBDIRS =
 libsaml_sts_la_SOURCES = issuer.c saml_skeleton.c
 libsaml_sts_la_LIBADD   = $(LDFLAGS) \
                     -L$(AXIS2C_HOME)/lib \
+					-L$(prefix)/lib \
 					-lrampart
 
 
