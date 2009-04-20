@@ -6,17 +6,16 @@ E.g. %sh deploy.sh scenario1
 Windows users please use the "deploy.bat".
 
 Make sure you have run the 
-samples/client/sec_echo/deploy_client_repo.sh on Linux or
-samples\client\sec_echo\deploy_client_repo.bat in Windows.
+../client/deploy_client_repo.sh on Linux or
+..\client\deploy_client_repo.bat in Windows.
 
 These scenarios will only copy the security policy (XML) files. 
 
-Then go to $AXIS2C_HOME/bin and start the server.
+Then start the server. (simple_axis_server is in $AXIS2C_HOME/bin)
 
 To run the client, use the script 
-"samples/client/sec_echo/update_n_run.sh" on Linux or
-"samples\client\sec_echo\update_n_run.bat" on Windows.
-
+"../client/sec_echo/update_n_run.sh" on Linux or
+"..\client\sec_echo\update_n_run.bat" on Windows.
 
 Following is a summary of scenarios available.
 
