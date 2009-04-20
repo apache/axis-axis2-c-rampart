@@ -1891,7 +1891,7 @@ extern "C"
      * @return AXIS2_TRUE if different keys are needed. AXIS2_FALSE otherwise.
      */
     AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-    is_different_session_key_for_encryption_and_signing(
+    rampart_context_is_different_session_key_for_enc_and_sign(
         const axutil_env_t *env,
         rampart_context_t *rampart_context);
 

@@ -1003,7 +1003,7 @@ rampart_context_get_signature_session_key(rampart_context_t *rampart_context,
     int i = 0;
     int key_usage = OXS_KEY_USAGE_SESSION;
 
-    if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+    if(rampart_context_is_different_session_key_for_enc_and_sign(env, rampart_context))
         key_usage = OXS_KEY_USAGE_SIGNATURE_SESSION;
 
     /*Repeat thru all the keys and find the matching one*/
@@ -1027,7 +1027,7 @@ rampart_context_set_signature_session_key(rampart_context_t *rampart_context,
     if(rampart_context->key_list)
     {
         int key_usage = OXS_KEY_USAGE_SESSION;
-        if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+        if(rampart_context_is_different_session_key_for_enc_and_sign(env, rampart_context))
             key_usage = OXS_KEY_USAGE_SIGNATURE_SESSION;
 
         oxs_key_set_usage(session_key, env, key_usage);
@@ -3436,7 +3436,7 @@ rampart_context_get_validate_security_context_token_fn(
 }
 
 AXIS2_EXTERN axis2_bool_t AXIS2_CALL
-is_different_session_key_for_encryption_and_signing(
+rampart_context_is_different_session_key_for_enc_and_sign(
     const axutil_env_t *env,
     rampart_context_t *rampart_context)
 {

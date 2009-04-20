@@ -188,17 +188,18 @@ oxs_xml_enc_populate_stref_with_issuer_serial(const axutil_env_t *env,
 }
 
 static axis2_status_t
-oxs_xml_enc_process_key_info(const axutil_env_t *env,
-                             oxs_asym_ctx_t *asym_ctx,
-                             axiom_node_t *key_info_node,
-                             axiom_node_t *parent_node)
+oxs_xml_enc_process_key_info(
+    const axutil_env_t *env,
+    oxs_asym_ctx_t *asym_ctx,
+    axiom_node_t *key_info_node,
+    axiom_node_t *parent_node)
 {
     axiom_node_t *st_ref_node = NULL;
-    axiom_node_t *cur_node = NULL;
-    axis2_char_t *node_name = NULL;
 
-    st_ref_node =  oxs_axiom_get_first_child_node_by_name(env, key_info_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, OXS_WSSE);
-    if(!st_ref_node){
+    st_ref_node =  oxs_axiom_get_first_child_node_by_name(
+        env, key_info_node, OXS_NODE_SECURITY_TOKEN_REFRENCE, OXS_WSSE_XMLNS, OXS_WSSE);
+    if(!st_ref_node)
+    {
         return AXIS2_FAILURE;
     }
     /*
@@ -212,26 +213,9 @@ oxs_xml_enc_process_key_info(const axutil_env_t *env,
     */
 
     /*
-     * Implementation of these are not important for Encryption.
-     * Might've to relocate to another file as this processing is essential in Signature
+     * TODO: This method should get the key from the key_node. Currently key is taken from 
+     * given private key file
      */
-    cur_node = axiom_node_get_first_element(st_ref_node, env);
-    node_name = axiom_util_get_localname(cur_node, env);
-    if(0 == axutil_strcmp(OXS_NODE_REFERENCE, node_name)){
-
-    }
-    else if(0 == axutil_strcmp(OXS_NODE_KEY_IDENTIFIER, node_name)){
-
-    }
-    else if(0 == axutil_strcmp(OXS_NODE_X509_DATA, node_name)){
-
-    }
-    else if(0 == axutil_strcmp(OXS_NODE_EMBEDDED, node_name)){
-
-    }
-    else{
-        /*Unsupported*/
-    }
 
     return AXIS2_SUCCESS;
 }

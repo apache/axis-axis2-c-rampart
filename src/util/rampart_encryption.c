@@ -535,7 +535,7 @@ rampart_enc_dk_encrypt_message(
             axiom_node_t *security_context_token_node = NULL;
             /*include the security context token*/
             security_context_token_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_SECURITY_CONTEXT_TOKEN);
-            if((!security_context_token_node) || (is_different_session_key_for_encryption_and_signing(env, rampart_context)))
+            if((!security_context_token_node) || (rampart_context_is_different_session_key_for_enc_and_sign(env, rampart_context)))
             {
                 security_context_token_node = sct_provider_get_token(env, token, AXIS2_TRUE, rampart_context, msg_ctx);
                 if(!security_context_token_node)

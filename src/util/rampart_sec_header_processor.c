@@ -323,7 +323,7 @@ rampart_shp_store_token_id(const axutil_env_t *env,
     }
 
     /*if same key is used for encryption and signature, then store it at both place*/
-    if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+    if(rampart_context_is_different_session_key_for_enc_and_sign(env, rampart_context))
     {
         if(is_encryption)
             rampart_context_set_encryption_token_id(rampart_context, env, token_id, msg_ctx);

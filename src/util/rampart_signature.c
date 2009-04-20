@@ -271,7 +271,7 @@ rampart_sig_pack_for_sym(const axutil_env_t *env,
             if(token_id)
             {
                 int key_usage = OXS_KEY_USAGE_SESSION;
-                if(is_different_session_key_for_encryption_and_signing(env, rampart_context))
+                if(rampart_context_is_different_session_key_for_enc_and_sign(env, rampart_context))
                     key_usage = OXS_KEY_USAGE_SIGNATURE_SESSION;
 
                 session_key = rampart_context_get_key(rampart_context, env, token_id);
@@ -537,7 +537,7 @@ rampart_sig_sign_message(
             axiom_node_t *security_context_token_node = NULL;
             /*include the security context token and set the AttachedReference to key_reference_node*/
             security_context_token_node = oxs_axiom_get_node_by_local_name(env, sec_node,  OXS_NODE_SECURITY_CONTEXT_TOKEN);
-            if((!security_context_token_node) || (is_different_session_key_for_encryption_and_signing(env, rampart_context)))
+            if((!security_context_token_node) || (rampart_context_is_different_session_key_for_enc_and_sign(env, rampart_context)))
             {
                 security_context_token_node = sct_provider_get_token(env, token, AXIS2_FALSE, rampart_context, msg_ctx);
                 if(!security_context_token_node)
