@@ -19,7 +19,7 @@ both forms.</p>
 <p>Please send your feedback to the developer mailing list: <a
 href="mailto:rampart-c-dev@ws.apache.org">rampart-c-dev@ws.apache.org</a>
 (Subscription details are available on the <a
-href="http://ws.apache.org/rampart/c/mail-lists.html">Rampart/C site</a>.</p>
+href="http://ws.apache.org/rampart/c/mail-lists.html">Rampart/C site</a>).</p>
 
 <h2>Contents</h2>
 <ul>
@@ -61,14 +61,14 @@ binary distribution on Linux : </p>
       <li>export AXIS2C_HOME</li>
     </ul>
   </li>
-  <li>Copy modules/rampart to $AXIS2C_HOME/modules
+  <li>Copy modules/* to $AXIS2C_HOME/modules/
   <li>Copy lib/* to $AXIS2C_HOME/lib
-  <li>Copy bin/samples/server/sec_echo to $AXIS2C_HOME/services/
-  <li>Copy bin/samples/* to $AXIS2C_HOME/bin/samples/rampart. This will copy callback modules etc
+  <li>Copy services/* to $AXIS2C_HOME/services/
+  <li>Copy samples/* to $AXIS2C_HOME/samples/. This will copy callback modules etc.
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
-  <li>Go to bin/samples/client/sec_echo/ and deploy the client repo
+  <li>Go to samples/src/rampartc/client/ and deploy the client repo
 	<pre>%sh deploy_client_repo.sh</pre>
-   <li>Go to bin/samples/secpolicy/ and try a scenario
+   <li>Go to samples/src/rampartc/secpolicy/ and try a scenario
 	<pre> %sh test_scen.sh scenarioX server-port</pre>
 </ol>
 <a id="linux_source"></a>
@@ -93,7 +93,7 @@ the source distribution on Linux :</p>
       <li>This can be done using the following command sequence, in the
         directory where you have extracted the source:
         <ul>
-          <li>./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.2</li>
+          <li>./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.6.0</li>
           <li>make</li>
           <li>make install</li>
         </ul>
@@ -128,10 +128,12 @@ distributions.) </p>
 <ol>
   <li>Extract the binary distribution to a folder of your choice. (example:
     C:\rampartc).</li>
-  <li>Copy modules\rampart to %AXIS2C_HOME%\modules.</li>
+	<li>Set the AXIS2C_HOME envirionment variable to direct to your Axis2/C Installation. </li>
+	<pre>SET AXIS2C_HOME=[your-path-to-axis2c]</pre>
+  <li>Run the deploy_rampart.bat that could be found in the root of the rampart binary distribution.</li>
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>.
-  <li>Copy samples\server\sec_echo to %AXIS2C_HOME%\services </li>
-  <li>Start the axis2_http_server and run the echo client in the samples\client\sec_echo to consume the secured service.
+   <li>Go to samples/src/rampartc/secpolicy/ and try a scenario
+	<pre> test_scen.bat scenarioX server-port</pre>
 </ol>
 <a id="bin_run"></a>
 
@@ -144,9 +146,8 @@ distributions.) </p>
   <li>The makefile shipped with this version needs Microsoft Visual Studio
     Compiler (cl) and the nmake build tool.</li>
 
-  <p>(Note: You can <a
-  href="http://msdn.microsoft.com/vstudio/express/downloads/">download the
-  Microsoft VSExpress2005 edition and Platform SDK</a> from the Microsoft Web
+  <p>(Note: You can download the <a
+  href="http://msdn.microsoft.com/vstudio/express/downloads/">Microsoft VSExpress edition and Platform SDK</a> from the Microsoft Web
   site. You will need to add the path to the Platform SDK Include and Lib
   folders to the makefile)</p>
   </li>
@@ -161,7 +162,13 @@ distributions.) </p>
 <ul>
   <li>Extract the source distribution to a folder of your choice. (Example:
     C:\rampartc)</li>
-  <li>Edit the configure.in file to specify the Axis2/C repository path and the OpenSSL installation path</li>
+  <li>Edit the configure.in file to specify the Axis2/C repository path and the OpenSSL installation path
+	<ul>
+	   <li>AXIS2_BIN_DIR = path/to/where/you/have/installed/axis2</li>
+           <li>OPENSSL_BIN_DIR = path/to/where/you/have/installed/openssl</li>
+           <li>DEBUG = 1 if enabled, 0 otherwise</li>
+	</ul>
+   </li>
   <li>Open a DOS shell</li>
   <li>cd C:\rampartc\build\win32</li>
   <li>to access .Net tools, run
@@ -173,13 +180,6 @@ distributions.) </p>
     cannot find this batch file. This file is located in &lt;your MS Visual
     Studio install Directory&gt;\VC\bin directory.)</p>
   </li>
-  <li>Set the patameters in the configure.in
-	<ul>
-	   <li>AXIS2_BIN_DIR = path/to/where/you/have/installed/axis2</li>
-           <li>OPENSSL_BIN_DIR = path/to/where/you/have/installed/openssl</li>
-           <li>DEBUG = 1 if enabled, 0 otherwise</li>
-	</ul>
-   </li>
   <li>To build the system and create the binary files in a directory named
     deploy under the build directory,
     <ul>
@@ -187,7 +187,10 @@ distributions.) </p>
     </ul>
   </li>
   <li>Engage Rampart/C as specified in the section <a href="#engage">Engage Rampart/C with Axis2/C</a>
-  <li>Start the axis2_http_server and run the echo client in the samples/client/sec_echo to consume the secured service
+  <li>Then go to  samples/secpolicy and try a scenario
+	<pre>
+	test_scen.bat scenarioX server-port
+	</pre>
 </ul>
 <a id="src_run"></a>
 
@@ -201,12 +204,23 @@ distributions.) </p>
    &lt;module ref="rampart"/&gt;
 </pre>
 
-<p> Also you need to add follwoing phase under &lt;phaseOrder type="outflow"&gt;
+<p>If you want to provide Secure Token Service (STS) functionality to a service, add the following entry to services.xml. </p>
+    &lt;module ref="rahas"/&gt;
+
+<p>Then add following "Security" phase to the phase order in the inflow and outflow in the axis2.xml. Also add "Rahas" phase to inflow.</p>
 <pre>
-   &lt;phaseOrder type="outflow"&gt;
-        &lt;!-- Other Phases--&gt;
+    &lt;phaseOrder type="inflow"&gt;
+        &lt;phase name="Transport"/&gt;
+        &lt;phase name="PreDispatch"/&gt;
+        &lt;phase name="Dispatch"/&gt;
+        &lt;phase name="PostDispatch"/&gt;
+        &lt;phase name="Security" /&gt;
+        &lt;phase name="Rahas"/&gt;
+    &lt;/phaseOrder&gt;
+    &lt;phaseOrder type="outflow"&gt;
+        &lt;phase name="MessageOut"/&gt;
         &lt;phase name="Security"/&gt;
-   &lt;/phaseOrder&gt;
+    &lt;/phaseOrder&gt;
 </pre>
 
 <p>Apart from that you must define security policies for the client and the server.
@@ -230,7 +244,5 @@ For each scenario there are two files</p>
   <li>services.xml : Defines what the security configurations are for a particular service using security policies</li>
 </ol>
 <p><strong>NOTE:</strong> If you have changed a client's policy file, make sure that you change the corresponding policy assertions in the services.xml file as well, and vise versa. </p>
-<p><strong>NOTE:</strong> To try out samples, use the client available under samples/client/sec_echo <br>
-Usage: echo [address] [client_repo]</p>
 </body>
 </html>

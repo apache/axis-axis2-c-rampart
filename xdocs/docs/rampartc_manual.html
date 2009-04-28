@@ -59,9 +59,9 @@ two processors in Rampart/C.</p>
 Similar to processes, Rampart/C uses two builders that builds outgoing
 messages.
 <ol>
-  <li>Security header builder : Builds Security headers of an outgoing
+	<li><strong>Security Header Builder</strong> : Builds Security headers of an outgoing
     message depending on security policies.</li>
-  <li>Token Builder : Builds token claims such as binary security token.</li>
+	<li><strong>Token Builder</strong> : Builds token claims such as binary security token.</li>
 </ol>
 These builders and processes assemble other components such as encryption,
 signature, UsernameToken together. Decisions are taken in these processes
@@ -76,7 +76,7 @@ Also there are set of builders that builds these models. <br>
 </p>
 
 <p>Rampart/C is configured using policy assertions defined in WS-Security
-Policy specification 1.1. These policies are defined in policy.xml files.
+Policy specification (1.1 or 1.2). These policies are defined in policy.xml files.
 The client side policies are defined in a seperate policy.xml file located in the client's repository.
 The service's policies are defined in the services.xml file.
 

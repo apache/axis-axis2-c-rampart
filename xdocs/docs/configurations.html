@@ -24,9 +24,14 @@ You may find several examples comes with Rampart/C under samples/secpolicy/. The
 <li>Detecting replays of messages
 </ol>
 
+<p>In addition to that, if you want to provide Secure Token Service (STS) functionality to a service, add the following entry to your descriptor file. </p>
+<pre>
+ &lt;module ref="rahas"/&gt;
+</pre>
+
 <h2>Security policy based configurations</h2>
 
-<p>Rampart/C configurations are based on WS Security Policy Language 1.0. Thus, we need to specify these policies in the descriptor file. For the client side we place them in a separate policy file, whilst in the server side we place them within either the services.xml or the axis2.xml.</p>
+<p>Rampart/C configurations are based on WS Security Policy Language. Thus, we need to specify these policies in the descriptor file. For the client side we place them in a separate policy file, whilst in the server side we place them within either the services.xml or the axis2.xml.</p>
 
 <h2>Client configurations</h2>
 
@@ -364,41 +369,5 @@ RECORD-ID = MSG-ID + TIMESTAMP
 </p>
 <p>The message ID is considered to be unique to a particular message. But for this, user needs to have the addressing module engaged(which comes with axis2/c). This is NOT a MUST but is the RECOMONDED approach. One can just survive with only the timestamp. But shouldn't forget the chance of generating two message at the same time, which definitely make them suspicious as a replay.</p>
 
-<h2>Rampart/C samples</h2>
-
-<p>There are number of samples available under Rampart/C samples. 
-Following is a brief description of Rampart/C samples</p>
-<p>
-<b><i>Service :</b> samples/services/sec_echo</i><br>
-The security enabled service. Depends on deployed security policy scenario.</p>
-<p>
-<b><i>Client:</b> samples/client/sec_echo</i><br>
-The client to send secured SOAP messages. Depends on deployed security policy scenario.</p>
-<p>
-<b><i>Security policies:</b> samples/secpolicy/scenarioX</i><br>
-Provides several identified scenarios to demonstrate features of Rampart/C.
-Please read the README file under samples/secpolicy to learn more about them.</p>
-<p>
-<b><i>Callbacks :</b> samples/callback</i><br>
-To retrieve passwords for a particular user, Rampart/C uses password callback mechanism.
-Such callback modules can be plugged into Rampart/C by defining them in the policy assertions.
-The sample shows how to write a simple password callback module.</p>
-<p>
-<b><i>Credential Provider:</b> samples/credential_provider</i><br>
-In the client side it's possible to give a username/password pair to the client, using a credential_provider.
-Similar to Callbacks, these can too plugged into Rampart/C by defining them in the policy assertions.
-The sample shows how to write a simple credentials provider.</p>
-<p>
-<b><i>Authentication Provider :</b> samples/authn_provider</i><br>
-In the server side, in order to validate a usernametoken in more application specific way, an authentication module can be used.<br>
-The authentication module gets both the username and the password and returns a status code back to Rampart/C.
-The sample shows how to write a simple authentication provider.</p>
-<p>
-<b><i>Keys :</b> samples/keys</i><br>
-All the certificates, private keys and key stores that are used by samples, placed here.</p>
-<p>
-<b><i>Data :</b> samples/data</i><br>
-Data files that are used by samples, placed here.
-</p>
 </body>
 </html>

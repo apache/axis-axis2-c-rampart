@@ -13,6 +13,88 @@
 
 <p>This page contains information on previous releases running up to the
 latest.</p>
+
+<a id="1.2.0"></a>
+<h3>13th May 2008 - Apache Rampart/C Version 1.2.0 Released</h3>
+<a href="http://ws.apache.org/rampart/c/download.cgi">Download 1.2</a>
+<h4>Key Features</h4>
+<ol>
+<li>Ability to send and verify UsernameTokens with
+    <ul> 
+    <li>Username and PlainText password
+    <li>Username and Digested password
+    </ul>
+<li>Ability to send Timestamp tokens
+<li>SOAP message encryption
+    <ul>
+    <li> With derived key support for improved security
+    <li> Symmetric and Asymmetric modes of operations
+    <li> Support for AES and Tripple DES encryption
+    <li> Signature encryption
+    <li> Keys encryption
+    </ul>
+<li>SOAP message signature
+    <ul>
+    <li> XML signature with RSA-SHA1
+    <li> Message authentication with HMAC-SHA1
+    <li> Signature confirmation support
+    <li> SOAP Header signing
+    </ul>
+<li>WS-Security Policy (spec 1.1) based configurations
+    <ul>
+    <li> Support for both Symmetric as well as Asymmetric policy bindings
+    <li> Support for different modes of key identifiers
+    <li> Support for different algorithm suites<br>
+        [Basic128, Basic 192, Basic256, TrippleDES, Basic128Rsa15, Basic192Rsa15,Basic256Rsa15, TripleDesRsa15]
+     </ul>
+<li>Replay detection support
+    <ul>
+    <li> Easy to use built-in replay detection module
+    <li> Ability to deploy a customized replay detection module
+    </ul>
+<li>Different protection orders
+    <ul>
+    <li> Encrypt before signing
+    <li> Sign before encrypting
+    </ul>
+<li>Extensible modules
+    <ul>
+    <li> Password callback module
+    <li> Authentication module
+    <li> Credentials module
+    </ul>
+<li>Keys management
+    <ul>
+    <li> Support for X509 token profile
+    <li> Support for Key identifiers, Thumb prints, Issuer/Serial pairs, Embedded and Direct references
+    </ul>
+<li> WS-Secure Conversation Language support (Experimental)
+    <ul>
+    <li> Establishing Security Context and thereby maintaining a session
+    <li> Per message key derivation
+    <li> Support for stored securtiy context token
+    </ul>
+<li> WS-Trust Language support (Experimental)
+    <ul>
+    <li> Security Token Services (STS)
+    <li> STS Client
+    <li> Server and Client entrophy support
+    </ul>
+<li>Other
+    <ul>
+    <li> Easy to use deployment scripts
+    <li> A comprehensive set of samples
+    </ul>
+</ol>
+</div><div class="subsection"><a name="Major_Changes_Since_Last_Release"></a><h3>Major Changes Since Last Release</h3><p>
+<ol>
+    <li> WS-Secure Conversation Language support (Experimental)
+    <li> WS-Trust Language support (Experimental)
+    <li> SAML Support
+    <li> Memory leak fixes</li>
+    <li> Many bug fixes</li>
+ </ol>
+
 <a id="1.1.0"></a>
 <h3>16th Jan 2008 - Apache Rampart/C Version 1.1 Released</h3>
     <a href='http://ws.apache.org/rampart/c/download.cgi'>Download 1.1</a>

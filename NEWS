@@ -50,6 +50,7 @@ Key features
 9. Keys management
     - Support for X509 token profile
     - Support for Key identifiers, Thumb prints, Issuer/Serial pairs, Embedded and Direct references
+	- Support for PKCS12 keystore
 
 10. WS-Secure Conversation Language support 
     - Establishing Security Context and thereby maintaining a session
@@ -76,8 +77,9 @@ Major Changes Since Last Release
 1. WS-Secure Conversation Language support
 2. WS-Trust Language support
 3. Rahas module to give STS support to a service
-4. Memory leak fixes
-5. Many bug fixes
+4. PKCS12 Keystore support
+5. Memory leak fixes
+6. Many bug fixes
 
 
 Planned to be implemented Architecture Features 

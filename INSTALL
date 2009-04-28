@@ -26,7 +26,7 @@ Then go to  samples/secpolicy and try a scenario
 
 Getting Rampart/C binary distribution working on Linux
 ======================================================
-1. Copy modules/rampart to $AXIS2C_HOME/modules
+1. Copy modules/* to $AXIS2C_HOME/modules/
 2. Copy lib/* to $AXIS2C_HOME/lib
 3. Copy services/* to $AXIS2C_HOME/services/
 4. Engage rampart as described in section "Engaging Rampart/C with axis2/C"
