@@ -16,6 +16,8 @@ RAMPART/C release process
 	  xdocs\api\doxygenconf
       INSTALL file
 	  samples/build.sh
+	  sd.sh
+	  bindist.sh
 
 
 3. Update the documents inside xdocs
