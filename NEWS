@@ -78,8 +78,9 @@ Major Changes Since Last Release
 2. WS-Trust Language support
 3. Rahas module to give STS support to a service
 4. PKCS12 Keystore support
-5. Memory leak fixes
-6. Many bug fixes
+5. Security Policy 1.2 support
+6. Memory leak fixes
+7. Many bug fixes
 
 
 Planned to be implemented Architecture Features 
