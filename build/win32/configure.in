@@ -5,8 +5,8 @@ AXIS2_BIN_DIR = E:\axis2c\build\deploy
 OPENSSL_BIN_DIR = C:\OpenSSL
 
 # Set this to 1 if debug code should be generated, 0 otherwise.
-DEBUG = 1
+DEBUG = 0
 #CRUNTIME Libaray ( Use /MT or /MD)
-CRUNTIME=/MD
+CRUNTIME=/MT
 
-EMBED_MANIFEST=1
+EMBED_MANIFEST=0
