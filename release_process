@@ -2,6 +2,7 @@ RAMPART/C release process
 ==========================
                             
 1. Get a svn checkout from the trunk.
+
 2. Change the version numbers and update the following files.
     * ChangeLog
       NEWS
@@ -19,27 +20,41 @@ RAMPART/C release process
 	  sd.sh
 	  bindist.sh
 
-
 3. Update the documents inside xdocs
     * download.html
     * index.html
-    * installationguide.html
-    * axis2c_manual
+	* archived_news.html
 
-4. Run the build.sh
+4. Commit the changes
+
+5. Create a tag for the release
+	* run `svn copy https://svn.apache.org/repos/asf/webservices/rampart/trunk/c https://svn.apache.org/repos/asf/webservices/rampart/tags/c/1_3_0 -m "Tagging 1.3.0 release of RampartC"`
+
+6. Get an svn checkout from the tag. 
+
+7. Run the build.sh
     make sure for the configure option you have the following.
-    sh configure --prefix=${AXIS2C_HOME} --enable-tests=yes --with-apache2=/usr/local/apache2/include --enable-tcp=yes --with-archive=/usr/include
+    ./configure --prefix=${AXIS2C_HOME} --enable-static=no --with-axis2=${AXIS2C_HOME}/include/axis2-1.6.0
 
-5. Create the source distribution
+8. Creating the site documents
     * Should have maven 1.0.2 installed (for "maven site" command)
-    * make dist
+	* run "maven site" from rampart root directory
 
-6. Create the binay distribution
-    * make bindist
+9. Creating the API documents
+	* Go inside "xdocs/api/" directory
+	* run "doxygen doxygenconf"
 
-7. Test the source and binary distributions
+10. Create the source distribution
+	* You have to have gpg key. Check section 14 to create one.
+    * sh sd.sh
+	* enter your gpg password when asked. 
 
-8. Test the source distribution in Windows and create the Sorce zip
+11. Create the binay distribution
+    * sh bindist.sh
+
+12. Test the source and binary distributions
+
+13. Test the source distribution in Windows and create the Sorce zip
    and the windows binary
 
    Building Windows Binary
@@ -56,83 +71,43 @@ RAMPART/C release process
     * nmake dist  
 
 
-9. Sign the packs
+14. Sign the packs
     * use existing key pair if you have
     * To create a new key pair
         gpg --gen-key
         key selection default
         key size 2048
         key never expire
-        real name:Manjula Peiris
+        real name:Your Name
         comment:
         generated user id is:
-        "Manjula Peiris<manjula@wso2.com>"
+        "Your Name<email@your.domain>"
         passphrase temp_12_word
 
         keys will be created in ~/.gnupg directory.
 
     * cd to the directory which contains the pack and export keys
-        gpg --armor --export manjula@wso2.com > KEYS
+        gpg --armor --export email@your.domain > KEYS
 
         generated message is:
         You need a Passphrase to protect your secret key.
         by default key is created in ~/.gnupg
 
-    * Use following script to sign the keys
-        
-        #!/bin/bash
+15. Copy the source, binary packs to your directory in people.apache.org
 
-        SRC_TAR_GZ=axis2c-src-1.6.0.tar.gz
-        LIN_BIN_TAR_GZ=axis2c-bin-1.6.0-linux.tar.gz
-        SRC_ZIP=axis2c-src-1.6.0.zip
-        WIN32_BIN_ZIP=axis2c-bin-1.6.0-win32.zip
-        SRC_TAR_GZ_MD5=$SRC_TAR_GZ.md5
-        LIN_BIN_TAR_GZ_MD5=$LIN_BIN_TAR_GZ.md5
-        SRC_ZIP_MD5=$SRC_ZIP.md5
-        WIN32_BIN_ZIP_MD5=$WIN32_BIN_ZIP.md5
-        SRC_TAR_GZ_ASC=$SRC_TAR_GZ.asc
-        LIN_BIN_TAR_GZ_ASC=$LIN_BIN_TAR_GZ.asc
-        SRC_ZIP_ASC=$SRC_ZIP.asc
-        WIN32_BIN_ZIP_ASC=$WIN32_BIN_ZIP.asc
+        scp rampartc.1.3.0.* username@people.apache.org:~/public_html/releases/rampartc/1.3.0
 
-        rm -f *.asc
-        rm -f *.md5
-
-        echo "Creating MD5"
-        openssl md5 < $SRC_TAR_GZ > $SRC_TAR_GZ_MD5
-        openssl md5 < $LIN_BIN_TAR_GZ > $LIN_BIN_TAR_GZ_MD5
-        openssl md5 < $SRC_ZIP > $SRC_ZIP_MD5
-        openssl md5 < $WIN32_BIN_ZIP > $WIN32_BIN_ZIP_MD5
-
-        echo "To sign please enter password for the private key"
-        gpg --armor --output $SRC_TAR_GZ_ASC --detach-sig $SRC_TAR_GZ
-        gpg --armor --output $LIN_BIN_TAR_GZ_ASC --detach-sig $LIN_BIN_TAR_GZ
-        gpg --armor --output $SRC_ZIP_ASC --detach-sig $SRC_ZIP
-        gpg --armor --output $WIN32_BIN_ZIP_ASC --detach-sig $WIN32_BIN_ZIP
-
-        echo "DONE"
-
-10. Copy the source, binary packs to your directory in people.apache.org
-
-        rm -rf 1.6.0
-        rm -f 1.6.0.tar.gz
-        mkdir 1.6.0
-        cp -f ../KEYS 1.6.0
-        cp -f axis2c-* 1.6.0
-        tar -zcf axis2c_1.6.0.tar.gz 1.6.0
-        scp axis2c_1.6.0.tar.gz manjula@people.apache.org:~/
-
-11. Put RCs till all the packs are throughly tested and there are no more 
+16. Put RCs till all the packs are throughly tested and there are no more 
     known issues.
-12. Then upload the release packs to your directory at apache
-13. Call for vote
-14. When the required number of votes is received, upload the release.
-        Copy the release from your home to /www/www.apache.org/dist/ws/axis2-c/
-        update the keys (cat KEYS >> /www/www.apache.org/dist/ws/axis2-c/KEYS)
-        Move earlier releases to archive.apache.org (/www/archive.apache.org/dist/ws/axis2/c/)
-        Update the site at [WWW] https://svn.apache.org/repos/asf/webservices/axis2/site/c/
-        svn update the site at /www/ws.apache.org/axis2/c
+17. Then upload the release packs to your directory at apache
+18. Call for vote (in rampart-c-dev list and optionally copy to axis-c-dev)
+19. When the required number of votes is received, upload the release.
+        Copy the release from your home to /www/www.apache.org/dist/ws/rampart/c/1_3_0
+        update the keys (cat KEYS >> /www/www.apache.org/dist/ws/rampart/c/KEYS)
+        Move earlier releases to archive.apache.org (/www/archive.apache.org/dist/ws/rampart/c/)
+        Update the site at [WWW] https://svn.apache.org/repos/asf/webservices/rampart/site/c/ with generated site documents (in step 8)
+        svn update the site at /www/ws.apache.org/rampart/c
         Test Main Site Downloads (wait until mirros pickup the distributables, before sending the release note.)
 
-15. When the site is updated announce the release.
+20. When the site is updated announce the release.
 
