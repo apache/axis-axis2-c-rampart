@@ -20,7 +20,7 @@ cp -r samples/* $R_HOME/samples/
 echo "Copy axis2.xml"
 cp samples/src/rampartc/data/server_axis2.xml $R_HOME/axis2.xml
 
-cd samples/bin/rampartc/
+cd samples/src/rampartc/client
 sh deploy_client_repo.sh
 
 echo "It's done... :)"
