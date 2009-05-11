@@ -94,10 +94,10 @@ svc_client = axis2_svc_client_create(env, "/my/path/to/client/repository");
                 &lt;rampc:User&gt;Bob&lt;/rampc:User&gt;
                 &lt;rampc:EncryptionUser&gt;b&lt;/rampc:EncryptionUser&gt;
                 &lt;rampc:PasswordType&gt;Digest&lt;/rampc:PasswordType&gt;
-                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
-                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
-                &lt;rampc:Certificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
-                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/samples/lib/rampartc/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+                &lt;rampc:Certificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
+                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
             &lt;/rampc:RampartConfig&gt;
         &lt;/wsp:All&gt;
     &lt;/wsp:ExactlyOne&gt;
@@ -165,7 +165,7 @@ svc_client = axis2_svc_client_create(env, "/my/path/to/client/repository");
  &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
                 &lt;rampc:User&gt;Alice&lt;/rampc:User&gt;
                 &lt;rampc:PasswordType&gt;Digest&lt;/rampc:PasswordType&gt;
-                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/samples/lib/rampartc/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
 &lt;/rampc:RampartConfig&gt;
 </pre>
 
@@ -241,10 +241,10 @@ get_sample_password(rampart_callback_t *rcb,
             &lt;rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy"&gt;
                 &lt;rampc:User&gt;Bob&lt;/rampc:User&gt;
                 &lt;rampc:EncryptionUser&gt;b&lt;/rampc:EncryptionUser&gt;
-                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
-                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
-                &lt;rampc:Certificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
-                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/samples/lib/rampartc/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+                &lt;rampc:Certificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
+                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
             &lt;/rampc:RampartConfig&gt;
         &lt;/wsp:All&gt;
     &lt;/wsp:ExactlyOne&gt;
@@ -267,11 +267,11 @@ get_sample_password(rampart_callback_t *rcb,
 </pre>
 <p>The receiver's certificate is specified as follows. Here you have to specify the full path to the certificate. The public key of this certificate is used to encrypt the content.</p>
 <pre>
-&lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+&lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
 </pre>
 <p>To decrypt an incoming message you have to specify your own private as follows. Here you have to specify the full path to the key. </p>
 <pre>
-&lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+&lt;rampc:PrivateKey&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
 </pre>
 
 <h3>SOAP message Signature </h3>
@@ -327,10 +327,10 @@ get_sample_password(rampart_callback_t *rcb,
                 &lt;rampc:User&gt;Bob&lt;/rampc:User&gt;
                 &lt;rampc:EncryptionUser&gt;b&lt;/rampc:EncryptionUser&gt;
                 &lt;rampc:PasswordType&gt;Digest&lt;/rampc:PasswordType&gt;
-                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/bin/samples/rampart/callback/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
-                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
-                &lt;rampc:Certificate&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
-                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/bin/samples/rampart/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
+                &lt;rampc:PasswordCallbackClass&gt;AXIS2C_HOME/samples/lib/rampartc/libpwcb.so&lt;/rampc:PasswordCallbackClass&gt;
+                &lt;rampc:ReceiverCertificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/bob_cert.cert&lt;/rampc:ReceiverCertificate&gt;
+                &lt;rampc:Certificate&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_cert.cert&lt;/rampc:Certificate&gt;
+                &lt;rampc:PrivateKey&gt;AXIS2C_HOME/samples/src/rampartc/keys/ahome/alice_key.pem&lt;/rampc:PrivateKey&gt;
             &lt;/rampc:RampartConfig&gt;
         &lt;/wsp:All&gt;
     &lt;/wsp:ExactlyOne&gt;
@@ -361,7 +361,7 @@ get_sample_password(rampart_callback_t *rcb,
 
 <p>To detect replay attacks, Rampart/C has it's own Replay Detection module. This module detects if the message is a replay of a previous. By default the RD(Replay Detection) module is turned OFF. All you have to do turn it ON is to add </p>
 <pre>
-&lt;rampc:ReplayDetection&gt;<b>N</b>&lt;/rampc:ReplayDetection&gt;
+&lt;rampc:ReplayDetection&gt;N&lt;/rampc:ReplayDetection&gt;
 </pre>
 <p>policy assertion to your descriptor file. Here N is the number of records that must be kept in memory. Greater the value of N is, greater the chance of detecting a replays. Rampart/C keeps records of messages in a list and process them on arrival of a new message. A record is the concatenation of message id(wsa:msg-id) and the value of the timestamp.</p>
 <p>
