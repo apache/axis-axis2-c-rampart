@@ -1,5 +1,6 @@
 Table of contents
 =================
+    |_ Prerequisites
     |_ Getting Rampart/C source working on Linux
     |_ Getting Rampart/C binary distribution working on Linux
     |_ Getting Rampart/C source working on Win32
@@ -8,6 +9,10 @@ Table of contents
     |_ Try samples on Linux
     |_ Try samples on Win32
 
+Prerequisites
+=============
+You have to have openssl installed in your system. 
+All the binary packs were built with openssl 0.9.8k
 
 Getting Rampart/C source working on Linux
 =========================================
