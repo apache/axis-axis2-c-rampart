@@ -89,6 +89,7 @@ tar -xzf samples/rampart-samples-src*.tar.gz
 rm samples/rampart-samples-src*.tar.gz
 cp -r rampart-samples-src*/* $BIN_DIR/samples/src/rampartc/
 rm -rf rampart-samples-src*
+mv $BIN_DIR/samples/src/rampartc/keys $BIN_DIR/samples/src/rampartc/data/
 
 echo "Copy installer script"
 cp build/linux/install_rampart_bin_dist.sh  $BIN_DIR/
