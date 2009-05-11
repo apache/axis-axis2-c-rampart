@@ -63,7 +63,7 @@ cp -r $AXIS2C_HOME/modules/rampart $BIN_DIR/modules/
 cp -r $AXIS2C_HOME/modules/rahas $BIN_DIR/modules/
 
 echo "Copy libraries"
-cp -d $AXIS2C_HOME/lib/librampart.so.* $BIN_DIR/lib
+cp -d $AXIS2C_HOME/lib/librampart.* $BIN_DIR/lib
 
 echo "Strip binaries"
 strip $BIN_DIR/lib/*.so
@@ -103,6 +103,10 @@ do
    rm -rf $i
 done
 
+for i in `find . -name "*.la"`
+do
+   rm -rf $i
+done
 
 cd $PWDIR
 echo "Creating tar.gz in $PWDIR"
