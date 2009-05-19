@@ -20,6 +20,11 @@ RAMPART/C release process
 	  sd.sh
 	  bindist.sh
 
+	Change the release date and update the following files
+	  ChangeLog
+	  xdocs\index.html
+	  xdocs\download.html
+
 3. Update the documents inside xdocs
     * download.html
     * index.html
