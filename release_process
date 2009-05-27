@@ -116,4 +116,10 @@ RAMPART/C release process
         Test Main Site Downloads (wait until mirros pickup the distributables, before sending the release note.)
 
 20. When the site is updated announce the release.
+	Send the announce mail to 
+		axis-c-dev@ws.apache.org
+		axis-c-user@ws.apache.org
+		rampart-c-dev@ws.apache.org
+		announce@apache.org
+		
 
