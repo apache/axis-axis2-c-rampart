@@ -18,4 +18,5 @@ INCLUDES = -I$(top_builddir)/include \
 	    @OPENSSLINC@ \
 	    @UTILINC@ \
 	    @AXIOMINC@ \
+		@NEETHIINC@ \
 	    @AXIS2INC@
