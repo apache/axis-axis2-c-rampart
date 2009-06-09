@@ -12,9 +12,7 @@ libmod_rampart_la_LDFLAGS = -version-info $(VERSION_NO)
 libmod_rampart_la_LIBADD  = ../handlers/librampart_handlers.la \
 			    ../util/librampart.la \
 				@OPENSSLLIB@ \
-				@AXIS2LIB@ \
-				-lcrypto \
-				-laxis2_engine
+				-lcrypto
 				
 
 INCLUDES = -I$(top_builddir)/include \

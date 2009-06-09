@@ -11,7 +11,6 @@ libmod_rahas_la_LDFLAGS = -version-info $(VERSION_NO)
 
 libmod_rahas_la_LIBADD  = ../util/librampart.la \
 				@OPENSSLLIB@ \
-				@AXIS2LIB@ \
 				-lcrypto 
 				
 

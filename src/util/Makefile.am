@@ -18,7 +18,6 @@ librampart_la_LIBADD  = ../omxmlsec/libomxmlsec.la \
                      ../secconv/libsecconv.la \
                      ../trust/libtrust.la \
                      @OPENSSLLIB@ \
-                     @AXIS2LIB@ \
                      -lcrypto 
 
 INCLUDES = -I$(top_builddir)/include \
