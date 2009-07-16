@@ -49,12 +49,12 @@
 														</wsp:Policy>
 													</sp:SignedSupportingTokens>
 													<sp:Trust13 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-				<wsp:Policy>
-					<sp:MustSupportIssuedTokens /> 
-					<sp:RequireClientEntropy /> 
-					<sp:RequireServerEntropy /> 
-				</wsp:Policy>
-			</sp:Trust13>
+														<wsp:Policy>
+															<sp:MustSupportIssuedTokens /> 
+															<sp:RequireClientEntropy /> 
+															<sp:RequireServerEntropy /> 
+														</wsp:Policy>
+													</sp:Trust13>
 													<sp:Wss11 xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
 														<wsp:Policy>
 															<sp:MustSupportRefKeyIdentifier/>
@@ -134,12 +134,12 @@
 														</wsp:Policy>
 													</sp:SignedSupportingTokens>
 													<sp:Trust13 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
-				<wsp:Policy>
-					<sp:MustSupportIssuedTokens /> 
-					<sp:RequireClientEntropy /> 
-					<sp:RequireServerEntropy /> 
-				</wsp:Policy>
-			</sp:Trust13>
+														<wsp:Policy>
+															<sp:MustSupportIssuedTokens /> 
+															<sp:RequireClientEntropy /> 
+															<sp:RequireServerEntropy /> 
+														</wsp:Policy>
+													</sp:Trust13>
 													<sp:Wss11 xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702">
 														<wsp:Policy>
 															<sp:MustSupportRefKeyIdentifier/>

@@ -36,11 +36,19 @@
 																	<sp:Strict/>
 																</wsp:Policy>
 															</sp:Layout>
+															<sp:AlgorithmSuite>
+                                                                <wsp:Policy>
+                                                                    <sp:Basic256/>
+                                                                </wsp:Policy>
+                                                            </sp:AlgorithmSuite>
 															<sp:IncludeTimestamp/>
 														</wsp:Policy>
 													</sp:AsymmetricBinding>
 													<rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
 														<rampc:TimeToLive>360</rampc:TimeToLive>
+														<rampc:ReceiverCertificate>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/bob_cert.cert</rampc:ReceiverCertificate>
+                                                        <rampc:Certificate>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_cert.cert</rampc:Certificate>
+                                                        <rampc:PrivateKey>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_key.pem</rampc:PrivateKey>
 													</rampc:RampartConfig>
 												</wsp:All>
 											</wsp:ExactlyOne>
@@ -83,11 +91,19 @@
 																	<sp:Strict/>
 																</wsp:Policy>
 															</sp:Layout>
+															<sp:AlgorithmSuite>
+                                                                <wsp:Policy>
+                                                                    <sp:Basic256/>
+                                                                </wsp:Policy>
+                                                            </sp:AlgorithmSuite>
 															<sp:IncludeTimestamp/>
 														</wsp:Policy>
 													</sp:AsymmetricBinding>
 													<rampc:RampartConfig xmlns:rampc="http://ws.apache.org/rampart/c/policy">
 														<rampc:TimeToLive>360</rampc:TimeToLive>
+														<rampc:ReceiverCertificate>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/bob_cert.cert</rampc:ReceiverCertificate>
+                                                        <rampc:Certificate>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_cert.cert</rampc:Certificate>
+                                                        <rampc:PrivateKey>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_key.pem</rampc:PrivateKey>
 													</rampc:RampartConfig>
 												</wsp:All>
 											</wsp:ExactlyOne>

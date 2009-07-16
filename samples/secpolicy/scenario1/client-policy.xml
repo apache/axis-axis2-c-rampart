@@ -21,6 +21,11 @@
                             </sp:X509Token>
                         </wsp:Policy>
                     </sp:RecipientToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:Basic256Rsa15/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
                     <sp:Layout>
                         <wsp:Policy>
                             <sp:Strict/>
@@ -33,6 +38,9 @@
                 <rampc:TimeToLive>360</rampc:TimeToLive>
 				<rampc:ClockSkewBuffer>60</rampc:ClockSkewBuffer>
 				<rampc:PrecisionInMilliseconds>False</rampc:PrecisionInMilliseconds>
+                <rampc:ReceiverCertificate>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/bob_cert.cert</rampc:ReceiverCertificate>
+                <rampc:Certificate>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_cert.cert</rampc:Certificate>
+                <rampc:PrivateKey>AXIS2C_HOME/samples/src/rampartc/data/keys/ahome/alice_key.pem</rampc:PrivateKey>
             </rampc:RampartConfig>
         </wsp:All>
     </wsp:ExactlyOne>

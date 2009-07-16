@@ -58,7 +58,6 @@
 												</wsp:All>
 											</wsp:ExactlyOne>
 										</wsp:Policy>
-
 									</sp:BootstrapPolicy>
 								</wsp:Policy>
                             </sp:SecureConversationToken>
