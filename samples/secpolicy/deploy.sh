@@ -31,3 +31,24 @@ else
     sed 's,AXIS2C_HOME,'$INST_DIR',g' $1/services.xml > $SERVICE_HOME/services.xml
 fi
 
+if [ -e $1/sts.xml ]
+then
+	if [ `uname -s` = Darwin ]
+	then
+		    sed -e 's,AXIS2C_HOME,'$INST_DIR',g' -e 's,\.so,\.dylib,g' $1/sts.xml > $SERVICE_HOME/../secconv_echo/services.xml
+	else
+			sed 's,AXIS2C_HOME,'$INST_DIR',g' $1/sts.xml > $SERVICE_HOME/../secconv_echo/services..xml
+	fi
+fi
+
+if [ -e $1/rahas_module.xml ]
+then
+	if [ `uname -s` = Darwin ]
+	then
+		    sed -e 's,AXIS2C_HOME,'$INST_DIR',g' -e 's,\.so,\.dylib,g' $1/rahas_module.xml > $SERVICE_HOME/../../modules/rahas/module.xml
+	else
+			sed 's,AXIS2C_HOME,'$INST_DIR',g' $1/rahas_module.xml > $SERVICE_HOME/../../modules/rahas/module.xml
+	fi
+fi
+
+
