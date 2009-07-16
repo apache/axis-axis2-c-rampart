@@ -37,7 +37,7 @@ then
 	then
 		    sed -e 's,AXIS2C_HOME,'$INST_DIR',g' -e 's,\.so,\.dylib,g' $1/sts.xml > $SERVICE_HOME/../secconv_echo/services.xml
 	else
-			sed 's,AXIS2C_HOME,'$INST_DIR',g' $1/sts.xml > $SERVICE_HOME/../secconv_echo/services..xml
+			sed 's,AXIS2C_HOME,'$INST_DIR',g' $1/sts.xml > $SERVICE_HOME/../secconv_echo/services.xml
 	fi
 fi
 
