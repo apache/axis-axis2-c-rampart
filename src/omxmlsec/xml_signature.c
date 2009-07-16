@@ -125,10 +125,18 @@ oxs_xml_sig_transform_n_digest(const axutil_env_t *env,
         serialized_node = axiom_node_to_string(node, env);
     }
 
-    if(0 == axutil_strcmp( OXS_HREF_SHA1 , digest_mtd)){
+    if(0 == axutil_strcmp(OXS_HREF_SHA1, digest_mtd))
+    {
         digest = openssl_sha1(env, serialized_node, axutil_strlen(serialized_node));
-    }else{
-        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,"Unsupported digest method  %s", digest_mtd);
+    }
+    else if(0 == axutil_strcmp(OXS_HREF_SHA256, digest_mtd))
+    {
+        digest = openssl_sha256(env, serialized_node, axutil_strlen(serialized_node));
+    }
+    else
+    {
+        oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_TRANSFORM_FAILED,
+            "Unsupported digest method  %s", digest_mtd);
         return NULL;
     }
 	
@@ -194,6 +202,10 @@ oxs_xml_sig_build_reference(const axutil_env_t *env,
 
     /*Transform and Digest*/
     digest = oxs_xml_sig_transform_n_digest(env, node, transforms, digest_mtd);
+    if(!digest)
+    {
+        return AXIS2_FAILURE;
+    }
 
     /*Build ds:Transforms node and its children*/
     if((transforms) && (0 < axutil_array_list_size(transforms, env))){
@@ -320,7 +332,10 @@ oxs_xml_sig_sign(const axutil_env_t *env,
         /*Get ith sign_part*/
         sign_part = (oxs_sign_part_t*)axutil_array_list_get(sign_parts, env, i);
         /*Create <ds:Reference> elements */
-        oxs_xml_sig_build_reference(env, signed_info_node, sign_part);
+        if(oxs_xml_sig_build_reference(env, signed_info_node, sign_part) != AXIS2_SUCCESS)
+        {
+            return AXIS2_FAILURE;
+        }
 
     }
     /*At this point we have a complete <SignedInfo> node. Now we need to sign it*/

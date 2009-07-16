@@ -221,43 +221,60 @@ rampart_pv_validate_signature(
     rampart_context_t *rampart_context,
     axis2_msg_ctx_t *msg_ctx)
 {
-    axis2_status_t status = AXIS2_SUCCESS;
-    axutil_array_list_t *nodes_to_sign = NULL;
-    axiom_soap_envelope_t *soap_envelope = NULL;
     axis2_char_t* signature_verified = NULL;
 
-    nodes_to_sign = axutil_array_list_create(env, 0);
-    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
-    status = rampart_context_get_nodes_to_sign(rampart_context, env, soap_envelope, nodes_to_sign);
-    status = rampart_context_get_elements_to_sign(
-        rampart_context, env, soap_envelope, nodes_to_sign);
+    signature_verified = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx,
+        RAMPART_SPR_SIG_VALUE);
+    if(!signature_verified)
+    {
+        axutil_array_list_t *nodes_to_sign = NULL;
+        axiom_soap_envelope_t *soap_envelope = NULL;
+        int nodes_to_sign_size = 0;
 
-    signature_verified = (axis2_char_t*)rampart_get_security_processed_result(
-        env, msg_ctx, RAMPART_SPR_SIG_VERIFIED);
-    if(!axutil_strcmp(RAMPART_YES, signature_verified))
-    {
-        if(axutil_array_list_size(nodes_to_sign, env) <= 0)
+        nodes_to_sign = axutil_array_list_create(env, 0);
+        soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+        rampart_context_get_nodes_to_sign(rampart_context, env, soap_envelope, nodes_to_sign);
+        rampart_context_get_elements_to_sign(rampart_context, env, soap_envelope, nodes_to_sign);
+        nodes_to_sign_size = axutil_array_list_size(nodes_to_sign, env);
+        axutil_array_list_free(nodes_to_sign, env);
+
+        if(nodes_to_sign_size > 0)
         {
-			axutil_array_list_free(nodes_to_sign, env);
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Signature is not expected.");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, 
-                "Signature is not expected", RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
-            return AXIS2_FAILURE;
-        }
-    }
-    else
-    {
-        if(axutil_array_list_size(nodes_to_sign, env) > 0)
-        {
-			axutil_array_list_free(nodes_to_sign, env);
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"[rampart]Could not find signature.");
-            rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK, 
-                "Could not find signature", RAMPART_FAULT_INVALID_SECURITY, msg_ctx);
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "Could not find signature.");
             return AXIS2_FAILURE;
         }
     }
 
-	axutil_array_list_free(nodes_to_sign, env);
+    /* if signature verified is not null, validation would have done when verifying the signature */
+    return AXIS2_SUCCESS;
+}
+
+static axis2_status_t
+rampart_pv_validate_endorsing(
+    const axutil_env_t *env,
+    rampart_context_t *rampart_context,
+    axis2_msg_ctx_t *msg_ctx)
+{
+    if(axis2_msg_ctx_get_server_side(msg_ctx,env))
+    {
+        /* Endorsing signature is verified only by server side. Not needed for client side */
+        axis2_char_t* endorsing_verified = NULL;
+        endorsing_verified = (axis2_char_t*)rampart_get_security_processed_result(env, msg_ctx,
+            RAMPART_SPR_SIG_VALUE);
+        if(!endorsing_verified)
+        {
+            /* check whether we need endorsing signature*/
+            rp_property_t *token = NULL;
+            token = rampart_context_get_endorsing_token(rampart_context, env);
+            if(token)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,"Could not find endorsing signature.");
+                return AXIS2_FAILURE;
+            }
+        }
+    }
+
+    /* if endorsing verified is not null, validation would have done when verifying the signature */
     return AXIS2_SUCCESS;
 }
 
@@ -309,6 +326,12 @@ rampart_pv_validate_sec_header(
 
     /* Check if signature is valid found */
     if(!rampart_pv_validate_signature(env, rampart_context, msg_ctx))
+    {
+        return AXIS2_FAILURE;
+    }
+
+    /* Check if endorsing signature is valid */
+    if(!rampart_pv_validate_endorsing(env, rampart_context, msg_ctx))
     {
         return AXIS2_FAILURE;
     }

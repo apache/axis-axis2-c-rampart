@@ -59,6 +59,14 @@ extern "C" {
                                 axiom_soap_envelope_t *soap_envelope,
                                 axiom_node_t *sec_node);
 
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    rampart_shp_add_security_context_token(
+        const axutil_env_t* env,
+        axis2_char_t* identifier,
+        axis2_char_t* key_name,
+        rampart_context_t* rampart_context,
+        axis2_msg_ctx_t* msg_ctx);
+
 
     /* @} */
 #ifdef __cplusplus

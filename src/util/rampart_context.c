@@ -16,8 +16,6 @@
  */
 
 #include "oxs_key_mgr.h"
-
-
 #include <rampart_context.h>
 #include <rampart_constants.h>
 #include <oxs_axiom.h>
@@ -2174,8 +2172,47 @@ rampart_context_get_nodes_to_sign(
     axiom_soap_envelope_t *soap_envelope,
     axutil_array_list_t *nodes_to_sign)
 {
+    rp_header_t *header = NULL;
+    axis2_status_t status = AXIS2_FAILURE;
 
-    return rampart_context_get_nodes_to_protect(rampart_context,env,soap_envelope,nodes_to_sign,AXIS2_TRUE);
+    status = rampart_context_get_nodes_to_protect(rampart_context, env, soap_envelope,
+        nodes_to_sign, AXIS2_TRUE);
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    header = rp_header_create(env);
+    rp_header_set_name(header, env, RAMPART_SECURITY_TIMESTAMP);
+    rp_header_set_namespace(header, env, RAMPART_WSU_XMLNS);
+    status = rampart_context_set_nodes_to_encrypt_or_sign(header, env, soap_envelope, nodes_to_sign);
+    rp_header_free(header, env);
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    header = rp_header_create(env);
+    rp_header_set_name(header, env, RAMPART_SECURITY_USERNAMETOKEN);
+    rp_header_set_namespace(header, env, RAMPART_WSSE_XMLNS);
+    status = rampart_context_set_nodes_to_encrypt_or_sign(header, env, soap_envelope, nodes_to_sign);
+    rp_header_free(header, env);
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    header = rp_header_create(env);
+    rp_header_set_name(header, env, OXS_NODE_SIGNATURE_CONFIRMATION);
+    rp_header_set_namespace(header, env, RAMPART_WSSE_XMLNS);
+    status = rampart_context_set_nodes_to_encrypt_or_sign(header, env, soap_envelope, nodes_to_sign);
+    rp_header_free(header, env);
+    if(status != AXIS2_SUCCESS)
+    {
+        return AXIS2_FAILURE;
+    }
+
+    return AXIS2_SUCCESS;
 }
 
 AXIS2_EXTERN axis2_status_t AXIS2_CALL
@@ -2253,18 +2290,19 @@ rampart_context_get_nodes_to_protect(
     {
         axiom_soap_body_t *body = NULL;
         axiom_node_t *body_node = NULL;
-        axiom_node_t *body_child_node = NULL;
 
-        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "[rampart][rampart_context] Including the body for encryption/sign.");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI, "Including the body for encryption/sign.");
         body = axiom_soap_envelope_get_body(soap_envelope, env);
         body_node = axiom_soap_body_get_base_node(body, env);
-        body_child_node = axiom_node_get_first_element(body_node, env);
+
         if(is_sign)
         {
             axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_node);
         }
         else
         {
+            axiom_node_t *body_child_node = NULL;
+            body_child_node = axiom_node_get_first_element(body_node, env);
             if(body_child_node)
             {
                 axutil_array_list_add(nodes_to_sign_or_encrypt, env, body_child_node);
@@ -2645,6 +2683,22 @@ rampart_context_get_asym_sig_algo(
     if(algosuite)
     {
         return rp_algorithmsuite_get_asymmetric_signature(algosuite,env);
+    }
+    else
+        return NULL;
+}
+
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+rampart_context_get_sym_sig_algo(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    rp_algorithmsuite_t *algosuite = NULL;
+
+    algosuite = rampart_context_get_algorithmsuite(rampart_context, env);
+    if(algosuite)
+    {
+        return rp_algorithmsuite_get_symmetric_signature(algosuite, env);
     }
     else
         return NULL;

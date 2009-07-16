@@ -15,7 +15,6 @@
  */
 
 #include <openssl/sha.h>
-
 #include <axutil_utils_defines.h>
 #include <axis2_defines.h>
 #include <axutil_env.h>
@@ -44,14 +43,23 @@ extern "C" {
     * @return calculated digest
     */
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    openssl_sha1(const axutil_env_t *env,
-                 axis2_char_t *input,
-                 int length);
+    openssl_sha1(
+        const axutil_env_t *env,
+        axis2_char_t *input,
+        int length);
 
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-    openssl_md5(const axutil_env_t *env,
-                axis2_char_t *input,
-                int length);
+    openssl_sha256(
+        const axutil_env_t *env,
+        axis2_char_t *input,
+        int length);
+
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    openssl_md5(
+        const axutil_env_t *env,
+        axis2_char_t *input,
+        int length);
+
     /* @} */
 #ifdef __cplusplus
 }

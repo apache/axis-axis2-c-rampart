@@ -1163,18 +1163,29 @@ extern "C"
     rampart_context_get_enc_asym_algo(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
     /**
-     *
      * @param rampart_context
      * @param env pointer to environment struct,Must not be NULL.
      * @returns status of the op.                                                                                                        
      * AXIS2_SUCCESS on success and AXIS2_FAILURE on error          
      */
-
     AXIS2_EXTERN axis2_char_t *AXIS2_CALL
     rampart_context_get_asym_sig_algo(
         rampart_context_t *rampart_context,
         const axutil_env_t *env);
+
+    /**
+     * @param rampart_context
+     * @param env pointer to environment struct,Must not be NULL.
+     * @returns status of the op.
+     * AXIS2_SUCCESS on success and AXIS2_FAILURE on error
+     */
+    AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+    rampart_context_get_sym_sig_algo(
+        rampart_context_t *rampart_context,
+        const axutil_env_t *env);
+
     /**
      *
      * @param rampart_context

@@ -25,17 +25,18 @@
 #define SIZE_HASH 32
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-openssl_sha1(const axutil_env_t *env,
-             axis2_char_t *input,
-             int length)
+openssl_sha1(
+    const axutil_env_t *env,
+    axis2_char_t *input,
+    int length)
 {
-    SHA_CTX c ;
+    SHA_CTX c;
     unsigned char md[SHA_DIGEST_LENGTH];
     axis2_char_t* encoded_str = NULL;
 
     SHA1_Init(&c);
-    SHA1_Update(&c,(unsigned char*)input,length);
-    SHA1_Final(md,&c);
+    SHA1_Update(&c, (unsigned char*)input, length);
+    SHA1_Final(md, &c);
 
     encoded_str = AXIS2_MALLOC(env->allocator, axutil_base64_encode_len(SIZE_HASH));
     axutil_base64_encode(encoded_str, (char*)md, SHA_DIGEST_LENGTH);
@@ -44,16 +45,17 @@ openssl_sha1(const axutil_env_t *env,
 }
 
 AXIS2_EXTERN axis2_char_t *AXIS2_CALL
-openssl_md5(const axutil_env_t *env,
-            axis2_char_t *input,
-            int length)
+openssl_md5(
+    const axutil_env_t *env,
+    axis2_char_t *input,
+    int length)
 {
     MD5_CTX ctx;
     unsigned char md[MD5_DIGEST_LENGTH];
     axis2_char_t* encoded_str = NULL;
 
     MD5_Init(&ctx);
-    MD5_Update(&ctx, (unsigned char*)input,length);
+    MD5_Update(&ctx, (unsigned char*)input, length);
     MD5_Final(md, &ctx);
 
     encoded_str = AXIS2_MALLOC(env->allocator, MD5_DIGEST_LENGTH);
@@ -62,4 +64,22 @@ openssl_md5(const axutil_env_t *env,
     return encoded_str;
 }
 
+AXIS2_EXTERN axis2_char_t *AXIS2_CALL
+openssl_sha256(
+    const axutil_env_t *env,
+    axis2_char_t *input,
+    int length)
+{
+    SHA256_CTX c;
+    unsigned char md[SHA256_DIGEST_LENGTH];
+    axis2_char_t* encoded_str = NULL;
 
+    SHA256_Init(&c);
+    SHA256_Update(&c, (unsigned char*)input, length);
+    SHA256_Final(md, &c);
+
+    encoded_str = AXIS2_MALLOC(env->allocator, axutil_base64_encode_len(SHA256_DIGEST_LENGTH));
+    axutil_base64_encode(encoded_str, (char*)md, SHA256_DIGEST_LENGTH);
+
+    return encoded_str;
+}

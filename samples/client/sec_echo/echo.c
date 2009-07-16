@@ -34,7 +34,10 @@ build_om_payload_for_echo_svc_interop(const axutil_env_t *env);
 axiom_node_t *
 build_om_programatically_mtom(const axutil_env_t * env);
 
-int main(int argc, char** argv)
+int
+main(
+    int argc,
+    char** argv)
 {
     const axutil_env_t *env = NULL;
     const axis2_char_t *address = NULL;
@@ -49,17 +52,17 @@ int main(int argc, char** argv)
     axis2_status_t status = AXIS2_FAILURE;
     neethi_policy_t *policy = NULL;
     /*axutil_property_t *property  = NULL;
-    int i = 0;*/
-	
-	/* Set up the environment */
+     int i = 0;*/
+
+    /* Set up the environment */
     env = axutil_env_create_all("echo.log", AXIS2_LOG_LEVEL_TRACE);
 
     /*if (argc == 4)
-        AXIS2_SLEEP(10); */
+     AXIS2_SLEEP(10); */
 
     /* Set end-point-reference of echo service */
     address = "http://localhost:9090/axis2/services/echo";
-    if (argc > 2)
+    if(argc > 2)
     {
         address = argv[1];
         client_home = argv[2];
@@ -67,7 +70,7 @@ int main(int argc, char** argv)
         printf("Using client_home : %s\n", client_home);
     }
 
-    if ((axutil_strcmp(argv[1], "-h") == 0) || (axutil_strcmp(argv[1], "--help") == 0))
+    if((axutil_strcmp(argv[1], "-h") == 0) || (axutil_strcmp(argv[1], "--help") == 0))
     {
         printf("Usage : %s [endpoint_url] [client_home]\n", argv[0]);
         printf("use -h for help\n");
@@ -80,20 +83,19 @@ int main(int argc, char** argv)
     /* Setup options */
     options = axis2_options_create(env);
     axis2_options_set_to(options, env, endpoint_ref);
-    axis2_options_set_action(options, env,
-            "http://example.com/ws/2004/09/policy/Test/EchoRequest");
-    
+    axis2_options_set_action(options, env, "http://example.com/ws/2004/09/policy/Test/EchoRequest");
+
     /*axis2_options_set_action(options, env,
-            "http://xmlsoap.org/Ping");*/
+     "http://xmlsoap.org/Ping");*/
     /*axis2_options_set_action(options, env,
-            "urn:echoString");*/
-    
+     "urn:echoString");*/
+
     /*axis2_options_set_soap_action(options, env, axutil_string_create(env, "http://xmlsoap.org/Ping"));
-    axis2_options_set_soap_version(options, env, AXIOM_SOAP11);*/
+     axis2_options_set_soap_version(options, env, AXIOM_SOAP11);*/
     axis2_options_set_soap_version(options, env, AXIOM_SOAP12);
 
     /*If the client home is not specified, use the AXIS2C_HOME*/
-    if (!client_home)
+    if(!client_home)
     {
         client_home = AXIS2_GETENV("AXIS2C_HOME");
         printf("\nNo client_home specified. Using default %s", client_home);
@@ -102,7 +104,7 @@ int main(int argc, char** argv)
     /* Create service client */
     printf("client_home= %s", client_home);
     svc_client = axis2_svc_client_create(env, client_home);
-    if (!svc_client)
+    if(!svc_client)
     {
         printf("Error creating service client\n");
         return -1;
@@ -112,27 +114,30 @@ int main(int argc, char** argv)
     axis2_svc_client_set_options(svc_client, env, options);
 
     /* 
-    property = axutil_property_create(env);
-    axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
-    axutil_property_set_value(property, env, AXIS2_WSA_NAMESPACE_SUBMISSION);
-    axis2_options_set_property(options, env, AXIS2_WSA_VERSION, property);
-    */
+     property = axutil_property_create(env);
+     axutil_property_set_scope(property, env, AXIS2_SCOPE_APPLICATION);
+     axutil_property_set_value(property, env, AXIS2_WSA_NAMESPACE_SUBMISSION);
+     axis2_options_set_property(options, env, AXIS2_WSA_VERSION, property);
+     */
 
     /*We need to specify the client's policy file location*/
     if(client_home)
     {
         file_name = axutil_stracat(env, client_home, AXIS2_PATH_SEP_STR);
-        policy_file = axutil_stracat(env, file_name, "policy.xml" );
+        policy_file = axutil_stracat(env, file_name, "policy.xml");
         AXIS2_FREE(env->allocator, file_name);
-        file_name = NULL;        
-    }else{
+        file_name = NULL;
+    }
+    else
+    {
         printf("Client Home not Specified\n");
         printf("echo client invoke FAILED!\n");
         return 0;
     }
-    /*Create the policy, from file*/   
+    /*Create the policy, from file*/
     policy = neethi_util_create_policy_from_file(env, policy_file);
-    if(policy_file){
+    if(policy_file)
+    {
         AXIS2_FREE(env->allocator, policy_file);
         policy_file = NULL;
     }
@@ -147,46 +152,43 @@ int main(int argc, char** argv)
     {
         printf("Policy setting failed\n");
     }
-    
+
     /* Build the SOAP request message payload using OM API.*/
     payload = build_om_payload_for_echo_svc(env);
     /*axis2_options_set_enable_mtom(options, env, AXIS2_TRUE);*/
-    
+
     /*If not engaged in the client's axis2.xml, uncomment this line*/
     /*axis2_svc_client_engage_module(svc_client, env, "rampart");*/
-    
+
     /* Send request */
     ret_node = axis2_svc_client_send_receive(svc_client, env, payload);
 
-
-    if (axis2_svc_client_get_last_response_has_fault(svc_client, env))
+    if(axis2_svc_client_get_last_response_has_fault(svc_client, env))
     {
         axiom_soap_envelope_t *soap_envelope = NULL;
         axiom_soap_body_t *soap_body = NULL;
         axiom_soap_fault_t *soap_fault = NULL;
 
-        printf ("\nResponse has a SOAP fault\n");
-        soap_envelope =
-            axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
-        if (soap_envelope)
+        printf("\nResponse has a SOAP fault\n");
+        soap_envelope = axis2_svc_client_get_last_response_soap_envelope(svc_client, env);
+        if(soap_envelope)
             soap_body = axiom_soap_envelope_get_body(soap_envelope, env);
-        if (soap_body)
+        if(soap_body)
             soap_fault = axiom_soap_body_get_fault(soap_body, env);
-        if (soap_fault)
+        if(soap_fault)
         {
-            printf("\nReturned SOAP fault: %s\n",
-            axiom_node_to_string(axiom_soap_fault_get_base_node(soap_fault,env),
-                env));
+            printf("\nReturned SOAP fault: %s\n", axiom_node_to_string(
+                axiom_soap_fault_get_base_node(soap_fault, env), env));
         }
-            printf("echo client invoke FAILED!\n");
-            return -1;
+        printf("echo client invoke FAILED!\n");
+        return -1;
     }
-    
-    if (ret_node)
+
+    if(ret_node)
     {
         axis2_char_t *om_str = NULL;
         om_str = axiom_node_to_string(ret_node, env);
-        if (om_str)
+        if(om_str)
         {
             printf("\nReceived OM : %s\n", om_str);
         }
@@ -200,17 +202,17 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    if (svc_client)
+    if(svc_client)
     {
         axis2_svc_client_free(svc_client, env);
         svc_client = NULL;
     }
-    if (env)
+    if(env)
     {
-        axutil_env_free((axutil_env_t *) env);
+        axutil_env_free((axutil_env_t *)env);
         env = NULL;
     }
-    
+
     return 0;
 }
 

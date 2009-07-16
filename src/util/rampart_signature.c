@@ -421,6 +421,8 @@ rampart_sig_sign_message(
         nodes_to_sign = NULL;
         return AXIS2_SUCCESS;
     }
+
+#if 0 /* this block is moved to rampart_context_get_nodes_to_sign */
     /*If Timestamp and usernametoken are in the message we should sign them.*/
 
     if(rampart_context_get_require_timestamp(rampart_context, env))
@@ -475,6 +477,7 @@ rampart_sig_sign_message(
             }
         }
     }
+#endif
 
     /*Now we have to check whether a token is specified.*/
     token = rampart_context_get_token(rampart_context, env, AXIS2_FALSE, server_side, AXIS2_FALSE);
@@ -1114,3 +1117,6 @@ rampart_sig_endorse_sign(
 
     return status;
 }
+
+
+

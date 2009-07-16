@@ -26,6 +26,7 @@ extern "C"
 {
 #endif
 
+    /* TODO OXS_ST_KEY_ID_VALUE_TYPE looks odd. Rename it properly */
 #define OXS_ST_KEY_ID_VALUE_TYPE    "http://docs.oasis-open.org/wss/oass-wss-saml-token-profile-1.0#SAMLAssertionID"
 
 AXIS2_EXTERN axiom_node_t * AXIS2_CALL
