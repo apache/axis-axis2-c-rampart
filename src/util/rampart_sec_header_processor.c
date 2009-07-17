@@ -218,6 +218,7 @@ rampart_shp_store_token_id(const axutil_env_t *env,
     }
 }
 
+#if 0
 /*Process a KeyInfo and return the key*/
 static oxs_key_t* 
 rampart_shp_get_key_for_key_info(const axutil_env_t* env, 
@@ -361,7 +362,8 @@ rampart_shp_get_key_for_key_info(const axutil_env_t* env,
 	AXIS2_FREE(env->allocator, id);
     return key;
 }
-    
+#endif
+
 static axis2_bool_t
 rampart_shp_validate_qnames(
     const axutil_env_t *env,
@@ -933,9 +935,20 @@ rampart_shp_process_reference_list(
         if(key_info_node)
         {
             oxs_key_t *key_to_decrypt = NULL;
+            axis2_char_t *token_type = NULL;
+            axis2_char_t *reference_method = NULL;
+            void *cert = NULL;
 
             /*Get the sesison key*/
-            key_to_decrypt = rampart_shp_get_key_for_key_info(env, key_info_node, rampart_context, msg_ctx, AXIS2_FALSE);
+            /*key_to_decrypt = rampart_shp_get_key_for_key_info(env, key_info_node, rampart_context, msg_ctx, AXIS2_FALSE);*/
+            if(rampart_token_process_key_info(env, key_info_node, sec_node, rampart_context,
+                msg_ctx, AXIS2_FALSE, &cert, &key_to_decrypt, &token_type, &reference_method)
+                != AXIS2_SUCCESS)
+            {
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart]On processing ReferenceList, failed to get the key to decrypt");
+                return AXIS2_FAILURE;
+            }
             
             /*if security context token is used, then store it. It will be used by the server to encrypt the message*/
             rampart_shp_store_token_id(env, key_info_node, rampart_context, sec_node, AXIS2_TRUE, msg_ctx);
@@ -1901,10 +1914,20 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
 {
     oxs_key_t *session_key = NULL;
     oxs_key_t *derived_key = NULL;
+    axis2_char_t *token_type = NULL;
+    axis2_char_t *reference_method = NULL;
+    void *cert = NULL;
 
     /* Get the session key. */ 
-    session_key = rampart_shp_get_key_for_key_info(
-        env, dk_node, rampart_context, msg_ctx, AXIS2_TRUE);
+    /*session_key = rampart_shp_get_key_for_key_info(
+        env, dk_node, rampart_context, msg_ctx, AXIS2_TRUE);*/
+    if(rampart_token_process_key_info(env, dk_node, sec_node, rampart_context, msg_ctx, AXIS2_TRUE,
+        &cert, &session_key, &token_type, &reference_method) != AXIS2_SUCCESS)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart]Failed to get the session key. Cannot derive the key");
+        return AXIS2_FAILURE;
+    }
     if(!session_key)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,  
