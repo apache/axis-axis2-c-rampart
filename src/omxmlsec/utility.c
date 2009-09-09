@@ -95,10 +95,10 @@ AXIS2_EXTERN axis2_char_t *AXIS2_CALL
 oxs_util_get_newline_removed_string(const axutil_env_t *env,
                                     axis2_char_t *input)
 {
-    axis2_char_t *output = NULL;
+    /*axis2_char_t *output = NULL;
     int i = 0;
 
-    output = AXIS2_MALLOC(env->allocator,  axutil_strlen(input)+1);
+    output = AXIS2_MALLOC(env->allocator, axutil_strlen(input) +1);
 
     while(*input!='\0')
     {
@@ -110,5 +110,46 @@ oxs_util_get_newline_removed_string(const axutil_env_t *env,
         input++;
     }
     output[i]='\0';
+    return output;*/
+
+    axis2_char_t *output = NULL;
+    int index = 0;
+    int len = axutil_strlen(input);
+
+    output = AXIS2_MALLOC(env->allocator, len +1);
+
+    while(len > 0)
+    {
+        size_t i = 0;
+
+        /* scan buffer until the next newline character and skip it */
+        axis2_char_t *pos = (axis2_char_t*)strchr(input, '\n');
+        if(pos)
+        {
+            i = pos - input;
+        }
+        else
+        {
+            i = len;
+        }
+
+        /* write everything until the special character */
+        if(i > 0)
+        {
+            memcpy(output + index, input, i);
+            input += i;
+            index += i;
+            len -= i;
+        }
+
+        /* skip the new line */
+        if(len > 0)
+        {
+            ++input;
+            --len;
+        }
+    }
+
+    output[index]='\0';
     return output;
 }

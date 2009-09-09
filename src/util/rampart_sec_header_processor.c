@@ -937,7 +937,7 @@ rampart_shp_process_reference_list(
             oxs_key_t *key_to_decrypt = NULL;
             axis2_char_t *token_type = NULL;
             axis2_char_t *reference_method = NULL;
-            void *cert = NULL;
+            oxs_x509_cert_t *cert = NULL;
 
             /*Get the sesison key*/
             /*key_to_decrypt = rampart_shp_get_key_for_key_info(env, key_info_node, rampart_context, msg_ctx, AXIS2_FALSE);*/
@@ -1916,7 +1916,7 @@ rampart_shp_process_derived_key(const axutil_env_t *env,
     oxs_key_t *derived_key = NULL;
     axis2_char_t *token_type = NULL;
     axis2_char_t *reference_method = NULL;
-    void *cert = NULL;
+    oxs_x509_cert_t* cert = NULL; 
 
     /* Get the session key. */ 
     /*session_key = rampart_shp_get_key_for_key_info(

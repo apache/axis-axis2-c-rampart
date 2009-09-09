@@ -270,12 +270,6 @@ c14n_ns_stack_free(
 /* Function Prototypes */
 
 static axis2_status_t
-c14n_apply_on_node(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx
-);
-
-static axis2_status_t
 c14n_apply_on_element(
     const axiom_node_t *node,
     const c14n_ctx_t *ctx
@@ -1065,6 +1059,7 @@ c14n_apply_on_attribute_axis(
      * */
 }
 
+#if 0
 static axis2_char_t*
 c14n_normalize_text(
     axis2_char_t *text,
@@ -1151,6 +1146,123 @@ c14n_normalize_text(
         old ++;
     }
     *p++ = '\0';
+    return buf;
+}
+#endif
+
+static axis2_char_t*
+c14n_normalize_text(
+    axis2_char_t *text,
+    const c14n_ctx_t *ctx)
+{
+    axis2_char_t *buf = NULL;
+    int index = 0;
+    int bufsz = INIT_BUFFER_SIZE;
+    int original_size = axutil_strlen(text);
+
+    /* TODO:DONE a better buffer implementation */
+
+    /* we need atleast the size of original text. worst case is, each character is replaced with
+     * 5 other characters (all the texts are special character). But these special characters are
+     * rare and will occur less than 10% of the time. Hence we can create a buffer with length
+     * max(INIT_BUFFER_SIZE, strlen(text)*1.5).. This will reduce the number of memcpy needed
+     */
+    if(bufsz < original_size * 1.5)
+        bufsz = original_size * 1.5;
+
+    buf = (axis2_char_t *)AXIS2_MALLOC(ctx->env->allocator, (sizeof(axis2_char_t) * bufsz));
+    if(!buf)
+    {
+        AXIS2_ERROR_SET(ctx->env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        return buf;
+    }
+
+    while(original_size > 0)
+    {
+        size_t i = 0;
+        /* scan buffer until the next special character (&, <, >, \x0D) these need to be escaped,
+         * otherwise XML will not be valid*/
+        axis2_char_t *pos = (axis2_char_t*)strpbrk(text, "&<>\x0D");
+        if(pos)
+        {
+            i = pos - text;
+        }
+        else
+        {
+            i = original_size;
+        }
+
+        /* copy everything until the special character */
+        if(i > 0)
+        {
+            if(index + i + 6 > bufsz)
+            {
+                /* not enough space to write remaining characters + (5 character resulting
+                 * from special character + 1 NULL character). So, have to create a new buffer
+                 * and populate */
+                axis2_char_t *temp_buf = NULL;
+
+                bufsz *= 2;
+                temp_buf = (axis2_char_t *)AXIS2_MALLOC(ctx->env->allocator,
+                    sizeof(axis2_char_t) * bufsz);
+                if(!temp_buf)
+                {
+                    AXIS2_ERROR_SET(ctx->env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+                    return buf;
+                }
+                memcpy(temp_buf, buf, index);
+                AXIS2_FREE(ctx->env->allocator, buf);
+                buf = temp_buf;
+            }
+
+            memcpy(buf + index, text, i);
+            text += i;
+            index += i;
+            original_size -= i;
+        }
+
+        /* replace the character with the appropriate sequence */
+        if(original_size > 0)
+        {
+            switch(text[0])
+            {
+                case '&':
+                    buf[index++] = '&';
+                    buf[index++] = 'a';
+                    buf[index++] = 'm';
+                    buf[index++] = 'p';
+                    buf[index++] = ';';
+                    break;
+                case '>':
+                    buf[index++] = '&';
+                    buf[index++] = 'g';
+                    buf[index++] = 't';
+                    buf[index++] = ';';
+                    break;
+                case '<':
+                    buf[index++] = '&';
+                    buf[index++] = 'l';
+                    buf[index++] = 't';
+                    buf[index++] = ';';
+                    break;
+                case '\x0D':
+                    buf[index++] = '&';
+                    buf[index++] = '#';
+                    buf[index++] = 'x';
+                    buf[index++] = 'D';
+                    buf[index++] = ';';
+                    break;
+                default:
+                    ;
+            }
+
+            ++text;
+            --original_size;
+        }
+    }
+
+    buf[index] = '\0';
+    /*printf("buffer [%s]\n", buf);*/
     return buf;
 }
 

@@ -396,7 +396,7 @@ oxs_axiom_deserialize_node(
     const axutil_env_t *env,  
     axis2_char_t* buffer)
 {
-    return axiom_util_string_to_node(env, buffer);
+    return axiom_node_create_from_buffer(env, buffer);
 }
 
 /**
