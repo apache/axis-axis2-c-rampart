@@ -73,10 +73,8 @@ typedef struct c14n_ctx {
     const axutil_env_t *env;
     const axiom_document_t *doc;
     axis2_bool_t comments;
-    axis2_char_t **outbuf;
     axutil_stream_t *outstream;
     axis2_bool_t exclusive;
-    axis2_bool_t use_stream;
     const axutil_array_list_t *ns_prefixes;
     const axiom_node_t *node;
     c14n_ns_stack_t *ns_stack;
@@ -120,19 +118,19 @@ c14n_ns_stack_create(
     const c14n_ctx_t *ctx)
 {
     c14n_ns_stack_t *ns_stack = NULL;
-
     ns_stack = (c14n_ns_stack_t *) (AXIS2_MALLOC(ctx->env->allocator, sizeof(c14n_ns_stack_t)));
-
-    if(ns_stack)
+    if(!ns_stack)
     {
-        ns_stack->head = 0;
-        ns_stack->size = 0;
-        ns_stack->stack = NULL;
-        ns_stack->def_ns = NULL;
-    }
-    else
         AXIS2_ERROR_SET(ctx->env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
+        AXIS2_LOG_ERROR(ctx->env->log, AXIS2_LOG_SI,
+            "[rampart]cannot create c14n ns stack. Insufficient memory");
+        return NULL;
+    }
 
+    ns_stack->head = 0;
+    ns_stack->size = 0;
+    ns_stack->stack = NULL;
+    ns_stack->def_ns = NULL;
     return ns_stack;
 }
 
@@ -232,19 +230,14 @@ static axis2_status_t c14n_ns_stack_find(
         ctx->env), axiom_namespace_get_uri((axiom_namespace_t *) ns, ctx->env), ctx));
 }
 
-static void c14n_ns_stack_free(
+static void
+c14n_ns_stack_free(
     c14n_ctx_t *ctx)
 {
     if(ctx->ns_stack->stack)
     {
         AXIS2_FREE(ctx->env->allocator, ctx->ns_stack->stack);
-        ctx->ns_stack->stack = NULL;
     }
-    ctx->ns_stack->stack = NULL;
-    ctx->ns_stack->head = 0;
-    ctx->ns_stack->size = 0;
-
-    /**/
     AXIS2_FREE(ctx->env->allocator, ctx->ns_stack);
     ctx->ns_stack = NULL;
 }
@@ -253,8 +246,8 @@ static void c14n_ns_stack_free(
 
 static axis2_status_t
 c14n_apply_on_element(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx);
+    axiom_node_t *node,
+    c14n_ctx_t *ctx);
 
 static axis2_status_t
 c14n_apply_on_namespace_axis(
@@ -264,9 +257,9 @@ c14n_apply_on_namespace_axis(
 
 static axis2_status_t
 c14n_apply_on_namespace_axis_exclusive(
-    const axiom_element_t *ele,
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx);
+    axiom_element_t *ele,
+    axiom_node_t *node,
+    c14n_ctx_t *ctx);
 
 static axis2_status_t
 c14n_apply_on_attribute_axis(
@@ -275,13 +268,13 @@ c14n_apply_on_attribute_axis(
 
 static axis2_status_t
 c14n_apply_on_node(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx);
+    axiom_node_t *node,
+    c14n_ctx_t *ctx);
 
 static void
 c14n_apply_on_comment(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx);
+    axiom_node_t *node,
+    c14n_ctx_t *ctx);
 
 static void
 c14n_output(
@@ -314,7 +307,7 @@ c14n_normalize_attribute(
 static axis2_char_t*
 c14n_normalize_text(
     axis2_char_t *text,
-    const c14n_ctx_t *ctx);
+    c14n_ctx_t *ctx);
 
 static void
 c14n_apply_on_namespace(
@@ -360,14 +353,11 @@ c14n_in_nodeset(
 
 /* Implementations */
 
-static void c14n_ctx_free(
+static void
+c14n_ctx_free(
     c14n_ctx_t *ctx)
 {
-    if(ctx)
-    {
-        c14n_ns_stack_free(ctx);
-    }
-
+    c14n_ns_stack_free(ctx);
     AXIS2_FREE(ctx->env->allocator, ctx);
 }
 
@@ -376,33 +366,34 @@ c14n_init(
     const axutil_env_t *env,
     const axiom_document_t *doc,
     axis2_bool_t comments,
-    axis2_char_t **outbuf,
     axutil_stream_t *stream,
     const axis2_bool_t exclusive,
     const axutil_array_list_t *ns_prefixes,
-    const axis2_bool_t use_stream,
     const axiom_node_t *node)
 {
     c14n_ctx_t *ctx = (c14n_ctx_t *) (AXIS2_MALLOC(env->allocator, sizeof(c14n_ctx_t)));
-    if(ctx)
+    if(!ctx)
     {
-        ctx->env = env;
-        ctx->doc = doc;
-        ctx->comments = comments;
-        ctx->outbuf = outbuf;
-        ctx->exclusive = exclusive;
-        ctx->ns_prefixes = ns_prefixes;
-        ctx->use_stream = use_stream;
-        ctx->node = node;
-        if(use_stream)
-            ctx->outstream = stream;
-
-        /*this should come after ctx->env=env*/
-        ctx->ns_stack = c14n_ns_stack_create(ctx);
-    }
-    else
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart]cannot create c14n structure. Insufficient memory");
+        return NULL;
+    }
+    ctx->env = env;
+    ctx->doc = doc;
+    ctx->comments = comments;
+    ctx->exclusive = exclusive;
+    ctx->ns_prefixes = ns_prefixes;
+    ctx->node = node;
+    ctx->outstream = stream;
+    ctx->ns_stack = c14n_ns_stack_create(ctx);
+    if(!ctx->ns_stack)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+            "[rampart]cannot create c14n strucure. ns stack creation failed");
+        AXIS2_FREE(env->allocator, ctx);
+        ctx = NULL;
+    }
     return ctx;
 }
 
@@ -516,80 +507,34 @@ oxs_c14n_apply_stream(
     const axiom_node_t *node)
 {
     c14n_ctx_t *ctx = NULL;
-    axiom_node_t *root_node = NULL;
     axis2_status_t status = AXIS2_SUCCESS;
-    axiom_element_t *root_ele = NULL;
-    /*axiom_children_iterator_t *child_itr = NULL;*/
-    axutil_stream_t *outstream = NULL;
 
-    ctx = c14n_init(env, doc, comments, NULL, stream, exclusive, ns_prefixes, AXIS2_TRUE, node);
-
-    if(ctx && ctx->outstream)
+    if(!stream)
     {
-        root_node = C14N_GET_ROOT_NODE_FROM_DOC_OR_NODE(doc, node, ctx);
-        /*root_node = axiom_document_get_root_element((axiom_document_t *)doc,
-         ctx->env); */
-
-        /* shouldn't the called method's document be const?*/
-
-        root_ele = axiom_node_get_data_element(root_node, env);
-        status = c14n_apply_on_node((node ? node
-            : root_node), ctx);
-
-        if(!status)
-        {
-            axutil_stream_free(ctx->outstream, env);
-            ctx->outstream = NULL;
-        }
-
-        outstream = ctx->outstream;
-
-#ifdef TEST
-        printf("--------------\n");
-        axiom_namespace_t *ns1 = NULL;
-        axiom_namespace_t *ns2 = NULL;
-        axiom_namespace_t *ns3 = NULL;
-        int i = 0;
-        for (i=0; i<17; i++)
-        {
-            char uri[10], pfx[10];
-            sprintf(uri, "urn:ns%d", i);
-            sprintf(pfx, "ns%d", i);
-            ns1 = axiom_namespace_create(ctx->env, uri, pfx);
-            c14n_ns_stack_add(ns1, ctx);
-        }
-        for (i=0; i<ctx->ns_stack->head; i++)
-        {
-            ns1 = ctx->ns_stack->stack[i];
-            printf("%s:%s\n", axiom_namespace_get_prefix(ns1, env),
-                axiom_namespace_get_uri(ns1, env));
-        }
-        printf("%d\n", ctx->ns_stack->size);
-
-        ns1 = axiom_namespace_create(ctx->env, "urn:ns0", "ns0");
-        ns2 = axiom_namespace_create(ctx->env, "urn:ns10", "ns10");
-        ns3 = axiom_namespace_create(ctx->env, "urn:ns2", "ns3");
-
-        if (c14n_ns_stack_find(ns1, ctx)) printf("ns1 found\n");
-        if (c14n_ns_stack_find(ns2, ctx)) printf("ns2 found\n");
-        if (c14n_ns_stack_find(ns3, ctx)) printf("ns3 found\n");
-#endif
-
-        c14n_ctx_free(ctx);
-        ctx = NULL;
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]stream is not given to do c14n");
+        return AXIS2_FAILURE;
     }
-    else
+
+    ctx = c14n_init(env, doc, comments, stream, exclusive, ns_prefixes, node);
+    if(!ctx)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-
-        if(ctx)
-        {
-            c14n_ctx_free(ctx);
-            ctx = NULL;
-        }
-        status = AXIS2_FAILURE;
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart] c14n structure creating failed");
+        return AXIS2_FAILURE;
     }
 
+    if(!node)
+    {
+        node = C14N_GET_ROOT_NODE_FROM_DOC_OR_NODE(doc, node, ctx);
+        if(!node)
+        {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]cannot find node to apply c14n");
+            return AXIS2_FAILURE;
+        }
+    }
+
+    status = c14n_apply_on_node((axiom_node_t *)node, ctx);
+    c14n_ctx_free(ctx);
     return status;
 }
 
@@ -634,40 +579,42 @@ oxs_c14n_apply(
     }
 }
 
-static axis2_status_t c14n_apply_on_text(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx)
+static axis2_status_t
+c14n_apply_on_text(
+    axiom_node_t *node,
+    c14n_ctx_t *ctx)
 {
-    axiom_text_t *text = NULL;
-    text = (axiom_text_t *) axiom_node_get_data_element((axiom_node_t *) node, ctx->env);
+    axiom_text_t *text = (axiom_text_t *) axiom_node_get_data_element(node, ctx->env);
 
     if(text)
     {
         axis2_char_t *textval = (axis2_char_t*) axiom_text_get_text(text, ctx->env);
-
-        if(textval)
-            textval = c14n_normalize_text(textval, ctx);
-        else
-            /*should never occur*/
+        if(!textval)
+        {
+            AXIS2_LOG_ERROR(ctx->env->log, AXIS2_LOG_SI, "[rampart]cannot get text from node");
             return AXIS2_FAILURE;
+        }
+
+        textval = c14n_normalize_text(textval, ctx);
+        if(!textval)
+        {
+            AXIS2_LOG_ERROR(ctx->env->log, AXIS2_LOG_SI, "[rampart]cannot normalize text");
+            return AXIS2_FAILURE;
+        }
 
         c14n_output(textval, ctx);
-        if(textval)
-        {
-            AXIS2_FREE(ctx->env->allocator, textval);
-            textval = NULL;
-        }
+        AXIS2_FREE(ctx->env->allocator, textval);
     }
 
     return AXIS2_SUCCESS;
 }
 
-static axis2_status_t c14n_apply_on_node(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx)
+static axis2_status_t
+c14n_apply_on_node(
+    axiom_node_t *node,
+    c14n_ctx_t *ctx)
 {
-    /*    printf("%d %d %d\n", axiom_node_get_node_type((axiom_node_t *)node, ctx->env), AXIOM_COMMENT, AXIOM_ELEMENT); */
-    switch(axiom_node_get_node_type((axiom_node_t *) node, ctx->env))
+    switch(axiom_node_get_node_type(node, ctx->env))
     {
         case AXIOM_ELEMENT:
             c14n_apply_on_element(node, ctx);
@@ -690,45 +637,46 @@ static axis2_status_t c14n_apply_on_node(
     return AXIS2_SUCCESS;
 }
 
-static void c14n_apply_on_comment(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx)
+static void
+c14n_apply_on_comment(
+    axiom_node_t *node,
+    c14n_ctx_t *ctx)
 {
     /*TODO: HACK*/
     c14n_output("<!--", ctx);
     c14n_output(axiom_comment_get_value((axiom_comment_t*) axiom_node_get_data_element(
-        (axiom_node_t*) node, ctx->env), ctx->env), ctx);
+        node, ctx->env), ctx->env), ctx);
     c14n_output("-->", ctx);
 }
 
-static axis2_status_t c14n_apply_on_element(
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx)
+static axis2_status_t
+c14n_apply_on_element(
+    axiom_node_t *node,
+    c14n_ctx_t *ctx)
 {
     axis2_status_t res = AXIS2_SUCCESS;
     axiom_element_t *ele = NULL;
     axiom_namespace_t *ns = NULL;
-    /*axiom_children_iterator_t *child_itr = NULL;*/
     c14n_ns_stack_t *save_stack = NULL;
     axiom_node_t *child_node = NULL;
 
-    ele = (axiom_element_t *) axiom_node_get_data_element((axiom_node_t *) node, ctx->env);
-
+    ele = (axiom_element_t *) axiom_node_get_data_element(node, ctx->env);
     if(!ele)
-        return AXIS2_FAILURE; /*should it be failure?*/
+    {
+        AXIS2_LOG_ERROR(ctx->env->log, AXIS2_LOG_SI,
+            "[rampart] cannot find valid element to apply c14n");
+        return AXIS2_FAILURE;
+    }
 
-    ns = axiom_element_get_namespace(ele, ctx->env, (axiom_node_t *) node);
-
+    ns = axiom_element_get_namespace(ele, ctx->env, node);
     save_stack = c14n_ns_stack_create(ctx);
     c14n_ns_stack_push(save_stack, ctx); /*save current ns stack*/
 
-    /*print qname*/
+    /*print start tag*/
     c14n_output("<", ctx);
-
     if(ns)
     {
         axis2_char_t *prefix = axiom_namespace_get_prefix(ns, ctx->env);
-
         if(axutil_strlen(prefix) > 0)
         {
             c14n_output(prefix, ctx);
@@ -757,41 +705,17 @@ static axis2_status_t c14n_apply_on_element(
 
     c14n_output(">", ctx);
 
-#ifdef C14N_DEBUG
-    /*c14n_output("\n", ctx);*/
-#endif
 
     /*process child elements*/
-
     child_node = axiom_node_get_first_child((axiom_node_t *) node, ctx->env);
-
     while(child_node)
     {
         c14n_apply_on_node(child_node, ctx);
         child_node = axiom_node_get_next_sibling(child_node, ctx->env);
     }
 
-    /*process child elements*/
-
-    /*child_itr = AXIOM_ELEMENT_GET_CHILDREN(ele, ctx->env, (axiom_node_t*)node);
-     if (child_itr)
-     {
-
-     while(axiom_children_iterator_has_next(child_itr, ctx->env))
-     {
-     axiom_node_t *child_node = NULL;
-     child_node = axiom_children_iterator_next(child_itr, ctx->env);
-
-     if (child_node)
-     {
-     c14n_apply_on_node(child_node, ctx);
-     }
-     }
-     }*/
-
-    /*print qname*/
+    /*print end tag*/
     c14n_output("</", ctx);
-
     if(ns)
     {
         axis2_char_t *prefix = axiom_namespace_get_prefix(ns, ctx->env);
@@ -803,22 +727,13 @@ static axis2_status_t c14n_apply_on_element(
         }
     }
     c14n_output(axiom_element_get_localname(ele, ctx->env), ctx);
-
     c14n_output(">", ctx);
 
     c14n_ns_stack_pop(save_stack, ctx); /*restore to previous ns stack */
-    /*TODO:DONE??? save_stack free*/
+
     /*since save_stack is used just to memorize the head of the stack,
      * we don't have to worry about freeing its members*/
-
-    /**/
     AXIS2_FREE(ctx->env->allocator, save_stack);
-    save_stack = NULL;
-
-#ifdef C14N_DEBUG
-    /*c14n_output("\n", ctx);*/
-#endif
-
     return res;
 }
 
@@ -906,7 +821,8 @@ static int attr_compare(
 
 }
 
-static void c14n_apply_on_attribute(
+static void
+c14n_apply_on_attribute(
     const void *attribute,
     const void *context)
 {
@@ -944,7 +860,8 @@ static void c14n_apply_on_attribute(
     }
 }
 
-static axis2_status_t c14n_apply_on_attribute_axis(
+static axis2_status_t
+c14n_apply_on_attribute_axis(
     const axiom_element_t *ele,
     const c14n_ctx_t *ctx)
 {
@@ -1074,7 +991,7 @@ c14n_normalize_text(
 static axis2_char_t*
 c14n_normalize_text(
     axis2_char_t *text,
-    const c14n_ctx_t *ctx)
+    c14n_ctx_t *ctx)
 {
     axis2_char_t *buf = NULL;
     int index = 0;
@@ -1095,7 +1012,7 @@ c14n_normalize_text(
     if(!buf)
     {
         AXIS2_ERROR_SET(ctx->env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        return buf;
+        return NULL;
     }
 
     while(original_size > 0)
@@ -1366,10 +1283,11 @@ static axis2_status_t c14n_apply_on_namespace_axis(
     return AXIS2_SUCCESS;
 }
 
-static axis2_status_t c14n_apply_on_namespace_axis_exclusive(
-    const axiom_element_t *ele,
-    const axiom_node_t *node,
-    const c14n_ctx_t *ctx)
+static axis2_status_t
+c14n_apply_on_namespace_axis_exclusive(
+    axiom_element_t *ele,
+    axiom_node_t *node,
+    c14n_ctx_t *ctx)
 {
     axutil_hash_t *ns_ht = NULL;
     axutil_hash_index_t *hi = NULL;
@@ -1379,8 +1297,8 @@ static axis2_status_t c14n_apply_on_namespace_axis_exclusive(
 
     c14n_sorted_list_t *out_list = c14n_sorted_list_create(ctx->env);
 
-    pele = (axiom_element_t *) ele;
-    pnode = (axiom_node_t *) node;
+    pele = ele;
+    pnode = node;
 
     /*treat the default namespace specially*/
 
@@ -1406,8 +1324,8 @@ static axis2_status_t c14n_apply_on_namespace_axis_exclusive(
 
     while(pnode)
     {
-        pele = axiom_node_get_data_element((axiom_node_t *) pnode, ctx->env);
-        ns_ht = axiom_element_get_namespaces((axiom_element_t *) pele, ctx->env);
+        pele = axiom_node_get_data_element(pnode, ctx->env);
+        ns_ht = axiom_element_get_namespaces(pele, ctx->env);
 
         if(ns_ht)
         {
@@ -1444,7 +1362,7 @@ static axis2_status_t c14n_apply_on_namespace_axis_exclusive(
                 }
             }
         }
-        pnode = axiom_node_get_parent((axiom_node_t *) pnode, ctx->env);
+        pnode = axiom_node_get_parent(pnode, ctx->env);
     } /*while*/
     C14N_SORTED_LIST_ITERATE(out_list, ctx, c14n_apply_on_namespace, ctx->env);
 
@@ -1488,15 +1406,7 @@ static void c14n_output(
     const axis2_char_t *str,
     const c14n_ctx_t *ctx)
 {
-#ifdef C14N_DEBUG
-    printf("%s", str);
-#else
-    if(ctx->use_stream)
-    {
-        axutil_stream_write(ctx->outstream, ctx->env, str, axutil_strlen(str)
-            * sizeof(axis2_char_t));
-    }
-#endif
+    axutil_stream_write(ctx->outstream, ctx->env, str, axutil_strlen(str) * sizeof(axis2_char_t));
 }
 
 static axis2_bool_t c14n_need_to_declare_ns(

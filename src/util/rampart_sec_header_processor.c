@@ -823,6 +823,8 @@ rampart_shp_process_encrypted_key(const axutil_env_t *env,
 
         if(AXIS2_FAILURE == status)
         {
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart]Decryption of node with ID [%s] failed.", id);
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
                                           "Data decryption failed", RAMPART_FAULT_IN_ENCRYPTED_DATA, msg_ctx);
             oxs_asym_ctx_free(asym_ctx, env);
