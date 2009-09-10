@@ -786,7 +786,7 @@ oxs_xml_sig_verify_sign_part(
     else
     {
         oxs_error(env, OXS_ERROR_LOCATION, OXS_ERROR_SIG_VERIFICATION_FAILED,
-            "Digest verification failed for node Id= %s  ", id);
+            "Digest verification failed for node Id= %s. Calculated digest is [%s] and given digest is [%s]", id, new_digest, digest_val);
         status = AXIS2_FAILURE;
     }
 

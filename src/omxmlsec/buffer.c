@@ -27,8 +27,8 @@ struct oxs_buffer
 {
     unsigned char* data; /* will be adjusted based on oxs_buffer_remove_head method */
     unsigned char* original_data; /* to free the data */
-    unsigned int size;
-    unsigned int max_size;
+    int size;
+    int max_size;
     oxs_AllocMode alloc_mode;
 };
 
@@ -116,6 +116,7 @@ oxs_buffer_populate(
     oxs_buffer_set_max_size(buffer, env, size);
     memcpy(buffer->data, data, size);
     buffer->size = size;
+    buffer->data[size] = '\0';
     return AXIS2_SUCCESS;
 }
 
