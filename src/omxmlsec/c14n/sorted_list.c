@@ -49,21 +49,25 @@ sorted_list_insert(
     void *val,
     const void *ctx,
     int(*compar)(const void *, const void *, const void *),
-    const axutil_env_t *env
-)
+    const axutil_env_t *env)
 {
-    if(!(*node)) {
+
+    if(!(*node))
+    {
         *node = (c14n_sorted_list_t *) AXIS2_MALLOC(env->allocator, (sizeof(**node)));
         (*node)->left = (*node)->right = NULL;
         (*node)->val = val;
         return;
     }
-
-    if(compar(val, (*node)->val, ctx)<0)
-        sorted_list_insert(&(*node)->left, val, ctx, compar, env);
-    else if(compar(val, (*node)->val, ctx)>0)
-        sorted_list_insert(&(*node)->right, val, ctx, compar, env);
-    else; /*neglect if the same ns*/
+    else
+    {
+        int result = compar(val, (*node)->val, ctx);
+        if(result < 0)
+            sorted_list_insert(&(*node)->left, val, ctx, compar, env);
+        else if(result > 0)
+            sorted_list_insert(&(*node)->right, val, ctx, compar, env);
+        else; /*neglect if the same ns*/
+    }
 }
 
 void
