@@ -46,30 +46,6 @@ extern "C"
     
     /**
      * Perform given XML-Canonicalization (XML-C14N) method and returns the
-     * result as an <pre>axutil_stream</pre>.
-     *
-     * @param env Pointer to the Axis2/C environment.
-     * @param doc Document on which the canonicalization is performed.
-     * @param stream Output stream.
-     * @param ns_prefixes List of inclusive namespace prefixes.
-     * @param node Node that defines the subdocument to be canonicalized.
-     *             When it is <pre>NULL</pre> the whole document will be
-     *             canonicalized.
-     * @param algo Canonicalization method to be used.
-     */
-    AXIS2_EXTERN axis2_status_t AXIS2_CALL
-    oxs_c14n_apply_stream_algo(
-        const axutil_env_t *env,
-        const axiom_document_t *doc,
-        axutil_stream_t *stream,
-        const axutil_array_list_t *ns_prefixes,
-        const axiom_node_t *node,
-        const axis2_char_t* algo
-    );
-
-
-    /**
-     * Perform given XML-Canonicalization (XML-C14N) method and returns the
      * result as an <pre>axis2_char_t</pre> buffer.
      *
      * @param env Pointer to the Axis2/C environment.
@@ -92,7 +68,7 @@ extern "C"
         const axis2_char_t *algo
     );
 
-
+#if 0 /* these doesn't need to be public methods */
     /**
      * Perform given XML-Canonicalization (XML-C14N) method and returns the
      * result as an <pre>axutil_stream</pre>.
@@ -148,6 +124,32 @@ extern "C"
         const axutil_array_list_t *ns_prefixes,
         const axiom_node_t *node
     );
+
+    /**
+     * Perform given XML-Canonicalization (XML-C14N) method and returns the
+     * result as an <pre>axutil_stream</pre>.
+     *
+     * @param env Pointer to the Axis2/C environment.
+     * @param doc Document on which the canonicalization is performed.
+     * @param stream Output stream.
+     * @param ns_prefixes List of inclusive namespace prefixes.
+     * @param node Node that defines the subdocument to be canonicalized.
+     *             When it is <pre>NULL</pre> the whole document will be
+     *             canonicalized.
+     * @param algo Canonicalization method to be used.
+     */
+    AXIS2_EXTERN axis2_status_t AXIS2_CALL
+    oxs_c14n_apply_stream_algo(
+        const axutil_env_t *env,
+        const axiom_document_t *doc,
+        axutil_stream_t *stream,
+        const axutil_array_list_t *ns_prefixes,
+        const axiom_node_t *node,
+        const axis2_char_t* algo
+    );
+#endif
+
+
 #ifdef __cplusplus
 }
 /** @} */
