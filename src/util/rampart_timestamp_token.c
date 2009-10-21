@@ -172,12 +172,12 @@ rampart_timestamp_token_validate(
     /* Check whether created is less than current time or not */
     current_val = rampart_generate_time(env, clock_skew_buffer, AXIS2_TRUE);
     validity = rampart_compare_date_time(env, current_val, created_val); 
-    AXIS2_FREE(env->allocator, current_val);
     if (validity == AXIS2_SUCCESS)
     {
         /* this means current_val < created_val. Which is not a valid case */
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart]Timestamp not valid: Created time is not valid");
+        AXIS2_FREE(env->allocator, current_val);
         return AXIS2_FAILURE;
     }
 
@@ -189,6 +189,7 @@ rampart_timestamp_token_validate(
         /* If the expire element is not present, it means that the message will not be expired. */
         AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,"[rampart]Cannot find expires in timestamp element."
             " This is not critical. Assume that the message is not expiring");
+        AXIS2_FREE(env->allocator, current_val);
         return AXIS2_SUCCESS;
     }
 
@@ -198,6 +199,7 @@ rampart_timestamp_token_validate(
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Timestamp not valid: "
             "The second element of timestamp token (if any) MUST be EXPIRES");
+        AXIS2_FREE(env->allocator, current_val);
         return AXIS2_FAILURE;
     }
 
@@ -211,6 +213,17 @@ rampart_timestamp_token_validate(
     if (validity == AXIS2_FAILURE)
     {
         /* this means created_value > expires_value. Which is not valid */
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+            "[rampart]Timestamp not valid: Timestamp token has expired");
+        AXIS2_FREE(env->allocator, current_val);
+        return AXIS2_FAILURE;
+    }
+
+    validity = rampart_compare_date_time(env, current_val, expires_val);
+    AXIS2_FREE(env->allocator, current_val);
+    if (validity == AXIS2_FAILURE)
+    {
+        /* this means current_value > expires_value. Which is not valid */
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
             "[rampart]Timestamp not valid: Timestamp token has expired");
         return AXIS2_FAILURE;
