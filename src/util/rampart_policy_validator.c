@@ -318,6 +318,12 @@ rampart_pv_validate_sec_header(
         return AXIS2_FAILURE;
     }
 
+    /* If the binding is transport, we don't need to validate anything more */
+    if(rampart_context_get_binding_type(rampart_context,env) == RP_PROPERTY_TRANSPORT_BINDING)
+    {
+        return AXIS2_SUCCESS;
+    }
+
     /* Check if encryption is valid found */
     if(!rampart_pv_validate_encryption(env, rampart_context, msg_ctx))
     {
