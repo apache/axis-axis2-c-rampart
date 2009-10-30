@@ -1614,7 +1614,11 @@ rampart_shp_process_signature(
     /* if security context token or X509 token is used, then store it. It will be used by the
      * server to sign the message */
     rampart_shp_store_token_id(env, key_info_node, rampart_context, sec_node, AXIS2_FALSE, msg_ctx);
-    if(public_cert)
+
+    /* receiver certificate should be stored only if token is included as reference or embedded */
+    if((public_cert) &&
+        ((0 == axutil_strcmp(reference_method, OXS_NODE_REFERENCE))
+            || (0 == axutil_strcmp(reference_method, OXS_NODE_EMBEDDED))))
     {
         rampart_context_set_found_cert_in_shp(rampart_context, env, AXIS2_TRUE);
         rampart_context_set_receiver_cert_found_in_shp(rampart_context, env, public_cert);

@@ -357,11 +357,11 @@ rampart_context_free(rampart_context_t *rampart_context,
         }
         
         /* Free receiver certificate we found when processing incoming security header */
-        /*if(rampart_context->receiver_cert && rampart_context->found_cert_in_shp)
+        if(rampart_context->receiver_cert && rampart_context->found_cert_in_shp)
         {
             oxs_x509_cert_free(rampart_context->receiver_cert, env);
             rampart_context->receiver_cert = NULL;
-        }*/
+        }
 
         if(rampart_context->key_mgr)
         {
