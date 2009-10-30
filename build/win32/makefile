@@ -327,7 +327,6 @@ mod_rampart_copy_deploy:
 	copy deploy_rampart.bat $(RAMPART_DISTDIR)
 	copy $(RAMPART_SOURCE_DIR)\samples\client\sec_echo\update_n_run.bat $(RAMPART_SAMPLE_BIN_DIR)
 	copy $(RAMPART_SOURCE_DIR)\samples\client\saml_echo\update_n_run.bat $(RAMPART_SAMPLE_BIN_DIR)\saml_update_n_run.bat
-	copy $(RAMPART_SOURCE_DIR)\samples\data\client_axis2.xml $(RAMPART_SAMPLE_DATA_DIR)\ 
 	copy $(RAMPART_SOURCE_DIR)\samples\data\server_axis2.xml $(RAMPART_SAMPLE_DATA_DIR)\ 
 
 copy_sec_policy:
