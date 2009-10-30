@@ -26,13 +26,16 @@
 #include <axis2_addr.h>
 
 axiom_node_t *
-build_om_payload_for_echo_svc(const axutil_env_t *env);
+build_om_payload_for_echo_svc(
+    const axutil_env_t *env);
 
 axiom_node_t *
-build_om_payload_for_echo_svc_interop(const axutil_env_t *env);
+build_om_payload_for_echo_svc_interop(
+    const axutil_env_t *env);
 
 axiom_node_t *
-build_om_programatically_mtom(const axutil_env_t * env);
+build_om_programatically_mtom(
+    const axutil_env_t * env);
 
 int
 main(
@@ -158,7 +161,7 @@ main(
     /*axis2_options_set_enable_mtom(options, env, AXIS2_TRUE);*/
 
     /*If not engaged in the client's axis2.xml, uncomment this line*/
-    /*axis2_svc_client_engage_module(svc_client, env, "rampart");*/
+    axis2_svc_client_engage_module(svc_client, env, "rampart");
 
     /* Send request */
     ret_node = axis2_svc_client_send_receive(svc_client, env, payload);
@@ -218,7 +221,8 @@ main(
 
 /* build SOAP request message content using OM */
 axiom_node_t *
-build_om_payload_for_echo_svc(const axutil_env_t *env)
+build_om_payload_for_echo_svc(
+    const axutil_env_t *env)
 {
     axiom_node_t *echo_om_node = NULL;
     axiom_element_t* echo_om_ele = NULL;
@@ -229,23 +233,25 @@ build_om_payload_for_echo_svc(const axutil_env_t *env)
 
     ns1 = axiom_namespace_create(env, "http://ws.apache.org/rampart/c/samples", "ns1");
     /*ns1 = axiom_namespace_create(env, "http://echo.services.wsas.wso2.org", "ns1");*/
-    echo_om_ele = axiom_element_create(env, NULL, "echoIn", ns1, &echo_om_node);    
-    
+    echo_om_ele = axiom_element_create(env, NULL, "echoIn", ns1, &echo_om_node);
+
     text_om_ele = axiom_element_create(env, echo_om_node, "text", NULL, &text_om_node);
     axiom_element_set_text(text_om_ele, env, "Hello", text_om_node);
 
     om_str = axiom_node_to_string(echo_om_node, env);
-    if (om_str){
+    if(om_str)
+    {
         printf("\nSending OM : %s\n", om_str);
         AXIS2_FREE(env->allocator, om_str);
-        om_str =  NULL;
+        om_str = NULL;
     }
     return echo_om_node;
 }
 
 /* build SOAP request message content using OM (for java interop)*/
 axiom_node_t *
-build_om_payload_for_echo_svc_interop(const axutil_env_t *env)
+build_om_payload_for_echo_svc_interop(
+    const axutil_env_t *env)
 {
     axiom_node_t *ping_request_om_node = NULL;
     axiom_element_t* ping_request_om_ele = NULL;
@@ -259,23 +265,25 @@ build_om_payload_for_echo_svc_interop(const axutil_env_t *env)
 
     ns0 = axiom_namespace_create(env, "http://InteropBaseAddress/interop", "ns0");
     ns1 = axiom_namespace_create(env, "http://xmlsoap.org/Ping", "ns1");
-    ping_request_om_ele = axiom_element_create(env, NULL, "PingRequest", ns0, &ping_request_om_node);    
-    ping_om_ele = axiom_element_create(env, ping_request_om_node, "Ping", ns1, &ping_om_node);   
-    
+    ping_request_om_ele
+        = axiom_element_create(env, NULL, "PingRequest", ns0, &ping_request_om_node);
+    ping_om_ele = axiom_element_create(env, ping_request_om_node, "Ping", ns1, &ping_om_node);
+
     text_om_ele = axiom_element_create(env, ping_om_node, "scenario", ns1, &text_om_node);
     axiom_element_set_text(text_om_ele, env, "scenario", text_om_node);
-    text_om_node= NULL;
+    text_om_node = NULL;
     text_om_ele = axiom_element_create(env, ping_om_node, "origin", ns1, &text_om_node);
     axiom_element_set_text(text_om_ele, env, "origin", text_om_node);
-    text_om_node= NULL;
+    text_om_node = NULL;
     text_om_ele = axiom_element_create(env, ping_om_node, "text", ns1, &text_om_node);
     axiom_element_set_text(text_om_ele, env, "text", text_om_node);
 
     om_str = axiom_node_to_string(ping_request_om_node, env);
-    if (om_str){
+    if(om_str)
+    {
         printf("\nSending OM : %s\n", om_str);
         AXIS2_FREE(env->allocator, om_str);
-        om_str =  NULL;
+        om_str = NULL;
     }
     return ping_request_om_node;
 }
@@ -301,18 +309,13 @@ build_om_programatically_mtom(
 
     axiom_data_handler_t *data_handler = NULL;
 
-    ns1 =
-        axiom_namespace_create(env, "http://ws.apache.org/axis2/c/samples/mtom",
-                               "ns1");
-    mtom_om_ele =
-        axiom_element_create(env, NULL, "mtomSample", ns1, &mtom_om_node);
+    ns1 = axiom_namespace_create(env, "http://ws.apache.org/axis2/c/samples/mtom", "ns1");
+    mtom_om_ele = axiom_element_create(env, NULL, "mtomSample", ns1, &mtom_om_node);
 
-    file_om_ele =
-        axiom_element_create(env, mtom_om_node, "fileName", ns1, &file_om_node);
+    file_om_ele = axiom_element_create(env, mtom_om_node, "fileName", ns1, &file_om_node);
     axiom_element_set_text(file_om_ele, env, to_save_name, file_om_node);
 
-    image_om_ele =
-        axiom_element_create(env, mtom_om_node, "image", ns1, &image_om_node);
+    image_om_ele = axiom_element_create(env, mtom_om_node, "image", ns1, &image_om_node);
 
     /* This is when we directly give file name */
 
@@ -321,17 +324,16 @@ build_om_programatically_mtom(
     /* Uncomment following to set a callback instead of a file */
 
     /*data_handler = axiom_data_handler_create(env, NULL, "image/jpeg");
-    axiom_data_handler_set_data_handler_type(data_handler, env, AXIOM_DATA_HANDLER_TYPE_CALLBACK); 
-    axiom_data_handler_set_user_param(data_handler, env, (void *)image_name);*/
+     axiom_data_handler_set_data_handler_type(data_handler, env, AXIOM_DATA_HANDLER_TYPE_CALLBACK);
+     axiom_data_handler_set_user_param(data_handler, env, (void *)image_name);*/
 
-    data_text =
-        axiom_text_create_with_data_handler(env, image_om_node, data_handler,
-                                            &data_om_node);
+    data_text
+        = axiom_text_create_with_data_handler(env, image_om_node, data_handler, &data_om_node);
 
     axiom_text_set_optimize(data_text, env, optimized);
     /*axiom_text_set_is_swa(data_text, env, AXIS2_TRUE);*/
     om_str = axiom_node_to_string(mtom_om_node, env);
-    if (om_str)
+    if(om_str)
     {
         printf("%s", om_str);
         AXIS2_FREE(env->allocator, om_str);

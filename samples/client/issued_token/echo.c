@@ -154,7 +154,7 @@ int main(int argc, char** argv)
     payload = build_om_payload_for_echo_svc(env);
     
     /*If not engaged in the client's axis2.xml, uncomment this line*/
-    /*axis2_svc_client_engage_module(svc_client, env, "rampart");*/
+    axis2_svc_client_engage_module(svc_client, env, "rampart");
     
     /* Send request */
     ret_node = axis2_svc_client_send_receive(svc_client, env, payload);

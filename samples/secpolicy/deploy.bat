@@ -5,7 +5,7 @@ IF NOT "%1" == "" SET scn=%1
 
 echo Deploying %scn%
 echo Copying %scn%\client policy file
-deploy.js %scn%\client-policy.xml %AXIS2C_HOME%\client_repo\policy.xml
+deploy.js %scn%\client-policy.xml %AXIS2C_HOME%\policy.xml
 echo Copying %scn%\services.xml
 deploy.js %scn%\services.xml %AXIS2C_HOME%\services\sec_echo\services.xml
 

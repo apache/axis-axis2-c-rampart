@@ -10,10 +10,6 @@ xcopy .\samples %AXIS2C_HOME%\samples /E /I /Y /S
 xcopy .\services %AXIS2C_HOME%\services /E /I /Y /S
 copy .\samples\src\rampartc\data\server_axis2.xml %AXIS2C_HOME%\axis2.xml
 
-cd .\samples\src\rampartc\client
-deploy_client_repo.bat
-cd ..\..\..\..\
-
 echo -------------------------------------------------------------------------
 echo Rampart deployed
 echo -------------------------------------------------------------------------
