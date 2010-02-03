@@ -16,25 +16,14 @@
  */
 
 #include <axis2_handler_desc.h>
-#include <axutil_array_list.h>
-#include <axutil_hash.h>
-#include <axiom_soap_const.h>
 #include <axiom_soap_envelope.h>
 #include <axiom_soap_header.h>
-#include <axiom_soap_header_block.h>
-#include <axis2_op.h>
-#include <axis2_msg_ctx.h>
-#include <axis2_msg_info_headers.h>
-#include <axutil_property.h>
-#include <rampart_constants.h>
-#include <rampart_username_token.h>
-#include <rampart_handler_util.h>
-#include <rampart_timestamp_token.h>
-#include <rampart_util.h>
+#include <rampart_context.h>
 #include <rampart_sec_header_processor.h>
 #include <rampart_sec_processed_result.h>
-#include <rampart_context.h>
+#include <rampart_util.h>
 #include <rampart_engine.h>
+#include <rampart_handler_util.h>
 
 axis2_status_t AXIS2_CALL
 rampart_in_handler_invoke(
