@@ -52,7 +52,7 @@ rampart_mod_create(
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[rampart][rampart_mod] Not enough memory. Cannot create module.");
+            "[rampart]Not enough memory. Cannot create module.");
         return NULL;
     }
 
@@ -73,7 +73,7 @@ rampart_mod_init(
      */
     rampart_error_init();
 
-    AXIS2_LOG_INFO(env->log, "[rampart][rampart_mod] rampart_mod initialized");
+    AXIS2_LOG_INFO(env->log, "[rampart] rampart_mod initialized");
     return AXIS2_SUCCESS;
 }
 
@@ -82,7 +82,7 @@ rampart_mod_shutdown(
     axis2_module_t *module,
     const axutil_env_t *env)
 {
-    AXIS2_LOG_INFO(env->log, "[rampart][rampart_mod] rampart_mod shutdown");
+    AXIS2_LOG_INFO(env->log, "[rampart] rampart_mod shutdown");
 
     if(module)
     {
@@ -106,8 +106,7 @@ rampart_mod_fill_handler_create_func_map(
     if(!module->handler_create_func_map)
     {
         AXIS2_ERROR_SET(env->error, AXIS2_ERROR_NO_MEMORY, AXIS2_FAILURE);
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[rampart][rampart_mod] Cannot create function map.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot create function map.");
         return AXIS2_FAILURE;
     }
 
