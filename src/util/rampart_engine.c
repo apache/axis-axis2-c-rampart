@@ -34,18 +34,18 @@
 #include <openssl_pkcs12_keystore.h>
 #include <rampart_sct_provider_utility.h>
 
-neethi_policy_t *AXIS2_CALL
-build_policy(
+static neethi_policy_t *
+rampart_engine_build_policy(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     axis2_bool_t is_inflow);
 
-axis2_status_t AXIS2_CALL
-set_rampart_user_properties(
+static axis2_status_t
+rampart_engine_set_user_properties(
     const axutil_env_t *env,
     rampart_context_t *rampart_context);
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t
 rampart_engine_retrieve_key_mgr_prop_from_policy(
     rampart_context_t *rampart_context,
     const axutil_env_t *env);
@@ -82,7 +82,7 @@ rampart_engine_build_configuration(
      but for client side, it will be created only on outflow*/
     if(is_server_side || (!is_server_side && !is_inflow))
     {
-        policy = build_policy(env, msg_ctx, is_inflow);
+        policy = rampart_engine_build_policy(env, msg_ctx, is_inflow);
         if(!policy)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
@@ -194,7 +194,7 @@ rampart_engine_build_configuration(
         }
 
         rampart_context_set_secpolicy(rampart_context, env, secpolicy);
-        status = set_rampart_user_properties(env, rampart_context);
+        status = rampart_engine_set_user_properties(env, rampart_context);
         if(status != AXIS2_SUCCESS)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
@@ -341,8 +341,8 @@ rampart_engine_build_configuration(
     return rampart_context;
 }
 
-neethi_policy_t *AXIS2_CALL
-build_policy(
+static neethi_policy_t*
+rampart_engine_build_policy(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     axis2_bool_t is_inflow)
@@ -402,8 +402,8 @@ build_policy(
     return service_policy;
 }
 
-axis2_status_t AXIS2_CALL
-set_rampart_user_properties(
+static axis2_status_t
+rampart_engine_set_user_properties(
     const axutil_env_t *env,
     rampart_context_t *rampart_context)
 {
@@ -630,7 +630,7 @@ set_rampart_user_properties(
     return AXIS2_SUCCESS;
 }
 
-axis2_status_t AXIS2_CALL
+static axis2_status_t
 rampart_engine_retrieve_key_mgr_prop_from_policy(
     rampart_context_t *rampart_context,
     const axutil_env_t *env)
@@ -639,6 +639,7 @@ rampart_engine_retrieve_key_mgr_prop_from_policy(
     rp_rampart_config_t *config = NULL;
     oxs_key_mgr_t *key_mgr = NULL;
     rp_secpolicy_t *secpolicy = NULL;
+
     secpolicy = rampart_context_get_secpolicy(rampart_context, env);
     config = rp_secpolicy_get_rampart_config(secpolicy, env);
     if(!config)
