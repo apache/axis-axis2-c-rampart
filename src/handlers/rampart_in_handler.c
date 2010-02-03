@@ -16,8 +16,7 @@
  */
 
 #include <axis2_handler_desc.h>
-#include <axiom_soap_envelope.h>
-#include <axiom_soap_header.h>
+#include <axiom_soap.h>
 #include <rampart_context.h>
 #include <rampart_sec_header_processor.h>
 #include <rampart_sec_processed_result.h>
