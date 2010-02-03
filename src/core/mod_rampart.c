@@ -37,7 +37,9 @@ rampart_mod_fill_handler_create_func_map(
     axis2_module_t *module,
     const axutil_env_t *env);
 
-static const axis2_module_ops_t addr_module_ops_var = { rampart_mod_init, rampart_mod_shutdown,
+static const axis2_module_ops_t addr_module_ops_var = {
+    rampart_mod_init,
+    rampart_mod_shutdown,
     rampart_mod_fill_handler_create_func_map };
 
 axis2_module_t *
