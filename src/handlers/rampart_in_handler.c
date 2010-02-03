@@ -57,7 +57,6 @@ rampart_in_handler_invoke(
 {
     axiom_soap_envelope_t *soap_envelope = NULL;
     axiom_soap_header_t *soap_header = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *sec_node = NULL;
     rampart_context_t *rampart_context = NULL;
 
