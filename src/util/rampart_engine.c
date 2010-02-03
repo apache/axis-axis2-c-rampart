@@ -15,10 +15,6 @@
  * limitations under the License.
  */
 
-/*
- *
- */
-
 #include <rampart_engine.h>
 #include <axis2_ctx.h>
 #include <axis2_svc.h>
@@ -38,16 +34,11 @@
 #include <openssl_pkcs12_keystore.h>
 #include <rampart_sct_provider_utility.h>
 
-/*This method sets all the configurations
- loads required modules and start rampart.*/
-
-
 neethi_policy_t *AXIS2_CALL
 build_policy(
     const axutil_env_t *env,
     axis2_msg_ctx_t *msg_ctx,
     axis2_bool_t is_inflow);
-
 
 axis2_status_t AXIS2_CALL
 set_rampart_user_properties(
@@ -56,8 +47,8 @@ set_rampart_user_properties(
 
 axis2_status_t AXIS2_CALL
 rampart_engine_retrieve_key_mgr_prop_from_policy(
-	rampart_context_t *rampart_context, 
-	const axutil_env_t *env);
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env);
 
 AXIS2_EXTERN rampart_context_t *AXIS2_CALL
 rampart_engine_build_configuration(
@@ -74,7 +65,7 @@ rampart_engine_build_configuration(
     axutil_property_t *property = NULL;
     void *value = NULL;
 
-	/* Key Manager related */
+    /* Key Manager related */
     oxs_key_mgr_t *key_mgr = NULL;
     axis2_char_t *password = NULL;
     axis2_char_t *enc_user = NULL;
@@ -82,26 +73,26 @@ rampart_engine_build_configuration(
     axis2_char_t *pkcs12_password = NULL;
     axis2_char_t *pkcs12_buf = NULL;
     password_callback_fn password_function = NULL;
-    rampart_callback_t *password_callback = NULL;   
+    rampart_callback_t *password_callback = NULL;
     pkcs12_keystore_t *key_store = NULL;
 
     is_server_side = axis2_msg_ctx_get_server_side(msg_ctx, env);
 
     /*policy has to be created for inflow and outflow for server side. 
-    but for client side, it will be created only on outflow*/
+     but for client side, it will be created only on outflow*/
     if(is_server_side || (!is_server_side && !is_inflow))
     {
         policy = build_policy(env, msg_ctx, is_inflow);
         if(!policy)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_engine] Policy creation failed.");
+                "[rampart][rampart_engine] Policy creation failed.");
             return NULL;
         }
     }
-    
+
     /* for server side's outflow and client side's inflow, we have to use rampart context 
      * created in server side's inflow or client side's out flow
      */
@@ -135,17 +126,18 @@ rampart_engine_build_configuration(
             rampart_context = (rampart_context_t *)axutil_property_get_value(property, env);
 
             /*for serverside, recreate security policy and attach it to rampart context. This is because, 
-            there might be differnt policy for inflow and outflow (only for server side. we are still not 
-            supporting this feature for client side*/
+             there might be differnt policy for inflow and outflow (only for server side. we are still not
+             supporting this feature for client side*/
             if(is_server_side)
             {
                 secpolicy = rp_secpolicy_builder_build(env, policy);
                 if(!secpolicy)
                 {
                     rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                                  "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                        "Error in the Internal security policy configuration.",
+                        RAMPART_FAULT_IN_POLICY, msg_ctx);
                     AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][rampart_engine] Cannot create security policy from policy.");
+                        "[rampart][rampart_engine] Cannot create security policy from policy.");
                     return NULL;
                 }
                 rampart_context_set_secpolicy(rampart_context, env, secpolicy);
@@ -155,9 +147,10 @@ rampart_engine_build_configuration(
         else
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY,
+                msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_engine] Cannot get saved rampart_context");
+                "[rampart][rampart_engine] Cannot get saved rampart_context");
             return NULL;
         }
     }
@@ -174,9 +167,10 @@ rampart_engine_build_configuration(
             if(!secpolicy)
             {
                 rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                              "Error in the Internal security policy configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                    "Error in the Internal security policy configuration.",
+                    RAMPART_FAULT_IN_POLICY, msg_ctx);
                 AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][rampart_engine] Cannot create security policy from policy.");
+                    "[rampart][rampart_engine] Cannot create security policy from policy.");
 
                 return NULL;
             }
@@ -190,9 +184,9 @@ rampart_engine_build_configuration(
         if(!secpolicy)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_engine] Cannot create security policy from policy.");
+                "[rampart][rampart_engine] Cannot create security policy from policy.");
 
             rampart_context_free(rampart_context, env);
             rampart_context = NULL;
@@ -204,25 +198,24 @@ rampart_engine_build_configuration(
         if(status != AXIS2_SUCCESS)
         {
             rampart_create_fault_envelope(env, RAMPART_FAULT_FAILED_CHECK,
-                                          "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
+                "Error in the Internal configuration.", RAMPART_FAULT_IN_POLICY, msg_ctx);
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][rampart_engine] rampc policies creation failed.");
+                "[rampart][rampart_engine] rampc policies creation failed.");
 
             rampart_context_free(rampart_context, env);
             rampart_context = NULL;
             return NULL;
-        }  
-        
+        }
+
         rampart_engine_retrieve_key_mgr_prop_from_policy(rampart_context, env);
     }
-    
+
     key_mgr = rampart_context_get_key_mgr(rampart_context, env);
-    if (!key_mgr)
+    if(!key_mgr)
     {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                    "[rampart][engine] Key mgr creation failed.");
-            return NULL;
-    }		
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][engine] Key mgr creation failed.");
+        return NULL;
+    }
 
     /* Retrieve the password for obtaining private keys */
     enc_user = rampart_context_get_encryption_user(rampart_context, env);
@@ -242,12 +235,12 @@ rampart_engine_build_configuration(
         }
         else
         {
-            password_callback = rampart_context_get_password_callback(
-                                    rampart_context, env);
+            password_callback = rampart_context_get_password_callback(rampart_context, env);
             if(password_callback)
             {
                 password = rampart_callback_password(env, password_callback, enc_user);
-                pkcs12_password = rampart_callback_pkcs12_password(env, password_callback, enc_user);
+                pkcs12_password
+                    = rampart_callback_pkcs12_password(env, password_callback, enc_user);
             }
             else
             {
@@ -255,8 +248,8 @@ rampart_engine_build_configuration(
                 pkcs12_password = password;
             }
         }
-    } 
-    
+    }
+
     pkcs12_file = rampart_context_get_pkcs12_file_name(rampart_context, env);
     if(pkcs12_file && pkcs12_password)
     {
@@ -264,25 +257,26 @@ rampart_engine_build_configuration(
         if(!key_store)
         {
             AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                            "[rampart][engine] PKCS12 KeyStore creation failed.");
-            return NULL;	
-        }        
+                "[rampart][engine] PKCS12 KeyStore creation failed.");
+            return NULL;
+        }
     }
-    else if(pkcs12_password && (pkcs12_buf = (axis2_char_t*)rampart_context_get_key_store_buff(rampart_context, env)))
+    else if(pkcs12_password && (pkcs12_buf = (axis2_char_t*)rampart_context_get_key_store_buff(
+        rampart_context, env)))
     {
         key_store = pkcs12_keystore_create_from_buffer(env, pkcs12_buf, password,
-                    oxs_key_mgr_get_key_store_buff_len(key_mgr, env));
+            oxs_key_mgr_get_key_store_buff_len(key_mgr, env));
         if(!key_store)
         {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-                                "[rampart][engine] PKCS12 KeyStore creation failed.");
-                return NULL;	
-        }  
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
+                "[rampart][engine] PKCS12 KeyStore creation failed.");
+            return NULL;
+        }
     }
-    
+
     oxs_key_mgr_set_key_store(key_mgr, env, key_store);
 
-    if (password)
+    if(password)
     {
         oxs_key_mgr_set_prv_key_password(key_mgr, env, password);
     }
@@ -290,8 +284,8 @@ rampart_engine_build_configuration(
     /* Since rampart_context is for request scope, we have to store in a container which has 
      * request scope 
      */
-    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST ,
-               AXIS2_TRUE, (void *)rampart_context_free, rampart_context);
+    property = axutil_property_create_with_args(env, AXIS2_SCOPE_REQUEST, AXIS2_TRUE,
+        (void *)rampart_context_free, rampart_context);
     axis2_msg_ctx_set_property(msg_ctx, env, RAMPART_CONTEXT, property);
 
     /*For the client side*/
@@ -312,7 +306,7 @@ rampart_engine_build_configuration(
             {
                 rampart_context_set_user(rampart_context, env, config_value);
             }
-            
+
             config_value = rampart_config_get_password(client_config, env);
             if(config_value)
             {
@@ -331,20 +325,21 @@ rampart_engine_build_configuration(
                 rampart_context_set_ttl(rampart_context, env, ttl);
             }
             saml_tokens = rampart_config_get_saml_tokens(client_config, env);
-            if (saml_tokens)
+            if(saml_tokens)
             {
                 rampart_context_set_saml_tokens(rampart_context, env, saml_tokens);
             }
-            issued_token_aquire = rampart_config_get_issued_token_aquire_function(client_config, env);
-            if (issued_token_aquire)
+            issued_token_aquire = rampart_config_get_issued_token_aquire_function(client_config,
+                env);
+            if(issued_token_aquire)
             {
-                rampart_context_set_issued_token_aquire_function(rampart_context, env, issued_token_aquire); 
+                rampart_context_set_issued_token_aquire_function(rampart_context, env,
+                    issued_token_aquire);
             }
         }
     }
     return rampart_context;
 }
-
 
 neethi_policy_t *AXIS2_CALL
 build_policy(
@@ -393,22 +388,19 @@ build_policy(
     policy_include = axis2_desc_get_policy_include(desc, env);
     if(!policy_include)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[rampart][rampart_engine] Policy include is NULL.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_engine] Policy include is NULL.");
         return NULL;
     }
 
     service_policy = axis2_policy_include_get_effective_policy(policy_include, env);
     if(!service_policy)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_engine] Policy is NULL.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart][rampart_engine] Policy is NULL.");
         return NULL;
     }
 
     return service_policy;
 }
-
 
 axis2_status_t AXIS2_CALL
 set_rampart_user_properties(
@@ -418,50 +410,51 @@ set_rampart_user_properties(
 
     rampart_callback_t* password_callback_module = NULL;
     rampart_authn_provider_t *authn_provider = NULL;
-	rampart_replay_detector_t *replay_detector = NULL;
+    rampart_replay_detector_t *replay_detector = NULL;
     rampart_sct_provider_t* sct_provider = NULL;
     axis2_char_t *pwcb_module_name = NULL;
     axis2_char_t *authn_provider_name = NULL;
-	axis2_char_t *replay_detector_name = NULL;
+    axis2_char_t *replay_detector_name = NULL;
     axis2_char_t *sct_provider_name = NULL;
 
-    if(rampart_context_set_user_from_file(rampart_context,env) != AXIS2_SUCCESS)
+    if(rampart_context_set_user_from_file(rampart_context, env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    if(rampart_context_set_ttl_from_file(rampart_context,env) != AXIS2_SUCCESS)
+    if(rampart_context_set_ttl_from_file(rampart_context, env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    if(rampart_context_set_clock_skew_buffer_from_file(rampart_context,env) != AXIS2_SUCCESS)
+    if(rampart_context_set_clock_skew_buffer_from_file(rampart_context, env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    if(rampart_context_set_need_millisecond_precision_from_file(rampart_context,env)!= AXIS2_SUCCESS)
+    if(rampart_context_set_need_millisecond_precision_from_file(rampart_context, env)
+        != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    if(rampart_context_set_rd_val_from_file(rampart_context,env) != AXIS2_SUCCESS)
+    if(rampart_context_set_rd_val_from_file(rampart_context, env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    if(rampart_context_set_password_type_from_file(rampart_context,env) != AXIS2_SUCCESS)
+    if(rampart_context_set_password_type_from_file(rampart_context, env) != AXIS2_SUCCESS)
     {
         return AXIS2_FAILURE;
     }
 
-    pwcb_module_name = rampart_context_get_password_callback_class(rampart_context,env);
+    pwcb_module_name = rampart_context_get_password_callback_class(rampart_context, env);
     if(pwcb_module_name)
     {
         password_callback_module = rampart_load_pwcb_module(env, pwcb_module_name);
         if(password_callback_module)
         {
-            rampart_context_set_password_callback(rampart_context,env,password_callback_module);
+            rampart_context_set_password_callback(rampart_context, env, password_callback_module);
         }
         else
         {
@@ -469,13 +462,13 @@ set_rampart_user_properties(
         }
     }
 
-    authn_provider_name = rampart_context_get_authn_module_name(rampart_context,env);
+    authn_provider_name = rampart_context_get_authn_module_name(rampart_context, env);
     if(authn_provider_name)
     {
-        authn_provider = rampart_load_auth_module(env,authn_provider_name);
+        authn_provider = rampart_load_auth_module(env, authn_provider_name);
         if(authn_provider)
         {
-            rampart_context_set_authn_provider(rampart_context,env,authn_provider);
+            rampart_context_set_authn_provider(rampart_context, env, authn_provider);
         }
         else
         {
@@ -483,13 +476,13 @@ set_rampart_user_properties(
         }
     }
 
-    replay_detector_name = rampart_context_get_replay_detector_name(rampart_context,env);
+    replay_detector_name = rampart_context_get_replay_detector_name(rampart_context, env);
     if(replay_detector_name)
     {
-        replay_detector = rampart_load_replay_detector(env,replay_detector_name);
+        replay_detector = rampart_load_replay_detector(env, replay_detector_name);
         if(replay_detector)
         {
-            rampart_context_set_replay_detector(rampart_context,env,(void*)replay_detector);
+            rampart_context_set_replay_detector(rampart_context, env, (void*)replay_detector);
         }
         else
         {
@@ -502,24 +495,24 @@ set_rampart_user_properties(
          * whether user has already set it. If not, we can use default function */
         if(!rampart_context_get_replay_detect_function(rampart_context, env))
         {
-            rampart_context_set_replay_detect_function(
-                rampart_context, env, rampart_replay_detector_default, NULL);
+            rampart_context_set_replay_detect_function(rampart_context, env,
+                rampart_replay_detector_default, NULL);
         }
     }
 
-    sct_provider_name = rampart_context_get_sct_provider_name(rampart_context,env);
+    sct_provider_name = rampart_context_get_sct_provider_name(rampart_context, env);
     if(sct_provider_name)
     {
-        sct_provider = rampart_load_sct_provider(env,sct_provider_name);
+        sct_provider = rampart_load_sct_provider(env, sct_provider_name);
         if(sct_provider)
         {
             rampart_sct_provider_ops_t *ops = NULL;
-            rampart_context_set_sct_provider(rampart_context,env,(void*)sct_provider);
+            rampart_context_set_sct_provider(rampart_context, env, (void*)sct_provider);
             ops = sct_provider->ops;
 
             if(ops)
             {
-                
+
                 void *user_param = NULL;
                 store_security_context_token_fn store_fn = NULL;
                 obtain_security_context_token_fn obtain_fn = NULL;
@@ -530,14 +523,14 @@ set_rampart_user_properties(
                 if(ops->get_user_params)
                 {
                     user_param = ops->get_user_params(env);
-                    rampart_context_set_security_context_token_user_params(
-                        rampart_context, env, user_param);
+                    rampart_context_set_security_context_token_user_params(rampart_context, env,
+                        user_param);
                 }
                 else
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart]Cannot find 'get user param' operation of secrutiy context token "
-                        "provider.");
+                            "provider.");
                     return AXIS2_FAILURE;
                 }
 
@@ -545,12 +538,12 @@ set_rampart_user_properties(
                 store_fn = ops->store_security_context_token;
                 if(store_fn)
                 {
-                    rampart_context_set_store_security_context_token_fn(
-                        rampart_context, env, store_fn);
+                    rampart_context_set_store_security_context_token_fn(rampart_context, env,
+                        store_fn);
                 }
                 else
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart]Cannot find 'store' operation of secrutiy context token provider.");
                     return AXIS2_FAILURE;
                 }
@@ -558,12 +551,12 @@ set_rampart_user_properties(
                 obtain_fn = ops->obtain_security_context_token;
                 if(obtain_fn)
                 {
-                    rampart_context_set_obtain_security_context_token_fn(
-                        rampart_context, env, obtain_fn);
+                    rampart_context_set_obtain_security_context_token_fn(rampart_context, env,
+                        obtain_fn);
                 }
                 else
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart]Cannot find 'obtain' operation of secrutiy context token provider.");
                     return AXIS2_FAILURE;
                 }
@@ -571,12 +564,12 @@ set_rampart_user_properties(
                 delete_fn = ops->delete_security_context_token;
                 if(delete_fn)
                 {
-                    rampart_context_set_delete_security_context_token_fn(
-                        rampart_context, env, delete_fn);
+                    rampart_context_set_delete_security_context_token_fn(rampart_context, env,
+                        delete_fn);
                 }
                 else
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart]Cannot find 'delete' operation of secrutiy context token provider.");
                     return AXIS2_FAILURE;
                 }
@@ -584,24 +577,24 @@ set_rampart_user_properties(
                 validate_fn = ops->validate_security_context_token;
                 if(validate_fn)
                 {
-                    rampart_context_set_validate_security_context_token_fn(
-                        rampart_context, env, validate_fn);
+                    rampart_context_set_validate_security_context_token_fn(rampart_context, env,
+                        validate_fn);
                 }
                 else
                 {
-                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                    AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                         "[rampart]Cannot find 'validate' operation of secrutiy context token provider.");
                     return AXIS2_FAILURE;
                 }
             }
             else
             {
-                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
+                AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
                     "[rampart]Cannot find operations of secrutiy context token provider.");
                 return AXIS2_FAILURE;
             }
         }
-        else 
+        else
         {
             return AXIS2_FAILURE;
         }
@@ -612,62 +605,63 @@ set_rampart_user_properties(
          * already set it. If not, we can use default function */
         if(!rampart_context_get_obtain_security_context_token_fn(rampart_context, env))
         {
-            rampart_context_set_obtain_security_context_token_fn(
-                rampart_context, env, sct_provider_obtain_sct_default);
+            rampart_context_set_obtain_security_context_token_fn(rampart_context, env,
+                sct_provider_obtain_sct_default);
         }
 
         if(!rampart_context_get_store_security_context_token_fn(rampart_context, env))
         {
-            rampart_context_set_store_security_context_token_fn(
-                rampart_context, env, sct_provider_store_sct_default);
+            rampart_context_set_store_security_context_token_fn(rampart_context, env,
+                sct_provider_store_sct_default);
         }
 
         if(!rampart_context_get_delete_security_context_token_fn(rampart_context, env))
         {
-            rampart_context_set_delete_security_context_token_fn(
-                rampart_context, env, sct_provider_delete_sct_default);
+            rampart_context_set_delete_security_context_token_fn(rampart_context, env,
+                sct_provider_delete_sct_default);
         }
 
         if(!rampart_context_get_validate_security_context_token_fn(rampart_context, env))
         {
-            rampart_context_set_validate_security_context_token_fn(
-                rampart_context, env, sct_provider_validate_sct_default);
+            rampart_context_set_validate_security_context_token_fn(rampart_context, env,
+                sct_provider_validate_sct_default);
         }
     }
     return AXIS2_SUCCESS;
 }
 
 axis2_status_t AXIS2_CALL
-rampart_engine_retrieve_key_mgr_prop_from_policy(rampart_context_t *rampart_context, 
-												 const axutil_env_t *env)
-{	
-	axis2_char_t *value = NULL;
-	rp_rampart_config_t *config = NULL;    
-	oxs_key_mgr_t *key_mgr = NULL;
-	rp_secpolicy_t *secpolicy = NULL;
-	secpolicy = rampart_context_get_secpolicy(rampart_context, env);
+rampart_engine_retrieve_key_mgr_prop_from_policy(
+    rampart_context_t *rampart_context,
+    const axutil_env_t *env)
+{
+    axis2_char_t *value = NULL;
+    rp_rampart_config_t *config = NULL;
+    oxs_key_mgr_t *key_mgr = NULL;
+    rp_secpolicy_t *secpolicy = NULL;
+    secpolicy = rampart_context_get_secpolicy(rampart_context, env);
     config = rp_secpolicy_get_rampart_config(secpolicy, env);
-    if (!config)
-        return AXIS2_FAILURE;    
+    if(!config)
+        return AXIS2_FAILURE;
 
-	key_mgr = rampart_context_get_key_mgr(rampart_context, env);
+    key_mgr = rampart_context_get_key_mgr(rampart_context, env);
 
-	value = rp_rampart_config_get_certificate_file(config, env);
-	if (value)
-	{
-		oxs_key_mgr_set_certificate_file(key_mgr, env, value);
-	}
+    value = rp_rampart_config_get_certificate_file(config, env);
+    if(value)
+    {
+        oxs_key_mgr_set_certificate_file(key_mgr, env, value);
+    }
 
-	value = rp_rampart_config_get_private_key_file(config, env);
-	if (value)
-	{
-		oxs_key_mgr_set_private_key_file(key_mgr, env, value);
-	}
+    value = rp_rampart_config_get_private_key_file(config, env);
+    if(value)
+    {
+        oxs_key_mgr_set_private_key_file(key_mgr, env, value);
+    }
 
-	value = rp_rampart_config_get_receiver_certificate_file(config, env);
-	if (value)
-	{
-		oxs_key_mgr_set_reciever_certificate_file(key_mgr, env, value);
-	}
-	return AXIS2_SUCCESS;
+    value = rp_rampart_config_get_receiver_certificate_file(config, env);
+    if(value)
+    {
+        oxs_key_mgr_set_reciever_certificate_file(key_mgr, env, value);
+    }
+    return AXIS2_SUCCESS;
 }
