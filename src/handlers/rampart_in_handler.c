@@ -47,23 +47,18 @@ rampart_in_handler_create(
     const axutil_env_t *env,
     axutil_string_t *name)
 {
-    axis2_handler_t *handler = NULL;
-    AXIS2_ENV_CHECK(env, NULL);
-
-    handler = axis2_handler_create(env);
-    if (!handler)
+    axis2_handler_t *handler = axis2_handler_create(env);
+    if(!handler)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_in_handler] Cannot create in-handler.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Cannot create in-handler.");
         return NULL;
     }
 
     /*Set the function to invoke*/
     axis2_handler_set_invoke(handler, env, rampart_in_handler_invoke);
-    
+
     return handler;
 }
-
 
 axis2_status_t AXIS2_CALL
 rampart_in_handler_invoke(
@@ -77,42 +72,43 @@ rampart_in_handler_invoke(
     axiom_node_t *sec_node = NULL;
     rampart_context_t *rampart_context = NULL;
 
-    AXIS2_PARAM_CHECK(env->error, msg_ctx, AXIS2_FAILURE);
+    if(!msg_ctx)
+    {
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]message context is not valid");
+        return AXIS2_FAILURE;
+    }
 
     /*
-    * since rampart in_handler is a global handler we should
-    * first check whether the rampart module is engaged.If not engaged we 
-    * should not process the message but return success.
-    */
+     * since rampart in_handler is a global handler we should
+     * first check whether the rampart module is engaged.If not engaged we
+     * should not process the message but return success.
+     */
     if(!rampart_is_rampart_engaged(env, msg_ctx))
     {
-        AXIS2_LOG_INFO(env->log, 
-            "[rampart][rampart_in_handler] Rampart is not engaged. No security checks needed. ");
+        AXIS2_LOG_DEBUG(env->log, AXIS2_LOG_SI,
+            "[rampart]Rampart is not engaged. No security checks needed.");
         return AXIS2_SUCCESS;
     }
 
-    soap_envelope =  axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
+    soap_envelope = axis2_msg_ctx_get_soap_envelope(msg_ctx, env);
     if(!soap_envelope)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_in_handler] SOAP envelope cannot be found.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]SOAP envelope cannot be found.");
         return AXIS2_FAILURE;
     }
 
     soap_header = axiom_soap_envelope_get_header(soap_envelope, env);
-    if (!soap_header)
+    if(!soap_header)
     {
         /*No SOAP header, so no point of proceeding. FAIL*/
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_in_handler] SOAP header cannot be found.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]SOAP header cannot be found.");
         return AXIS2_FAILURE;
     }
 
     rampart_context = rampart_engine_build_configuration(env, msg_ctx, AXIS2_TRUE);
     if(!rampart_context)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-            "[rampart][rampart_in_handler] rampart_context creation failed.");
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]rampart_context creation failed.");
         return AXIS2_FAILURE;
     }
 
@@ -123,26 +119,23 @@ rampart_in_handler_invoke(
     {
         if(!sec_node)
         {
-            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, 
-                "[rampart][rampart_in_handler] Security header cannot be found.");
+            AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Security header cannot be found.");
             return AXIS2_FAILURE;
         }
     }
 
-    status = rampart_set_security_processed_results_property(env, msg_ctx);
-    if(status != AXIS2_SUCCESS)
+    if(rampart_set_security_processed_results_property(env, msg_ctx) != AXIS2_SUCCESS)
     {
         AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[rampart][rampart_in_handler] Unable to set the security processed results.");
-        return status;
+            "[rampart]Unable to set the security processed results.");
+        return AXIS2_FAILURE;
     }
 
-    status = rampart_shp_process_sec_header(env, msg_ctx, rampart_context, soap_envelope, sec_node);                                         
-    if(status != AXIS2_SUCCESS)
+    if(rampart_shp_process_sec_header(env, msg_ctx, rampart_context, soap_envelope, sec_node)
+        != AXIS2_SUCCESS)
     {
-        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI,
-            "[rampart][rampart_in_handler] Security Header processing failed.");
-        return status;
+        AXIS2_LOG_ERROR(env->log, AXIS2_LOG_SI, "[rampart]Security Header processing failed.");
+        return AXIS2_FAILURE;
     }
 
     return AXIS2_SUCCESS;
