@@ -464,6 +464,22 @@ openssl_x509_get_common_name(
 	return result;
 }
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+openssl_x509_get_alias(const axutil_env_t* env,
+					   X509* cert)
+{
+	axis2_char_t* result = NULL;
+	unsigned char* data = NULL;
+	int length = 0;
+
+	data = X509_alias_get0(cert, &length);
+	if (!data) return NULL;
+
+	result = axutil_strndup(env, data, length);
+	
+	return result;
+}
+
 AXIS2_EXTERN void  AXIS2_CALL
 openssl_x509_print(const axutil_env_t *env,
                    X509 *cert)
