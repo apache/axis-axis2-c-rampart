@@ -29,6 +29,48 @@ struct pkcs12_keystore {
     openssl_pkey_t *pvt_key;
 };
 
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
+pkcs12_keystore_get_keystore_file(
+	pkcs12_keystore_t* keystore)
+{
+	return keystore->keystore_file;
+}
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL 
+pkcs12_keystore_get_password(
+	pkcs12_keystore_t* keystore)
+{
+	return keystore->keystore_password;
+}
+
+AXIS2_EXTERN PKCS12* AXIS2_CALL 
+pkcs12_keystore_get_keystore(
+	pkcs12_keystore_t* keystore)
+{
+	return keystore->keystore;
+}
+
+AXIS2_EXTERN X509* AXIS2_CALL 
+pkcs12_keystore_get_cert(
+	pkcs12_keystore_t* keystore)
+{
+	return keystore->cert;
+}
+
+AXIS2_EXTERN STACK_OF(X509)* AXIS2_CALL 
+pkcs12_keystore_get_other_certs(
+	pkcs12_keystore_t* keystore)
+{
+	return keystore->other_certs;
+}
+
+AXIS2_EXTERN openssl_pkey_t* AXIS2_CALL 
+pkcs12_keystore_get_pvt_key(
+	pkcs12_keystore_t* keystore)
+{
+	return keystore->pvt_key;
+}
+
 AXIS2_EXTERN pkcs12_keystore_t * AXIS2_CALL 
 pkcs12_keystore_create(
         const axutil_env_t *env,
@@ -128,7 +170,8 @@ pkcs12_keystore_create_from_buffer(
     return keystore;
 }
 
-axutil_array_list_t * AXIS2_CALL pkcs12_keystore_populate_cert_array(
+AXIS2_EXTERN axutil_array_list_t * AXIS2_CALL 
+pkcs12_keystore_populate_cert_array(
         const axutil_env_t *env,
         STACK_OF(X509) * other_certs) 
 {
