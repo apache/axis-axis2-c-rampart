@@ -153,6 +153,36 @@ extern "C"
     oxs_x509_cert_get_public_key(oxs_x509_cert_t *x509_cert,
                                  const axutil_env_t *env);
 
+	/**
+     * Get the date from when the X509 Certificate is valid
+     * @param x509_cert the X509 certificate
+     * @param env pointer to environment struct
+     * @return the date from when the X509 Certificate is valid
+     */
+	AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+	oxs_x509_cert_get_valid_from(oxs_x509_cert_t *x509_cert,
+								 const axutil_env_t* env);
+
+	/**
+     * Get the version of X509 Certificate
+     * @param x509_cert the X509 certificate
+     * @param env pointer to environment struct
+     * @return the version of X509 certificate
+     */
+	AXIS2_EXTERN int AXIS2_CALL
+	oxs_x509_cert_get_version(oxs_x509_cert_t* x509_cert,
+							  const axutil_env_t* env);
+
+	/**
+     * Get the alias (i.e. friendly name) of X509 Certificate
+     * @param x509_cert the X509 certificate
+     * @param env pointer to environment struct
+     * @return the alias of X509 certificate
+     */
+	AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+	oxs_x509_cert_get_alias(oxs_x509_cert_t* x509_cert,
+							const axutil_env_t* env);
+
     /*Setters*/
     /**
      * Set the serial number of X509 Certificate

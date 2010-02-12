@@ -33,6 +33,9 @@ struct oxs_x509_cert_t
     axis2_char_t *data;
 	axis2_char_t *common_name;
     openssl_pkey_t *public_key;
+	axis2_char_t *valid_from;
+	int version;
+	axis2_char_t *alias;
 };
 
 
@@ -63,6 +66,9 @@ oxs_x509_cert_create(const axutil_env_t *env)
     x509_cert->data =NULL;
     x509_cert->public_key =NULL;
 	x509_cert->common_name = NULL;
+	x509_cert->valid_from = NULL;
+	x509_cert->version = 0;
+	x509_cert->alias = NULL;
 
     return x509_cert;
 }
@@ -110,6 +116,17 @@ oxs_x509_cert_free(oxs_x509_cert_t *x509_cert,
         	x509_cert->common_name = NULL;
     }
 
+	if(x509_cert->valid_from)
+	{
+		AXIS2_FREE(env->allocator, x509_cert->valid_from);
+		x509_cert->valid_from = NULL;
+	}
+	if(x509_cert->alias)
+	{
+		AXIS2_FREE(env->allocator, x509_cert->alias);
+		x509_cert->alias = NULL;
+	}
+
     AXIS2_FREE(env->allocator,  x509_cert);
     x509_cert = NULL;
 
@@ -132,6 +149,9 @@ oxs_x509_cert_copy_to(oxs_x509_cert_t *x509_cert,
     openssl_pkey_increment_ref(x509_cert->public_key, env);
     oxs_x509_cert_set_public_key(to, env, x509_cert->public_key);
 	oxs_x509_cert_set_common_name(to, env, x509_cert->common_name);
+	oxs_x509_cert_set_valid_from(to, env, x509_cert->valid_from);
+	oxs_x509_cert_set_version(to, env, x509_cert->version);
+	oxs_x509_cert_set_alias(to, env, x509_cert->alias);
 
     return AXIS2_SUCCESS;
 }
@@ -190,6 +210,27 @@ oxs_x509_cert_get_public_key(oxs_x509_cert_t *x509_cert,
                              const axutil_env_t *env)
 {
     return x509_cert->public_key;
+}
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+oxs_x509_cert_get_valid_from(oxs_x509_cert_t *x509_cert,
+							 const axutil_env_t* env)
+{
+	return x509_cert->valid_from;
+}
+
+AXIS2_EXTERN int AXIS2_CALL
+oxs_x509_cert_get_version(oxs_x509_cert_t* x509_cert,
+						  const axutil_env_t* env)
+{
+	return x509_cert->version;
+}
+
+AXIS2_EXTERN axis2_char_t* AXIS2_CALL
+oxs_x509_cert_get_alias(oxs_x509_cert_t* x509_cert,
+						const axutil_env_t* env)
+{
+	return x509_cert->alias;
 }
 
 AXIS2_EXTERN axis2_char_t * AXIS2_CALL
@@ -330,3 +371,43 @@ oxs_x509_cert_set_public_key(oxs_x509_cert_t *x509_cert,
     return AXIS2_SUCCESS;
 }
 
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_x509_cert_set_valid_from(oxs_x509_cert_t* x509_cert,
+							 const axutil_env_t* env,
+							 axis2_char_t* valid_from)
+{
+	if(x509_cert->valid_from)
+	{
+		AXIS2_FREE(env->allocator, x509_cert->valid_from);
+		x509_cert->valid_from = NULL;
+	}
+
+	x509_cert->valid_from = axutil_strdup(env, valid_from);
+	return AXIS2_SUCCESS;
+}
+
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_x509_cert_set_version(oxs_x509_cert_t* x509_cert,
+						  const axutil_env_t* env,
+						  int version)
+{
+	x509_cert->version = version;
+	return AXIS2_SUCCESS;
+}
+
+
+AXIS2_EXTERN axis2_status_t AXIS2_CALL
+oxs_x509_cert_set_alias(oxs_x509_cert_t* x509_cert,
+					    const axutil_env_t* env,
+						axis2_char_t* alias)
+{
+	if(x509_cert->alias)
+	{
+		AXIS2_FREE(env->allocator, x509_cert->alias);
+		x509_cert->alias = NULL;
+	}
+
+	x509_cert->alias = axutil_strdup(env, alias);
+	return AXIS2_SUCCESS;
+}
