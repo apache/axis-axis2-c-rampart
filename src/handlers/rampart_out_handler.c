@@ -70,7 +70,6 @@ rampart_out_handler_invoke(
     axiom_soap_header_t *soap_header = NULL;
     axiom_node_t *soap_header_node = NULL;
     axiom_element_t *soap_header_ele = NULL;
-    axis2_status_t status = AXIS2_FAILURE;
     rampart_context_t *rampart_context = NULL;
 
     if(!msg_ctx)
