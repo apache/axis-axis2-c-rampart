@@ -99,7 +99,7 @@ AC_ARG_WITH(openssl,
     ;;
   *)
     AC_MSG_RESULT($withval)
-    dnl Find oprnssl dir in the path
+    dnl Find openssl dir in the path
     if test -d $withval; then
         opensslinc="-I$withval/include"
         openssllib="-L$withval/lib"
