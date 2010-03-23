@@ -720,7 +720,6 @@ rampart_enc_dk_encrypt_message(
             enc_data_node = oxs_axiom_get_node_by_id(env, envelope_node, OXS_ATTR_ID, id, NULL);
             str_node = oxs_axiom_get_node_by_local_name(env, enc_data_node, OXS_NODE_SECURITY_TOKEN_REFRENCE);
             reference_node = oxs_axiom_get_node_by_local_name(env, str_node, OXS_NODE_REFERENCE);
-            reference_node = axiom_node_detach(reference_node, env);
             axiom_node_free_tree(reference_node, env);
             
             id_ref = axutil_stracat(env, OXS_LOCAL_REFERENCE_PREFIX,asym_key_id);
@@ -1333,7 +1332,7 @@ rampart_enc_encrypt_signature(
 
     if(node_to_move)
     {
-        temp_node = axiom_node_detach(node_to_move, env);
+        temp_node = axiom_node_detach_without_namespaces(node_to_move, env);
         if(temp_node)
         {
             enc_status = axiom_node_insert_sibling_after(

@@ -260,7 +260,6 @@ oxs_xml_enc_encrypt_node(
     /*Remove the node from the parent*/
     if(AXIS2_SUCCESS == ret)
     {
-        axiom_node_detach(node, env);
         axiom_node_free_tree(node, env);
         node = NULL;
     }
@@ -383,8 +382,6 @@ oxs_xml_enc_decrypt_node(
     parent_of_enc_node = axiom_node_get_parent(enc_type_node, env);
 
     axiom_node_insert_sibling_after(enc_type_node, env, deserialized_node);
-    axiom_node_detach(enc_type_node, env);
-
     axiom_node_free_tree(enc_type_node, env);
     enc_type_node = NULL;
 

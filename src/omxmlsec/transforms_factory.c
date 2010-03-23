@@ -72,7 +72,7 @@ oxs_transforms_enveloped_xmldsig(const axutil_env_t *env,
 		node_local_name = axiom_util_get_localname(child_node, env);
 		if(!(axutil_strcmp(node_local_name, OXS_NODE_SIGNATURE)))
 		{	
-			sig_node = axiom_node_detach(child_node, env);
+			sig_node = axiom_node_detach(child_node, env); /* TODO should we use detach_without_namespace here?? */
 			break;
 		}
 		child_node = axiom_node_get_next_sibling(child_node, env);

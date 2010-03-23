@@ -456,7 +456,7 @@ oxs_axiom_interchange_nodes(
     axis2_status_t status = AXIS2_FAILURE;
     axiom_node_t *temp_node = NULL;
 
-    temp_node = axiom_node_detach(node_to_move,env);
+    temp_node = axiom_node_detach_without_namespaces(node_to_move,env);
     status = axiom_node_insert_sibling_before(node_before, env, temp_node);
     return status;
 }
