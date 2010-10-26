@@ -44,7 +44,8 @@ openssl_pem_buf_read_pkey(const axutil_env_t *env,
     int len = 0;
     int ret = 0;
     int decode_len = 0;
-
+    
+    /** Fix the magic number, causes the failure of 2048 key length issues */
     decode_len = axutil_base64_decode_len(b64_encoded_buf);
     buff = AXIS2_MALLOC(env->allocator, decode_len + 1000);
 
